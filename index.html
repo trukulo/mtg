@@ -2,20 +2,23 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#150e08">
 <title>Jumpstart Cimientos · Duelo contra la IA</title>
 <style>
-/* ... (todo el CSS se mantiene igual que en la versión anterior) ... */
-:root{--ch:14vh;--cw:calc(var(--ch)*.716);color-scheme:dark}
-*{box-sizing:border-box}html,body{height:100%}
-body{margin:0;display:flex;height:100vh;background:#150e08;color:#eee;font:14px Georgia,serif;overflow:hidden}
+:root{--ch:14vh;--cw:calc(var(--ch)*.716);color-scheme:dark;--touch-min:48px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body{margin:0;display:flex;height:100vh;height:100dvh;background:#150e08;color:#eee;font:14px Georgia,serif;touch-action:manipulation}
 #board{flex:1;min-width:0;display:flex;margin:6px;perspective:1600px}
 #main{flex:1;min-width:0;display:flex;flex-direction:column;border:8px solid #4a2d17;border-radius:14px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 45%,#2c6046,#163a28 65%,#0a2016);box-shadow:inset 0 0 80px #000c,0 0 0 2px #2a1808,0 10px 40px #000c}
 #main::before{content:'';position:absolute;inset:0;pointer-events:none;border-radius:8px;background-image:repeating-linear-gradient(45deg,#0000 0 2px,#0001 2px 4px);z-index:0}
 #main.shake{animation:shake .42s}
 @keyframes shake{0%,100%{transform:translate(0)}15%{transform:translate(-8px,3px) rotate(-.6deg)}35%{transform:translate(7px,-3px) rotate(.6deg)}55%{transform:translate(-5px,-2px)}75%{transform:translate(5px,2px)}}
 #board-body{display:flex;flex:1;min-height:0;position:relative;z-index:1}
-#piles-col{display:flex;flex-direction:column;justify-content:space-between;padding:10px 6px;gap:8px;background:linear-gradient(180deg,#0008,#0005);border-right:1px solid #c99a3b33;min-width:86px;flex:none}
+#piles-col{display:flex;flex-direction:column;justify-content:space-between;padding:10px 6px;gap:8px;background:linear-gradient(180deg,#0008,#0005);border-right:1px solid #c99a3b33;min-width:86px;flex:none;z-index:4}
 .pile-stack{display:flex;flex-direction:column;gap:6px;align-items:center}
 .pile-label{font:bold 9px sans-serif;color:#c99a3b;text-transform:uppercase;letter-spacing:1px;opacity:.7;margin-bottom:2px}
 .pile-mini{width:64px;height:64px;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(145deg,#3a2416,#1a0f08);border:2px solid #7a5a30;border-radius:9px;cursor:pointer;transition:transform .12s,box-shadow .2s,opacity .2s;box-shadow:0 3px 8px #000a,inset 0 0 12px #0008;color:#c99a3b;user-select:none}
@@ -48,12 +51,12 @@ body{margin:0;display:flex;height:100vh;background:#150e08;color:#eee;font:14px 
 #phasebar{display:flex;gap:4px;padding:5px 10px;justify-content:center;background:#0009;border-bottom:1px solid #c99a3b22}
 #phasebar .ph{padding:2px 10px;font-size:11px;color:#666;border-radius:4px;transition:all .2s;text-transform:uppercase;letter-spacing:.5px}
 #phasebar .ph.active{color:#ffe28a;background:#c99a3b28;text-shadow:0 0 10px #e6c46f;box-shadow:0 0 12px #c99a3b55}
-button{font:bold 14px Georgia;background:linear-gradient(180deg,#e6b955,#c99a3b);color:#2a1a05;border:0;border-radius:7px;padding:9px 18px;cursor:pointer;box-shadow:0 3px 0 #6b4a17,0 6px 12px #000a;transition:transform .1s,box-shadow .1s}
+button{font:bold 14px Georgia;background:linear-gradient(180deg,#e6b955,#c99a3b);color:#2a1a05;border:0;border-radius:7px;padding:9px 18px;cursor:pointer;box-shadow:0 3px 0 #6b4a17,0 6px 12px #000a;transition:transform .1s,box-shadow .1s;min-height:44px;touch-action:manipulation}
 button:hover{filter:brightness(1.12)}button:active{transform:translateY(2px);box-shadow:0 1px 0 #6b4a17,0 3px 8px #000a}
 button:disabled{opacity:.4;cursor:default;filter:none}
-.card{position:relative;flex:none;width:var(--cw);height:var(--ch);border-radius:6px;background:#3a3a3a;box-shadow:0 4px 10px #000c,0 1px 3px #000a,inset 0 0 1px #fff3;font-size:9px;color:#ccc;cursor:pointer;transition:box-shadow .2s,translate .5s cubic-bezier(.34,1.56,.64,1),rotate .5s cubic-bezier(.34,1.56,.64,1),scale .25s,filter .2s}
-.card img{position:absolute;inset:0;width:100%;height:100%;border-radius:6px}
-.card .nm{position:absolute;inset:4px}
+.card{position:relative;flex:none;width:var(--cw);height:var(--ch);border-radius:6px;background:#3a3a3a;box-shadow:0 4px 10px #000c,0 1px 3px #000a,inset 0 0 1px #fff3;font-size:9px;color:#ccc;cursor:pointer;transition:box-shadow .2s,translate .5s cubic-bezier(.34,1.56,.64,1),rotate .5s cubic-bezier(.34,1.56,.64,1),scale .25s,filter .2s;touch-action:none;user-select:none}
+.card img{position:absolute;inset:0;width:100%;height:100%;border-radius:6px;pointer-events:none}
+.card .nm{position:absolute;inset:4px;pointer-events:none}
 .card:hover{z-index:12;box-shadow:0 18px 30px #000d,0 0 0 2px #fc6,0 0 26px #fc68,inset 0 0 1px #fff5}
 .hand.me .card{transform-origin:50% 110%;rotate:var(--rot,0deg);translate:0 var(--lift,0px);margin:0 -16px}
 .hand.me .card:hover{rotate:0deg!important;translate:0 -50px!important;scale:1.2;z-index:30}
@@ -61,12 +64,12 @@ button:disabled{opacity:.4;cursor:default;filter:none}
 @keyframes cardEnter{0%{opacity:0;translate:0 -80px;scale:.6;rotate:10deg}100%{opacity:1;translate:0 0;scale:1;rotate:0}}
 .card.drawn{animation:drawnFx .45s ease-out}
 @keyframes drawnFx{0%{opacity:0;filter:brightness(3) sepia(1) hue-rotate(60deg)}60%{opacity:1;filter:brightness(1.6)}100%{filter:brightness(1)}}
-.pt{position:absolute;right:1px;bottom:1px;z-index:2;background:#000d;font:bold 1.5vh sans-serif;padding:1px 5px;border-radius:4px;color:#fff}
+.pt{position:absolute;right:1px;bottom:1px;z-index:2;background:#000d;font:bold 1.5vh sans-serif;padding:1px 5px;border-radius:4px;color:#fff;pointer-events:none}
 .pt.d{color:#f88}.pt.u{color:#8f8}
-.loy{position:absolute;right:1px;bottom:1px;z-index:2;background:#4a2d6a;color:#fff;font:bold 1.5vh sans-serif;padding:1px 6px;border-radius:4px;box-shadow:0 0 8px #a8f}
-.bn{position:absolute;left:2px;top:2px;z-index:2;background:#c22;color:#fff;font:bold 11px sans-serif;border-radius:50%;width:18px;height:18px;text-align:center;line-height:18px;box-shadow:0 0 6px #f55}
-.regen{position:absolute;left:2px;bottom:2px;z-index:2;color:#8f8;font:bold 14px sans-serif;text-shadow:0 0 6px #7f7}
-.fb-badge{position:absolute;left:2px;top:22px;z-index:2;background:#06c;color:#fff;font:bold 9px sans-serif;padding:1px 4px;border-radius:3px;box-shadow:0 0 4px #06c}
+.loy{position:absolute;right:1px;bottom:1px;z-index:2;background:#4a2d6a;color:#fff;font:bold 1.5vh sans-serif;padding:1px 6px;border-radius:4px;box-shadow:0 0 8px #a8f;pointer-events:none}
+.bn{position:absolute;left:2px;top:2px;z-index:2;background:#c22;color:#fff;font:bold 11px sans-serif;border-radius:50%;width:18px;height:18px;text-align:center;line-height:18px;box-shadow:0 0 6px #f55;pointer-events:none}
+.regen{position:absolute;left:2px;bottom:2px;z-index:2;color:#8f8;font:bold 14px sans-serif;text-shadow:0 0 6px #7f7;pointer-events:none}
+.fb-badge{position:absolute;left:2px;top:22px;z-index:2;background:#06c;color:#fff;font:bold 9px sans-serif;padding:1px 4px;border-radius:3px;box-shadow:0 0 4px #06c;pointer-events:none}
 .back{background:repeating-linear-gradient(45deg,#5a2d12,#5a2d12 4px,#7a431d 4px,#7a431d 8px);border:2px solid #d9b46a}
 .tap{rotate:90deg;margin:0 calc(var(--ch)*.18)}.pac img{filter:grayscale(1) brightness(.7)}.sick img{filter:brightness(.78)}
 .ok{box-shadow:0 0 13px 3px #fc6,0 0 5px 1px #ffa,inset 0 0 1px #fff5}
@@ -90,6 +93,9 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
 #zoom img{width:100%;border-radius:14px;box-shadow:0 10px 30px #000}
 #tools{display:flex;gap:6px}#tools button{flex:1;padding:6px 4px;font-size:12px}
 #log{flex:1;overflow:auto;background:#0006;border-radius:10px;padding:8px;font-size:12px;line-height:1.5;color:#cdb}
+.drag-ghost{position:fixed;pointer-events:none;z-index:9999;border-radius:8px;overflow:hidden;box-shadow:0 20px 60px #000,0 0 40px #c99a3b99;transform:translate(-50%,-50%) scale(1.1) rotate(-3deg);opacity:.95;width:120px;height:168px}
+.drag-ghost img{width:100%;height:100%;display:block}
+.drop-target{box-shadow:inset 0 0 40px #6f6,inset 0 0 20px #6f69!important;background-color:#6f69!important;transition:all .15s}
 #menu{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 30%,#1a120a,#000e);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;z-index:60;padding:20px;overflow-y:auto}
 #menu h1{margin:0;font-size:34px;color:#e6c46f;text-shadow:0 2px 0 #000,0 0 30px #c99a3b88}
 #menu h1.win{color:#a8ff8a;text-shadow:0 2px 0 #000,0 0 40px #6f6}
@@ -119,24 +125,24 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
 #difficulty-bar label{display:flex;align-items:center;gap:4px;cursor:pointer}
 #difficulty-bar input{accent-color:#c99a3b}
 #play{margin-top:6px;padding:12px 32px;font-size:16px}
-#gallery{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 30%,#1a120a,#000f);z-index:70;display:none;flex-direction:column;padding:14px 18px;gap:10px}
-#gallery.on{display:flex;animation:galOpen .3s ease-out}
+#gallery,#collection{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 30%,#1a120a,#000f);z-index:70;display:none;flex-direction:column;padding:14px 18px;gap:10px}
+#gallery.on,#collection.on{display:flex;animation:galOpen .3s ease-out}
 @keyframes galOpen{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
-.gal-header{display:flex;gap:16px;align-items:center;padding-bottom:10px;border-bottom:1px solid #c99a3b44}
-.gal-header h2{margin:0;color:#e6c46f;font-size:22px;white-space:nowrap}
-.gal-stats{color:#cbb;font-size:13px;flex:1;text-align:center}
-.gal-close{padding:8px 20px}
-.gal-filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.gal-filters input{padding:8px 14px;border-radius:8px;border:1px solid #c99a3b;background:#1a120a;color:#eee;font:14px Georgia;flex:1;min-width:180px}
-.gal-filters select{padding:8px 12px;border-radius:8px;border:1px solid #c99a3b;background:#1a120a;color:#eee;font:13px Georgia;cursor:pointer}
-.gal-color-group{display:flex;gap:4px}
+.gal-header,.col-header{display:flex;gap:16px;align-items:center;padding-bottom:10px;border-bottom:1px solid #c99a3b44}
+.gal-header h2,.col-header h2{margin:0;color:#e6c46f;font-size:22px;white-space:nowrap}
+.gal-stats,.col-stats{color:#cbb;font-size:13px;flex:1;text-align:center}
+.gal-close,.col-close{padding:8px 20px}
+.gal-filters,.album-filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gal-filters input,.album-filters input{padding:8px 14px;border-radius:8px;border:1px solid #c99a3b;background:#1a120a;color:#eee;font:14px Georgia;flex:1;min-width:180px}
+.gal-filters select,.album-filters select{padding:8px 12px;border-radius:8px;border:1px solid #c99a3b;background:#1a120a;color:#eee;font:13px Georgia;cursor:pointer}
+.gal-color-group,.col-color-group{display:flex;gap:4px}
 .gal-color{width:34px;height:34px;border-radius:50%;border:2px solid #fff3;cursor:pointer;font:bold 13px Georgia;color:#111;transition:transform .1s,box-shadow .1s}
 .gal-color:hover{transform:scale(1.1)}
 .gal-color.on{box-shadow:0 0 0 3px #fff,0 0 12px #fff8}
-.gal-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;padding:8px;align-content:start}
-.gal-grid::-webkit-scrollbar{width:10px}
-.gal-grid::-webkit-scrollbar-track{background:#0006;border-radius:5px}
-.gal-grid::-webkit-scrollbar-thumb{background:#c99a3b88;border-radius:5px}
+.gal-grid,.album-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;padding:8px;align-content:start}
+.gal-grid::-webkit-scrollbar,.album-grid::-webkit-scrollbar{width:10px}
+.gal-grid::-webkit-scrollbar-track,.album-grid::-webkit-scrollbar-track{background:#0006;border-radius:5px}
+.gal-grid::-webkit-scrollbar-thumb,.album-grid::-webkit-scrollbar-thumb{background:#c99a3b88;border-radius:5px}
 .gal-card{position:relative;aspect-ratio:.716;border-radius:8px;overflow:hidden;cursor:pointer;background:#2a2a2a;box-shadow:0 4px 12px #000a;transition:transform .15s,box-shadow .15s;content-visibility:auto;contain-intrinsic-size:auto 320px}
 .gal-card:hover{transform:scale(1.06);z-index:2;box-shadow:0 14px 40px #000,0 0 0 3px #fc6}
 .gal-card img{width:100%;height:100%;object-fit:cover;display:block}
@@ -147,12 +153,7 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
 .gal-pagination button{padding:8px 16px;font-size:13px}
 .gal-pagination .page-info{color:#e6c46f;font-size:14px;font-weight:bold;min-width:180px;text-align:center}
 .gal-pagination select{padding:6px 10px;border-radius:6px;border:1px solid #c99a3b;background:#1a120a;color:#eee;font:13px Georgia;cursor:pointer}
-#gal-empty{text-align:center;color:#888;padding:40px;font-size:15px;grid-column:1/-1}
-#collection{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 30%,#1a120a,#000f);z-index:75;display:none;flex-direction:column;padding:14px 18px;gap:10px}
-#collection.on{display:flex;animation:galOpen .3s ease-out}
-.col-header{display:flex;gap:16px;align-items:center;padding-bottom:10px;border-bottom:1px solid #c99a3b44}
-.col-header h2{margin:0;color:#e6c46f;font-size:22px;white-space:nowrap}
-.col-stats{color:#cbb;font-size:14px;flex:1;text-align:center}
+#gal-empty,#album-empty{text-align:center;color:#888;padding:40px;font-size:15px;grid-column:1/-1}
 .col-tabs{display:flex;gap:8px;justify-content:center}
 .col-tab{padding:10px 24px;font-size:15px;background:#1c1c1c;color:#cbb;border:2px solid #c99a3b55;border-radius:10px;cursor:pointer;transition:all .15s}
 .col-tab.active{background:linear-gradient(180deg,#e6b955,#c99a3b);color:#2a1a05;border-color:#e6b955;font-weight:bold}
@@ -165,30 +166,20 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
 .pack-info{color:#cbb;font-size:14px;text-align:center;line-height:1.5}
 .pack-info b{color:#e6c46f;font-size:16px}
 #open-pack-btn{padding:16px 40px;font-size:18px;background:linear-gradient(180deg,#f4e8c8,#c99a3b);box-shadow:0 4px 0 #6b4a17,0 8px 20px #000a,0 0 30px #c99a3b44}
-#open-pack-btn:hover{filter:brightness(1.15);box-shadow:0 4px 0 #6b4a17,0 8px 24px #000a,0 0 50px #c99a3b88}
-#pack-reveal{position:fixed;inset:0;background:#000f;display:none;z-index:85;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:20px}
+#pack-reveal{position:fixed;inset:0;background:#000f;display:none;z-index:85;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:20px;overflow-y:auto}
 #pack-reveal.on{display:flex}
 .reveal-title{color:#e6c46f;font-size:24px;font-weight:bold;text-shadow:0 0 20px #c99a3b88}
-.reveal-cards{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;perspective:1200px}
-.reveal-card{width:180px;height:252px;border-radius:10px;overflow:hidden;box-shadow:0 10px 40px #000;transform-style:preserve-3d;animation:cardFlip .6s ease-out both;position:relative;cursor:pointer}
+.reveal-cards{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;perspective:1200px}
+.reveal-card{width:130px;height:182px;border-radius:8px;overflow:hidden;box-shadow:0 10px 40px #000;transform-style:preserve-3d;animation:cardFlip .6s ease-out both;position:relative;cursor:pointer}
 @keyframes cardFlip{0%{transform:rotateY(180deg) scale(.5);opacity:0}100%{transform:rotateY(0) scale(1);opacity:1}}
 .reveal-card img{width:100%;height:100%;object-fit:cover;display:block}
 .reveal-card.rare{box-shadow:0 0 30px #f0c040,0 10px 40px #000;border:2px solid #f0c040}
 .reveal-card.mythic{box-shadow:0 0 40px #f05030,0 0 60px #f0503055,0 10px 40px #000;border:2px solid #f05030;animation:cardFlip .6s ease-out both,mythicGlow 1.5s infinite alternate}
 @keyframes mythicGlow{from{box-shadow:0 0 30px #f05030,0 10px 40px #000}to{box-shadow:0 0 60px #f05030,0 0 90px #f0503088,0 10px 40px #000}}
-.reveal-badge{position:absolute;top:6px;right:6px;background:#000d;color:#fc6;font:bold 12px sans-serif;padding:2px 7px;border-radius:4px}
+.reveal-badge{position:absolute;top:6px;right:6px;background:#000d;color:#fc6;font:bold 11px sans-serif;padding:2px 6px;border-radius:4px}
 .reveal-badge.rare{color:#f0c040}.reveal-badge.mythic{color:#f05030}
 .reveal-actions{display:flex;gap:12px}
 #col-album-view{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:6px}
-.album-filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;justify-content:center}
-.album-filters input{padding:8px 14px;border-radius:8px;border:1px solid #c99a3b;background:#1a120a;color:#eee;font:14px Georgia;min-width:200px}
-.album-filters select{padding:8px 12px;border-radius:8px;border:1px solid #c99a3b;background:#1a120a;color:#eee;font:13px Georgia;cursor:pointer}
-.album-filters .col-color-group{display:flex;gap:4px}
-.album-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;padding:8px;align-content:start}
-.album-grid::-webkit-scrollbar{width:10px}
-.album-grid::-webkit-scrollbar-track{background:#0006;border-radius:5px}
-.album-grid::-webkit-scrollbar-thumb{background:#c99a3b88;border-radius:5px}
-#album-empty{text-align:center;color:#888;padding:40px;font-size:15px;grid-column:1/-1}
 #gyv{position:fixed;inset:7vh 340px 7vh 3vw;background:#000e;border:2px solid #c99a3b;border-radius:12px;z-index:50;padding:14px;overflow:auto;display:none;flex-wrap:wrap;gap:8px;align-content:flex-start;--ch:15vh;box-shadow:0 0 60px #000,inset 0 0 40px #0008}
 #gyv.on{display:flex;animation:fadeIn .25s}
 @keyframes fadeIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
@@ -205,21 +196,25 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
 @keyframes confettiFall{0%{opacity:1;transform:translate(-50%,-50%) rotate(0)}100%{opacity:.3;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(720deg)}}
 .arrow{position:fixed;height:4px;pointer-events:none;z-index:98;transform-origin:0 50%;animation:arrowFade 1.3s ease-out forwards;border-radius:2px}
 @keyframes arrowFade{0%{opacity:0;filter:brightness(2)}15%{opacity:1;filter:brightness(1)}100%{opacity:0}}
-#card-detail{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:16px;pointer-events:none}
+#card-detail{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;pointer-events:none}
 #card-detail.on{display:flex;pointer-events:auto}
 .cd-backdrop{position:absolute;inset:0;background:#000e;backdrop-filter:blur(6px);cursor:pointer}
 .cd-content{position:relative;display:flex;gap:0;width:96vw;height:94vh;max-width:1700px;max-height:1000px;background:linear-gradient(145deg,#1a1410,#0c0806);border:2px solid #c99a3b;border-radius:16px;box-shadow:0 30px 100px #000,0 0 80px #c99a3b44;overflow:hidden;animation:cdIn .3s cubic-bezier(.2,.9,.3,1.1)}
 @keyframes cdIn{from{opacity:0;transform:scale(.94) translateY(20px)}to{opacity:1;transform:none}}
-.cd-image{flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:16px;background:#0008;max-width:60%}
-.cd-image img{max-height:calc(94vh - 32px);max-width:100%;width:auto;height:auto;border-radius:12px;box-shadow:0 20px 60px #000,0 0 40px #c99a3b22;display:block}
+.cd-image{flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:16px;background:#0008;max-width:60%;position:relative;overflow:hidden}
+.cd-image img{max-height:calc(94vh - 32px);max-width:100%;width:auto;height:auto;border-radius:12px;box-shadow:0 20px 60px #000,0 0 40px #c99a3b22;display:block;transition:transform .15s;cursor:zoom-in}
 .cd-image .token-ph{width:min(340px,50vw);aspect-ratio:.716;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:linear-gradient(160deg,#707070,#2b2b2b);border:3px solid #c9b36a;border-radius:14px;color:#fff;font:bold 28px Georgia;text-align:center;padding:20px;box-shadow:0 20px 60px #000}
 .cd-image .token-ph .tst{color:#fc6;font-size:32px}
-.cd-info{flex:1;min-width:320px;padding:22px 26px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;color:#e8dcc0;background:linear-gradient(180deg,#0f0b08,#1a1410)}
+.cd-info{flex:1;min-width:320px;padding:22px 26px 100px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;color:#e8dcc0;background:linear-gradient(180deg,#0f0b08,#1a1410);-webkit-overflow-scrolling:touch}
 .cd-info::-webkit-scrollbar{width:10px}
 .cd-info::-webkit-scrollbar-track{background:#0006;border-radius:5px}
 .cd-info::-webkit-scrollbar-thumb{background:#c99a3b88;border-radius:5px}
-.cd-close{position:absolute;top:12px;right:12px;width:42px;height:42px;padding:0;font-size:20px;line-height:1;background:linear-gradient(180deg,#e6b955,#c99a3b);z-index:10;box-shadow:0 3px 0 #6b4a17,0 6px 14px #000a}
-.cd-info h2{margin:0;font-size:26px;color:#e6c46f;text-shadow:0 2px 0 #000;padding-right:50px}
+.cd-close{position:absolute;top:12px;right:12px;width:48px;height:48px;padding:0;font-size:22px;line-height:1;background:linear-gradient(180deg,#e6b955,#c99a3b);z-index:10;box-shadow:0 3px 0 #6b4a17,0 6px 14px #000a;border-radius:50%}
+.cd-action{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:10;padding:16px 40px;font-size:18px;min-width:220px;background:linear-gradient(180deg,#a8e088,#5cb03c);color:#0a2a05;box-shadow:0 4px 0 #2a5a10,0 8px 20px #000a,0 0 30px #6f69;border-radius:12px;text-transform:uppercase;letter-spacing:1px}
+.cd-action:disabled{background:linear-gradient(180deg,#666,#444);color:#999;box-shadow:0 4px 0 #222,0 8px 20px #000a;opacity:.7;filter:none}
+.cd-action.danger{background:linear-gradient(180deg,#e08888,#c04040);color:#fff;box-shadow:0 4px 0 #601010,0 8px 20px #000a,0 0 30px #f66c}
+.cd-action.attack{background:linear-gradient(180deg,#f8b040,#c98020);color:#2a1a05;box-shadow:0 4px 0 #6b4a17,0 8px 20px #000a,0 0 30px #f93c}
+.cd-info h2{margin:0;font-size:26px;color:#e6c46f;text-shadow:0 2px 0 #000;padding-right:56px}
 .cd-type{font-style:italic;color:#b8a988;font-size:15px;padding-bottom:8px;border-bottom:1px solid #c99a3b33}
 .cd-mana{display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:6px 0}
 .mana-chip{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font:bold 13px sans-serif;border:1px solid #0008;box-shadow:0 1px 3px #000a,inset 0 -1px 2px #0005;text-shadow:0 1px 0 #fff4}
@@ -232,33 +227,114 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
 .cd-abil-item{background:#0008;padding:10px;border-radius:6px;border-left:3px solid #6af;margin-bottom:6px;font-size:13px;line-height:1.5;color:#dcd0b0;font-family:monospace}
 .cd-abil-item i{color:#8fa;font-style:normal;font-weight:bold}
 #cd-fx{background:#000a;padding:10px;border-radius:6px;font-size:11px;overflow-x:auto;color:#acf;border-left:3px solid #a8f;white-space:pre-wrap;font-family:monospace}
-@media(max-width:900px){.cd-content{flex-direction:column;width:98vw;height:98vh}.cd-image{max-width:none;max-height:50vh;padding:10px}.cd-image img{max-height:calc(50vh - 20px)}.cd-info{min-width:0;padding:14px}.cd-grid{grid-template-columns:1fr}}
-@media(max-width:1200px){aside{width:280px}#piles-col{min-width:74px}.pile-mini{width:56px;height:56px}.pile-mini .icon{font-size:22px}}
+#mobile-menu-toggle{display:none;position:fixed;top:12px;right:12px;z-index:55;width:52px;height:52px;padding:0;font-size:24px;line-height:1;border-radius:50%;box-shadow:0 4px 12px #000a,0 0 20px #c99a3b44}
+#mobile-aside{display:none;position:fixed;inset:0;background:#000f;z-index:54;padding:60px 16px 16px;flex-direction:column;gap:8px}
+#mobile-aside.on{display:flex}
+#mobile-aside #zoom{min-height:50vh;flex:1}
+#mobile-aside #log{max-height:30vh}
+#mobile-aside .mob-close{position:absolute;top:8px;left:8px;width:48px;height:48px;padding:0;font-size:20px;border-radius:50%}
+@media (max-width: 900px), (pointer: coarse){
+  body{flex-direction:column}
+  #board{margin:0;border-radius:0}
+  #main{border-width:4px;border-radius:8px}
+  aside{display:none}
+  #mobile-menu-toggle{display:flex;align-items:center;justify-content:center}
+  #piles-col{flex-direction:row;min-width:0;width:100%;padding:4px 8px;gap:8px;border-right:0;border-bottom:1px solid #c99a3b33;order:0}
+  .pile-stack{flex-direction:row;gap:4px}
+  .pile-stack .pile-label{display:none}
+  .pile-mini{width:44px;height:44px;border-radius:7px}
+  .pile-mini .icon{font-size:18px}
+  .pile-mini .cnt{font-size:10px;min-width:20px;height:20px;line-height:18px;bottom:-4px;right:-4px}
+  #board-body{flex-direction:column;gap:0}
+  #play-area{order:1}
+  .info{padding:4px 8px;min-height:auto;flex-wrap:wrap;gap:8px}
+  .life .die{min-width:54px;height:54px;font-size:24px}
+  .meta{font-size:11px}
+  #phasebar{padding:3px 4px}
+  #phasebar .ph{padding:2px 6px;font-size:9px}
+  #mid{padding:8px;gap:8px;min-height:60px;flex-wrap:wrap}
+  #mid button{padding:14px 20px;font-size:16px;min-height:52px;flex:1;min-width:120px}
+  #st{font-size:12px;width:100%;text-align:center}
+  .zone{padding:2px 4px;gap:3px;min-height:44px}
+  .lands{--ch:10vh;flex:.5}
+  .hand.me{--ch:22vh;min-height:24vh;flex-wrap:nowrap;overflow-x:auto;overflow-y:visible;justify-content:flex-start;align-items:flex-end;padding:6px 8px;gap:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .hand.me::-webkit-scrollbar{display:none}
+  .hand.me .card{margin:0;transform:none!important;flex:0 0 auto;width:calc(var(--ch)*.716)}
+  .hand.ai{--ch:7vh}
+  .hand.ai .card{margin:0 -6px;top:-1vh}
+  .zone:not(.hand):not(.lands) .card{--ch:12vh}
+  .cd-content{flex-direction:column;width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;border-radius:0;border:0}
+  .cd-image{max-width:none;max-height:55vh;padding:8px;flex:none;overflow:hidden}
+  .cd-image img{max-height:55vh;max-width:100%}
+  .cd-info{min-width:0;padding:14px 16px 100px;font-size:13px;flex:1;overflow-y:auto}
+  .cd-info h2{font-size:20px;padding-right:56px}
+  .cd-type{font-size:13px}
+  .cd-grid{grid-template-columns:1fr;gap:4px 12px;font-size:12px}
+  .cd-section h3{font-size:11px}
+  .cd-text{font-size:13px;padding:10px}
+  .cd-abil-item{font-size:12px;padding:8px}
+  .cd-close{top:8px;right:8px;width:44px;height:44px}
+  .cd-action{bottom:16px;left:16px;right:16px;transform:none;width:auto;min-width:0;padding:16px 20px;font-size:17px;min-height:56px}
+  #gallery,#collection{padding:10px 8px;gap:8px}
+  .gal-header h2,.col-header h2{font-size:17px}
+  .gal-stats,.col-stats{font-size:11px}
+  .gal-close,.col-close{padding:8px 14px;font-size:12px;min-height:44px}
+  .gal-filters,.album-filters{gap:6px}
+  .gal-filters input,.album-filters input{min-width:0;flex:1 1 100%;padding:10px 12px;min-height:44px}
+  .gal-filters select,.album-filters select{flex:1 1 auto;padding:10px;min-height:44px;font-size:12px}
+  .gal-color{width:40px;height:40px}
+  .gal-grid,.album-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px;padding:4px}
+  .gal-pagination{flex-wrap:wrap;gap:6px;padding:6px}
+  .gal-pagination .page-info{min-width:auto;font-size:12px}
+  .gal-pagination button{padding:8px 12px;font-size:12px;min-height:44px}
+  .gal-pagination select{min-height:44px}
+  #menu{padding:12px;gap:10px}
+  #menu h1{font-size:22px}
+  #menu .sub{font-size:13px}
+  .menu-hero{gap:8px}
+  .hero-card{width:150px;padding:14px 10px}
+  .hero-card .icon{font-size:30px}
+  .hero-card h2{font-size:14px}
+  .hero-card p{font-size:10px}
+  #play{padding:16px 40px;font-size:18px;min-height:56px;width:100%;max-width:340px}
+  .reveal-card{width:100px;height:140px}
+  .reveal-title{font-size:18px}
+  .reveal-actions button{flex:1;min-height:52px;font-size:15px}
+  .reveal-cards{gap:6px}
+  #gyv{inset:0;--ch:16vh;padding:10px;gap:6px;border-radius:0}
+  .pack-visual{font-size:80px}
+  #open-pack-btn{padding:16px 30px;font-size:16px;min-height:56px}
+  #phasebar .ph{font-size:8px;padding:2px 4px}
+}
+@media (max-width: 500px){
+  .zone:not(.hand):not(.lands) .card{--ch:11vh}
+  .hand.me{--ch:20vh}
+  .gal-grid,.album-grid{grid-template-columns:repeat(auto-fill,minmax(95px,1fr))}
+}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation-duration:.01s!important}}
 </style>
 </head>
 <body>
-<!-- ... (estructura HTML idéntica a la versión anterior, con los mismos IDs y clases) ... -->
 <div id="board">
 <div id="main">
   <div id="phasebar">
-    <span class="ph" data-p="m1">Main 1</span>
+    <span class="ph" data-p="m1">Principal 1</span>
     <span class="ph" data-p="c">⚔ Combate</span>
-    <span class="ph" data-p="m2">Main 2</span>
+    <span class="ph" data-p="m2">Principal 2</span>
     <span class="ph" data-p="end">Fin</span>
   </div>
   <div id="board-body">
     <div id="piles-col">
       <div class="pile-stack ai">
         <div class="pile-label">IA</div>
-        <div class="pile-mini lib" id="aiLib" title="Biblioteca IA">📚<span class="cnt">0</span></div>
-        <div class="pile-mini gy empty" id="aiGy" title="Cementerio IA (click para ver)">💀<span class="cnt">0</span></div>
-        <div class="pile-mini ex empty" id="aiEx" title="Exilio IA (click para ver)">⛓<span class="cnt">0</span></div>
+        <div class="pile-mini lib" id="aiLib">📚<span class="cnt">0</span></div>
+        <div class="pile-mini gy empty" id="aiGy">💀<span class="cnt">0</span></div>
+        <div class="pile-mini ex empty" id="aiEx">⛓<span class="cnt">0</span></div>
       </div>
       <div class="pile-stack me">
-        <div class="pile-mini lib" id="myLib" title="Biblioteca">📚<span class="cnt">0</span></div>
-        <div class="pile-mini gy empty" id="myGy" title="Cementerio (click para ver)">💀<span class="cnt">0</span></div>
-        <div class="pile-mini ex empty" id="myEx" title="Exilio (click para ver)">⛓<span class="cnt">0</span></div>
+        <div class="pile-mini lib" id="myLib">📚<span class="cnt">0</span></div>
+        <div class="pile-mini gy empty" id="myGy">💀<span class="cnt">0</span></div>
+        <div class="pile-mini ex empty" id="myEx">⛓<span class="cnt">0</span></div>
         <div class="pile-label">TÚ</div>
       </div>
     </div>
@@ -287,6 +363,13 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
   <div id="log"></div>
 </aside>
 </div>
+<button id="mobile-menu-toggle">☰</button>
+<div id="mobile-aside">
+  <button class="mob-close">✕</button>
+  <div id="zoom">Toca una carta para verla</div>
+  <div id="tools"><button id="rst2">Reiniciar</button><button id="menuB2">Paquetes</button><button id="auto2">Piloto: NO</button></div>
+  <div id="log"></div>
+</div>
 <div id="gyv"></div>
 <div id="flash"></div>
 <div id="menu">
@@ -294,7 +377,7 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
   <p class="sub">Elige dos mazos. Se unirán en un mazo de 40 cartas. La IA jugará con otros dos al azar.</p>
   <div class="menu-hero">
     <button id="btn-beginner" class="hero-card"><span class="icon">🎁</span><h2>Mazos de Principiante</h2><p>Los 10 mazos de la caja de iniciación</p></button>
-    <button id="btn-advanced" class="hero-card"><span class="icon">📦</span><h2>Mazos Avanzados</h2><p>Los 46 temas de Jumpstart Foundations</p></button>
+    <button id="btn-advanced" class="hero-card"><span class="icon">📦</span><h2>Mazos Avanzados</h2><p>Los 46 temas de Jumpstart Cimientos</p></button>
     <button id="btn-gallery" class="hero-card"><span class="icon">📖</span><h2>Galería</h2><p>Todas las cartas con filtros y paginación</p></button>
     <button id="btn-collection" class="hero-card"><span class="icon">🎴</span><h2>Colección</h2><p>Abre sobres y completa tu álbum</p></button>
   </div>
@@ -320,7 +403,7 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
   <button id="play" disabled>Jugar</button>
 </div>
 <div id="gallery">
-  <div class="gal-header"><h2>📖 Galería Foundations</h2><span class="gal-stats" id="gal-stats">Cargando…</span><button id="gal-close" class="gal-close">✕ Cerrar</button></div>
+  <div class="gal-header"><h2>📖 Galería Cimientos</h2><span class="gal-stats" id="gal-stats">Cargando…</span><button id="gal-close" class="gal-close">✕ Cerrar</button></div>
   <div class="gal-filters">
     <input type="text" id="gal-search" placeholder="🔍 Buscar por nombre…">
     <div class="gal-color-group">
@@ -334,7 +417,7 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
     </div>
     <select id="gal-type"><option value="all">Todos los tipos</option><option value="Creature">Criatura</option><option value="Instant">Instantáneo</option><option value="Sorcery">Conjuro</option><option value="Artifact">Artefacto</option><option value="Enchantment">Encantamiento</option><option value="Land">Tierra</option><option value="Planeswalker">Planeswalker</option></select>
     <select id="gal-rarity"><option value="all">Todas las rarezas</option><option value="common">Común</option><option value="uncommon">Infrecuente</option><option value="rare">Rara</option><option value="mythic">Mítica</option></select>
-    <select id="gal-set"><option value="all">Ambos sets</option><option value="fdn">FDN · Foundations</option><option value="j25">J25 · Jumpstart</option></select>
+    <select id="gal-set"><option value="all">Ambos sets</option><option value="fdn">FDN · Cimientos</option><option value="j25">J25 · Jumpstart 2025</option></select>
   </div>
   <div class="gal-grid" id="gal-grid"></div>
   <div class="gal-pagination">
@@ -350,7 +433,7 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
   <div id="col-packs-view">
     <div class="pack-machine">
       <div class="pack-visual" id="pack-visual">📦</div>
-      <div class="pack-info"><b>Sobre de Foundations</b><br>6 cartas · 4 comunes, 1 infrecuente, 1 rara o mítica<br><span id="pack-count" style="color:#fc6">Sobres abiertos: 0</span></div>
+      <div class="pack-info"><b>Sobre de Cimientos</b><br>14 cartas · 6 comunes, 3 infrecuentes, 1 rara/mítica, 2 comodines, 1 foil, 1 tierra<br><span id="pack-count" style="color:#fc6">Sobres abiertos: 0</span></div>
       <button id="open-pack-btn">Abrir sobre</button>
     </div>
   </div>
@@ -393,22 +476,27 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
         <div><b>Fuerza/Resistencia:</b> <span id="cd-pt">—</span></div>
         <div><b>Lealtad:</b> <span id="cd-loy">—</span></div>
       </div>
-      <div class="cd-section"><h3>Keywords</h3><div id="cd-kw">—</div></div>
+      <div class="cd-section"><h3>Palabras clave</h3><div id="cd-kw">—</div></div>
       <div class="cd-section"><h3>Texto de reglas</h3><div id="cd-text" class="cd-text">—</div></div>
       <div class="cd-section" id="cd-abil-section"><h3>Habilidades activadas</h3><div id="cd-abil">—</div></div>
-      <div class="cd-section" id="cd-fx-section"><h3>Efecto detectado (debug)</h3><div id="cd-fx">—</div></div>
+      <div class="cd-section" id="cd-fx-section"><h3>Efecto detectado</h3><div id="cd-fx">—</div></div>
     </div>
+    <button class="cd-action" id="cd-action-btn" style="display:none"></button>
   </div>
 </div>
 <script src="cartas/datos.js"></script>
 <script>
 /* ============================================================
-   AUDIO Y FX (Se mantienen igual)
+   AUDIO
 ============================================================ */
 let _ac=null;
 function AC(){if(!_ac)try{_ac=new (window.AudioContext||window.webkitAudioContext)()}catch(e){};return _ac}
 function snd(freq,dur,type='sine',vol=.1,sweep=null){const ctx=AC();if(!ctx)return;const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.setValueAtTime(freq,ctx.currentTime);if(sweep)o.frequency.exponentialRampToValueAtTime(sweep,ctx.currentTime+dur);g.gain.setValueAtTime(vol,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+dur)}
 const SFX={tap:()=>snd(280,.06,'triangle',.15,180),draw:()=>snd(700,.08,'sine',.08,900),cast:()=>snd(500,.15,'sine',.1,900),hit:()=>snd(120,.15,'sawtooth',.12,60),big:()=>{snd(80,.3,'sawtooth',.2,40);snd(160,.2,'square',.1,80)},kill:()=>{snd(200,.25,'square',.15,60);setTimeout(()=>snd(120,.2,'sawtooth',.1,40),80)},heal:()=>snd(600,.15,'sine',.1,1000),win:()=>{[523,659,784,1047].forEach((f,i)=>setTimeout(()=>snd(f,.25,'sine',.15,0),i*110))},lose:()=>{[392,349,294,220].forEach((f,i)=>setTimeout(()=>snd(f,.3,'triangle',.12,0),i*130))},mull:()=>snd(400,.4,'triangle',.1,150),turn:()=>snd(440,.1,'sine',.08,550),swing:()=>{snd(300,.18,'sawtooth',.08,150);setTimeout(()=>snd(180,.12,'triangle',.06,90),60)},act:()=>snd(560,.12,'sine',.1,800),packOpen:()=>{snd(660,.15,'sine',.12,880);setTimeout(()=>snd(880,.15,'sine',.12,1100),120);setTimeout(()=>snd(1100,.3,'sine',.15,1320),240)},rare:()=>{[800,1000,1200,1600].forEach((f,i)=>setTimeout(()=>snd(f,.2,'triangle',.15,0),i*80))},mythic:()=>{[600,800,1000,1200,1600,2000].forEach((f,i)=>setTimeout(()=>snd(f,.25,'sine',.18,0),i*90))}};
+
+/* ============================================================
+   FX
+============================================================ */
 function burst(x,y,color='#fc6',n=12){for(let i=0;i<n;i++){const p=document.createElement('div');p.className='particle';const a=Math.random()*Math.PI*2,sp=40+Math.random()*90;p.style.cssText=`left:${x}px;top:${y}px;background:${color};--dx:${Math.cos(a)*sp}px;--dy:${Math.sin(a)*sp}px`;document.body.appendChild(p);setTimeout(()=>p.remove(),700)}}
 function burstAt(el,color,n){if(!el)return;const r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,color,n)}
 function shake(){const m=$('#main');m.classList.remove('shake');void m.offsetWidth;m.classList.add('shake')}
@@ -419,69 +507,329 @@ function shockwave(c){const el=document.getElementById('c'+c.id);if(!el)return;c
 function arrow(x1,y1,x2,y2,color='#f93'){const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy),ang=Math.atan2(dy,dx);const el=document.createElement('div');el.className='arrow';el.style.cssText=`left:${x1}px;top:${y1}px;width:${len}px;background:linear-gradient(90deg,${color},transparent);transform:rotate(${ang}rad);box-shadow:0 0 12px ${color}`;document.body.appendChild(el);setTimeout(()=>el.remove(),1400)}
 function tweenLife(el,from,to){const start=performance.now(),dur=420;function frame(t){const p=Math.min((t-start)/dur,1);const v=Math.round(from+(to-from)*(1-Math.pow(1-p,3)));el.textContent=v;if(p<1)requestAnimationFrame(frame)}requestAnimationFrame(frame)}
 function confetti(){const colors=['#fc6','#f66','#6f6','#66f','#f6f','#6ff','#ff6'];for(let i=0;i<60;i++){setTimeout(()=>{const p=document.createElement('div');p.className='particle confetti';p.style.cssText=`left:${Math.random()*100}vw;top:-20px;background:${colors[i%7]};--dx:${(Math.random()-.5)*260}px;--dy:${window.innerHeight+60}px`;document.body.appendChild(p);setTimeout(()=>p.remove(),2600)},i*28)}}
+
+/* ============================================================
+   UTIL
+============================================================ */
 const $=s=>document.querySelector(s),sleep=ms=>new Promise(r=>setTimeout(r,ms)),R=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
-const reg={};let uid=1,di=0,G,POOL=[],BASIC={},BYN={},TOKENS={},picked=[],menuMode=null,loadingCancelled=false;
+const reg={};const TMPL={};let uid=1,di=0,G,POOL=[],BASIC={},BYN={},TOKENS={},picked=[],menuMode=null,loadingCancelled=false;
 const BASIC_NAMES={'Plains':'W','Island':'U','Swamp':'B','Mountain':'R','Forest':'G'};
 const KWS=['flying','first strike','double strike','deathtouch','lifelink','menace','reach','trample','vigilance','haste','indestructible','defender','flash','prowess'];
-const LANG_ES=false;const ES={Plains:'Llanura',Island:'Isla',Swamp:'Pantano',Mountain:'Montaña',Forest:'Bosque'};
+const LANG_ES=true;const ES={Plains:'Llanura',Island:'Isla',Swamp:'Pantano',Mountain:'Montaña',Forest:'Bosque'};
+
+const ES_THEMES={
+  'Cats':'Gatos','Vampires':'Vampiros','Healing':'Curación','Pirates':'Piratas','Wizards':'Hechiceros',
+  'Undead':'No muertos','Goblins':'Trasgos','Inferno':'Infierno','Elves':'Elfos','Primal':'Primigenio',
+  'Angels':'Ángeles','Armed':'Armados','Bookworms':'Ratones de biblioteca','Bloody':'Sangrientos',
+  'Dragons':'Dragones','Healers':'Sanadores','Soldiers':'Soldados','Merfolk':'Tritones','Zombies':'Zombis',
+  'Giants':'Gigantes','Beasts':'Bestias','Spirits':'Espíritus','Illusions':'Ilusiones','Demons':'Demonios',
+  'Devils':'Diablos','Elementals':'Elementales','Knights':'Caballeros','Sphinxes':'Esfinges','Rats':'Ratas',
+  'Wolves':'Lobos','Clerics':'Clérigos','Faeries':'Hadas','Horrors':'Horrores','Hydras':'Hidras',
+  'Pegasus':'Pegasos','Leviathans':'Leviatanes','Nightmares':'Pesadillas','Phoenixes':'Fénix',
+  'Wurms':'Sierpes','Unicorns':'Unicornios','Krakens':'Krakens','Skeletons':'Esqueletos',
+  'Hellions':'Avernos','Treefolk':'Pueblo arbóreo','Griffins':'Grifos'
+};
+const ES_KWS={
+  'flying':'Vuela','first strike':'Daña primero','double strike':'Daña dos veces','deathtouch':'Toque mortal',
+  'lifelink':'Vínculo vital','menace':'Amenaza','reach':'Alcance','trample':'Arrolla',
+  'vigilance':'Vigilancia','haste':'Prisa','indestructible':'Indestructible','defender':'Defensor',
+  'flash':'Destello','prowess':'Destreza'
+};
+function translateTypeToEs(t){
+  if(!t)return '—';
+  const map=[
+    [/Legendary/g,'Legendario/a'],[/Basic/g,'Básica'],[/Artifact/g,'Artefacto'],[/Enchantment/g,'Encantamiento'],
+    [/Creature/g,'Criatura'],[/Instant/g,'Instantáneo'],[/Sorcery/g,'Conjuro'],[/Land/g,'Tierra'],
+    [/Planeswalker/g,'Planeswalker'],[/Equipment/g,'Equipo'],[/Aura/g,'Aura'],[/Token/g,'Ficha'],
+    [/Plains/g,'Llanura'],[/Island/g,'Isla'],[/Swamp/g,'Pantano'],[/Mountain/g,'Montaña'],[/Forest/g,'Bosque'],
+    [/Human/g,'Humano'],[/Soldier/g,'Soldado'],[/Warrior/g,'Guerrero'],[/Knight/g,'Caballero'],
+    [/Wizard/g,'Hechicero'],[/Cleric/g,'Clérigo'],[/Rogue/g,'Bribón'],[/Pirate/g,'Pirata'],
+    [/Vampire/g,'Vampiro'],[/Zombie/g,'Zombi'],[/Skeleton/g,'Esqueleto'],[/Spirit/g,'Espíritu'],
+    [/Angel/g,'Ángel'],[/Demon/g,'Demonio'],[/Dragon/g,'Dragón'],[/Goblin/g,'Trasgo'],
+    [/Elf/g,'Elfo'],[/Beast/g,'Bestia'],[/Cat/g,'Gato'],[/Wolf/g,'Lobo'],[/Elemental/g,'Elemental'],
+    [/Merfolk/g,'Tritón'],[/Bird/g,'Ave'],[/Giant/g,'Gigante'],[/Shaman/g,'Chamán'],[/Druid/g,'Druida']
+  ];
+  let out=t;
+  for(const[rx,rep]of map)out=out.replace(rx,rep);
+  return out;
+}
+function translateRulesToEs(o){
+  if(!o)return '';
+  let s=o;
+  const rules=[
+    [/Flying/g,'Vuela'],[/First strike/g,'Daña primero'],[/Double strike/g,'Daña dos veces'],
+    [/Deathtouch/g,'Toque mortal'],[/Lifelink/g,'Vínculo vital'],[/Menace/g,'Amenaza'],
+    [/Reach/g,'Alcance'],[/Trample/g,'Arrolla'],[/Vigilance/g,'Vigilancia'],
+    [/Haste/g,'Prisa'],[/Indestructible/g,'Indestructible'],[/Defender/g,'Defensor'],
+    [/Flash/g,'Destello'],[/Prowess/g,'Destreza'],
+    [/Whenever equipped creature attacks, it gets ([+-]\d+\/[+-]\d+) and gains ([^.]+) until end of turn\./gi,
+     (_,pt,kw)=>`Siempre que la criatura equipada ataque, obtiene ${pt} y gana ${kw.toLowerCase()} hasta el final del turno.`],
+    [/Whenever ([^,]+) enters(?: the battlefield)?, /gi,'Siempre que $1 entre al campo de batalla, '],
+    [/When ([^,]+) enters(?: the battlefield)?, /gi,'Cuando $1 entre al campo de batalla, '],
+    [/Whenever ([^,]+) attacks, /gi,'Siempre que $1 ataque, '],
+    [/Whenever ([^,]+) dies, /gi,'Siempre que $1 muera, '],
+    [/Enchanted creature can't attack or block\./gi,'La criatura encantada no puede atacar ni bloquear.'],
+    [/Enchant creature/gi,'Encantar criatura'],
+    [/Equipped creature gets ([+-]\d+\/[+-]\d+)/gi,'La criatura equipada obtiene $1'],
+    [/Enchanted creature gets ([+-]\d+\/[+-]\d+)/gi,'La criatura encantada obtiene $1'],
+    [/Target creature gets ([+-]\d+\/[+-]\d+) until end of turn\./gi,'La criatura objetivo obtiene $1 hasta el final del turno.'],
+    [/Destroy target creature\./gi,'Destruye la criatura objetivo.'],
+    [/Exile target creature\./gi,'Exilia la criatura objetivo.'],
+    [/Counter target spell\./gi,'Contrarresta el hechizo objetivo.'],
+    [/Draw (a|one) card\./gi,'Roba una carta.'],
+    [/Draw (two|2) cards\./gi,'Roba dos cartas.'],
+    [/Draw (three|3) cards\./gi,'Roba tres cartas.'],
+    [/You gain (\d+) life\./gi,'Ganas $1 vidas.'],
+    [/deals (\d+) damage to any target\./gi,'hace $1 puntos de daño a cualquier objetivo.'],
+    [/deals (\d+) damage to target creature\./gi,'hace $1 puntos de daño a la criatura objetivo.'],
+    [/Create (a|one) (\d+\/\d+) ([^.]+) creature token\./gi,'Crea una ficha de criatura $3 $2.'],
+    [/Equip (\{[^}]+\})/gi,'Equipar $1'],
+    [/until end of turn/gi,'hasta el final del turno'],
+    [/you control/gi,'que controlas'],
+    [/target creature/gi,'la criatura objetivo'],
+    [/target opponent/gi,'el oponente objetivo'],
+    [/loses (\d+) life/gi,'pierde $1 vidas'],
+    [/you gain (\d+) life/gi,'ganas $1 vidas'],
+    [/Put a \+1\/\+1 counter on/gi,'Pon un contador +1/+1 sobre'],
+    [/Search your library for/gi,'Busca en tu biblioteca'],
+    [/then shuffle\./gi,'luego baraja.'],
+    [/Scry (\d+)\./gi,'Adivina $1.'],
+    [/Mill (\d+) cards?\./gi,'Muele $1 cartas.'],
+    [/This creature enters tapped\./gi,'Esta criatura entra girada.'],
+    [/This land enters tapped\./gi,'Esta tierra entra girada.'],
+    [/Add (\{[^}]+\})\./gi,'Agrega $1.']
+  ];
+  for(const[rx,rep]of rules)s=s.replace(rx,rep);
+  return s;
+}
+const ES_CARD_CACHE={};
+async function fetchSpanishCardData(card){
+  if(!card||!card.name)return null;
+  if(ES_CARD_CACHE[card.name])return ES_CARD_CACHE[card.name];
+  try{
+    const q=encodeURIComponent(`!"${card.name}" lang:es`);
+    const r=await fetch(`https://api.scryfall.com/cards/search?q=${q}`);
+    if(r.ok){
+      const j=await r.json();
+      if(j.data&&j.data[0]){
+        const c=j.data[0];
+        const res={
+          name:c.printed_name||card.pname,
+          type:c.printed_type_line||translateTypeToEs(card.type),
+          text:c.printed_text||translateRulesToEs(card.oracle)
+        };
+        ES_CARD_CACHE[card.name]=res;
+        return res;
+      }
+    }
+  }catch(e){}
+  const fallback={
+    name:card.pname,
+    type:translateTypeToEs(card.type),
+    text:translateRulesToEs(card.oracle)
+  };
+  ES_CARD_CACHE[card.name]=fallback;
+  return fallback;
+}
+
 const T0=[['Ángeles','W','angel'],['Soldados','W','soldier'],['Tritones','U','merfolk'],['Hechiceros','U','wizard'],['Vampiros','B','vampire'],['Zombis','B','zombie'],['Dragones','R','dragon'],['Duendes','R','goblin'],['Elfos','G','elf'],['Bestias','G','beast']].map(([n,c,k])=>({n,c,k}));
 let T=window.PAQUETES||T0;
 const CC={W:'#e8dca0',U:'#6fb4f0',B:'#a58cc0',R:'#f07a5a',G:'#6fcf7a'};
 const bfAll=()=>G.p.flatMap(P=>P.bf),alive=c=>bfAll().includes(c),owner=c=>G.p.find(P=>P.bf.includes(c));
 const mark=(c,k)=>{const e=document.getElementById('c'+c.id);e&&e.classList.add(k)};
-const log=t=>{const d=document.createElement('div');d.textContent=t;$('#log').append(d);$('#log').scrollTop=1e9};
+const log=t=>{const d=document.createElement('div');d.textContent=t;const lg=$('#log');if(lg){lg.append(d);lg.scrollTop=1e9}};
+const isTouch=matchMedia('(pointer: coarse)').matches||navigator.maxTouchPoints>0;
+
+/* HOVER ZOOM PC */
+document.addEventListener('mouseover',e=>{
+  if(isTouch) return;
+  if($('#card-detail')?.classList.contains('on')) return;
+  const x=e.target.closest('.card[data-i]');
+  if(!x||!G) return;
+  const c=reg[x.dataset.i];
+  if(!c) return;
+  const zoom=$('#zoom');
+  if(!zoom) return;
+  zoom.innerHTML=c.img?`<img src="${c.img}" alt="${c.pname}">`:`<b style="font-size:22px">${c.pname}<br>Ficha ${c.pow}/${c.tou}</b>`;
+});
 
 /* ============================================================
-   MODAL DE DETALLE (Se mantiene igual)
+   MODAL DE DETALLE
 ============================================================ */
+let currentDetailCard=null;
 function renderCost(cost){if(!cost)return '<i style="color:#888">—</i>';return cost.replace(/\{([^}]+)\}/g,(_,s)=>{let bg='#888',color='#fff';if(s==='W'){bg='#e8dca0';color='#2a1a05'}else if(s==='U'){bg='#6fb4f0'}else if(s==='B'){bg='#a58cc0'}else if(s==='R'){bg='#f07a5a'}else if(s==='G'){bg='#6fcf7a';color='#2a1a05'}else if(s==='X'){bg='#c99a3b';color='#2a1a05'}else if(s==='C'){bg='#bbb';color='#111'}else if(/^\d+$/.test(s)){bg='#999';color='#111'}return `<span class="mana-chip" style="background:${bg};color:${color}">${s}</span>`})}
-function showCardDetail(c){if(!c)return;const img=$('#cd-img'),ph=$('.cd-image .token-ph');if(c.img||c.small){img.src=c.img||c.small;img.style.display='block';if(ph)ph.remove()}else{img.style.display='none';if(!ph){const p=document.createElement('div');p.className='token-ph';p.innerHTML=`<div class="tst">◈</div><div>${c.pname||'Token'}</div><div style="font-size:18px;color:#fc6">${c.pow||0} / ${c.tou||0}</div><div style="font-size:13px;color:#bbb">${c.type||''}</div>`;$('.cd-image').appendChild(p)}}$('#cd-name').textContent=c.pname||'—';$('#cd-type').textContent=c.type||'—';$('#cd-mana').innerHTML=renderCost(c.cost);$('#cd-cmc').textContent=c.cmc!==undefined?c.cmc:'—';$('#cd-colors').innerHTML=c.col&&c.col.length?c.col.map(x=>`<span class="mana-chip" style="background:${CC[x]||'#888'};color:#111">${x}</span>`).join(''):'—';const rmap={common:'Común',uncommon:'Infrecuente',rare:'Rara',mythic:'Mítica'};$('#cd-rarity').textContent=rmap[c.rarity]||c.rarity||'—';$('#cd-set').textContent=(c.set||'').toUpperCase()||'—';$('#cd-pt').textContent=c.cr?`${c.pow}/${c.tou}`:'—';$('#cd-loy').textContent=c.pw?c.loy:'—';$('#cd-kw').innerHTML=c.kw&&c.kw.length?c.kw.map(k=>`<span class="kw-chip">${k}</span>`).join(''):'<i style="color:#888">Sin keywords</i>';$('#cd-text').textContent=c.oracle||'(sin texto de reglas disponible)';if(c.abil&&c.abil.length){$('#cd-abil-section').style.display='';$('#cd-abil').innerHTML=c.abil.map(a=>{const tags=[];if(a.tap)tags.push('gira');if(a.sac)tags.push('sacrifica esta');if(a.sacOther)tags.push('sacrifica otra');if(a.disc)tags.push('descarta');if(a.payLife)tags.push('paga '+a.payLife+' vida');if(a.loy!==undefined)tags.push('lealtad '+(a.loy>0?'+':'')+a.loy);return `<div class="cd-abil-item">${a.txt}${tags.length?' <i>['+tags.join(' · ')+']</i>':''}</div>`}).join('')}else $('#cd-abil-section').style.display='none';if(c.fx){$('#cd-fx-section').style.display='';$('#cd-fx').textContent=JSON.stringify(c.fx,null,2)}else $('#cd-fx-section').style.display='none';$('#card-detail').classList.add('on')}
-function hideCardDetail(){$('#card-detail').classList.remove('on')}
+
+function computeAction(card){
+  if(!G||G.over)return null;
+  const me=G.p[0],m=G.mode;
+  const inHand=me.hand.includes(card);
+  const onField=me.bf.includes(card);
+  if(inHand){
+    if(card.ld){
+      if(m==='main1'||m==='main2'){
+        if(me.landPlayed) return {label:'Tierra ya jugada',style:'',disabled:true,exec:null};
+        return {label:'🃏 Jugar tierra',style:'',exec:()=>{hideCardDetail();me.landPlayed=1;me.hand.splice(me.hand.indexOf(card),1);playLand(me,card)}};
+      }
+    } else if(m==='main1'||m==='main2'||m==='prio'){
+      if(!plan(me,card)) return {label:'Sin maná',style:'',disabled:true,exec:null};
+      if(card.fx&&card.fx.k==='ctrs') return {label:'Solo en respuesta',style:'',disabled:true,exec:null};
+      if(card.fx&&card.fx.k==='modal') return {label:'▶ Lanzar',style:'',exec:()=>{hideCardDetail();G.busy=1;cast(me,card).then(()=>{G.busy=0;render()})}};
+      if(isSp(card)&&card.fx&&/^(dmg|destroy|pump|pac|ctr|regen|bounce|tutor|fight_you|bite_you|stomp|primal_might|dmg_gain_tapped|dmg_gain_combat|dmg_controller|debuff_gain|dmg_tapped|destroy_tapped)$/.test(card.fx.k)) return {label:'🎯 Elegir objetivo',style:'',exec:()=>{hideCardDetail();G.prev=m;G.mode='target';G.pend=card;render()}};
+      if(card.eqp&&card.eqp.aura) return {label:'🎯 Elegir objetivo',style:'',exec:()=>{hideCardDetail();G.prev=m;G.mode='target';G.pend=card;render()}};
+      return {label:'▶ Lanzar',style:'',exec:()=>{hideCardDetail();G.busy=1;cast(me,card).then(()=>{G.busy=0;render()})}};
+    }
+    return {label:'No jugable ahora',style:'',disabled:true,exec:null};
+  }
+  if(onField){
+    if(m==='atk'&&card.cr&&!card.tapped&&!card.sick&&!card.pac&&!has(card,'defender')){
+      if(card.sel) return {label:'✓ Quitar del ataque',style:'attack',exec:()=>{card.sel=0;hideCardDetail();render()}};
+      return {label:'⚔ Marcar para atacar',style:'attack',exec:()=>{card.sel=1;hideCardDetail();render()}};
+    }
+    if(m==='block'&&card.cr&&!card.tapped&&!card.pac&&!card.cantBlock){
+      return {label:'🛡 Seleccionar bloqueador',style:'',exec:()=>{hideCardDetail();if(G.sb)G.sb.sel=0;G.sb=card;card.sel=1;render()}};
+    }
+    if((m==='main1'||m==='main2'||m==='prio')&&card.abil&&card.abil.length){
+      const ok=card.abil.filter(a=>canAct(me,card,a));
+      if(ok.length) return {label:'⚡ Activar habilidad',style:'',exec:async()=>{hideCardDetail();
+        const a=ok.length>1?ok[pick('Habilidad de '+card.pname+':',ok.map(x=>translateRulesToEs(x.txt)))||0]:ok[0];
+        if(!a)return;G.busy=1;await activate(me,card,a);G.busy=0;render()}};
+    }
+    if((m==='main1'||m==='main2')&&card.eqp&&!card.eqp.aura&&card.eqp.cost){
+      if(!plan(me,{cost:card.eqp.cost})) return {label:'Sin maná para equipar',style:'',disabled:true,exec:null};
+      const lbl=(card.on&&alive(card.on))?'🔄 Re-equipar':'🔧 Equipar';
+      return {label:lbl,style:'',exec:()=>{hideCardDetail();G.prev=m;G.mode='target';G.pend=card;render()}};
+    }
+  }
+  return null;
+}
+
+function showCardDetail(card){
+  if(!card)return;
+  currentDetailCard=card;
+  const img=$('#cd-img'),ph=$('.cd-image .token-ph');
+  if(card.img||card.small){img.src=card.img||card.small;img.style.display='block';img.style.transform='';if(ph)ph.remove()}
+  else{img.style.display='none';if(!ph){const p=document.createElement('div');p.className='token-ph';p.innerHTML=`<div class="tst">◈</div><div>${card.pname||'Ficha'}</div><div style="font-size:18px;color:#fc6">${card.pow||0} / ${card.tou||0}</div><div style="font-size:13px;color:#bbb">${translateTypeToEs(card.type)}</div>`;$('.cd-image').appendChild(p)}}
+  const cachedEs=ES_CARD_CACHE[card.name];
+  $('#cd-name').textContent=(cachedEs&&cachedEs.name)||card.pname||'—';
+  $('#cd-type').textContent=(cachedEs&&cachedEs.type)||card.ptype||translateTypeToEs(card.type);
+  $('#cd-mana').innerHTML=renderCost(card.cost);
+  $('#cd-cmc').textContent=card.cmc!==undefined?card.cmc:'—';
+  $('#cd-colors').innerHTML=card.col&&card.col.length?card.col.map(x=>`<span class="mana-chip" style="background:${CC[x]||'#888'};color:#111">${x}</span>`).join(''):'<span style="color:#aaa">Incolora</span>';
+  const rmap={common:'Común',uncommon:'Infrecuente',rare:'Rara',mythic:'Mítica'};
+  $('#cd-rarity').textContent=rmap[card.rarity]||card.rarity||'—';
+  $('#cd-set').textContent=(card.set||'').toUpperCase()||'—';
+  $('#cd-pt').textContent=card.cr?`${card.pow}/${card.tou}`:'—';
+  $('#cd-loy').textContent=card.pw?card.loy:'—';
+  $('#cd-kw').innerHTML=card.kw&&card.kw.length?card.kw.map(k=>`<span class="kw-chip">${ES_KWS[k]||k}</span>`).join(''):'<i style="color:#888">Sin palabras clave</i>';
+  const initialEsText=(cachedEs&&cachedEs.text)||card.ptext||translateRulesToEs(card.oracle);
+  $('#cd-text').textContent=initialEsText||'(sin texto de reglas disponible)';
+  if(!cachedEs&&!card.ptext&&card.oracle&&!card.isToken){
+    fetchSpanishCardData(card).then(esData=>{
+      if(currentDetailCard===card&&esData){
+        if(esData.name)$('#cd-name').textContent=esData.name;
+        if(esData.type)$('#cd-type').textContent=esData.type;
+        if(esData.text)$('#cd-text').textContent=esData.text;
+      }
+    });
+  }
+  if(card.abil&&card.abil.length){
+    $('#cd-abil-section').style.display='';
+    $('#cd-abil').innerHTML=card.abil.map(a=>{
+      const tags=[];if(a.tap)tags.push('gira');if(a.sac)tags.push('sacrifica esta');if(a.sacOther)tags.push('sacrifica otra');if(a.disc)tags.push('descarta');if(a.payLife)tags.push('paga '+a.payLife+' vida');if(a.loy!==undefined)tags.push('lealtad '+(a.loy>0?'+':'')+a.loy);
+      return `<div class="cd-abil-item">${translateRulesToEs(a.txt)}${tags.length?' <i>['+tags.join(' · ')+']</i>':''}</div>`;
+    }).join('');
+  } else $('#cd-abil-section').style.display='none';
+  if(card.fx){$('#cd-fx-section').style.display='';$('#cd-fx').textContent=JSON.stringify(card.fx,null,2)}else $('#cd-fx-section').style.display='none';
+  const action=computeAction(card);
+  const btn=$('#cd-action-btn');
+  if(action){btn.style.display='block';btn.textContent=action.label;btn.className='cd-action '+(action.style||'');btn.disabled=!!action.disabled;btn.onclick=(e)=>{e.stopPropagation();if(action.exec)action.exec()}}
+  else btn.style.display='none';
+  $('#card-detail').classList.add('on');
+}
+function hideCardDetail(){$('#card-detail').classList.remove('on');currentDetailCard=null}
 document.querySelector('#card-detail .cd-close').onclick=hideCardDetail;
 document.querySelector('#card-detail .cd-backdrop').onclick=hideCardDetail;
 document.addEventListener('contextmenu',e=>{const x=e.target.closest('.card[data-i]');if(x&&G&&reg[x.dataset.i]){e.preventDefault();showCardDetail(reg[x.dataset.i])}});
 
+let lastTapTime=0;
+$('#cd-img').addEventListener('click',()=>{
+  const now=Date.now();
+  if(now-lastTapTime<300){const img=$('#cd-img');img.style.transform=img.style.transform==='scale(2)'?'':'scale(2)';lastTapTime=0}
+  else lastTapTime=now;
+});
+
 /* ============================================================
-   PARSER Y CARGA (Con correcciones clave)
+   PARSER
 ============================================================ */
 const parseKW=s=>KWS.filter(x=>s.toLowerCase().includes(x));
 function tokOf(o){const m=o.match(/[Cc]reate (a|an|one|two|three|four|\d+) (\d+)\/(\d+) ([\w ]*?)creature tokens?( with [a-z ,]+?)?(?:[.,\n]| and |$)/);if(!m)return null;const nm=m[4].replace(/artifact|colorless|white|blue|black|red|green|and/g,'').trim().split(/\s+/).pop()||'Token';return{k:'tok',n:{a:1,an:1,one:1,two:2,three:3,four:4}[m[1]]||+m[1],p:+m[2],t:+m[3],nm:nm[0].toUpperCase()+nm.slice(1),kw:parseKW(m[5]||'')}}
-function eff(s){let m;s=(s||'').replace(/^you may /i,'').replace(/\s+/g,' ').trim();
- if(m=tokOf(s))return m;
- if(m=s.match(/[Cc]reate (a|one|two|three|four) Treasure tokens?/))return{k:'tres',n:{a:1,one:1,two:2,three:3,four:4}[m[1]]};
- if(m=s.match(/^(?:you )?draw (a|one|two|three|four|X) cards?/i)){const n={a:1,one:1,two:2,three:3,four:4}[m[1]];return n?{k:'draw',n}:{k:'drawX'}}
- if(m=s.match(/^(?:you )?gain (\d+) life/i))return{k:'gain',n:+m[1]};
- if(m=s.match(/each opponent loses (\d+) life/))return{k:'drain',n:+m[1]};
- if(m=s.match(/deals? (\d+|X) damage to (any target|target creature|target player|each opponent)/i)){const xd=m[1]=='X',n=xd?0:+m[1];if(m[2]=='each opponent')return{k:'drain',n};return{k:'dmg',n,xd,tg:'any',auto:1}}
- if(/^(?:destroy|exile) target (?:nonland permanent|creature)/i.test(s))return{k:'destroy',auto:1};
- if(m=s.match(/^put (a|two|three) \+1\/\+1 counters? on (target creature you control|target creature|this creature|it)/i)){const own=/you control/.test(m[2]);return{k:'ctr',n:{a:1,two:2,three:3}[m[1]],auto:1,own,self:m[2]=='this creature'||m[2]=='it'}}
- if(m=s.match(/(?:this creature|it) gets \+(\d+)\/\+(\d+) until end of turn/i))return{k:'pump',a:+m[1],b:+m[2],self:1};
- if(m=s.match(/^(?:this creature|it) gains ([a-z ]+) until end of turn/i)){const k=parseKW(m[1]);if(k.length)return{k:'kwt',kw:k,self:1}}
- if(/^regenerate target creature/i.test(s))return{k:'regen',auto:1};
- if(/^regenerate (?:this creature|it)/i.test(s))return{k:'regen',self:1};
- if(m=s.match(/^scry (\d+)/i))return{k:'scry',n:+m[1]};
- if(m=s.match(/^mill (\d+)/i))return{k:'mill',n:+m[1]};
- if(/^return target (?:nonland )?creature to (?:its|their) owner'?s? hand/i.test(s))return{k:'bounce',auto:1};
- if(/^search your library for (?:a|up to one) (?:creature|land|artifact|enchantment|instant|sorcery|card)/i.test(s))return{k:'tutor',auto:1};
- return null}
-function fx(o,t){let m;
- if(/Choose one/.test(o)){const modes=o.split(/[•·]/).slice(1).map(s=>eff(s.trim().replace(/\.$/,''))).filter(Boolean);if(modes.length)return{k:'modal',modes}}
- if(/Aura/.test(t)&&/Enchanted creature can't attack or block\./.test(o))return{k:'pac'};
- if(/Instant|Sorcery/.test(t)){if(m=tokOf(o))return m;
-  if(m=o.match(/deals (\d+|X) damage to (any target|target creature|target player)/i))return{k:'dmg',n:m[1]=='X'?0:+m[1],xd:m[1]=='X',tg:'any',auto:1};
-  if(/^(Destroy|Exile) target creature\.$/m.test(o))return{k:'destroy',auto:1};
-  if(m=o.match(/^Draw (a|one|two|three) cards?\.$/m))return{k:'draw',n:{a:1,one:1,two:2,three:3}[m[1]]};
-  if(m=o.match(/^You gain (\d+) life\.$/m))return{k:'gain',n:+m[1]};
-  if(m=o.match(/^Counter target (creature |noncreature )?spell(?: unless its controller pays \{(\d+)\})?\.$/m))return{k:'ctrs',only:(m[1]||'').trim(),tax:+m[2]||0};
-  if(m=o.match(/^Put (a|two|three) \+1\/\+1 counters? on target creature\.$/m))return{k:'ctr',n:{a:1,two:2,three:3}[m[1]],auto:1,own:false};
-  if(m=o.match(/^Target creature gets \+(\d+)\/\+(\d+) until end of turn\.$/m))return{k:'pump',a:+m[1],b:+m[2]};
-  if(m=o.match(/^Regenerate target creature\.$/m))return{k:'regen',auto:1};
-  if(m=o.match(/^Scry (\d+)\.$/m))return{k:'scry',n:+m[1]};
-  if(m=o.match(/^Mill (a|one|two|three|\d+) cards?\.$/m))return{k:'mill',n:{a:1,one:1,two:2,three:3}[m[1]]||+m[1]};
-  if(/^Return target (?:nonland )?creature to (?:its|their) owner'?s? hand\.$/m.test(o))return{k:'bounce',auto:1};
-  if(/^Search your library for (?:a|up to one)/i.test(o))return{k:'tutor',auto:1};
-  return null}
- if(m=o.match(/(?:When|Whenever) [^,.\n]*enters[^,.\n]*, ([^.\n]*)/))return eff(m[1]);return null}
+
+function eff(s){
+  let m;s=(s||'').replace(/^you may /i,'').replace(/\s+/g,' ').trim();
+
+  /* --- FIGHT --- */
+  if(/^target creature you control fights target creature you don'?t control/i.test(s)) return{k:'fight_you',auto:1};
+  if(/^target creature you control deals damage equal to its power to target creature you don'?t control/i.test(s)) return{k:'bite_you',auto:1};
+  if(/^put a \+1\/\+1 counter on target creature you control\.? then (?:it|that creature) fights target creature you don'?t control/i.test(s)) return{k:'stomp',auto:1};
+  if(/^target creature you control gets \+X\/\+X until end of turn\.? then (?:it|that creature) fights target creature you don'?t control/i.test(s)) return{k:'primal_might',auto:1};
+
+  /* --- COMPOSITE / RESTRICTED --- */
+  if(m=s.match(/deals? (\d+) damage to target tapped creature and you gain (\d+) life/i)) return{k:'dmg_gain_tapped',dmg:+m[1],life:+m[2],auto:1,tg:'cre'};
+  if(m=s.match(/deals? (\d+) damage to target (?:attacking or blocking|attacking|blocking) creature\.?\s*you gain (\d+) life/i)) return{k:'dmg_gain_combat',dmg:+m[1],life:+m[2],auto:1,tg:'cre'};
+  if(m=s.match(/deals? (\d+|X) damage to target creature or planeswalker and you gain (\d+|X) life/i)) return{k:'dmg_gain',dmg:m[1]=='X'?0:+m[1],life:m[2]=='X'?0:+m[2],xd:m[1]=='X',xl:m[2]=='X',auto:1,tg:'cre'};
+  if(m=s.match(/deals? (\d+) damage to target creature and (\d+) damage to that creature'?s controller/i)) return{k:'dmg_controller',dmg:+m[1],extra:+m[2],auto:1};
+  if(m=s.match(/^target creature gets (-?\d+)\/(-?\d+) and gains ([a-z ]+) until end of turn/i)) return{k:'pump_kwt',a:+m[1],b:+m[2],kw:parseKW(m[3])};
+  if(m=s.match(/^target creature gets (-?\d+)\/(-?\d+) until end of turn\.? you gain (\d+) life/i)) return{k:'debuff_gain',a:+m[1],b:+m[2],life:+m[3],auto:1};
+  if(m=s.match(/^you gain (\d+) life and draw (a|one) card/i)) return{k:'gain_draw',gain:+m[1],draw:1,auto:1};
+  if(m=s.match(/deals? (\d+) damage to target tapped creature/i)) return{k:'dmg_tapped',n:+m[1],auto:1,tg:'cre'};
+  if(/^destroy target tapped creature/i.test(s)) return{k:'destroy_tapped',auto:1,tg:'cre'};
+  if(m=s.match(/(?:each|target) opponent loses (\d+) life and you gain \1 life/i)) return{k:'drain',n:+m[1]};
+  if(m=s.match(/^target opponent loses (\d+) life\.?$/i)) return{k:'drain_noheal',n:+m[1],auto:1};
+
+  /* --- BASE --- */
+  if(m=tokOf(s))return m;
+  if(m=s.match(/[Cc]reate (a|one|two|three|four) Treasure tokens?/))return{k:'tres',n:{a:1,one:1,two:2,three:3,four:4}[m[1]]};
+  if(m=s.match(/^(?:you )?draw (a|one|two|three|four|X) cards?/i)){const n={a:1,one:1,two:2,three:3,four:4}[m[1]];return n?{k:'draw',n}:{k:'drawX'}}
+  if(m=s.match(/^(?:you )?gain (\d+) life/i))return{k:'gain',n:+m[1]};
+  if(m=s.match(/each opponent loses (\d+) life/))return{k:'drain',n:+m[1]};
+  if(m=s.match(/deals? (\d+|X) damage to (any target|target creature|target player|each opponent|target player or planeswalker)/i)){const xd=m[1]=='X',n=xd?0:+m[1];if(m[2]=='each opponent')return{k:'drain',n};return{k:'dmg',n,xd,tg:'any',auto:1}}
+  if(/^(?:destroy|exile) target (?:nonland permanent|creature)/i.test(s))return{k:'destroy',auto:1};
+  if(m=s.match(/^put (a|two|three) \+1\/\+1 counters? on (target creature you control|target creature|this creature|it)/i)){const own=/you control/.test(m[2]);return{k:'ctr',n:{a:1,two:2,three:3}[m[1]],auto:1,own,self:m[2]=='this creature'||m[2]=='it'}}
+  if(m=s.match(/(?:this creature|it) gets \+(\d+)\/\+(\d+) until end of turn/i))return{k:'pump',a:+m[1],b:+m[2],self:1};
+  if(m=s.match(/^target creature gets \+(\d+)\/\+(\d+) until end of turn\.$/m))return{k:'pump',a:+m[1],b:+m[2]};
+  if(m=s.match(/^(?:this creature|it) gains ([a-z ]+) until end of turn/i)){const k=parseKW(m[1]);if(k.length)return{k:'kwt',kw:k,self:1}}
+  if(/^regenerate target creature/i.test(s))return{k:'regen',auto:1};
+  if(/^regenerate (?:this creature|it)/i.test(s))return{k:'regen',self:1};
+  if(m=s.match(/^scry (\d+)/i))return{k:'scry',n:+m[1]};
+  if(m=s.match(/^mill (\d+)/i))return{k:'mill',n:+m[1]};
+  if(/^return target (?:nonland )?creature to (?:its|their) owner'?s? hand/i.test(s))return{k:'bounce',auto:1};
+  if(/^search your library for (?:a|up to one) (?:creature|land|artifact|enchantment|instant|sorcery|card)/i.test(s))return{k:'tutor',auto:1};
+  return null;
+}
+
+function fx(o,t){
+  let m;
+  if(/Choose one/.test(o)){const modes=o.split(/[•·]/).slice(1).map(s=>eff(s.trim().replace(/\.$/,''))).filter(Boolean);if(modes.length)return{k:'modal',modes}}
+  if(/Aura/.test(t)&&/Enchanted creature can't attack or block\./.test(o))return{k:'pac'};
+  if(/Instant|Sorcery/.test(t)){
+    if(m=eff(o))return m;
+    if(m=o.match(/deals (\d+|X) damage to (any target|target creature|target player)/i))return{k:'dmg',n:m[1]=='X'?0:+m[1],xd:m[1]=='X',tg:'any',auto:1};
+    if(/^(Destroy|Exile) target creature\.$/m.test(o))return{k:'destroy',auto:1};
+    if(m=o.match(/^Draw (a|one|two|three) cards?\.$/m))return{k:'draw',n:{a:1,one:1,two:2,three:3}[m[1]]};
+    if(m=o.match(/^You gain (\d+) life\.$/m))return{k:'gain',n:+m[1]};
+    if(m=o.match(/^Counter target (creature |noncreature )?spell(?: unless its controller pays \{(\d+)\})?\.$/m))return{k:'ctrs',only:(m[1]||'').trim(),tax:+m[2]||0};
+    if(m=o.match(/^Put (a|two|three) \+1\/\+1 counters? on target creature\.$/m))return{k:'ctr',n:{a:1,two:2,three:3}[m[1]],auto:1,own:false};
+    if(m=o.match(/^Target creature gets \+(\d+)\/\+(\d+) until end of turn\.$/m))return{k:'pump',a:+m[1],b:+m[2]};
+    if(m=o.match(/^Regenerate target creature\.$/m))return{k:'regen',auto:1};
+    if(m=o.match(/^Scry (\d+)\.$/m))return{k:'scry',n:+m[1]};
+    if(m=o.match(/^Mill (a|one|two|three|\d+) cards?\.$/m))return{k:'mill',n:{a:1,one:1,two:2,three:3}[m[1]]||+m[1]};
+    if(/^Return target (?:nonland )?creature to (?:its|their) owner'?s? hand\.$/m.test(o))return{k:'bounce',auto:1};
+    if(/^Search your library for (?:a|up to one)/i.test(o))return{k:'tutor',auto:1};
+    return null;
+  }
+  if(m=o.match(/(?:When|Whenever) [^,.\n]*enters[^,.\n]*, ([^.\n]*)/))return eff(m[1]);
+  return null;
+}
 function abilOf(o,t){if(/Instant|Sorcery|Land/.test(t))return null;const out=[];
  for(const l of o.split('\n')){
   let m=l.match(/^([+\-\u2212]\d+):\s*(.*)$/);
@@ -502,84 +850,312 @@ function trigOf(o,n,kw){const q=n.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
  m=o.match(new RegExp('(?:When|Whenever) (?:a|one or more) creatures? '+kw+'[^,.\\n]*, ([^.\\n]*)'));if(m)return{e:eff(m[1]),scope:'any'};return null}
 function eqpOf(o,t){if(!/Equipment|Aura/.test(t)||(/Aura/.test(t)&&!/^Enchant creature/m.test(o)))return null;
  const m=o.match(/(?:Equipped|Enchanted) creature gets ([+-]\d+)\/([+-]\d+)/),s=(o.match(/(?:Equipped|Enchanted) creature[^.\n]*/)||[''])[0],kw=parseKW(s);
- if(!m&&!kw.length)return null;const q=o.match(/Equip ((?:\{[^}]+\})+)/);return{a:m?+m[1]:0,b:m?+m[2]:0,kw,cost:q?q[1]:null,aura:/Aura/.test(t)?1:0}}
+ const q=o.match(/Equip(?: [A-Za-z]+)? ((?:\{[^}]+\})+)/);
+ const atkTrig=o.match(/Whenever (?:equipped|enchanted) creature attacks,\s*([^.\n]*)/i);
+ if(!m&&!kw.length&&!q&&!atkTrig)return null;
+ return{a:m?+m[1]:0,b:m?+m[2]:0,kw,cost:q?q[1]:null,aura:/Aura/.test(t)?1:0,attackTrigger:atkTrig?atkTrig[1]:null}}
 const lordOf=o=>{const m=o.match(/^Other (?:[A-Za-z]+ )?creatures you control get ([+-]\d+)\/([+-]\d+)/m);return m?{a:+m[1],b:+m[2]}:null};
 function parseThreshold(o){const m=o.match(/Threshold[^\n]*seven or more[^\n]*gets ([+-]\d+)\/([+-]\d+)/i);return m?{a:+m[1],b:+m[2]}:null}
 function parseFlashback(o){const m=o.match(/Flashback ((?:\{[^}]+\})+)/i);return m?m[1]:null}
 function parseKicker(o){const m=o.match(/Kicker ((?:\{[^}]+\})+)/i);return m?m[1]:null}
 function parseLandfall(o){const m=o.match(/Landfall[^\n]*?(?:Whenever|When) a land (?:you control )?enters[^,]*, ([^.\n]*)/i);return m?eff(m[1]):null}
+
 function mk(c){
   const t=c.type_line||'',o=c.oracle_text||'';
   let imgs=c.image_uris;
   if(!imgs&&Array.isArray(c.card_faces)){const face=c.card_faces.find(f=>f&&f.image_uris);if(face)imgs=face.image_uris}
-  if(!imgs||!imgs.normal||!imgs.small){console.warn('Carta sin imagen (se omite):',c.name);return null}
+  if(!imgs||!imgs.normal||!imgs.small){console.warn('Carta sin imagen:',c.name);return null}
   const isPW=/Planeswalker/.test(t),tr=trigOf(o,c.name,'dies');
   const diesOtherMatch=o.match(/Whenever (?:this creature or )?another creature you control dies,\s*([^.\n]*)/i);
   const raidMatch=o.match(/Raid\s*[—–-]\s*When this creature enters, if you attacked this turn,\s*([^.\n]*)/i);
   const attackBuffMatch=o.match(/Whenever one or more creatures you control attack,\s*([^.\n]*)/i);
-  return{
+  const gainLifeMatch=o.match(/Whenever you gain life,\s*([^.\n]*)/i);
+  const anotherEntersMatch=o.match(/Whenever (?:another|one or more other) creatures? you control enters?,\s*([^.\n]*)/i);
+  const castTrigger=/Whenever you cast a spell during an opponent'?s turn/i.test(o);
+  const vampAttack=/Whenever a Vampire you control attacks/i.test(o);
+  const cannotBlock=/can'?t block/i.test(o);
+  const cannotBeBlocked=/can'?t be blocked/i.test(o);
+  const costReduction=(()=>{const m=o.match(/costs \{(\d+)\} less to cast for each (instant and sorcery|instant|sorcery|creature) card in your graveyard/i);return m?{n:+m[1],type:m[2]}:null})();
+  const wardMatch=o.match(/^Ward \{(\d+)\}/m);
+  const conditionalElf=/if you control another Elf/i.test(o);
+  const conditionalOther=o.match(/When this creature enters, if you control another (\w+)/i);
+
+  const card={
     i:di++,name:c.name,pname:c.printed_name||(LANG_ES&&ES[c.name])||c.name,type:t,cost:c.mana_cost||'',cmc:c.cmc||0,
-    pow:parseInt(c.power)||0,tou:parseInt(c.toughness)||0,kw:(c.keywords||[]).map(k=>k.toLowerCase()),img:imgs.normal,small:imgs.small,oracle:o,
+    pow:parseInt(c.power)||0,tou:parseInt(c.toughness)||0,kw:(c.keywords||[]).map(k=>k.toLowerCase()),
+    img:imgs.normal,small:imgs.small,oracle:o,ptype:c.printed_type_line||'',ptext:c.printed_text||'',
     col:c.colors||[],prod:(c.produced_mana&&c.produced_mana.length)?c.produced_mana:(/Land/.test(t)?['W','U','B','R','G']:[]),
     cr:/Creature/.test(t),ld:/Land/.test(t),pw:isPW,loy:isPW?(parseInt(c.loyalty)||0):0,
     ldTap:/enters (?:the battlefield )?tapped/.test(o),hasX:/\{X\}/.test(c.mana_cost||''),
-    fx:fx(o,t),atkt:trigOf(o,c.name,'attacks'),dies:tr&&tr.scope=='self'?tr.e:null,
+    fx:fx(o,t),atkt:trigOf(o,c.name,'attacks'),
+    dies:tr&&tr.scope=='self'?tr.e:null,
     diesOther:diesOtherMatch?eff(diesOtherMatch[1]):null,
     diesAny:tr&&tr.scope=='any'?tr.e:null,
     raid:raidMatch?eff(raidMatch[1]):null,
     attackBuff:attackBuffMatch?eff(attackBuffMatch[1]):null,
+    gainLifeTrigger:gainLifeMatch?eff(gainLifeMatch[1]):null,
+    anotherEntersTrigger:anotherEntersMatch?eff(anotherEntersMatch[1]):null,
+    castTrigger,
+    vampAttack:vampAttack?{k:'vampAtk'}:null,
+    cantBlock:cannotBlock,
+    cantBeBlocked:cannotBeBlocked,
+    costReduction,
+    ward:wardMatch?{n:+wardMatch[1]}:null,
+    conditionalElf,
+    conditionalOther:conditionalOther?{type:conditionalOther[1]}:null,
     abil:abilOf(o,t),eqp:eqpOf(o,t),lord:lordOf(o),mana:!/Land/.test(t)&&/\{T\}: Add/.test(o),
     rarity:c.rarity||'common',set:c.set||'fdn',
     thresholdBuff:parseThreshold(o),flashbackCost:parseFlashback(o),kickerCost:parseKicker(o),landfall:parseLandfall(o),
-    choice:/choose a color/i.test(o) // Para Uncharted Haven y similares
-  }
+    choice:/choose a color/i.test(o)
+  };
+  TMPL[card.i]=card;
+  return card;
 }
 const inst=d=>{const c=Object.assign(Object.create(d),{id:uid++,tapped:0,sick:1,dmg:0,pb:0,tb:0,ct:0,regen:0,chosenColor:null});reg[c.id]=c;return c};
 
-/* ... (El resto de funciones de carga, menús, etc. se mantienen, con ajustes en plan() y playLand) ... */
+/* ============================================================
+   CARGA
+============================================================ */
+async function jget(u,timeout=12000){const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),timeout);try{const r=await fetch(u,{signal:ctrl.signal});clearTimeout(timer);if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}catch(e){clearTimeout(timer);if(e.name==='AbortError')throw new Error('Timeout');throw e}}
+async function fetchWithRetry(u,retries=2){for(let i=0;i<=retries;i++){try{return await jget(u)}catch(e){console.warn(`Fetch ${i+1}/${retries+1}:`,e.message);if(i<retries)await sleep(800)}}return null}
+async function loadSet(code,maxPages=8){let url=`https://api.scryfall.com/cards/search?q=e%3A${code}+-t%3Abasic&unique=cards`;let page=0;while(url&&page<maxPages&&!loadingCancelled){page++;$('#msg').innerHTML=`Cargando ${code.toUpperCase()}… pág. ${page} · ${POOL.length} cartas <button id="skipLoad">Saltar</button>`;const r=await fetchWithRetry(url);if(!r||!r.data){console.warn(`Sin datos ${code} pág ${page}`);break}r.data.forEach(c=>{if(!['fdn','j25','tfdn'].includes(c.set))return;if(!c.image_uris&&!c.card_faces)return;const d=mk(c);if(!d)return;if(POOL.find(x=>x.name===d.name))return;POOL.push(d);BYN[c.name]=d});url=r.next_page;await sleep(120)}}
+async function loadBeginnerCards(){const names=[...new Set(BEGINNER_DECKS.flatMap(d=>d.list))].filter(n=>!BASIC_NAMES[n]&&!BYN[n]);if(!names.length)return;for(let i=0;i<names.length;i+=75){const chunk=names.slice(i,i+75);try{const r=await fetch('https://api.scryfall.com/cards/collection',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identifiers:chunk.map(n=>({name:n}))})});if(r.ok){const j=await r.json();j.data.forEach(c=>{if(!['fdn','j25','tfdn'].includes(c.set))return;const d=mk(c);if(d)BYN[c.name]=d})}}catch(e){console.warn('Error principiante:',e)}await sleep(150)}}
+async function loadAll(){
+  try{
+    if(window.CARTAS){CARTAS.forEach(c=>{if(!['fdn','j25','tfdn'].includes(c.set))return;const d=mk(c);if(!d)return;BYN[c.name]=d;c.basic?BASIC[c.basic]=d:POOL.push(d)});
+      if(!Object.keys(BASIC).length){for(const[k,n]of[['W','Plains'],['U','Island'],['B','Swamp'],['R','Mountain'],['G','Forest']]){const d=mk(await jget('https://api.scryfall.com/cards/named?exact='+n));if(d){BASIC[k]=d;BYN[n]=d}else console.warn('No básica '+n);await sleep(150)}}
+      $('#msg').innerHTML='Cargando mazos… <button id="skipLoad">Saltar</button>';await loadBeginnerCards();$('#msg').textContent='Elige 2 mazos (0/2)';autoStart();return}
+    await loadSet('fdn');await loadSet('j25');
+    for(const[k,n]of[['W','Plains'],['U','Island'],['B','Swamp'],['R','Mountain'],['G','Forest']]){const d=mk(await jget('https://api.scryfall.com/cards/named?exact='+n));if(d){BASIC[k]=d;BYN[n]=d}else console.warn('No básica '+n);await sleep(150)}
+    try{const tk=await jget('https://api.scryfall.com/cards/search?q=t%3Atoken+%28e%3Afdn+or+e%3Atfdn%29&unique=cards');tk.data.forEach(c=>{const d=mk(c);if(d){d.isToken=true;TOKENS[c.name.toLowerCase()]=d}})}catch(e){}
+    $('#msg').innerHTML='Cargando mazos… <button id="skipLoad">Saltar</button>';await loadBeginnerCards();
+    if(!POOL.length&&!Object.keys(BYN).length){$('#play').disabled=true;$('#msg').textContent='No se pudieron descargar cartas.';return}
+    $('#msg').textContent=`Cargadas ${POOL.length} cartas. Elige 2 mazos (0/2)`;autoStart();
+  }catch(e){console.error(e);$('#msg').textContent='Error al cargar: '+(e.message||e)}
+}
+document.addEventListener('click',e=>{if(e.target.id==='skipLoad'){loadingCancelled=true;$('#msg').textContent=`Carga interrumpida con ${POOL.length} cartas. Elige 2 mazos (0/2)`}});
 
 /* ============================================================
-   PLANIFICADOR DE MANÁ CORREGIDO
+   MAZOS
 ============================================================ */
-function plan(P,c){
-  let g=0,cols=[];
-  [...c.cost.matchAll(/\{([^}]+)\}/g)].forEach(m=>{
-    const s=m[1];
-    if(/^\d+$/.test(s))g+=+s;
-    else if(s!='X'){
-      if(s!='C'&&'WUBRG'.includes(s[0]))cols.push(s[0]);
-      else g++;
-    }
+const BEGINNER_DECKS=[
+ {n:'Cats',c:'W',list:['Savannah Lions','Leonin Skyhunter','Prideful Parent','Felidar Savior','Angelic Edict','Jazal Goldmane','Pacifism','Ingenious Leonin','Helpful Hunter','Leonin Vanguard','Moment of Triumph',"Elspeth's Smite",'Uncharted Haven','Plains','Plains','Plains','Plains','Plains','Plains','Plains']},
+ {n:'Vampires',c:'B',list:['Vampire Interloper','Vampire Spawn','Moment of Craving','Highborn Vampire','Untamed Hunger','Bloodtithe Collector','Crossway Troublemakers','Vengeful Bloodwitch',"Hero's Downfall",'Vampire Neonate','Offer Immortality','Stromkirk Bloodthief','Uncharted Haven','Swamp','Swamp','Swamp','Swamp','Swamp','Swamp','Swamp']},
+ {n:'Healing',c:'W',list:['Ancestor Dragon','Dazzling Angel',"Ajani's Pridemate","Bishop's Soldier",'Herald of Faith','Inspiring Overseer','Twinblade Paladin','Hinterland Sanctifier','Prayer of Binding','Quick-Draw Katana','Adamant Will','Deadly Riposte','Uncharted Haven','Plains','Plains','Plains','Plains','Plains','Plains','Plains']},
+ {n:'Pirates',c:'U',list:['Bigfin Bouncer','Brineborn Cutthroat','Corsair Captain','Eaten by Piranhas',"Pirate's Cutlass",'Spectral Sailor','Tolarian Terror','Storm Fleet Spy','Merfolk Pirate','Shark Pirate','Island','Island','Island','Island','Island','Island','Island','Island','Island','Uncharted Haven']},
+ {n:'Wizards',c:'U',list:['Mystic Archaeologist','Arcane Epiphany','Clinquant Skymage','Erudite Wizard','Icewind Elemental','Mischievous Mystic','Island','Island','Island','Island','Island','Island','Island','Island','Island','Island','Island','Island','Island','Island']},
+ {n:'Undead',c:'B',list:['Walking Corpse','Diregraf Ghoul','Eternal Taskmaster','Ghoulish Procession','Undead Butler','Graveyard Shift','Swamp','Swamp','Swamp','Swamp','Swamp','Swamp','Swamp','Swamp','Swamp','Swamp','Swamp','Swamp','Swamp','Swamp']},
+ {n:'Goblins',c:'R',list:['Goblin Arsonist','Goblin Instigator','Goblin Motivator','Goblin Trashmaster','Mons Goblin Raiders','Raging Goblin','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain']},
+ {n:'Inferno',c:'R',list:['Fire Elemental','Lava Axe','Shock','Lightning Strike',"Chandra's Outrage",'Flame Slash','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain','Mountain']},
+ {n:'Elves',c:'G',list:['Beast-Kin Ranger',"Dwynen's Elite",'Elfsworn Giant','Elvish Rejuvenator','Felling Blow','Elvish Mystic','Llanowar Elves','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest']},
+ {n:'Primal',c:'G',list:['Giant Growth','Prey Upon','Rabid Bite','Savage Stomp','Primal Might','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest']}
+];
+const ADVANCED_THEMES=[{n:'Angels',c:'W'},{n:'Armed',c:'W'},{n:'Bookworms',c:'U'},{n:'Bloody',c:'B'},{n:'Cats',c:'W'},{n:'Dragons',c:'R'},{n:'Elves',c:'G'},{n:'Goblins',c:'R'},{n:'Healers',c:'W'},{n:'Inferno',c:'R'},{n:'Pirates',c:'U'},{n:'Primal',c:'G'},{n:'Undead',c:'B'},{n:'Vampires',c:'B'},{n:'Wizards',c:'U'},{n:'Soldiers',c:'W'},{n:'Merfolk',c:'U'},{n:'Zombies',c:'B'},{n:'Giants',c:'R'},{n:'Beasts',c:'G'},{n:'Spirits',c:'W'},{n:'Illusions',c:'U'},{n:'Demons',c:'B'},{n:'Devils',c:'R'},{n:'Elementals',c:'G'},{n:'Knights',c:'W'},{n:'Sphinxes',c:'U'},{n:'Rats',c:'B'},{n:'Goblins',c:'R'},{n:'Wolves',c:'G'},{n:'Clerics',c:'W'},{n:'Faeries',c:'U'},{n:'Horrors',c:'B'},{n:'Dragons',c:'R'},{n:'Hydras',c:'G'},{n:'Pegasus',c:'W'},{n:'Leviathans',c:'U'},{n:'Nightmares',c:'B'},{n:'Phoenixes',c:'R'},{n:'Wurms',c:'G'},{n:'Unicorns',c:'W'},{n:'Krakens',c:'U'},{n:'Skeletons',c:'B'},{n:'Hellions',c:'R'},{n:'Treefolk',c:'G'},{n:'Griffins',c:'W'}];
+function packBeginner(i){const d=BEGINNER_DECKS[i];const fbPool=POOL.filter(c=>c.col.includes(d.c)||c.col.length===0);const fbCr=R(fbPool.filter(c=>c.cr)),fbSp=R(fbPool.filter(c=>!c.cr));const cards=d.list.map(n=>{if(BASIC_NAMES[n]&&BASIC[BASIC_NAMES[n]])return BASIC[BASIC_NAMES[n]];if(BYN[n])return BYN[n];return fbCr.pop()||fbSp.pop()||BASIC[d.c]}).filter(Boolean);while(cards.length<20&&BASIC[d.c])cards.push(BASIC[d.c]);return cards.slice(0,20)}
+function packAdvanced(theme){if(!POOL.length)return Array(20).fill(BASIC[theme.c]).filter(Boolean);const p=POOL.filter(d=>(d.col.includes(theme.c)||d.col.length===0)&&(d.cr||isSp(d)));const cr=R(p.filter(d=>d.cr)),sp=R(p.filter(d=>!d.cr));const picks=[...cr.slice(0,10),...sp.slice(0,5),...cr.slice(10),...sp.slice(5)].slice(0,13);if(BASIC[theme.c])while(picks.length<20)picks.push(BASIC[theme.c]);return picks.slice(0,20)}
+const mkP=deck=>({life:20,lib:R(deck.filter(Boolean).map(inst)),hand:[],bf:[],gy:[],exile:[],landPlayed:0,creatureDiedThisTurn:false,attackedThisTurn:false});
+function draw(P,n=1){for(let i=0;i<n;i++){if(!P.lib.length){end(P);return}const c=P.lib.pop();P.hand.push(c);setTimeout(()=>{const el=document.getElementById('c'+c.id);if(el){el.classList.add('drawn');setTimeout(()=>el.classList.remove('drawn'),480)}},60)}if(n>0)SFX.draw()}
+function end(P){if(G.over)return;G.over=1;G.busy=1;if(G.next)G.next();const isWin=P===G.p[1];if(isWin){SFX.win();confetti()}else{SFX.lose()}$('#menu').style.display='flex';$('#menu').innerHTML=`<h1 class="${isWin?'win':'lose'}">${isWin?'¡Has ganado!':'Has perdido'}</h1><p class="sub">${isWin?'La IA se rinde. ¡Bien jugado!':'La IA ha sido más fuerte esta vez. ¿Otra?'}</p><div class="menu-hero"><button class="hero-card" onclick="restart()"><span class="icon">🔄</span><h2>Revancha</h2><p>Mismos mazos</p></button><button class="hero-card" onclick="location.reload()"><span class="icon">🎲</span><h2>Cambiar mazos</h2><p>Nueva selección</p></button></div>`}
+const checkEnd=()=>G.p.forEach(P=>P.life<=0&&end(P));
+
+/* MENÚ */
+function buildMenu(){
+  const COL_ES={W:'Blanco',U:'Azul',B:'Negro',R:'Rojo',G:'Verde'};
+  $('#btn-beginner').onclick=()=>{menuMode='beginner';picked=[];$('#picker').classList.add('on');$('#filter-bar').style.display='none';const grid=$('#deck-grid');grid.innerHTML='';BEGINNER_DECKS.forEach((d,i)=>{const el=document.createElement('div');el.className='deck-card';el.dataset.i=i;el.innerHTML=`<div class="dc-name">${ES_THEMES[d.n]||d.n}</div><div class="dc-color">${COL_ES[d.c]||d.c} · 20 cartas</div>`;el.style.borderColor=CC[d.c];el.onclick=()=>togglePick(i,el);grid.append(el)});$('#msg').textContent='Selecciona 2 mazos de principiante (0/2)';$('#play').disabled=true};
+  $('#btn-advanced').onclick=()=>{menuMode='advanced';picked=[];$('#picker').classList.add('on');$('#filter-bar').style.display='flex';$('#filter-name').value='';setColorFilter('all');renderAdvancedGrid();$('#msg').textContent='Selecciona 2 temas avanzados (0/2)';$('#play').disabled=true};
+  $('#btn-gallery').onclick=openGallery;
+  $('#btn-collection').onclick=openCollection;
+  $('#filter-name').oninput=renderAdvancedGrid;
+  document.querySelectorAll('#filter-bar .color-btn').forEach(b=>{b.onclick=()=>{setColorFilter(b.dataset.c);renderAdvancedGrid()}});
+}
+let activeColor='all';
+function setColorFilter(c){activeColor=c;document.querySelectorAll('#filter-bar .color-btn').forEach(b=>b.classList.toggle('on',b.dataset.c===c))}
+function renderAdvancedGrid(){const COL_ES={W:'Blanco',U:'Azul',B:'Negro',R:'Rojo',G:'Verde'};const q=($('#filter-name').value||'').toLowerCase();const grid=$('#deck-grid');grid.innerHTML='';ADVANCED_THEMES.forEach((d,i)=>{const esName=ES_THEMES[d.n]||d.n;if(activeColor!=='all'&&d.c!==activeColor)return;if(q&&!d.n.toLowerCase().includes(q)&&!esName.toLowerCase().includes(q))return;const el=document.createElement('div');el.className='deck-card';el.dataset.i=i;el.innerHTML=`<div class="dc-name">${esName}</div><div class="dc-color">${COL_ES[d.c]||d.c}</div>`;el.style.borderColor=CC[d.c];if(picked.includes(i))el.classList.add('sel');el.onclick=()=>togglePick(i,el);grid.append(el)})}
+function togglePick(i,el){const k=picked.indexOf(i);if(k>=0)picked.splice(k,1);else if(picked.length<2)picked.push(i);document.querySelectorAll('#deck-grid .deck-card').forEach(e=>{e.classList.toggle('sel',picked.includes(+e.dataset.i))});$('#msg').textContent=`Selecciona 2 mazos (${picked.length}/2)`;$('#play').disabled=picked.length<2}
+
+/* GALERÍA */
+let galFilter={color:'all',type:'all',rarity:'all',set:'all',search:''};let galSearchTimer=null;let galPage=0;let galPageSize=100;let galFilteredCache=[];
+function openGallery(){if(!POOL.length){alert('Las cartas aún se están cargando.');return}$('#gallery').classList.add('on');galPage=0;renderGallery()}
+function closeGallery(){$('#gallery').classList.remove('on')}
+function applyGalleryFilters(){const q=(galFilter.search||'').toLowerCase();galFilteredCache=POOL.filter(c=>{if(galFilter.color!=='all'){if(galFilter.color==='C'){if(c.col.length>0)return false}else if(!c.col.includes(galFilter.color))return false}if(galFilter.type!=='all'&&!c.type.includes(galFilter.type))return false;if(galFilter.rarity!=='all'&&(c.rarity||'common')!==galFilter.rarity)return false;if(galFilter.set!=='all'&&c.set!==galFilter.set)return false;if(q&&!((c.pname+' '+c.name).toLowerCase().includes(q)))return false;return true});galFilteredCache.sort((a,b)=>a.pname.localeCompare(b.pname))}
+function renderGallery(){applyGalleryFilters();const total=galFilteredCache.length;const totalPages=Math.max(1,Math.ceil(total/galPageSize));if(galPage>=totalPages)galPage=totalPages-1;if(galPage<0)galPage=0;const start=galPage*galPageSize;const pageCards=galFilteredCache.slice(start,start+galPageSize);const grid=$('#gal-grid');$('#gal-stats').textContent=`Mostrando ${pageCards.length} de ${total} cartas`;if(!pageCards.length){grid.innerHTML='<div id="gal-empty">No hay cartas que coincidan con los filtros.</div>'}else{grid.innerHTML=pageCards.map(c=>{const sb=c.set==='j25'?'j25':'';return `<div class="gal-card" data-id="${c.i}" title="Clic: ver detalle"><img loading="lazy" src="${c.small}" alt="${c.pname}"><span class="gal-badge ${sb}">${(c.set||'fdn').toUpperCase()}</span></div>`}).join('');grid.querySelectorAll('.gal-card').forEach(el=>{el.onclick=()=>{const c=TMPL[el.dataset.id];if(c)showCardDetail(c)}});grid.scrollTop=0}$('#gal-page-info').textContent=`Página ${galPage+1} de ${totalPages} · ${total} cartas`;$('#gal-prev').disabled=galPage===0;$('#gal-next').disabled=galPage>=totalPages-1}
+$('#gal-close').onclick=closeGallery;
+$('#gal-prev').onclick=()=>{if(galPage>0){galPage--;renderGallery()}};
+$('#gal-next').onclick=()=>{const totalPages=Math.ceil(galFilteredCache.length/galPageSize);if(galPage<totalPages-1){galPage++;renderGallery()}};
+$('#gal-page-size').onchange=()=>{galPageSize=+$('#gal-page-size').value;galPage=0;renderGallery()};
+$('#gal-search').oninput=()=>{clearTimeout(galSearchTimer);galSearchTimer=setTimeout(()=>{galFilter.search=$('#gal-search').value;galPage=0;renderGallery()},200)};
+document.querySelectorAll('#gallery .gal-color').forEach(b=>{b.onclick=()=>{galFilter.color=b.dataset.c;document.querySelectorAll('#gallery .gal-color').forEach(x=>x.classList.toggle('on',x===b));galPage=0;renderGallery()}});
+$('#gal-type').onchange=()=>{galFilter.type=$('#gal-type').value;galPage=0;renderGallery()};
+$('#gal-rarity').onchange=()=>{galFilter.rarity=$('#gal-rarity').value;galPage=0;renderGallery()};
+$('#gal-set').onchange=()=>{galFilter.set=$('#gal-set').value;galPage=0;renderGallery()};
+
+/* COLECCIÓN */
+let COLLECTION={};let PACKS_OPENED=0;
+function loadCollection(){try{COLLECTION=JSON.parse(localStorage.getItem('mtg_collection')||'{}')}catch(e){COLLECTION={}};try{PACKS_OPENED=+localStorage.getItem('mtg_packs_opened')||0}catch(e){PACKS_OPENED=0}}
+function saveCollection(){try{localStorage.setItem('mtg_collection',JSON.stringify(COLLECTION));localStorage.setItem('mtg_packs_opened',PACKS_OPENED)}catch(e){}}
+function updateCollectionStats(){const unique=Object.keys(COLLECTION).length;const total=Object.values(COLLECTION).reduce((a,b)=>a+b,0);$('#col-stats').textContent=`${unique} cartas únicas · ${total} totales`;$('#pack-count').textContent=`Sobres abiertos: ${PACKS_OPENED}`}
+function openCollection(){if(!POOL.length){alert('Las cartas aún se están cargando.');return}loadCollection();updateCollectionStats();$('#collection').classList.add('on');switchColView('packs')}
+function closeCollection(){$('#collection').classList.remove('on')}
+function switchColView(view){document.querySelectorAll('.col-tab').forEach(t=>t.classList.toggle('active',t.dataset.view===view));$('#col-packs-view').style.display=view==='packs'?'flex':'none';$('#col-album-view').style.display=view==='album'?'flex':'none';if(view==='album')renderAlbum()}
+
+function openPack(){
+  const pool=POOL.filter(c=>c.set==='fdn');
+  const commons=pool.filter(c=>c.rarity==='common');
+  const uncommons=pool.filter(c=>c.rarity==='uncommon');
+  const rares=pool.filter(c=>c.rarity==='rare');
+  const mythics=pool.filter(c=>c.rarity==='mythic');
+  const lands=POOL.filter(c=>c.ld&&(c.set==='fdn'||BASIC_NAMES[c.name]));
+  if(commons.length<10||uncommons.length<5||rares.length<2){alert('Esperando carga de cartas...');return}
+  const pick=arr=>arr.length?arr[Math.floor(Math.random()*arr.length)]:null;
+  const pack=[];
+  for(let i=0;i<6;i++){const c=pick(commons);if(c)pack.push(c)}
+  const wcRoll=Math.random();let wc1;
+  if(wcRoll<0.68)wc1=pick(commons);else if(wcRoll<0.92)wc1=pick(uncommons);else if(wcRoll<0.98)wc1=pick(rares);else wc1=pick(mythics);
+  if(wc1)pack.push(wc1);
+  for(let i=0;i<3;i++){const c=pick(uncommons);if(c)pack.push(c)}
+  const rareSlot=Math.random()<0.14?pick(mythics):pick(rares);
+  if(rareSlot)pack.push(rareSlot);
+  const wcRoll2=Math.random();let wc2;
+  if(wcRoll2<0.68)wc2=pick(commons);else if(wcRoll2<0.92)wc2=pick(uncommons);else if(wcRoll2<0.98)wc2=pick(rares);else wc2=pick(mythics);
+  if(wc2)pack.push(wc2);
+  const wcRoll3=Math.random();let wc3;
+  if(wcRoll3<0.68)wc3=pick(commons);else if(wcRoll3<0.92)wc3=pick(uncommons);else if(wcRoll3<0.98)wc3=pick(rares);else wc3=pick(mythics);
+  if(wc3)pack.push(wc3);
+  const land=pick(lands)||BASIC['W'];pack.push(land);
+  pack.forEach(c=>COLLECTION[c.name]=(COLLECTION[c.name]||0)+1);
+  PACKS_OPENED++;saveCollection();updateCollectionStats();
+  const pv=$('#pack-visual');pv.classList.add('opening');SFX.packOpen();
+  setTimeout(()=>{pv.classList.remove('opening');showPackReveal(pack)},500);
+}
+function showPackReveal(pack){
+  const grid=$('#reveal-cards');
+  const hasMythic=pack.some(c=>c.rarity==='mythic');
+  const hasRare=pack.some(c=>c.rarity==='rare');
+  if(hasMythic)SFX.mythic();else if(hasRare)SFX.rare();
+  grid.innerHTML=pack.map((c,i)=>{const rc=c.rarity==='mythic'?'mythic':c.rarity==='rare'?'rare':'';return `<div class="reveal-card ${rc}" style="animation-delay:${i*0.06}s" data-id="${c.i}"><img src="${c.img}" alt="${c.pname}"><span class="reveal-badge ${rc}">${(c.rarity||'common').charAt(0).toUpperCase()}</span></div>`}).join('');
+  grid.querySelectorAll('.reveal-card').forEach(el=>{el.onclick=()=>{const c=TMPL[el.dataset.id];if(c)showCardDetail(c)}});
+  $('#pack-reveal').classList.add('on');
+  if(hasMythic)confetti();
+}
+function closePackReveal(){$('#pack-reveal').classList.remove('on')}
+
+let albumFilter={color:'all',rarity:'all',search:''};
+function renderAlbum(){
+  const q=(albumFilter.search||'').toLowerCase();
+  const owned=POOL.filter(c=>COLLECTION[c.name]&&COLLECTION[c.name]>0);
+  const filtered=owned.filter(c=>{
+    if(albumFilter.color!=='all'){if(albumFilter.color==='C'){if(c.col.length>0)return false}else if(!c.col.includes(albumFilter.color))return false}
+    if(albumFilter.rarity!=='all'&&(c.rarity||'common')!==albumFilter.rarity)return false;
+    if(q&&!c.pname.toLowerCase().includes(q))return false;
+    return true;
   });
-  const ls=P.bf.filter(x=>{
-    if(x.tapped||!(x.ld||(x.mana&&!x.sick)))return false;
-    if(x.choice && x.chosenColor) return x.chosenColor === cols[0]; // Solo produce el color elegido
-    return x.prod.length > 0;
-  }).sort((a,b)=>(!a.ld-!b.ld)||a.prod.length-b.prod.length);
-  
-  const used=[];
-  for(const k of cols){
-    let i=ls.findIndex(l=> {
-      if(l.choice && l.chosenColor) return l.chosenColor === k;
-      return l.prod.includes(k);
-    });
-    if(i<0){
-      // Si no encuentra el color, intenta con cualquier tierra que produzca cualquier color (como Uncharted Haven si no se eligió)
-      i=ls.findIndex(l=>l.prod.length>0);
-    }
-    if(i<0) return null;
-    used.push(ls.splice(i,1)[0]);
-  }
-  return ls.length<g?null:used.concat(ls.slice(0,g));
+  filtered.sort((a,b)=>a.pname.localeCompare(b.pname));
+  const grid=$('#album-grid');
+  const totalOwned=owned.length;
+  const totalAll=POOL.length;
+  $('#col-stats').textContent=`${totalOwned}/${totalAll} cartas únicas · ${Object.values(COLLECTION).reduce((a,b)=>a+b,0)} totales`;
+  if(!filtered.length){grid.innerHTML='<div id="album-empty">Aún no tienes cartas. ¡Abre un sobre!</div>';return}
+  grid.innerHTML=filtered.map(c=>{const qty=COLLECTION[c.name]||1;return `<div class="gal-card" data-id="${c.i}" title="Clic: ver detalle"><img loading="lazy" src="${c.small}" alt="${c.pname}"><span class="gal-qty">×${qty}</span></div>`}).join('');
+  grid.querySelectorAll('.gal-card').forEach(el=>{el.onclick=()=>{const c=TMPL[el.dataset.id];if(c)showCardDetail(c)}});
 }
 
+/* MANÁ */
+function plan(P,c){
+  let g=0,cols=[];
+  [...c.cost.matchAll(/\{([^}]+)\}/g)].forEach(m=>{const s=m[1];if(/^\d+$/.test(s))g+=+s;else if(s!='X'){if(s!='C'&&'WUBRG'.includes(s[0]))cols.push(s[0]);else g++}});
+  const reduction=(()=>{
+    if(!c.costReduction)return 0;
+    const P2=P;let count=0;
+    if(c.costReduction.type.includes('instant'))count+=P2.gy.filter(x=>/Instant/.test(x.type)).length;
+    if(c.costReduction.type.includes('sorcery'))count+=P2.gy.filter(x=>/Sorcery/.test(x.type)).length;
+    if(c.costReduction.type==='creature')count+=P2.gy.filter(x=>x.cr).length;
+    return Math.min(g,count*c.costReduction.n);
+  })();
+  g=Math.max(0,g-reduction);
+  const ls=P.bf.filter(x=>{if(x.tapped||!(x.ld||(x.mana&&!x.sick)))return false;if(x.choice&&x.chosenColor)return x.chosenColor===cols[0];return x.prod.length>0;}).sort((a,b)=>(!a.ld-!b.ld)||a.prod.length-b.prod.length);
+  const used=[];
+  for(const k of cols){let i=ls.findIndex(l=>{if(l.choice&&l.chosenColor)return l.chosenColor===k;return l.prod.includes(k)});if(i<0){i=ls.findIndex(l=>l.prod.length>0)}if(i<0)return null;used.push(ls.splice(i,1)[0])}
+  return ls.length<g?null:used.concat(ls.slice(0,g));
+}
+function planX(P,c){const avail=P.bf.filter(x=>x.prod.length&&!x.tapped&&(x.ld||(x.mana&&!x.sick)));let base=0,cols=[];[...c.cost.matchAll(/\{([^}]+)\}/g)].forEach(m=>{const s=m[1];if(/^\d+$/.test(s))base+=+s;else if('WUBRG'.includes(s[0]))cols.push(s[0]);else if(s!='X'&&s!='C')base++});const used=[],ls=[...avail];for(const k of cols){const i=ls.findIndex(l=>l.prod.includes(k));if(i<0)return null;used.push(ls.splice(i,1)[0])}if(ls.length<base)return null;return{lands:used.concat(ls),x:ls.length-base}}
+
+/* TARGETING */
+function tgtC(c){
+  if(G.mode!='target'||!G.pend||!alive(c))return false;
+  if(G.pend.eqp&&!G.pend.eqp.aura)return c.cr&&G.p[0].bf.includes(c);
+  const f=G.pend._mode||G.pend.fx;
+  if(f&&f.k==='fight_you'&&c.cr){return G.p[0].bf.includes(c)}
+  if(f&&f.k==='fight_target_enemy'&&c.cr){return !G.p[0].bf.includes(c)}
+  const needsTapped=f&&(f.k==='dmg_gain_tapped'||f.k==='dmg_tapped'||f.k==='destroy_tapped');
+  const needsCombat=f&&f.k==='dmg_gain_combat';
+  if(needsTapped&&!c.tapped)return false;
+  if(needsCombat&&!c.att&&!c.blk)return false;
+  const isAny=f&&(f.k=='dmg'||f.k=='destroy'||f.k=='bounce')&&f.tg=='any';
+  if(!(c.cr||(isAny&&c.pw)))return false;
+  if(f&&f.own&&G.p[0]&&!G.p[0].bf.includes(c))return false;
+  return true;
+}
+const tgtP=()=>G.mode=='target'&&G.pend&&G.pend.fx&&G.pend.fx.k=='dmg'&&G.pend.fx.tg=='any';
+
+/* RENDER */
+function cardEl(c,hand,hidden){
+  const e=document.createElement('div');
+  if(hidden){e.className='card back';return e}
+  const bf=!hand;e.id='c'+c.id;e.dataset.i=c.id;
+  const canActivate=bf&&c.abil&&c.abil.length>0&&G&&(G.mode==='main1'||G.mode==='main2'||G.mode==='prio')&&owner(c)===G.p[0]&&!G.busy&&!G.over;
+  const validBlockTgt = G && G.mode === 'block' && G.sb && G.att && G.att.includes(c) && can(G.sb, c) && !c.cantBeBlocked;
+  e.className='card'+(c.tapped?' tap':'')+(bf&&c.cr&&c.sick?' sick':'')+(c.pac?' pac':'')+(c.tok?' tk':'')+(c.att?' atkr':'')+(c.blk?' blkr':'')+(c.sel?' sel':'')+(tgtC(c)||validBlockTgt?' tgt':'')+(hand&&playable(c)?' ok':'')+(c._enter?' enter':'')+(c.pw?' pw':'');
+  let extra='';
+  if(bf&&c.cr)extra+=`<b class="pt ${c.dmg?'d':(bon(c)[0]||bon(c)[1])?'u':''}">${pw(c)}/${th(c)-c.dmg}</b>`;
+  if(bf&&c.pw)extra+=`<b class="loy">${c.loy}</b>`;
+  if(c.regen)extra+=`<i class="regen">✦</i>`;
+  if(c.bn)extra+=`<i class=bn>${c.bn}</i>`;
+  if(c.on&&alive(c.on))extra+=`<i class=eq>→${c.on.pname}</i>`;
+  if(c.flashbackCost&&!hand)extra+=`<i class="fb-badge">FB</i>`;
+  if(canActivate)extra+=`<i class="actIcon" title="Habilidad activable">⚡</i>`;
+  e.innerHTML=`<span class=nm>${c.pname}</span>`+(c.small?`<img data-d="${c.i}" src="${c.small}" onerror="this.remove()">`:'')+extra;
+  return e;
+}
+function playable(c){const me=G.p[0],m=G.mode;if(G.busy||G.over||!(m=='main1'||m=='main2'||m=='prio'))return false;if(c.fx&&c.fx.k=='ctrs'&&!G.only)return false;return c.ld?(m!='prio'&&!me.landPlayed):(m=='prio'?inst_(me,c):!!plan(me,c))}
+function updatePile(id,count){const el=document.getElementById(id);if(!el)return;const cnt=el.querySelector('.cnt');if(cnt)cnt.textContent=count;el.classList.toggle('empty',count===0)}
+function info(){G.p.forEach((P,i)=>{const k=i?'ai':'my';const dice=$('#'+k+'Life').querySelector('.die');if(dice&&dice.dataset.shown!=P.life){const from=parseInt(dice.dataset.shown||'20');dice.dataset.shown=P.life;tweenLife(dice,from,P.life)}$('#'+k+'Meta').textContent=`${i?'IA':'Tú'} · 🖐 ${P.hand.length}`;updatePile(k+'Lib',P.lib.length);updatePile(k+'Gy',P.gy.length);updatePile(k+'Ex',(P.exile||[]).length)})}
+function render(){const[me,ai]=G.p;const f=(sel,arr,hand,hidden)=>{const el=$(sel);el.replaceChildren(...arr.map(c=>cardEl(c,hand,hidden)));if(sel=='#myHand'){const n=arr.length,mid=(n-1)/2;[...el.children].forEach((e,i)=>{const off=i-mid;e.style.setProperty('--rot',(off*4)+'deg');e.style.setProperty('--lift',(Math.abs(off)*5)+'px')})}};f('#aiHand',ai.hand,1,1);f('#aiLand',ai.bf.filter(c=>c.ld));f('#aiCre',ai.bf.filter(c=>!c.ld));f('#myCre',me.bf.filter(c=>!c.ld));f('#myLand',me.bf.filter(c=>c.ld));f('#myHand',me.hand,1);info();ui();setTimeout(()=>{G.p.forEach(P=>{P.bf.forEach(c=>c._enter=0);P.hand.forEach(c=>c._enter=0)})},700)}
+function ui(){const m=G.mode,n=G.p[0].bf.filter(c=>c.sel).length;$('#go').style.display=['main1','atk','block','target','mull','prio'].includes(m)?'':'none';$('#end').style.display=['main1','main2','mull'].includes(m)?'':'none';$('#go').textContent={main1:'Ir a combate ⚔',atk:n&&m=='atk'?`Atacar con ${n}`:'Sin ataque',block:'Confirmar bloqueos',target:'Cancelar',mull:'Conservar mano',prio:'Pasar'}[m]||'';$('#end').textContent=m=='mull'?'Mulligan':'Terminar turno';const stEl=$('#st');stEl.textContent={main1:'Tu turno · fase principal',atk:'Elige atacantes',main2:'Segunda fase principal',block:'Elige un bloqueador y luego el atacante',target:'Elige un objetivo',ai:'Turno de la IA',wait:'Resolviendo combate…',mull:'Mano inicial: ¿la conservas?',bottom:'Elige '+G.nb+' carta(s) al fondo del mazo',prio:G.pm,discard:'Descarta '+G.nd+' carta(s): máximo 7 en mano'}[m]||'';stEl.classList.toggle('thinking',m=='ai');const p=(m=='atk'||m=='block')?'c':(m=='main2')?'m2':(m=='main1')?'m1':'';document.querySelectorAll('#phasebar .ph').forEach(e=>e.classList.toggle('active',e.dataset.p===p))}
+
 /* ============================================================
-   JUGAR TIERRA CON ELECCIÓN DE COLOR
+   EFECTOS
 ============================================================ */
+function bon(c){let a=c.pb+c.ct,b=c.tb+c.ct;const o=owner(c);for(const e of bfAll()){if(e.eqp&&e.on===c){a+=e.eqp.a;b+=e.eqp.b}if(e.lord&&e!==c&&o&&o.bf.includes(e)){a+=e.lord.a;b+=e.lord.b}}if(c.thresholdBuff&&o&&o.gy.length>=7){a+=c.thresholdBuff.a;b+=c.thresholdBuff.b}return[a,b]}
+const pw=c=>c.pow+bon(c)[0],th=c=>c.tou+bon(c)[1],has=(c,k)=>c.kw.includes(k)||(c.tkw||[]).includes(k)||bfAll().some(e=>e.eqp&&e.on===c&&e.eqp.kw.includes(k));
+const isSp=c=>(/Instant|Sorcery/.test(c.type)&&!c.cr)||(c.fx&&c.fx.k=='pac');
+const can=(b,a)=>!has(a,'flying')||has(b,'flying')||has(b,'reach');
+const kills=(a,b)=>pw(a)>0&&(pw(a)>=th(b)-b.dmg||has(a,'deathtouch'));
+const fs=c=>has(c,'first strike')||has(c,'double strike'),dIn=(c,s)=>s==1?fs(c):(!has(c,'first strike')||has(c,'double strike'));
+const tapAll=(P,l)=>{l.forEach(x=>{x.tapped=1;const el=document.getElementById('c'+x.id);if(el)burstAt(el,'#6af',4);if(x.treas)P.bf=P.bf.filter(y=>y!==x)});if(l.length)SFX.tap()};
+const pick=(t,l)=>{const n=parseInt(prompt(t+'\n'+l.map((x,i)=>`${i+1}: ${x}`).join('\n')));return n>=1&&n<=l.length?n-1:null};
+
+function mkTok(P,f){const key=f.nm.toLowerCase();const realTok=TOKENS[key];const d=realTok?Object.assign({},realTok,{i:di++,pname:f.nm,tok:1}):{i:di++,name:f.nm,pname:f.nm,type:'Token Creature — '+f.nm,cost:'',cmc:0,pow:f.p,tou:f.t,kw:f.kw,img:'',small:'',col:[],prod:[],cr:true,ld:false,fx:null,tok:1};const c=inst(d);P.bf.push(c);c.sick=has(c,'haste')?0:1;c._enter=1;triggerEnter(P,c)}
+function mkTres(P,n){for(let k=0;k<n;k++){const realTok=TOKENS['treasure'];const c=inst(realTok?Object.assign({},realTok,{i:di++,pname:'Treasure',tok:1}):{i:di++,name:'Treasure',pname:'Treasure',type:'Token Artifact — Treasure',cost:'',cmc:0,pow:0,tou:0,kw:[],img:'',small:'',col:[],prod:['W','U','B','R','G'],cr:false,ld:false,fx:null,tok:1,mana:true,treas:true});c.sick=0;c._enter=1;P.bf.push(c)}}
+
+function triggerEnter(P,newC){
+  P.bf.filter(c=>c.anotherEntersTrigger&&c.cr&&c!==newC).forEach(c=>{
+    log(`${c.pname}: otra criatura entra`);
+    effect(P,c.anotherEntersTrigger,null,c);
+  });
+}
+function triggerGainLife(P){
+  P.bf.filter(c=>c.gainLifeTrigger&&!c.ld).forEach(c=>{
+    log(`${c.pname}: ganaste vida`);
+    effect(P,c.gainLifeTrigger,null,c);
+  });
+}
+
+function scry(P,n){if(!P.lib.length)return;if(P===G.p[0]&&!G.auto){for(let i=0;i<n&&P.lib.length;i++){const c=P.lib[P.lib.length-1];const keep=confirm(`Adivinar: ¿mantener "${c.pname}" arriba?\n(Aceptar = mantener · Cancelar = al fondo)`);if(keep)break;P.lib.pop();P.lib.unshift(c);log('Al fondo: '+c.pname)}}else{for(let i=0;i<n&&P.lib.length;i++){const c=P.lib[P.lib.length-1];if(!c.ld)break;P.lib.pop();P.lib.unshift(c)}}render()}
+async function tutor(P){const isLand=/land/i.test(P._tutorTx||'');let candidates=P.lib.filter(c=>isLand?c.ld:c.cr);if(!candidates.length)return log('No hay cartas válidas en el mazo.');let chosen=null;if(P===G.p[0]&&!G.auto){const k=pick('Busca en tu mazo:',candidates.map(c=>c.pname));if(k!=null)chosen=candidates[k]}else chosen=candidates.sort((a,b)=>val(b)-val(a))[0];if(!chosen)return;P.lib=P.lib.filter(c=>c!==chosen);chosen._enter=1;P.hand.push(chosen);log(`${P===G.p[0]?'Buscas':'La IA busca'} ${chosen.pname} y baraja.`);P.lib=R(P.lib);SFX.draw();render();await sleep(600)}
+async function sacrifice(P,src,target){if(!target||!alive(target))return;P.bf=P.bf.filter(x=>x!==target);if(!target.tok)P.gy.push(target);target.dmg=0;mark(target,'die-anim');shockwave(target);const el=document.getElementById('c'+target.id);if(el)burstAt(el,'#f55',15);SFX.kill();log(`${P===G.p[0]?'Sacrificas':'La IA sacrifica'} ${target.pname}`);render();await sleep(500);if(target.dies)effect(P,target.dies,null,target);await sweep()}
+
 async function playLand(P,land){
-  land.tapped=land.ldTap?1:0;
-  land._enter=1;
-  
+  land.tapped=land.ldTap?1:0;land._enter=1;
   if(land.choice){
     let chosen=null;
     if(P===G.p[0]&&!G.auto){
@@ -587,47 +1163,509 @@ async function playLand(P,land){
       const idx=parseInt(prompt(`Elige un color para ${land.pname}:\n1: Blanco (W)\n2: Azul (U)\n3: Negro (B)\n4: Rojo (R)\n5: Verde (G)`))-1;
       chosen=options[idx]||'W';
     } else {
-      // IA elige el color que más necesite
-      const needs={};
-      P.hand.forEach(c=>(c.cost.match(/\{[WUBRG]\}/g)||[]).forEach(x=>needs[x[1]]=(needs[x[1]]||0)+1));
+      const needs={};P.hand.forEach(c=>(c.cost.match(/\{[WUBRG]\}/g)||[]).forEach(x=>needs[x[1]]=(needs[x[1]]||0)+1));
       chosen=Object.entries(needs).sort((a,b)=>b[1]-a[1])[0]?.[0]||'W';
     }
-    land.chosenColor=chosen;
-    log(`${P===G.p[0]?'Eliges':'La IA elige'} ${chosen} para ${land.pname}.`);
+    land.chosenColor=chosen;log(`${P===G.p[0]?'Eliges':'La IA elige'} ${chosen} para ${land.pname}.`);
   }
-  
-  P.bf.push(land);
-  log(`${P===G.p[0]?'Juegas':'La IA juega'} ${land.pname}${land.ldTap?' (girada)':''}`);
-  
+  P.bf.push(land);log(`${P===G.p[0]?'Juegas':'La IA juega'} ${land.pname}${land.ldTap?' (girada)':''}`);
   const landfalls=P.bf.filter(c=>c.landfall&&!c.ld);
   for(const c of landfalls){log(`${c.pname}: caída de tierra`);effect(P,c.landfall,null,c)}
-  
-  render();
-  const el=document.getElementById('c'+land.id);
-  if(el)burstAt(el,CC[land.chosenColor]||CC[land.prod?.[0]||'W']||'#ccc',10);
+  render();const el=document.getElementById('c'+land.id);if(el)burstAt(el,CC[land.chosenColor]||CC[land.prod?.[0]||'W']||'#ccc',10);
 }
 
-/* ============================================================
-   DISPARADORES DE ATAQUE (Nuevo)
-============================================================ */
-async function triggerAttackEffects(P){
-  // Ancestor Dragon y similares
-  const dragons=P.bf.filter(c=>c.attackBuff&&!c.ld);
-  for(const c of dragons){
-    log(`${c.pname}: efecto al atacar`);
-    effect(P,c.attackBuff,null,c);
+function effect(P,f,t,src){
+  const i=G.p.indexOf(P);
+  if(f.self)t=src;
+  if(f.auto&&!t)t=aiTg({fx:f,type:'Instant'},i)||G.p[1-i];
+  if(/^(dmg|destroy|pac|pump|pump_kwt|ctr|regen|bounce|sac)$/.test(f.k)&&(!t||(t.life!==undefined&&f.k!='dmg')))return;
+  if(f.k=='dmg'){
+    const n=f.xd?(f.x||0):f.n;
+    if(t.life!==undefined){t.life-=n;flashL(t);floatDmg($('#'+(t===G.p[0]?'myLife':'aiLife')).querySelector('.die'),'-'+n,'#f55');if(n>=3){shake();screenFlash('#f55');SFX.big()}else SFX.hit()}
+    else if(t.pw){t.loy-=n;floatDmg(document.getElementById('c'+t.id),'-'+n,'#a8f');SFX.hit()}
+    else{t.dmg+=n;mark(t,'hit');const el=document.getElementById('c'+t.id);if(el)burstAt(el,'#f55',10);floatDmg(el,'-'+n,'#f55');SFX.hit()}
   }
-  // Jazal Goldmane
-  for(const c of P.bf){
-    for(const a of c.abil||[]){
-      if(a.txt.includes('Attacking creatures you control get')){
-        // Activación manual, no automática
+  else if(f.k=='destroy'){t.dmg=999;mark(t,'hit');const el=document.getElementById('c'+t.id);if(el)burstAt(el,'#f55',12);floatDmg(el,'✖','#f55')}
+  else if(f.k=='pac'){t.pac=1;mark(t,'hit')}
+  else if(f.k=='pump'){t.pb+=f.a;t.tb+=f.b;mark(t,'hit')}
+  else if(f.k=='pump_kwt'){t.pb+=f.a;t.tb+=f.b;t.tkw=(t.tkw||[]).concat(f.kw||[]);mark(t,'hit');log(t.pname+' obtiene '+f.kw.join(', '))}
+  else if(f.k=='ctr'){t.ct+=f.n;mark(t,'hit')}
+  else if(f.k=='regen'){t.regen=(t.regen||0)+1;log(t.pname+' obtiene escudo de regeneración');mark(t,'hit');SFX.heal()}
+  else if(f.k=='bounce'){const P2=owner(t);if(P2){P2.bf=P2.bf.filter(x=>x!==t);t._enter=1;P2.hand.push(t);log(t.pname+' regresa a la mano');render()}}
+  else if(f.k=='tok'){for(let k=0;k<f.n;k++)mkTok(P,f);log('Se crean fichas de '+f.nm)}
+  else if(f.k=='tres'){mkTres(P,f.n);log('Se crean '+f.n+' Tesoros')}
+  else if(f.k=='draw'||f.k=='drawX'){const n=f.k=='drawX'?(f.x||0):f.n;draw(P,n);log((P===G.p[0]?'Robas ':'La IA roba ')+n)}
+  else if(f.k=='gain'){P.life+=f.n;log((P===G.p[0]?'Ganas ':'La IA gana ')+f.n+' vidas');SFX.heal();floatDmg($('#'+(P===G.p[0]?'myLife':'aiLife')).querySelector('.die'),'+'+f.n,'#8f8');triggerGainLife(P)}
+  else if(f.k=='drain'){const O=G.p[1-i];O.life-=f.n;P.life+=f.n;flashL(O);log(`Drenaje: oponente pierde ${f.n}, tú ganas ${f.n}`);floatDmg($('#'+(P===G.p[0]?'myLife':'aiLife')).querySelector('.die'),'+'+f.n,'#8f8');floatDmg($('#'+(O===G.p[0]?'myLife':'aiLife')).querySelector('.die'),'-'+f.n,'#f55');SFX.heal();triggerGainLife(P)}
+  else if(f.k=='drain_noheal'){const O=G.p[1-i];O.life-=f.n;flashL(O);log(`Oponente pierde ${f.n}`)}
+  else if(f.k=='kwt'){src.tkw=(src.tkw||[]).concat(f.kw)}
+  else if(f.k=='scry'){scry(P,f.n)}
+  else if(f.k=='mill'){for(let k=0;k<f.n&&P.lib.length;k++)P.gy.push(P.lib.pop());log((P===G.p[0]?'Mueles ':'La IA muele ')+f.n)}
+  else if(f.k=='tutor'){tutor(P)}
+}
+
+function askT(f){return new Promise(res=>{G.prev=G.mode;G.mode='target';G.pend={fx:f,res,type:'Instant',pname:'efecto'};G.busy=0;render()})}
+function chooseMode(P,modes){if(P!==G.p[0]||G.auto)return modes.find(m=>canResolve(P,m))||modes[0];const names=modes.map(m=>m.k+(m.n?' '+m.n:'')+(m.a!==undefined?' +'+m.a:''));const i=pick('Elige un modo:',names);return modes[i!=null?i:0]||modes[0]}
+function canResolve(P,f){const O=G.p[1-G.p.indexOf(P)];if(f.k=='dmg'||f.k=='destroy'||f.k=='bounce')return O.bf.some(c=>c.cr);if(f.k=='pac')return O.bf.some(c=>c.cr&&!c.pac);if(f.k=='ctr'||f.k=='pump'||f.k=='regen')return P.bf.some(c=>c.cr);return true}
+async function resolveFx(P,f,src,ask){if(f.self&&src&&!alive(src))return;let t=null;if(f.k=='modal')f=chooseMode(P,f.modes);if(f.auto&&!f.self&&ask&&P===G.p[0]&&!G.auto)t=await askT(f);if(f.auto&&!t&&P!==G.p[0])t=aiTg({fx:f,type:'Instant'},G.p.indexOf(P));effect(P,f,t,src)}
+
+function triggerProwess(P){const creatures=P.bf.filter(c=>c.cr&&has(c,'prowess')&&!c.ld);if(!creatures.length)return;creatures.forEach(c=>{c.pb=(c.pb||0)+1;c.tb=(c.tb||0)+1;log(`${c.pname} destreza +1/+1`)})}
+async function equip(P,e,t){tapAll(P,plan(P,{cost:e.eqp.cost}));e.on=t;log(`${P===G.p[0]?'Equipas':'La IA equipa'} ${e.pname} → ${t.pname}`);render();await sleep(500);const el=document.getElementById('c'+t.id);if(el)burstAt(el,'#fc6',8);await sleep(300)}
+
+async function respond(P,c){
+  const O=G.p[1-G.p.indexOf(P)],f=x=>x.fx&&x.fx.k=='ctrs'&&(!x.fx.only||(x.fx.only=='creature'?c.cr:!c.cr))&&plan(O,x);
+  if(!O.hand.some(f))return false;
+  let x=null;
+  if(O===G.p[0]&&!G.auto){G.only='ctrs';G.cs=null;await prio(`La IA lanza ${c.pname}: ¿la contrarrestas?`);G.only=null;x=G.cs;G.cs=null;if(x&&!f(x))x=null}
+  else if(c.cmc>=3||(c.cmc>=2&&O.life<=8))x=O.hand.find(f);
+  if(!x)return false;
+  tapAll(O,plan(O,x));O.hand.splice(O.hand.indexOf(x),1);O.gy.push(x);
+  log(`${O===G.p[0]?'Contrarrestas':'La IA contrarresta'} ${c.pname} con ${x.pname}`);
+  render();await sleep(800);
+  if(x.fx.tax){const q=plan(P,{cost:'{'+x.fx.tax+'}'});if(q&&(P!==G.p[0]||G.auto||confirm(`¿Pagas {${x.fx.tax}}?`))){tapAll(P,q);log('Se paga el coste.');return false}}
+  return true;
+}
+
+async function cast(P,c,t,opts={}){
+  let handRect=null;
+  if(P===G.p[0]&&!opts.fromGY){const el=document.getElementById('c'+c.id);if(el)handRect=el.getBoundingClientRect()}
+  let kicked=false,totalCost=c.cost;
+  if(c.kickerCost&&!opts.fromGY){const canPay=plan(P,{cost:totalCost+c.kickerCost});if(canPay){if(P===G.p[0]&&!G.auto){if(confirm(`¿Pagar patada ${c.kickerCost}?`)){kicked=true;totalCost+=c.kickerCost}}else{kicked=true;totalCost+=c.kickerCost}}}
+  let lands,x=0;
+  if(opts.fromGY&&c.flashbackCost){lands=plan(P,{cost:c.flashbackCost});if(!lands)return}
+  else if(c.hasX){const r=planX(P,c);if(!r)return;lands=r.lands;x=r.x}
+  else{lands=plan(P,{cost:totalCost});if(!lands)return}
+  tapAll(P,lands);
+  if(opts.fromGY){P.gy.splice(P.gy.indexOf(c),1)}else{P.hand.splice(P.hand.indexOf(c),1)}
+  if(handRect&&c.small){const ghost=document.createElement('div');ghost.className='card';ghost.innerHTML=`<img src="${c.small}">`;ghost.style.cssText=`position:fixed;left:${handRect.left}px;top:${handRect.top}px;width:${handRect.width}px;height:${handRect.height}px;z-index:250;pointer-events:none;border-radius:6px;overflow:hidden;transition:all .5s cubic-bezier(.4,0,.6,1);box-shadow:0 0 20px #fc6`;document.body.appendChild(ghost);void ghost.offsetWidth;const fld=$('#myCre').getBoundingClientRect();ghost.style.left=`${fld.left+fld.width/2-handRect.width/2}px`;ghost.style.top=`${fld.top+fld.height/2-handRect.height/2}px`;ghost.style.opacity='0';ghost.style.transform='rotate(15deg) scale(.55)';setTimeout(()=>ghost.remove(),560)}
+  SFX.cast();
+  const me=P===G.p[0];
+  log(`${me?'Lanzas':'La IA lanza'} ${c.pname}${kicked?' (patada)':''}${opts.fromGY?' (retrospectiva)':''}${x?` (X=${x})`:''}`+(t?' → '+(t.life!==undefined?(t===G.p[0]?'ti':'la IA'):t.pname):''));
+
+  // Ward check
+  if(c.ward && t && t.cr){
+    const ctrl=owner(t);
+    if(ctrl && ctrl!==P){
+      const q=plan(ctrl,{cost:'{'+c.ward.n+'}'});
+      let pay=false;
+      if(ctrl===G.p[0]&&!G.auto){pay=confirm(`Ward {${c.ward.n}} de ${c.pname}: ¿pagas?`)}
+      else pay=!!q;
+      if(!pay){log(`Rebatir: ${c.pname} no es objetivo válido`);P.gy.push(c);render();return}
+      if(q)tapAll(ctrl,q);
+    }
+  }
+
+  // Cast trigger
+  if(c.castTrigger && G.t!==G.p.indexOf(P)){
+    P.bf.filter(x=>x.castTrigger&&!x.ld).forEach(cc=>{cc.ct+=1;log(`${cc.pname}: +1/+1 (hechizo en turno rival)`);mark(cc,'hit')});
+  }
+  if(!c.cr&&isSp(c))triggerProwess(P);
+  if(!(c.fx&&c.fx.k=='ctrs')&&await respond(P,c)){if(opts.fromGY)P.exile.push(c);else P.gy.push(c);log('¡Contrarrestada!');render();await sleep(600);return}
+
+  // Fight composite
+  if(isSp(c)&&c.fx&&['fight_you','bite_you','stomp','primal_might'].includes(c.fx.k)){
+    if(!t||!alive(t)){log('Objetivo inválido');P.gy.push(c);render();return}
+    const myCreature=t;
+    let enemyCreature;
+    if(P===G.p[0]&&!G.auto){
+      G.prev=G.mode;G.mode='target';G.pend={fx:{k:'fight_target_enemy'},res:null,type:'Instant'};
+      enemyCreature=await new Promise(res=>{G.pend.res=res;G.busy=0;render()});
+    } else {
+      const opp=G.p[1-G.p.indexOf(P)];
+      enemyCreature=opp.bf.filter(cc=>cc.cr).sort((a,b)=>val(b)-val(a))[0];
+    }
+    if(!enemyCreature){log('Cancelado');P.gy.push(c);render();return}
+    if(c.fx.k==='stomp'){myCreature.ct+=1;log(myCreature.pname+' gana +1/+1')}
+    if(c.fx.k==='primal_might'){const xx=x||0;myCreature.pb+=xx;myCreature.tb+=xx;log(myCreature.pname+' gana +'+xx+'/+'+xx)}
+    const myDmg=pw(myCreature),enemyDmg=pw(enemyCreature);
+    effect(P,{k:'dmg',n:myDmg},enemyCreature);
+    if(c.fx.k!=='bite_you') effect(P,{k:'dmg',n:enemyDmg},myCreature);
+    log(`${myCreature.pname} ${c.fx.k==='bite_you'?'muerde a':'lucha contra'} ${enemyCreature.pname}`);
+    P.gy.push(c);await sweep();render();return;
+  }
+
+  // Composite effects
+  if(isSp(c)&&c.fx&&c.fx.k==='dmg_gain_tapped'){
+    if(t&&t.cr&&t.tapped){effect(P,{k:'dmg',n:c.fx.dmg},t);effect(P,{k:'gain',n:c.fx.life},null)}
+    else log('El objetivo no es una criatura girada.');
+    P.gy.push(c);render();return;
+  }
+  if(isSp(c)&&c.fx&&c.fx.k==='dmg_gain_combat'){
+    if(t&&t.cr&&(t.att||t.blk)){effect(P,{k:'dmg',n:c.fx.dmg},t);effect(P,{k:'gain',n:c.fx.life},null)}
+    else log('El objetivo no está en combate.');
+    P.gy.push(c);render();return;
+  }
+  if(isSp(c)&&c.fx&&c.fx.k==='dmg_gain'){
+    effect(P,{k:'dmg',n:c.fx.xd?(x||0):c.fx.dmg},t);
+    effect(P,{k:'gain',n:c.fx.xl?(x||0):c.fx.life},null);
+    P.gy.push(c);render();return;
+  }
+  if(isSp(c)&&c.fx&&c.fx.k==='dmg_controller'){
+    effect(P,{k:'dmg',n:c.fx.dmg},t);
+    if(t&&t.cr){const ctl=owner(t);if(ctl){ctl.life-=c.fx.extra;flashL(ctl)}}
+    P.gy.push(c);render();return;
+  }
+  if(isSp(c)&&c.fx&&c.fx.k==='gain_draw'){
+    effect(P,{k:'gain',n:c.fx.gain},null);
+    draw(P,c.fx.draw);
+    P.gy.push(c);render();return;
+  }
+  if(isSp(c)&&c.fx&&c.fx.k==='dmg_tapped'){
+    if(t&&t.cr&&t.tapped)effect(P,{k:'dmg',n:c.fx.n},t);
+    else log('El objetivo no es una criatura girada.');
+    P.gy.push(c);render();return;
+  }
+  if(isSp(c)&&c.fx&&c.fx.k==='destroy_tapped'){
+    if(t&&t.cr&&t.tapped)effect(P,{k:'destroy'},t);
+    else log('El objetivo no es una criatura girada.');
+    P.gy.push(c);render();return;
+  }
+  if(isSp(c)&&c.fx&&c.fx.k==='debuff_gain'){
+    if(t&&t.cr){t.pb+=c.fx.a;t.tb+=c.fx.b;mark(t,'hit')}
+    effect(P,{k:'gain',n:c.fx.life},null);
+    P.gy.push(c);await sweep();render();return;
+  }
+  if(isSp(c)&&c.fx&&c.fx.k==='pump_kwt'){
+    if(t&&t.cr){t.pb+=c.fx.a;t.tb+=c.fx.b;t.tkw=(t.tkw||[]).concat(c.fx.kw);mark(t,'hit')}
+    P.gy.push(c);render();return;
+  }
+
+  if(isSp(c)){
+    render();await sleep(300);
+    let f=c._mode||c.fx;delete c._mode;
+    if(f&&f.k=='modal')f=chooseMode(P,f.modes);
+    if(f){if(f.xd)f={...f,x};if(f.k=='drawX')f={k:'draw',n:x};effect(P,f,t)}else log('(sin efecto)');
+    if(opts.fromGY)P.exile.push(c);else P.gy.push(c);
+  } else {
+    P.bf.push(c);c.tapped=c.ldTap?1:0;c.sick=has(c,'haste')?0:1;c._enter=1;
+    if(c.eqp&&c.eqp.aura)c.on=t;
+    if(c.conditionalElf && !P.bf.some(x=>x!==c&&x.cr&&/Elf/.test(x.type))){
+      log('No controlas otro Elfo, no se dispara');
+    } else if(c.conditionalOther && !P.bf.some(x=>x!==c&&x.cr&&x.type.includes(c.conditionalOther.type))){
+      log('No controlas otro '+c.conditionalOther.type+', no se dispara');
+    } else if(c.raid && P.attackedThisTurn){
+      log(`${c.pname}: Incursión activada`);
+      effect(P,c.raid,null,c);
+    } else if(c.fx){
+      render();await resolveFx(P,c.fx,c,true);
+    }
+    triggerEnter(P,c);
+  }
+  checkEnd();render();await sleep(450);
+  const newEl=document.getElementById('c'+c.id);
+  if(newEl)burstAt(newEl,c.col.length?CC[c.col[0]]:'#ccc',10);
+  await sweep();
+}
+
+async function castFlashback(c){if(!c.flashbackCost)return;const P=G.p[0];if(!plan(P,{cost:c.flashbackCost})){log('No tienes maná');return}$('#gyv').classList.remove('on');await cast(P,c,null,{fromGY:true})}
+function canAct(P,c,a){if(!alive(c))return null;if(a.tap&&(c.tapped||(c.cr&&c.sick)))return null;if(a.disc&&!P.hand.length)return null;if(a.sacOther&&!P.bf.some(x=>x.cr&&x!==c))return null;if(a.loy!==undefined&&c.loy+a.loy<0)return null;if(a.payLife&&P.life<=a.payLife+2)return null;const w=c.tapped;if(a.tap)c.tapped=1;const p=a.mana?plan(P,{cost:a.mana}):[];c.tapped=w;return p}
+async function activate(P,c,a){const p=canAct(P,c,a);if(p===null)return;const me=P===G.p[0]&&!G.auto;tapAll(P,p);if(a.tap)c.tapped=1;if(a.loy){c.loy+=a.loy;floatDmg(document.getElementById('c'+c.id),(a.loy>0?'+':'')+a.loy,'#a8f')}if(a.payLife&&P.life>a.payLife){P.life-=a.payLife;log(`${me?'Pagas':'La IA paga'} ${a.payLife} vidas`);floatDmg($('#'+(P===G.p[0]?'myLife':'aiLife')).querySelector('.die'),'-'+a.payLife,'#f55')}if(a.sacOther){const opts=P.bf.filter(x=>x.cr&&x!==c);let v=null;if(me){const k=pick('Sacrifica una criatura:',opts.map(x=>x.pname));v=k!=null?opts[k]:null}else v=opts.sort((x,y)=>val(x)-val(y))[0];if(v)await sacrifice(P,c,v);else return}if(a.sac){log(`${me?'Sacrificas':'La IA sacrifica'} ${c.pname} (coste)`);const own=owner(c)||P;own.bf=own.bf.filter(x=>x!==c);if(!c.tok)own.gy.push(c);c.dmg=0;mark(c,'die-anim');shockwave(c);const el=document.getElementById('c'+c.id);if(el)burstAt(el,'#f55',15);SFX.kill();render();await sleep(500);if(c.dies)effect(own,c.dies,null,c);await sweep()}if(a.disc){const h=P.hand;const k=me?pick('Descarta:',h.map(x=>x.pname)):null;const ls=h.filter(x=>x.ld);const d=k!=null?h[k]:(ls.length>3?ls[0]:[...h].sort((x,y)=>y.cmc-x.cmc)[0]);if(d){h.splice(h.indexOf(d),1);P.gy.push(d);log((me?'Descartas ':'La IA descarta ')+d.pname)}}log(`${me?'Activas':'La IA activa'}: ${c.pname}`);SFX.act();render();await sleep(400);await resolveFx(P,a.f,c,true);checkEnd();render();await sleep(500);await sweep()}
+
+async function aiAbil(i=1){const A=G.p[i];const diff=G.difficulty||'normal';for(let r=0;r<4;r++){let done=0;for(const c of A.bf){for(const a of c.abil||[]){if(!canAct(A,c,a))continue;const fk=a.f.k;if(!/^(draw|gain|tok|tres|drain|ctr|dmg|destroy|regen|scry|tutor)$/.test(fk))continue;if(fk=='gain'&&A.life>=16)continue;if(a.sac){const valuable=c.tok||c.dies||(fk==='draw'&&A.life>5)||fk==='tutor';if(!valuable&&diff!=='hard')continue}if(a.sacOther){const others=A.bf.filter(x=>x.cr&&x!==c);if(others.length<2&&!(fk==='draw'||fk==='destroy'||fk==='tutor'))continue;if(diff==='easy')continue}if(a.disc&&A.hand.length<5)continue;if(a.payLife&&A.life-a.payLife<=6)continue;if((fk=='dmg'||fk=='destroy')&&!aiTg({fx:a.f,type:'Instant'},i))continue;await activate(A,c,a);done=1;await sleep(1000);break}if(done)break}if(!done)return}}
+
+async function sweep(){
+  const ind=c=>has(c,'indestructible');
+  const wouldDie=c=>{if(!alive(c))return false;if(c.pw)return c.loy<=0;return c.cr&&(((c.dmg>=th(c)||c.dt)&&!ind(c))||th(c)<=0)};
+  const regenC=bfAll().filter(c=>wouldDie(c)&&c.regen>0);
+  if(regenC.length){regenC.forEach(c=>{c.regen--;c.dmg=0;c.dt=0;c.tapped=1;c.att=0;c.blk=0;c.bn=0;log(c.pname+' se regenera');mark(c,'hit');const el=document.getElementById('c'+c.id);if(el)burstAt(el,'#8f8',12);SFX.heal()});render();await sleep(600)}
+  const d=bfAll().filter(wouldDie);
+  if(!d.length)return;
+  d.forEach(c=>{if(c.cr){const P=owner(c);if(P)P.creatureDiedThisTurn=true}});
+  d.forEach(c=>c._own=owner(c)||G.p[0]);
+  const au=bfAll().filter(e=>e.eqp&&e.eqp.aura&&d.includes(e.on));
+  d.forEach(c=>{mark(c,'die-anim');shockwave(c);const el=document.getElementById('c'+c.id);if(el)burstAt(el,'#f55',18)});
+  if(d.length)SFX.kill();
+  log('Destruida: '+d.map(c=>c.pname).join(', '));
+  await sleep(700);
+  const selfTrig=[],otherTrig=[];
+  for(const c of d){if(c.dies)selfTrig.push([c._own,c.dies,c]);if(c.diesAny)selfTrig.push([c._own,c.diesAny,c])}
+  G.p.forEach(P=>P.bf.forEach(c=>{
+    if(!c.cr)return;
+    if(c.diesAny)for(const _ of d)otherTrig.push([P,c.diesAny,c]);
+    if(c.diesOther)for(const _ of d)otherTrig.push([P,c.diesOther,c]);
+  }));
+  G.p.forEach(P=>{const x=P.bf.filter(c=>d.includes(c)||au.includes(c));P.bf=P.bf.filter(c=>!x.includes(c));x.forEach(c=>{c.dmg=c.pb=c.tb=c.ct=c.dt=c.att=c.blk=c.bn=c.pac=0;if(!c.tok)P.gy.push(c)})});
+  render();await sleep(200);
+  for(const[P,e,src]of selfTrig){if(e){log(src.pname+': efecto al morir');effect(P,e,null,src);await sleep(180)}}
+  for(const[P,e,src]of otherTrig){if(e){effect(P,e,null,src);await sleep(100)}}
+  if(selfTrig.length||otherTrig.length){checkEnd();render();await sleep(400);await sweep()}
+}
+
+/* COMBATE */
+const val=c=>c.cr?pw(c)*1.5+th(c)+c.cmc*.5+(has(c,'flying')?2:0)+(has(c,'deathtouch')?2:0)+(has(c,'lifelink')?1.5:0)+(fs(c)?1.5:0)+(has(c,'trample')||has(c,'menace')?1:0):c.cmc;
+function aiBlocks(att,d=1){
+  const D=G.p[d],bm=new Map();
+  const diff=G.difficulty||'normal';
+  if(diff==='easy')return bm;
+  let free=D.bf.filter(c=>c.cr&&!c.tapped&&!c.pac&&!c.cantBlock),
+    rem=att.reduce((s,a)=>s+pw(a),0);
+  const set=(a,bs)=>{bm.set(a.id,bs);free=free.filter(x=>!bs.includes(x));rem-=pw(a)};
+  for(const a of[...att].sort((x,y)=>pw(y)-pw(x))){
+    const cd=free.filter(b=>can(b,a)&&!a.cantBeBlocked).sort((x,y)=>val(x)-val(y)),
+      low=D.life-rem<=8;
+    if(has(a,'menace')){if(cd.length>1&&(D.life-rem<=3||cd.slice(0,2).some(b=>kills(b,a))))set(a,cd.slice(0,2));continue}
+    const b=cd.find(b=>kills(b,a)&&!kills(a,b))||cd.find(b=>kills(b,a)&&val(b)<=val(a)+(low?3:0))||(D.life-rem<=4?cd.find(b=>!kills(a,b)):0)||(D.life-rem<=0?cd[0]:0);
+    if(b)set(a,[b]);
+  }
+  return bm;
+}
+function playerBlocks(att){const me=G.p[0];return new Promise(res=>{if(!me.bf.some(c=>c.cr&&!c.tapped&&!c.pac&&!c.cantBlock))return res(new Map());G.mode='block';G.att=att;G.bm=new Map();G.sb=null;G.busy=0;G.done=()=>{G.busy=1;G.mode='ai';me.bf.forEach(c=>c.sel=0);ui();res(G.bm)};render()})}
+
+async function combat(att,ap){
+  const D=G.p[1-ap];att.forEach((a,i)=>a.bn=i+1);
+  if(ap==1&&!G.auto)await prio('La IA ataca: ¿lanzas algo?');
+  if(G.over)return;
+  let bm=(ap==1&&!G.auto)?await playerBlocks(att):aiBlocks(att,1-ap);
+  bm=new Map([...bm].filter(([k,v])=>v.length));
+  for(const a of att){if(has(a,'menace')&&(bm.get(a.id)||[]).length==1){bm.get(a.id)[0].blk=0;bm.delete(a.id);log('Amenaza.')}}
+  for(const a of att)(bm.get(a.id)||[]).forEach(b=>{mark(b,'blkr');b.blk=1;b.bn=a.bn});
+  if(bm.size)log(`${ap?'Bloqueas':'La IA bloquea'} ${bm.size} atacante(s).`);
+  await sleep(800);render();await sleep(350);
+  await prio('Bloqueos: ¿lanzas algo?');
+  for(const i of[0,1])if(i==1||G.auto){await aiInst(i,att,bm);if(G.over)return}
+  const inv=[...att,...[...bm.values()].flat()];
+  for(const s of inv.some(fs)?[1,2]:[2]){
+    const ev=[];
+    for(const a of att){
+      const bs=bm.get(a.id)||[],ab=bs.filter(alive);
+      if(alive(a)&&dIn(a,s)){
+        if(!bs.length){const target=a._targetPW||D;ev.push([a,target,pw(a)])}
+        else{let left=pw(a);for(const b of ab){const n=Math.min(left,has(a,'deathtouch')?1:Math.max(1,th(b)-b.dmg));if(n>0)ev.push([a,b,n]);left-=n}if(left>0&&has(a,'trample')){const target=a._targetPW||D;ev.push([a,target,left])}}
+      }
+      for(const b of ab)if(alive(b)&&dIn(b,s))ev.push([b,a,pw(b)]);
+    }
+    for(const[sr,t,n]of ev){
+      if(n<=0)continue;
+      const o=owner(sr);
+      if(t.pw){t.loy-=n;floatDmg(document.getElementById('c'+t.id),'-'+n,'#a8f');log(`${t.pname} pierde ${n} lealtad`)}
+      else if(t.life!==undefined){t.life-=n;flashL(t);floatDmg($('#'+(t===G.p[0]?'myLife':'aiLife')).querySelector('.die'),'-'+n,'#f55');if(n>=3){shake();screenFlash('#f55');SFX.big()}else SFX.hit()}
+      else{t.dmg+=n;if(has(sr,'deathtouch'))t.dt=1;mark(t,'hit');const el=document.getElementById('c'+t.id);if(el)burstAt(el,'#f55',8);floatDmg(el,'-'+n,'#f55');SFX.hit()}
+      if(has(sr,'lifelink')&&o)o.life+=n;
+    }
+    info();checkEnd();await sleep(550);await sweep();if(G.over)return;
+  }
+  att.forEach(a=>{a.att=a.bn=0;a._targetPW=null});
+  bfAll().forEach(c=>{c.blk=c.bn=c.sel=0});
+  render();
+}
+
+async function declare(att,ap){
+  const P=G.p[ap];
+  att.forEach(a=>{a.sel=0;if(!has(a,'vigilance'))a.tapped=1});
+  render();await sleep(80);
+  att.forEach(a=>a.att=1);
+
+  // Ancestor Dragon y similares
+  P.bf.filter(c=>c.attackBuff&&!c.ld).forEach(c=>{
+    log(`${c.pname}: efecto al atacar (${att.length} atacantes)`);
+    const e=c.attackBuff;
+    if(e&&e.k==='gain'){P.life+=att.length;SFX.heal();floatDmg($('#'+(P===G.p[0]?'myLife':'aiLife')).querySelector('.die'),'+'+att.length,'#8f8');triggerGainLife(P)}
+    else if(e) effect(P,e,null,c);
+  });
+
+  // Crossway Troublemakers y similares
+  const vampAttack=P.bf.filter(c=>c.vampAttack&&!c.ld);
+  if(vampAttack.length){
+    const vamps=att.filter(a=>/Vampire/.test(a.type));
+    for(const c of vampAttack){
+      if(vamps.length && P.life>2){
+        P.life-=2;log(`${c.pname}: pagas 2 vidas, robas 1`);draw(P,1);
       }
     }
   }
+
+  // Equipos y Auras con disparador al atacar
+  for(const a of att){
+    const attached=P.bf.filter(e=>e.eqp&&e.on===a&&e.eqp.attackTrigger);
+    for(const eq of attached){
+      log(`${eq.pname} se dispara al atacar ${a.pname}`);
+      const trigTxt=eq.eqp.attackTrigger;
+      const mPump=trigTxt.match(/gets ([+-]\d+)\/([+-]\d+)/i);
+      if(mPump){a.pb+=+mPump[1];a.tb+=+mPump[2]}
+      const kws=parseKW(trigTxt);
+      if(kws.length)a.tkw=(a.tkw||[]).concat(kws);
+      mark(a,'hit');
+    }
+  }
+
+  const stagger=90;
+  att.forEach((a,i)=>{setTimeout(()=>{const el=document.getElementById('c'+a.id);if(el)el.classList.add('atkr')},i*stagger)});
+  await sleep(450+att.length*stagger);
+  if(att.length)SFX.swing();
+  const opp=G.p[1-ap];const pws=opp.bf.filter(c=>c.pw&&c.loy>0);
+  if(pws.length){const bigPW=pws.sort((a,b)=>b.loy-a.loy)[0];const bigAtt=att.sort((a,b)=>pw(b)-pw(a)).find(a=>pw(a)>=bigPW.loy);if(bigAtt){bigAtt._targetPW=bigPW;log(`${bigAtt.pname} ataca a ${bigPW.pname}`)}}
+  att.forEach(a=>{const el=document.getElementById('c'+a.id);if(!el)return;const r=el.getBoundingClientRect();const tgtEl=a._targetPW?document.getElementById('c'+a._targetPW.id):$(ap===0?'#aiLife':'#myLife');if(tgtEl){const tr=tgtEl.getBoundingClientRect();arrow(r.left+r.width/2,r.top+r.height/2,tr.left+tr.width/2,tr.top+tr.height/2,'#f93')}});
+  await sleep(400);
+  const tr=att.filter(a=>a.atkt);
+  for(const a of tr){log(`${a.pname}: al atacar`);effect(owner(a),a.atkt,null,a)}
+  if(tr.length){info();checkEnd();await sleep(500);await sweep()}
+  if(G.over)return;
+  await combat(att,ap);
 }
 
-/* ... (El resto del código: cast, resolveFx, aiTurn, run, etc. se mantiene igual, con las llamadas a triggerAttackEffects en declare) ... */
+/* IA */
+function aiTg(c,i=1){const A=G.p[i],H=G.p[1-i];if(c.eqp&&c.eqp.aura)return(c.eqp.a+c.eqp.b<0?H:A).bf.filter(x=>x.cr).sort((x,y)=>val(y)-val(x))[0]||false;const f=c.fx;if(!f||!isSp(c))return null;const cr=H.bf.filter(x=>x.cr).sort((a,b)=>val(b)-val(a)),mine=A.bf.filter(x=>x.cr).sort((a,b)=>val(b)-val(a));if(f.k=='pac')return cr.find(x=>!x.pac&&val(x)>=4)||false;if(f.k=='dmg'){const n=f.xd?(f.x||0):f.n;const pwH=H.bf.find(x=>x.pw&&n>=x.loy&&x.loy>0);if(pwH)return pwH;const lords=cr.filter(x=>x.lord);if(lords.length&&n>=th(lords[0])-lords[0].dmg)return lords[0];return cr.find(x=>n>=th(x)-x.dmg&&!has(x,'indestructible')&&val(x)>=3)||(f.tg=='any'&&H.life<=n?H:false)}if(f.k=='destroy'){const lords=cr.filter(x=>x.lord);if(lords.length)return lords[0];return cr.find(x=>!has(x,'indestructible')&&val(x)>=4)||false}if(f.k=='bounce')return cr.find(x=>val(x)>=4)||false;if(f.k=='ctr'||f.k=='regen')return mine[0]||false;if(f.k=='dmg_gain_tapped'||f.k=='dmg_tapped'||f.k=='destroy_tapped')return cr.find(x=>x.tapped&&val(x)>=2)||false;if(f.k=='dmg_gain_combat')return cr.find(x=>(x.att||x.blk)&&val(x)>=2)||false;return null}
+function bestPlay(A,i){const cs=A.hand.filter(c=>!c.ld&&!(isSp(c)&&!c.fx)&&!(c.fx&&(c.fx.k=='pump'||c.fx.k=='ctrs'||(c.fx.k=='gain'&&A.life>=14)))).sort((a,b)=>(!!isSp(b)-!!isSp(a))||b.cmc-a.cmc).slice(0,9);let best=null,bs=-1;for(let m=1;m<1<<cs.length;m++){const sub=cs.filter((c,j)=>m>>j&1),tp=[];let ok=true,totalMana=0;for(const c of sub){const p=c.hasX?planX(A,c)?.lands:plan(A,c);if(!p||aiTg(c,i)===false){ok=false;break}p.forEach(l=>{l.tapped=1;tp.push(l)});totalMana+=c.cmc}tp.forEach(l=>{l.tapped=0});if(ok){const sc=sub.length*3+totalMana*0.5+sub.filter(c=>c.cr).length*1.5;if(sc>bs){bs=sc;best=sub}}}return best}
+async function aiCast(i=1){const A=G.p[i];for(let r=0;r<3;r++){const sub=bestPlay(A,i);if(!sub||!sub.length)return;let n=0;for(const c of sub){if(G.over)return;if(!A.hand.includes(c))continue;const lands=c.hasX?planX(A,c)?.lands:plan(A,c);if(!lands)continue;const t=aiTg(c,i);if(t===false)continue;await cast(A,c,t);n++;await sleep(1000)}if(!n)return}}
+async function aiEquip(i=1){const A=G.p[i];for(const e of A.bf.filter(e=>e.eqp&&!e.eqp.aura&&e.eqp.cost&&!(e.on&&alive(e.on)))){const t=A.bf.filter(c=>c.cr&&!c.pac).sort((a,b)=>val(b)-val(a))[0];if(t&&plan(A,{cost:e.eqp.cost})){await equip(A,e,t);await sleep(1000)}}}
+async function aiInst(i,att,bm){const A=G.p[i],pairs=att.flatMap(a=>(bm.get(a.id)||[]).map(b=>[a,b]));for(const c of A.hand.filter(c=>c.fx&&inst_(A,c))){if(G.over)return;const f=c.fx;let t=null;if(f.k=='pump'||f.k=='pump_kwt'){const my=pairs.map(([a,b])=>owner(a)===A?[a,b]:[b,a]).find(([x,y])=>owner(x)===A&&alive(x)&&alive(y)&&th(x)-x.dmg+f.b>pw(y)&&pw(x)+f.a>=th(y)-y.dmg&&!(kills(x,y)&&!kills(y,x)));t=my&&my[0]}else if(f.k=='dmg'||f.k=='destroy'){const r=aiTg(c,i);if(r&&r.life===undefined)t=r}if(t){await cast(A,c,t);await sleep(900)}}for(const[a,b]of pairs)for(const[x,y]of[[a,b],[b,a]]){if(owner(x)!==A)continue;for(const ab of x.abil||[]){if(ab.f.k!='pump'||!ab.f.self||ab.sac||ab.disc)continue;for(let n=0;n<5&&alive(x)&&alive(y)&&canAct(A,x,ab)&&!(kills(x,y)&&!kills(y,x));n++)await activate(A,x,ab)}}}
+function aiAttackers(A,H){const bl=H.bf.filter(c=>c.cr&&!c.tapped&&!c.pac),cand=A.bf.filter(c=>c.cr&&!c.tapped&&!c.sick&&!c.pac&&!has(c,'defender')&&pw(c)>0);const cb=a=>bl.filter(b=>can(b,a)&&!a.cantBeBlocked),pows=cand.map(c=>pw(c)).sort((x,y)=>y-x);if(pows.slice(bl.length).reduce((s,x)=>s+x,0)>=H.life)return cand;const att=cand.filter(a=>{const c=cb(a);return(has(a,'menace')&&c.length<2)||c.every(b=>!kills(b,a)||(kills(a,b)&&val(b)>=val(a)-1))});const thr=H.bf.filter(c=>c.cr&&!c.pac&&!has(c,'defender')).map(c=>pw(c)).sort((x,y)=>y-x),home=()=>A.bf.filter(c=>c.cr&&!c.pac&&!att.includes(c)).length;while(att.length&&A.life-thr.slice(home()).reduce((s,x)=>s+x,0)<=2){att.sort((x,y)=>val(x)-val(y));att.shift()}return att}
+async function aiTurn(i=1){const A=G.p[i],H=G.p[1-i],w=i?'La IA':'Tú (auto)';G.busy=1;await sleep(1000);A.creatureDiedThisTurn=false;A.attackedThisTurn=false;const ls=A.landPlayed?[]:A.hand.filter(c=>c.ld);if(ls.length){const need={};A.hand.forEach(c=>(c.cost.match(/\{[WUBRG]\}/g)||[]).forEach(x=>need[x[1]]=(need[x[1]]||0)+1));const sc=l=>Math.max(...l.prod.map(k=>(need[k]||0)-A.bf.filter(x=>x.ld&&x.prod.includes(k)).length*.5)),l=[...ls].sort((a,b)=>sc(b)-sc(a))[0];A.landPlayed=1;A.hand.splice(A.hand.indexOf(l),1);await playLand(A,l);await sleep(1000)}await aiCast(i);await aiEquip(i);await aiAbil(i);if(G.over)return;const att=aiAttackers(A,H);if(att.length){await sleep(1000);log(`${w} ataca con ${att.length} criatura(s).`);A.attackedThisTurn=true;await declare(att,i);if(G.over)return;await sleep(1000);await aiCast(i)}if(i==1)await prio('Final del turno IA');G.busy=0}
+
+/* TURNOS */
+async function run(){while(!G.over){const P=G.p[G.t];P.bf.forEach(c=>{c.tapped=0;c.sick=0});P.landPlayed=0;P.attackedThisTurn=false;P.creatureDiedThisTurn=false;if(G.n)draw(P);G.n++;SFX.turn();log(`— Turno ${G.n}: ${G.t?'IA':'Tú'} —`);if(G.t==0&&!G.auto){G.mode='main1';G.busy=0;render();await new Promise(r=>G.next=r)}else{G.mode='ai';render();await aiTurn(G.t)}if(G.over)break;await discard(G.p[G.t]);if(G.over)break;bfAll().forEach(c=>{c.dmg=c.pb=c.tb=c.dt=0;c.tkw=[]});G.t=1-G.t}}
+$('#go').onclick=async()=>{if(G.busy)return;const m=G.mode;if(m=='mull')return G.mres(true);if(m=='main1'){G.mode='atk';render()}else if(m=='atk'){const a=G.p[0].bf.filter(c=>c.sel);if(a.length){G.busy=1;G.mode='wait';ui();log(`Atacas con ${a.length}.`);await declare(a,0);if(G.over)return}G.mode='main2';G.busy=0;render()}else if(m=='block')G.done();else if(m=='prio')G.pdone();else if(m=='target'){const r=G.pend.res;G.mode=G.prev;G.pend=null;if(r){G.busy=1;r(null)}render()}};
+$('#end').onclick=()=>{if(G.mode=='mull')return G.mres(false);if(!G.busy&&(G.mode=='main1'||G.mode=='main2')){G.mode='ai';ui();G.next()}};
+function fire(t){const c=G.pend;if(c.res){G.mode=G.prev;G.pend=null;G.busy=1;c.res(t);return}G.busy=1;G.mode=G.prev;delete c._mode;G.pend=null;(c.eqp&&alive(c)?equip(G.p[0],c,t):cast(G.p[0],c,t)).then(()=>{G.busy=0;render()})}
+$('#aiLife').onclick=()=>tgtP()&&fire(G.p[1]);$('#myLife').onclick=()=>tgtP()&&fire(G.p[0]);
+
+/* TAP / DRAG HANDLERS */
+let dragState=null,longPressTimer=null;
+function handleCardTap(card,e){
+  if(!G||G.over||G.busy)return;
+  const me=G.p[0],m=G.mode;
+  if(m==='target'){
+    if(tgtC(card)){fire(card);return}
+    if((e.target.id==='aiLife'||e.target.closest('#aiLife'))&&tgtP()){fire(G.p[1]);return}
+    if((e.target.id==='myLife'||e.target.closest('#myLife'))&&tgtP()){fire(G.p[0]);return}
+    hideCardDetail();return;
+  }
+  if(m==='bottom'&&me.hand.includes(card)){me.hand.splice(me.hand.indexOf(card),1);me.lib.unshift(card);if(!--G.nb)G.bdone();render();return}
+  if(m==='discard'&&me.hand.includes(card)){me.hand.splice(me.hand.indexOf(card),1);me.gy.push(card);log('Descartas '+card.pname);if(!--G.nd)G.ddone();render();return}
+  if(m==='block'){
+    if(me.bf.includes(card)&&card.cr&&!card.tapped&&!card.pac&&!card.cantBlock){
+      for(const[attId,blockers]of G.bm.entries()){
+        const idx=blockers.indexOf(card);
+        if(idx>=0){blockers.splice(idx,1);card.blk=0;card.bn=0}
+      }
+      if(G.sb===card){card.sel=0;G.sb=null}
+      else{if(G.sb)G.sb.sel=0;G.sb=card;card.sel=1}
+      render();return;
+    }
+    if(G.sb&&G.att&&G.att.includes(card)){
+      if(can(G.sb,card)&&!card.cantBeBlocked){
+        if(!G.bm.has(card.id))G.bm.set(card.id,[]);
+        G.bm.get(card.id).push(G.sb);
+        G.sb.blk=1;G.sb.bn=card.bn;G.sb.sel=0;G.sb=null;SFX.tap();
+      }else{
+        log(`${G.sb.pname} no puede bloquear a ${card.pname} (Vuela / Imbloqueable).`);
+      }
+      render();return;
+    }
+  }
+  if(m==='atk'&&me.bf.includes(card)&&card.cr&&!card.tapped&&!card.sick&&!card.pac&&!has(card,'defender')){
+    card.sel=card.sel?0:1;render();return;
+  }
+  if(isTouch){showCardDetail(card);return}
+  const action=computeAction(card);
+  if(action&&action.exec&&!action.disabled){action.exec();return}
+  showCardDetail(card);
+}
+document.addEventListener('pointerdown',e=>{
+  const x=e.target.closest('.card[data-i]');if(!x||!G||G.over)return;
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  const c=reg[x.dataset.i];if(!c)return;
+  const canDrag=G.p[0].hand.includes(c)||(G.mode==='atk'&&G.p[0].bf.includes(c)&&!c.tapped&&!c.sick&&!c.pac);
+  if(!canDrag){dragState={card:c,startX:e.clientX,startY:e.clientY,pointerId:e.pointerId,moved:false};return}
+  dragState={card:c,el:x,startX:e.clientX,startY:e.clientY,pointerId:e.pointerId,moved:false};
+  x.setPointerCapture(e.pointerId);
+  clearTimeout(longPressTimer);
+  longPressTimer=setTimeout(()=>{if(dragState&&!dragState.moved){showCardDetail(c);if(navigator.vibrate)navigator.vibrate(20)}},500);
+},{passive:true});
+document.addEventListener('pointermove',e=>{
+  if(!dragState||dragState.pointerId!==e.pointerId)return;
+  const dx=e.clientX-dragState.startX,dy=e.clientY-dragState.startY;
+  if(!dragState.moved&&Math.hypot(dx,dy)>12){
+    clearTimeout(longPressTimer);dragState.moved=true;
+    const ghost=document.createElement('div');ghost.className='drag-ghost';
+    ghost.innerHTML=`<img src="${dragState.card.small||''}">`;
+    ghost.style.left=e.clientX+'px';ghost.style.top=e.clientY+'px';
+    document.body.appendChild(ghost);dragState.ghost=ghost;
+    if(G.mode==='atk'&&G.p[0].bf.includes(dragState.card)){['#aiCre','#aiLand','#aiLife'].forEach(s=>$(s)?.classList.add('drop-target'))}
+    else if(G.p[0].hand.includes(dragState.card)){['#myCre','#myLand'].forEach(s=>$(s)?.classList.add('drop-target'))}
+  }
+  if(dragState.moved&&dragState.ghost){dragState.ghost.style.left=e.clientX+'px';dragState.ghost.style.top=e.clientY+'px'}
+},{passive:true});
+document.addEventListener('pointerup',e=>{
+  clearTimeout(longPressTimer);
+  if(!dragState||dragState.pointerId!==e.pointerId)return;
+  if(dragState.moved){
+    if(dragState.ghost)dragState.ghost.remove();
+    document.querySelectorAll('.drop-target').forEach(el=>el.classList.remove('drop-target'));
+    const card=dragState.card;dragState=null;
+    const dropEl=document.elementFromPoint(e.clientX,e.clientY);
+    if(!dropEl)return;
+    const tz=dropEl.closest('#myCre,#myLand,#aiCre,#aiLand,#aiLife,#myLife');
+    if(G.p[0].hand.includes(card)){
+      if(card.ld&&(tz?.id==='myLand'||dropEl.closest('#myLand'))){if(!G.p[0].landPlayed){G.p[0].landPlayed=1;G.p[0].hand.splice(G.p[0].hand.indexOf(card),1);playLand(G.p[0],card)}return}
+      if(!card.ld){const action=computeAction(card);if(action&&action.exec){action.exec();return}}
+      showCardDetail(card);return;
+    }
+    if(G.mode==='atk'&&G.p[0].bf.includes(card)&&card.cr&&!card.tapped&&!card.sick&&!card.pac){
+      if(tz?.id==='aiCre'||tz?.id==='aiLife'||tz?.id==='aiLand'){card.sel=1;render();return}
+    }
+    return;
+  }
+  const {card}=dragState;dragState=null;
+  handleCardTap(card,e);
+},{passive:true});
+document.addEventListener('pointercancel',()=>{clearTimeout(longPressTimer);if(dragState){if(dragState.ghost)dragState.ghost.remove();document.querySelectorAll('.drop-target').forEach(el=>el.classList.remove('drop-target'));dragState=null}},{passive:true});
+
+function setupMobileMenu(){
+  const toggle=$('#mobile-menu-toggle'),aside=$('#mobile-aside');
+  toggle.onclick=()=>{aside.classList.toggle('on');toggle.textContent=aside.classList.contains('on')?'✕':'☰'};
+  aside.querySelector('.mob-close').onclick=()=>{aside.classList.remove('on');toggle.textContent='☰'};
+  $('#rst2').onclick=()=>{if(confirm('¿Reiniciar?'))restart()};
+  $('#menuB2').onclick=()=>{if(confirm('¿Cambiar mazos?'))location.reload()};
+  $('#auto2').onclick=()=>{if(!G||G.over)return;G.auto=!G.auto;$('#auto2').textContent='Piloto: '+(G.auto?'SÍ':'NO');$('#auto').textContent='Piloto: '+(G.auto?'SÍ':'NO');if(G.auto&&G.t==0&&!G.busy&&['main1','main2','atk'].includes(G.mode)){G.p[0].bf.forEach(c=>c.sel=0);G.mode='ai';aiTurn(0).then(()=>{if(!G.over){G.mode='ai';G.next()}})}};
+}
+
+async function mull(){const me=G.p[0],A=G.p[1];let n=0;for(;;){render();G.mode='mull';G.busy=0;ui();const keep=await new Promise(r=>G.mres=r);if(keep||n>=4)break;n++;me.lib.push(...me.hand.splice(0));me.lib=R(me.lib);draw(me,7);log('Mulligan '+n);SFX.mull()}if(n){G.mode='bottom';G.nb=n;G.busy=0;render();await new Promise(r=>G.bdone=r)}let k=0;const bad=()=>{const l=A.hand.filter(c=>c.ld).length;return l<2||l>5};while(bad()&&k<2){k++;A.lib.push(...A.hand.splice(0));A.lib=R(A.lib);draw(A,7)}if(k){log(`IA hace mulligan (${k}).`);for(let i=0;i<k;i++){const h=A.hand,ls=h.filter(c=>c.ld),c=ls.length>3?ls[0]:[...h].sort((a,b)=>b.cmc-a.cmc)[0];h.splice(h.indexOf(c),1);A.lib.unshift(c)}}G.mode='wait'}
+function restart(){try{sessionStorage.cfg=JSON.stringify({mode:menuMode,picked,difficulty:G?.difficulty})}catch(e){}location.reload()}
+function autoStart(){try{const c=JSON.parse(sessionStorage.cfg||'null');sessionStorage.removeItem('cfg');if(c&&c.picked&&c.picked.length==2){menuMode=c.mode;picked=c.picked;if(c.difficulty){document.querySelector(`input[name="diff"][value="${c.difficulty}"]`).checked=true}$('#play').disabled=false;$('#play').click()}}catch(e){}}
+$('#rst').onclick=()=>confirm('¿Reiniciar?')&&restart();
+$('#menuB').onclick=()=>confirm('¿Cambiar mazos?')&&location.reload();
+$('#auto').onclick=()=>{if(!G||G.over)return;G.auto=!G.auto;$('#auto').textContent='Piloto: '+(G.auto?'SÍ':'NO');$('#auto2').textContent='Piloto: '+(G.auto?'SÍ':'NO');if(G.auto&&G.t==0&&!G.busy&&['main1','main2','atk'].includes(G.mode)){G.p[0].bf.forEach(c=>c.sel=0);G.mode='ai';aiTurn(0).then(()=>{if(!G.over){G.mode='ai';G.next()}})}};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#card-detail').classList.contains('on')){hideCardDetail();return}if($('#gallery').classList.contains('on')){closeGallery();return}if($('#collection').classList.contains('on')){closeCollection();return}if($('#pack-reveal').classList.contains('on')){closePackReveal();return}if($('#mobile-aside').classList.contains('on')){$('#mobile-aside').classList.remove('on');$('#mobile-menu-toggle').textContent='☰';return}}if(!G||G.busy&&G.mode!='block')return;const b=e.code==='Space'?$('#go'):e.key==='e'?$('#end'):0;if(b&&b.style.display!='none'){e.preventDefault();b.click()}});
+function inst_(P,c){if(G.only)return !!(c.fx&&c.fx.k==G.only&&plan(P,c));return !c.ld&&!!plan(P,c)&&!(isSp(c)&&!c.fx)&&!(c.fx&&c.fx.k=='ctrs')&&(/Instant/.test(c.type)||has(c,'flash'))}
+async function prio(txt){const me=G.p[0],can=me.hand.some(c=>inst_(me,c))||(!G.only&&me.bf.some(c=>c.abil&&c.abil.some(a=>canAct(me,c,a))));if(G.auto||G.over||!can)return;const pm=G.mode,pb=G.busy;G.mode='prio';G.pm=txt;G.busy=0;render();await new Promise(r=>G.pdone=r);G.mode=pm;G.busy=pb;render()}
+async function discard(P){if(P.hand.length<=7)return;if(P===G.p[0]&&!G.auto){G.mode='discard';G.nd=P.hand.length-7;G.busy=0;render();await new Promise(r=>G.ddone=r);G.mode='ai';G.busy=1;return}while(P.hand.length>7){const h=P.hand,ls=h.filter(c=>c.ld),c=ls.length>3?ls[0]:[...h].sort((a,b)=>b.cmc-a.cmc)[0];h.splice(h.indexOf(c),1);P.gy.push(c);log((P===G.p[0]?'Descartas ':'IA descarta ')+c.pname)}}
+function showGy(i){const v=$('#gyv'),h=document.createElement('div');h.style.cssText='width:100%;font-size:16px;cursor:pointer;padding:10px 0;border-bottom:1px solid #c99a3b44;margin-bottom:6px;color:#fc6';h.textContent=`${i?'Cementerio IA':'Tu cementerio'} (${G.p[i].gy.length}) · toca para cerrar`;v.replaceChildren(h,...G.p[i].gy.map(c=>cardEl(c,1)));v.classList.add('on');h.onclick=()=>v.classList.remove('on');v.querySelectorAll('.card[data-i]').forEach(el=>{const c=reg[el.dataset.i];if(!c)return;if(i===0&&c.flashbackCost&&(G.mode==='main1'||G.mode==='main2')&&!G.busy){el.style.boxShadow='0 0 12px 3px #06c';el.onclick=(ev)=>{ev.stopPropagation();castFlashback(c)}}else{el.onclick=(ev)=>{ev.stopPropagation();showCardDetail(c)}}})}
+function showExile(i){const v=$('#gyv'),h=document.createElement('div');h.style.cssText='width:100%;font-size:16px;cursor:pointer;padding:10px 0;border-bottom:1px solid #c99a3b44;margin-bottom:6px;color:#fc6';const ex=G.p[i].exile||[];h.textContent=`${i?'Exilio IA':'Tu exilio'} (${ex.length}) · toca para cerrar`;v.replaceChildren(h,...ex.map(c=>cardEl(c,1)));v.classList.add('on');h.onclick=()=>v.classList.remove('on');v.querySelectorAll('.card[data-i]').forEach(el=>{const c=reg[el.dataset.i];if(!c)return;el.onclick=(ev)=>{ev.stopPropagation();showCardDetail(c)}})}
+$('#gyv').onclick=(e)=>{if(e.target===$('#gyv'))$('#gyv').classList.remove('on')};
+$('#myMeta').onclick=()=>G&&showGy(0);$('#aiMeta').onclick=()=>G&&showGy(1);
+$('#myGy').onclick=()=>G&&showGy(0);$('#aiGy').onclick=()=>G&&showGy(1);$('#myEx').onclick=()=>G&&showExile(0);$('#aiEx').onclick=()=>G&&showExile(1);$('#myLib').onclick=()=>{if(G)alert(`Tu biblioteca: ${G.p[0].lib.length} cartas`)};$('#aiLib').onclick=()=>{if(G)alert(`Biblioteca IA: ${G.p[1].lib.length} cartas`)};
+$('#open-pack-btn').onclick=openPack;$('#reveal-again').onclick=()=>{closePackReveal();setTimeout(openPack,300)};$('#reveal-close').onclick=closePackReveal;$('#col-close').onclick=closeCollection;document.querySelectorAll('.col-tab').forEach(t=>{t.onclick=()=>switchColView(t.dataset.view)});$('#album-search').oninput=()=>{albumFilter.search=$('#album-search').value;renderAlbum()};$('#album-rarity').onchange=()=>{albumFilter.rarity=$('#album-rarity').value;renderAlbum()};document.querySelectorAll('#col-album-view .gal-color').forEach(b=>{b.onclick=()=>{albumFilter.color=b.dataset.c;document.querySelectorAll('#col-album-view .gal-color').forEach(x=>x.classList.toggle('on',x===b));renderAlbum()}});
+
+$('#play').onclick=()=>{
+  try{
+    AC();
+    const diff=document.querySelector('input[name="diff"]:checked')?.value||'normal';
+    sessionStorage.setItem('cfg',JSON.stringify({mode:menuMode,picked,difficulty:diff}));
+    if(!picked.length)return;
+    let mineCards,theirsCards,rest;
+    if(menuMode==='beginner'){rest=R(BEGINNER_DECKS.map((d,i)=>i).filter(i=>!picked.includes(i))).slice(0,2);mineCards=picked.flatMap(packBeginner);theirsCards=rest.flatMap(packBeginner)}
+    else{rest=R(ADVANCED_THEMES.map((d,i)=>i).filter(i=>!picked.includes(i))).slice(0,2);mineCards=picked.flatMap(i=>packAdvanced(ADVANCED_THEMES[i]));theirsCards=rest.flatMap(i=>packAdvanced(ADVANCED_THEMES[i]))}
+    const landsInMine=mineCards.filter(c=>c&&c.ld).length;
+    const landsInTheirs=theirsCards.filter(c=>c&&c.ld).length;
+    if(mineCards.length<20||theirsCards.length<20||landsInMine<10||landsInTheirs<10){alert('Espera 2-3 segundos y reinténtalo.');return}
+    uid=1;G={p:[mkP(mineCards),mkP(theirsCards)],t:0,n:0,mode:'wait',busy:0,difficulty:diff};
+    for(let i=0;i<7;i++){draw(G.p[0]);draw(G.p[1])}
+    $('#menu').style.display='none';$('#log').textContent='';
+    log(menuMode==='beginner'?'Mazos principiante':'Mazos avanzados');
+    log(`Dificultad IA: ${{easy:'FÁCIL',normal:'NORMAL',hard:'DIFÍCIL'}[diff]||diff.toUpperCase()}`);
+    log('Tú: '+picked.map(i=>{const nm=menuMode==='beginner'?BEGINNER_DECKS[i].n:ADVANCED_THEMES[i].n;return ES_THEMES[nm]||nm}).join(' + '));
+    log('IA: '+rest.map(i=>{const nm=menuMode==='beginner'?BEGINNER_DECKS[i].n:ADVANCED_THEMES[i].n;return ES_THEMES[nm]||nm}).join(' + '));
+    log('💡 Toca una carta para ver detalle. Arrastra para jugar.');
+    render();mull().then(run).catch(e=>{console.error(e);alert('Error: '+e.message);$('#menu').style.display='flex'});
+  }catch(e){console.error('Error:',e);alert('Error: '+e.message);$('#menu').style.display='flex'}
+};
+
+/* INIT */
+loadCollection();
+buildMenu();
+setupMobileMenu();
+loadAll();
 </script>
 </body>
 </html>
