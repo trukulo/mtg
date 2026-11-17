@@ -313,6 +313,79 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation-duration:.01s!important}}
 </style>
+
+<style id="mobile-v3">
+.card{width:calc(var(--ch)*.716)}
+@media (max-width:900px),(pointer:coarse){
+ html,body{height:100dvh}
+ body{flex-direction:column}
+ #board{margin:0;padding:0;perspective:none}
+ #main{border-width:3px;border-radius:0}
+ #main::before{display:none}
+ aside{display:none}
+ #phasebar{padding:3px 50px 3px 6px;justify-content:flex-start;gap:2px;overflow:hidden;flex:none}
+ #phasebar .ph{padding:3px 7px;font-size:10px;white-space:nowrap}
+ #mobile-menu-toggle{display:flex;align-items:center;justify-content:center;top:calc(env(safe-area-inset-top,0px) + 2px);right:4px;width:40px;height:40px;font-size:20px;z-index:60}
+ #board-body{flex-direction:column;min-height:0}
+ #piles-col{flex-direction:row;justify-content:space-between;padding:3px 8px;min-width:0;width:100%;gap:6px;flex:none;border-right:0}
+ .pile-stack{flex-direction:row;gap:6px}.pile-stack .pile-label{display:none}
+ .pile-mini{width:38px;height:34px;border-radius:7px}.pile-mini .icon{font-size:16px}
+ .pile-mini .cnt{font-size:10px;min-width:20px;height:20px;line-height:18px;bottom:-5px;right:-5px}
+ #play-area{--rowc:clamp(46px,calc((100dvh - 500px)/2 - 30px),13.5dvh);min-height:0}
+ .info{min-height:0;height:calc(5.6dvh + 6px);padding:2px 8px;gap:8px;flex:none}
+ .life .die{min-width:max(36px,5.4dvh);height:max(36px,5.4dvh);font-size:max(18px,2.6dvh);border-width:2px;padding:0 6px}
+ .meta{font-size:12px}
+ .zone{padding:2.6dvh 6px 1.4dvh;gap:4px;min-height:0;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;justify-content:flex-start;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+ .zone::-webkit-scrollbar{display:none}
+ .zone>.card:first-child{margin-left:auto}.zone>.card:last-child{margin-right:auto}
+ .zone:not(.hand):not(.lands){--ch:var(--rowc);flex:1 1 0}
+ .zone.lands{--ch:6.2dvh;flex:none;padding:1dvh 6px}
+ #aiHand{--ch:4.2dvh;flex:none;height:5dvh;padding:0;overflow:hidden;justify-content:center}
+ #aiHand .card{margin:0 -9px;top:-1dvh}
+ #aiHand>.card:first-child,#aiHand>.card:last-child{margin-left:-9px;margin-right:-9px}
+ .me .atkr{translate:0 -1.8dvh;rotate:0deg}.ai .atkr{translate:0 1.8dvh;rotate:0deg}
+ .me .blkr{translate:0 -1.2dvh;rotate:0deg}.ai .blkr{translate:0 1.2dvh;rotate:0deg}
+ .tap{margin:0 calc(var(--ch)*.14)}
+ #mid{flex:none;min-height:0;padding:4px 8px;gap:8px;flex-wrap:wrap}
+ #st{width:100%;text-align:center;font-size:12px;min-height:16px}
+ #mid button{flex:1;min-width:110px;min-height:46px;padding:8px 10px;font-size:15px}
+ #myHand{--ch:15dvh;flex:none;min-height:calc(15dvh + 14px);padding:10px 8px 6px;align-items:flex-end;overflow-x:auto;overflow-y:hidden;justify-content:flex-start}
+ #myHand .card{margin:0 -7px 0 0;transform:none!important;rotate:0deg!important;translate:0 0!important;scale:1!important;flex:0 0 auto;touch-action:pan-x}
+ #myHand .card:last-child{margin-right:auto}
+ #myHand>.card:first-child{margin-left:auto}
+ #myHand .card.ok{translate:0 -8px!important}
+ .zone .card{touch-action:pan-x}
+ .zone:not(.hand):not(.lands) .card{--ch:var(--rowc)}
+ .pt{font-size:max(10px,1.5dvh)}
+ #gyv{inset:0;--ch:15dvh;border-radius:0}
+}
+@media (orientation:landscape) and (max-height:560px){
+ #phasebar{padding:2px 44px 2px 6px}#phasebar .ph{padding:2px 7px;font-size:10px}#mobile-menu-toggle{width:34px;height:34px;font-size:17px;top:2px;right:4px}
+ #board-body{flex-direction:row}
+ #piles-col{flex-direction:column;width:52px;min-width:52px;padding:4px 4px;gap:4px;border-bottom:0;border-right:1px solid #c99a3b33}
+ .pile-stack{flex-direction:column;gap:5px;align-items:center}
+ .pile-mini{width:38px;height:32px}
+ #play-area{display:grid;grid-template-columns:minmax(0,1fr) 132px;grid-template-rows:auto minmax(0,1fr) minmax(0,1fr) auto auto;grid-template-areas:"ailand aiinfo" "aicre mid" "mycre mid" "myland myinfo" "hand hand";--rowc:clamp(40px,calc((100dvh - 250px)/2 - 14px),20dvh)}
+ #aiHand{display:none}
+ #aiLand{grid-area:ailand}#aiCre{grid-area:aicre}#myCre{grid-area:mycre}#myLand{grid-area:myland}#myHand{grid-area:hand}
+ .info.ai{grid-area:aiinfo;height:auto;flex-direction:row;justify-content:center;padding:8px 4px 2px;gap:6px}
+ .info.me{grid-area:myinfo;height:auto;justify-content:center;padding:2px 4px;gap:6px}
+ .info .meta{font-size:11px}
+ #mid{grid-area:mid;flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:center;padding:4px;gap:6px}
+ #mid button{min-height:42px;min-width:0;flex:none;font-size:13px;padding:4px 6px}
+ #st{font-size:11px;line-height:1.2}
+ .zone{padding:1.6dvh 6px 1dvh}
+ .zone.lands{--ch:9.5dvh;padding:.8dvh 6px}
+ #myHand{--ch:19dvh;min-height:calc(19dvh + 10px);padding:6px 8px 4px}
+ .life .die{min-width:max(32px,9dvh);height:max(32px,9dvh);font-size:max(16px,4.6dvh)}
+ .cd-content{flex-direction:row!important}
+ .cd-image{max-width:42vw!important;max-height:none!important;height:100%}
+ .cd-image img{max-height:88dvh!important}
+ .cd-info{padding-bottom:84px!important}
+ .cd-action{left:calc(42vw + 12px)!important;right:14px!important;bottom:10px!important;min-height:46px!important;padding:8px 14px!important;font-size:15px!important}
+ #menu{justify-content:flex-start;overflow-y:auto}
+}
+</style>
 </head>
 <body>
 <div id="board">
@@ -485,6 +558,7 @@ aside{width:320px;padding:8px 8px 8px 0;display:flex;flex-direction:column;gap:8
   </div>
 </div>
 <script src="cartas/datos.js"></script>
+<script src="cartas/paquetes.js"></script>
 <script>
 /* ============================================================
    AUDIO
@@ -634,10 +708,10 @@ async function fetchSpanishCardData(card){
 
 const T0=[['Ángeles','W','angel'],['Soldados','W','soldier'],['Tritones','U','merfolk'],['Hechiceros','U','wizard'],['Vampiros','B','vampire'],['Zombis','B','zombie'],['Dragones','R','dragon'],['Duendes','R','goblin'],['Elfos','G','elf'],['Bestias','G','beast']].map(([n,c,k])=>({n,c,k}));
 let T=window.PAQUETES||T0;
-const CC={W:'#e8dca0',U:'#6fb4f0',B:'#a58cc0',R:'#f07a5a',G:'#6fcf7a'};
+const CC={M:'#d8c070',W:'#e8dca0',U:'#6fb4f0',B:'#a58cc0',R:'#f07a5a',G:'#6fcf7a'};
 const bfAll=()=>G.p.flatMap(P=>P.bf),alive=c=>bfAll().includes(c),owner=c=>G.p.find(P=>P.bf.includes(c));
 const mark=(c,k)=>{const e=document.getElementById('c'+c.id);e&&e.classList.add(k)};
-const log=t=>{const d=document.createElement('div');d.textContent=t;const lg=$('#log');if(lg){lg.append(d);lg.scrollTop=1e9}};
+const log=t=>{document.querySelectorAll('#log').forEach(lg=>{const d=document.createElement('div');d.textContent=t;lg.append(d);lg.scrollTop=1e9})};
 const isTouch=matchMedia('(pointer: coarse)').matches||navigator.maxTouchPoints>0;
 
 /* HOVER ZOOM PC */
@@ -703,7 +777,8 @@ function computeAction(card){
   return null;
 }
 
-function showCardDetail(card){
+let _cdT=0;
+function showCardDetail(card){_cdT=performance.now();
   if(!card)return;
   currentDetailCard=card;
   const img=$('#cd-img'),ph=$('.cd-image .token-ph');
@@ -742,13 +817,13 @@ function showCardDetail(card){
   if(card.fx){$('#cd-fx-section').style.display='';$('#cd-fx').textContent=JSON.stringify(card.fx,null,2)}else $('#cd-fx-section').style.display='none';
   const action=computeAction(card);
   const btn=$('#cd-action-btn');
-  if(action){btn.style.display='block';btn.textContent=action.label;btn.className='cd-action '+(action.style||'');btn.disabled=!!action.disabled;btn.onclick=(e)=>{e.stopPropagation();if(action.exec)action.exec()}}
+  if(action){btn.style.display='block';btn.textContent=action.label;btn.className='cd-action '+(action.style||'');btn.disabled=!!action.disabled;btn.onclick=(e)=>{e.stopPropagation();if(performance.now()-_cdT<450)return;if(action.exec)action.exec()}}
   else btn.style.display='none';
   $('#card-detail').classList.add('on');
 }
 function hideCardDetail(){$('#card-detail').classList.remove('on');currentDetailCard=null}
-document.querySelector('#card-detail .cd-close').onclick=hideCardDetail;
-document.querySelector('#card-detail .cd-backdrop').onclick=hideCardDetail;
+document.querySelector('#card-detail .cd-close').onclick=()=>{if(performance.now()-_cdT>450)hideCardDetail()};
+document.querySelector('#card-detail .cd-backdrop').onclick=()=>{if(performance.now()-_cdT>450)hideCardDetail()};
 document.addEventListener('contextmenu',e=>{const x=e.target.closest('.card[data-i]');if(x&&G&&reg[x.dataset.i]){e.preventDefault();showCardDetail(reg[x.dataset.i])}});
 
 let lastTapTime=0;
@@ -952,7 +1027,15 @@ const BEGINNER_DECKS=[
 ];
 const ADVANCED_THEMES=[{n:'Angels',c:'W'},{n:'Armed',c:'W'},{n:'Bookworms',c:'U'},{n:'Bloody',c:'B'},{n:'Cats',c:'W'},{n:'Dragons',c:'R'},{n:'Elves',c:'G'},{n:'Goblins',c:'R'},{n:'Healers',c:'W'},{n:'Inferno',c:'R'},{n:'Pirates',c:'U'},{n:'Primal',c:'G'},{n:'Undead',c:'B'},{n:'Vampires',c:'B'},{n:'Wizards',c:'U'},{n:'Soldiers',c:'W'},{n:'Merfolk',c:'U'},{n:'Zombies',c:'B'},{n:'Giants',c:'R'},{n:'Beasts',c:'G'},{n:'Spirits',c:'W'},{n:'Illusions',c:'U'},{n:'Demons',c:'B'},{n:'Devils',c:'R'},{n:'Elementals',c:'G'},{n:'Knights',c:'W'},{n:'Sphinxes',c:'U'},{n:'Rats',c:'B'},{n:'Goblins',c:'R'},{n:'Wolves',c:'G'},{n:'Clerics',c:'W'},{n:'Faeries',c:'U'},{n:'Horrors',c:'B'},{n:'Dragons',c:'R'},{n:'Hydras',c:'G'},{n:'Pegasus',c:'W'},{n:'Leviathans',c:'U'},{n:'Nightmares',c:'B'},{n:'Phoenixes',c:'R'},{n:'Wurms',c:'G'},{n:'Unicorns',c:'W'},{n:'Krakens',c:'U'},{n:'Skeletons',c:'B'},{n:'Hellions',c:'R'},{n:'Treefolk',c:'G'},{n:'Griffins',c:'W'}];
 function packBeginner(i){const d=BEGINNER_DECKS[i];const fbPool=POOL.filter(c=>c.col.includes(d.c)||c.col.length===0);const fbCr=R(fbPool.filter(c=>c.cr)),fbSp=R(fbPool.filter(c=>!c.cr));const cards=d.list.map(n=>{if(BASIC_NAMES[n]&&BASIC[BASIC_NAMES[n]])return BASIC[BASIC_NAMES[n]];if(BYN[n])return BYN[n];return fbCr.pop()||fbSp.pop()||BASIC[d.c]}).filter(Boolean);while(cards.length<20&&BASIC[d.c])cards.push(BASIC[d.c]);return cards.slice(0,20)}
-function packAdvanced(theme){if(!POOL.length)return Array(20).fill(BASIC[theme.c]).filter(Boolean);const p=POOL.filter(d=>(d.col.includes(theme.c)||d.col.length===0)&&(d.cr||isSp(d)));const cr=R(p.filter(d=>d.cr)),sp=R(p.filter(d=>!d.cr));const picks=[...cr.slice(0,10),...sp.slice(0,5),...cr.slice(10),...sp.slice(5)].slice(0,13);if(BASIC[theme.c])while(picks.length<20)picks.push(BASIC[theme.c]);return picks.slice(0,20)}
+let ADV=ADVANCED_THEMES,OFFICIAL=false;
+function initOfficial(){const P=(window.PAQUETES||[]).filter(p=>p.set==='j25'&&p.cartas&&p.cartas.length);
+ if(P.length>=20){ADV=P.map(p=>({n:p.tema,v:p.v!==undefined?p.v:((p.n||'').replace(p.tema,'').trim()),c:p.c,cartas:p.cartas,official:1}));OFFICIAL=true;
+  const h=document.querySelector('#btn-advanced p');if(h)h.textContent=`Los 46 temas oficiales · ${ADV.length} paquetes de Jumpstart Cimientos`}}
+initOfficial();
+function packOfficial(t){const out=[],miss=[];for(const[n,k]of t.cartas){const d=BASIC_NAMES[n]?BASIC[BASIC_NAMES[n]]:BYN[n];if(!d){miss.push([n,k]);continue}for(let i=0;i<k;i++)out.push(d)}
+ if(miss.length){console.warn('Cartas no encontradas en '+t.n,miss.map(m=>m[0]));const fb=POOL.filter(c=>c.cr&&(t.c==='M'||c.col.includes(t.c)||c.col.length===0));for(const[,k]of miss)for(let i=0;i<k&&fb.length;i++)out.push(fb[Math.floor(Math.random()*fb.length)])}
+ return out}
+function packAdvanced(theme){if(theme.cartas)return packOfficial(theme);if(!POOL.length)return Array(20).fill(BASIC[theme.c]).filter(Boolean);const p=POOL.filter(d=>(d.col.includes(theme.c)||d.col.length===0)&&(d.cr||isSp(d)));const cr=R(p.filter(d=>d.cr)),sp=R(p.filter(d=>!d.cr));const picks=[...cr.slice(0,10),...sp.slice(0,5),...cr.slice(10),...sp.slice(5)].slice(0,13);if(BASIC[theme.c])while(picks.length<20)picks.push(BASIC[theme.c]);return picks.slice(0,20)}
 const mkP=deck=>({life:20,lib:R(deck.filter(Boolean).map(inst)),hand:[],bf:[],gy:[],exile:[],landPlayed:0,creatureDiedThisTurn:false,attackedThisTurn:false});
 function draw(P,n=1){for(let i=0;i<n;i++){if(!P.lib.length){end(P);return}const c=P.lib.pop();P.hand.push(c);setTimeout(()=>{const el=document.getElementById('c'+c.id);if(el){el.classList.add('drawn');setTimeout(()=>el.classList.remove('drawn'),480)}},60)}if(n>0)SFX.draw()}
 function end(P){if(G.over)return;G.over=1;G.busy=1;if(G.next)G.next();const isWin=P===G.p[1];if(isWin){SFX.win();confetti()}else{SFX.lose()}$('#menu').style.display='flex';$('#menu').innerHTML=`<h1 class="${isWin?'win':'lose'}">${isWin?'¡Has ganado!':'Has perdido'}</h1><p class="sub">${isWin?'La IA se rinde. ¡Bien jugado!':'La IA ha sido más fuerte esta vez. ¿Otra?'}</p><div class="menu-hero"><button class="hero-card" onclick="restart()"><span class="icon">🔄</span><h2>Revancha</h2><p>Mismos mazos</p></button><button class="hero-card" onclick="location.reload()"><span class="icon">🎲</span><h2>Cambiar mazos</h2><p>Nueva selección</p></button></div>`}
@@ -962,7 +1045,7 @@ const checkEnd=()=>G.p.forEach(P=>P.life<=0&&end(P));
 function buildMenu(){
   const COL_ES={W:'Blanco',U:'Azul',B:'Negro',R:'Rojo',G:'Verde'};
   $('#btn-beginner').onclick=()=>{menuMode='beginner';picked=[];$('#picker').classList.add('on');$('#filter-bar').style.display='none';const grid=$('#deck-grid');grid.innerHTML='';BEGINNER_DECKS.forEach((d,i)=>{const el=document.createElement('div');el.className='deck-card';el.dataset.i=i;el.innerHTML=`<div class="dc-name">${ES_THEMES[d.n]||d.n}</div><div class="dc-color">${COL_ES[d.c]||d.c} · 20 cartas</div>`;el.style.borderColor=CC[d.c];el.onclick=()=>togglePick(i,el);grid.append(el)});$('#msg').textContent='Selecciona 2 mazos de principiante (0/2)';$('#play').disabled=true};
-  $('#btn-advanced').onclick=()=>{menuMode='advanced';picked=[];$('#picker').classList.add('on');$('#filter-bar').style.display='flex';$('#filter-name').value='';setColorFilter('all');renderAdvancedGrid();$('#msg').textContent='Selecciona 2 temas avanzados (0/2)';$('#play').disabled=true};
+  $('#btn-advanced').onclick=()=>{menuMode='advanced';picked=[];$('#picker').classList.add('on');$('#filter-bar').style.display='flex';$('#filter-name').value='';setColorFilter('all');renderAdvancedGrid();$('#msg').textContent=OFFICIAL?'Selecciona 2 paquetes oficiales (0/2)':'Selecciona 2 temas (0/2) · APROXIMADOS: ejecuta descargar_paquetes.py para los oficiales';$('#play').disabled=true};
   $('#btn-gallery').onclick=openGallery;
   $('#btn-collection').onclick=openCollection;
   $('#filter-name').oninput=renderAdvancedGrid;
@@ -970,7 +1053,7 @@ function buildMenu(){
 }
 let activeColor='all';
 function setColorFilter(c){activeColor=c;document.querySelectorAll('#filter-bar .color-btn').forEach(b=>b.classList.toggle('on',b.dataset.c===c))}
-function renderAdvancedGrid(){const COL_ES={W:'Blanco',U:'Azul',B:'Negro',R:'Rojo',G:'Verde'};const q=($('#filter-name').value||'').toLowerCase();const grid=$('#deck-grid');grid.innerHTML='';ADVANCED_THEMES.forEach((d,i)=>{const esName=ES_THEMES[d.n]||d.n;if(activeColor!=='all'&&d.c!==activeColor)return;if(q&&!d.n.toLowerCase().includes(q)&&!esName.toLowerCase().includes(q))return;const el=document.createElement('div');el.className='deck-card';el.dataset.i=i;el.innerHTML=`<div class="dc-name">${esName}</div><div class="dc-color">${COL_ES[d.c]||d.c}</div>`;el.style.borderColor=CC[d.c];if(picked.includes(i))el.classList.add('sel');el.onclick=()=>togglePick(i,el);grid.append(el)})}
+function renderAdvancedGrid(){const COL_ES={W:'Blanco',U:'Azul',B:'Negro',R:'Rojo',G:'Verde',M:'Multicolor'};const q=($('#filter-name').value||'').toLowerCase();const grid=$('#deck-grid');grid.innerHTML='';ADV.forEach((d,i)=>{const esName=(ES_THEMES[d.n]||d.n)+(d.v?' '+d.v:'');if(activeColor!=='all'&&d.c!==activeColor)return;if(q&&!d.n.toLowerCase().includes(q)&&!esName.toLowerCase().includes(q))return;const el=document.createElement('div');el.className='deck-card';el.dataset.i=i;el.innerHTML=`<div class="dc-name">${esName}</div><div class="dc-color">${COL_ES[d.c]||d.c}</div>`;el.style.borderColor=CC[d.c];if(picked.includes(i))el.classList.add('sel');el.onclick=()=>togglePick(i,el);grid.append(el)})}
 function togglePick(i,el){const k=picked.indexOf(i);if(k>=0)picked.splice(k,1);else if(picked.length<2)picked.push(i);document.querySelectorAll('#deck-grid .deck-card').forEach(e=>{e.classList.toggle('sel',picked.includes(+e.dataset.i))});$('#msg').textContent=`Selecciona 2 mazos (${picked.length}/2)`;$('#play').disabled=picked.length<2}
 
 /* GALERÍA */
@@ -1645,7 +1728,7 @@ $('#play').onclick=()=>{
     if(!picked.length)return;
     let mineCards,theirsCards,rest;
     if(menuMode==='beginner'){rest=R(BEGINNER_DECKS.map((d,i)=>i).filter(i=>!picked.includes(i))).slice(0,2);mineCards=picked.flatMap(packBeginner);theirsCards=rest.flatMap(packBeginner)}
-    else{rest=R(ADVANCED_THEMES.map((d,i)=>i).filter(i=>!picked.includes(i))).slice(0,2);mineCards=picked.flatMap(i=>packAdvanced(ADVANCED_THEMES[i]));theirsCards=rest.flatMap(i=>packAdvanced(ADVANCED_THEMES[i]))}
+    else{rest=R(ADV.map((d,i)=>i).filter(i=>!picked.includes(i))).slice(0,2);mineCards=picked.flatMap(i=>packAdvanced(ADV[i]));theirsCards=rest.flatMap(i=>packAdvanced(ADV[i]))}
     const landsInMine=mineCards.filter(c=>c&&c.ld).length;
     const landsInTheirs=theirsCards.filter(c=>c&&c.ld).length;
     if(mineCards.length<20||theirsCards.length<20||landsInMine<10||landsInTheirs<10){alert('Espera 2-3 segundos y reinténtalo.');return}
@@ -1654,8 +1737,8 @@ $('#play').onclick=()=>{
     $('#menu').style.display='none';$('#log').textContent='';
     log(menuMode==='beginner'?'Mazos principiante':'Mazos avanzados');
     log(`Dificultad IA: ${{easy:'FÁCIL',normal:'NORMAL',hard:'DIFÍCIL'}[diff]||diff.toUpperCase()}`);
-    log('Tú: '+picked.map(i=>{const nm=menuMode==='beginner'?BEGINNER_DECKS[i].n:ADVANCED_THEMES[i].n;return ES_THEMES[nm]||nm}).join(' + '));
-    log('IA: '+rest.map(i=>{const nm=menuMode==='beginner'?BEGINNER_DECKS[i].n:ADVANCED_THEMES[i].n;return ES_THEMES[nm]||nm}).join(' + '));
+    log('Tú: '+picked.map(i=>{const nm=menuMode==='beginner'?BEGINNER_DECKS[i].n:ADV[i].n;return (ES_THEMES[nm]||nm)+(menuMode!=='beginner'&&ADV[i].v?' '+ADV[i].v:'')}).join(' + '));
+    log('IA: '+rest.map(i=>{const nm=menuMode==='beginner'?BEGINNER_DECKS[i].n:ADV[i].n;return (ES_THEMES[nm]||nm)+(menuMode!=='beginner'&&ADV[i].v?' '+ADV[i].v:'')}).join(' + '));
     log('💡 Toca una carta para ver detalle. Arrastra para jugar.');
     render();mull().then(run).catch(e=>{console.error(e);alert('Error: '+e.message);$('#menu').style.display='flex'});
   }catch(e){console.error('Error:',e);alert('Error: '+e.message);$('#menu').style.display='flex'}
