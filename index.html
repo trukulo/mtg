@@ -1197,6 +1197,61 @@ button:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 #7a5c2
 .dl-acts button:hover{background:#20374c;border-color:#e8c57466}
 .dl-empty{grid-column:1/-1;color:#8fa1b2;padding:26px 12px;text-align:center;font-size:13px}
 .dl-empty button{margin-top:10px;background:#18293a;border:1px solid #ffffff1c;color:#dfeaf4;border-radius:7px;padding:6px 12px;font:600 12px "Segoe UI",system-ui,sans-serif;cursor:pointer}
+/* ---- Análisis detallado ---- */
+.bd-grade{flex:none;display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:#ffffff10;border:1px solid #ffffff1f;color:#cfe0ee;font:800 14px "Segoe UI",system-ui,sans-serif}
+.bd-grade.good{background:#6fcf7a22;border-color:#6fcf7a66;color:#a8e6b0}
+.bd-grade.bad{background:#f07a5a22;border-color:#f07a5a66;color:#ffb3a0}
+.bd-parts{display:flex;flex-direction:column;gap:3px}
+.bd-part{display:grid;grid-template-columns:64px 1fr 42px;grid-template-areas:"l bar pts" "why why why";gap:2px 6px;align-items:center;padding:4px 6px;border-radius:7px;background:#ffffff06;border:1px solid #ffffff0a}
+.bd-part-l{grid-area:l;font:700 10px "Segoe UI",system-ui,sans-serif;color:#c3d2df;letter-spacing:.02em}
+.bd-part-bar{grid-area:bar;height:5px;border-radius:4px;background:#ffffff12;overflow:hidden}
+.bd-part-bar i{display:block;height:100%;border-radius:4px;background:#7fbf8a}
+.bd-part.warn .bd-part-bar i{background:#e8c574}
+.bd-part.bad .bd-part-bar i{background:#f07a5a}
+.bd-part b{grid-area:pts;text-align:right;font:700 10px "Segoe UI",system-ui,sans-serif;color:#a9bccb}
+.bd-part em{grid-area:why;font:500 10px/1.3 "Segoe UI",system-ui,sans-serif;color:#8497a8;font-style:normal}
+.bd-tags{display:flex;gap:4px;flex-wrap:wrap}
+.bd-tag{font:600 10px "Segoe UI",system-ui,sans-serif;padding:2px 7px;border-radius:999px;background:#ffffff0d;border:1px solid #ffffff14;color:#c3d2df}
+.bd-tag.ok{background:#6fcf7a1a;border-color:#6fcf7a4d;color:#a8e6b0}
+.bd-tag.bad{background:#f07a5a1a;border-color:#f07a5a4d;color:#ffb3a0}
+.bd-wr{display:flex;flex-direction:column;gap:5px;padding:7px 8px;border-radius:8px;background:#0b141c;border:1px solid #ffffff10}
+.bd-wr-top{display:flex;align-items:baseline;gap:6px}
+.bd-wr-top b{font:800 22px "Segoe UI",system-ui,sans-serif;color:#e8c574}
+.bd-wr-top b.good{color:#8fe09a}
+.bd-wr-top b.bad{color:#ff9a86}
+.bd-wr-top span{font:600 10px "Segoe UI",system-ui,sans-serif;color:#8497a8}
+.bd-wr-bar{position:relative;height:6px;border-radius:5px;background:#ffffff12;overflow:hidden}
+.bd-wr-bar i{display:block;height:100%;background:linear-gradient(90deg,#f07a5a,#e8c574 45%,#6fcf7a)}
+.bd-wr-bar u{position:absolute;top:0;width:1px;height:100%;background:#ffffff55}
+.bd-wr-list{display:flex;flex-direction:column;gap:2px}
+.bd-wr-row{display:grid;grid-template-columns:58px 1fr 34px;gap:6px;align-items:center;font:500 10px "Segoe UI",system-ui,sans-serif;color:#9fb0c0}
+.bd-wr-row>div{height:4px;border-radius:4px;background:#ffffff10;overflow:hidden}
+.bd-wr-row>div i{display:block;height:100%;background:#6fb4f0}
+.bd-wr-row b{text-align:right;color:#c3d2df}
+/* ---- Orden visual y accesibilidad ---- */
+button:disabled,.gen-btn:disabled,.bd-btn:disabled,.px-check input:disabled+span{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid #e8c574;outline-offset:2px}
+::selection{background:#e8c57455;color:#fff}
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:#ffffff22;border-radius:8px}
+*::-webkit-scrollbar-thumb:hover{background:#ffffff38}
+.bd-topactions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-left:auto}
+.bd-sep{width:1px;height:20px;background:#ffffff1f;margin:0 2px}
+.bd-btn.primary{background:linear-gradient(180deg,#2f6a4a,#1d4630);border-color:#57a87a;color:#eafff1;font-weight:700}
+.bd-btn.primary:hover{background:linear-gradient(180deg,#3a7d59,#245539);border-color:#7fd3a1}
+.bd-btn.quiet{background:#0e1822;border-color:#ffffff14;color:#b7c7d6}
+.bd-btn.quiet:hover{background:#162738;color:#eaf3fb;border-color:#ffffff2a}
+.bd-btn.icon{padding:6px 10px;font-size:14px;color:#9fb0c0}
+.bd-btn.icon:hover{color:#fff;border-color:#f07a5a66;background:#f07a5a1a}
+.bd-reset{background:#0e1822;border:1px solid #ffffff14;color:#9fb0c0;border-radius:7px;padding:6px 10px;font:600 12px "Segoe UI",system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+.bd-reset:hover{color:#f7eccd;border-color:#e8c57466;background:#162738}
+.bd-panel-head{border-bottom:1px solid #ffffff10;padding-bottom:6px;margin-bottom:8px}
+.bd-panel-head b{letter-spacing:.02em}
+.gal-filters{position:sticky;top:0;z-index:2;background:#0b1218e6;border:1px solid #ffffff12;border-radius:10px;backdrop-filter:blur(8px);padding:8px 10px}
+.gal-header{border-bottom:1px solid #ffffff10;padding-bottom:8px}
+.px-panel{scrollbar-gutter:stable}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 @media(max-width:520px){.dl-grid{grid-template-columns:1fr}.dl-art{width:64px}.dl-header h2{font-size:16px}}
 #proxy.on{display:flex;animation:galOpen .25s ease-out}
 .px-header{display:flex;gap:14px;align-items:center;padding-bottom:9px;border-bottom:1px solid #ffffff14}
@@ -1422,15 +1477,18 @@ button:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 #7a5c2
     <h2>🛠️ Constructor de mazos</h2>
     <div class="bd-setpick" data-setbar><span>Set</span><input data-setpick list="set-list" autocomplete="off" spellcheck="false" placeholder="Código"><button id="bd-set-go" data-setgo>Cargar</button></div>
     <input id="bd-name" maxlength="40" placeholder="Nombre del mazo" value="Mi mazo">
-    <select id="bd-target" title="Formato y tamaño del mazo"><option value="40">Limitado · 40</option><option value="60">Estándar · 60</option><option value="100">Commander · 100</option></select>
+    <select id="bd-target" title="Formato y tamaño del mazo"><option value="40">Limitado · 40</option><option value="40s">Custom Jumpstart · 40 · singleton</option><option value="60">Estándar · 60</option><option value="100">Commander · 100</option></select>
     <span id="bd-total" class="bd-total">0/40</span>
-    <button id="bd-save" class="bd-btn">💾 Guardar</button>
-    <button id="bd-new" class="bd-btn">✚ Nuevo</button>
-    <button id="bd-lib" class="bd-btn" title="Combinaciones de iniciación y mazos guardados">📚 Mazos</button>
-    <button id="bd-export" class="bd-btn">📤 Exportar</button>
-    <button id="bd-import" class="bd-btn">📥 Importar</button>
-    <button id="bd-pdf" class="bd-btn">🖨️ PDF</button>
-    <button id="bd-close" class="bd-btn">✕ Cerrar</button>
+    <div class="bd-topactions">
+      <button id="bd-save" class="bd-btn primary">💾 Guardar</button>
+      <button id="bd-new" class="bd-btn">✚ Nuevo</button>
+      <button id="bd-lib" class="bd-btn" title="Combinaciones de iniciación y mazos guardados">📚 Mazos</button>
+      <span class="bd-sep" aria-hidden="true"></span>
+      <button id="bd-export" class="bd-btn quiet">📤 Exportar</button>
+      <button id="bd-import" class="bd-btn quiet">📥 Importar</button>
+      <button id="bd-pdf" class="bd-btn quiet">🖨️ PDF</button>
+      <button id="bd-close" class="bd-btn icon" title="Cerrar" aria-label="Cerrar">✕</button>
+    </div>
   </div>
   <div class="bd-body">
     <section class="bd-browse">
@@ -1453,6 +1511,7 @@ button:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 #7a5c2
         <label class="bd-check"><input type="checkbox" id="bd-universal"> 🌐 Universal</label>
         <button id="bd-online" title="Busca en todos los sets de Scryfall, no solo en los cargados">🌐 Buscar en todos los sets</button>
         <label class="bd-check"><input type="checkbox" id="bd-fit"> Solo colores del mazo</label>
+        <button id="bd-reset" class="bd-reset" title="Borrar la búsqueda y volver a los filtros por defecto">↺ Limpiar</button>
         <span id="bd-count" class="bd-dim"></span>
         <span class="bd-hint">Mayús+clic = ×4 · clic derecho = ver carta · Ctrl+Z = deshacer</span>
       </div>
@@ -2350,7 +2409,8 @@ function mountSetPickers(){
   });
 }
 const SET_LOADED=new Set(),BASICS_BY_SET={};
-const setName=(c=ACTIVE_SET)=>(SETS[c]&&SETS[c].name)||String(c).toUpperCase();
+const setName=(c=ACTIVE_SET)=>{const s=SETS[c];if(!s)return String(c).toUpperCase();return (LANG.ui==='en'&&s.full)?s.full:(s.name||String(c).toUpperCase())};
+const setLabel=(c=ACTIVE_SET)=>{const s=SETS[c];if(!s)return String(c).toUpperCase();return LANG.ui==='en'?(s.full||s.name||String(c).toUpperCase()):(s.short||s.name||String(c).toUpperCase())};
 async function loadSet(code,maxPages=8,esOnly=true){
   let url=`https://api.scryfall.com/cards/search?q=${encodeURIComponent('e:'+code+(esOnly?' -t:basic lang:es':' -t:basic'))}&unique=cards`;
   let page=0;
@@ -2431,6 +2491,7 @@ function updateSetUI(){
   const sel=$('#set-input');if(sel)sel.value=ACTIVE_SET;
   const h1=$('#menu h1');
   if(h1&&!$('#menu').classList.contains('end-screen'))h1.textContent='Taller de mazos';
+  const gh=document.querySelector('.gal-header h2');if(gh){const gl='📖 Galería '+setName();if(gh.textContent!==gl)gh.textContent=gl}
   const b=$('#btn-beginner');
   if(b){
     const h=b.querySelector('h2'),p=b.querySelector('p');
@@ -2581,7 +2642,8 @@ const BEGINNER_DECKS=[
 ];
 let PACKS=BEGINNER_DECKS.slice();
 function packOf(i){const d=PACKS[i];if(!d)return[];if(d.cards)return d.cards.slice();const fbPool=POOL.filter(c=>c.col.includes(d.c)||c.col.length===0);const fbCr=R(fbPool.filter(c=>c.cr)),fbSp=R(fbPool.filter(c=>!c.cr));const cards=d.list.map(n=>{if(BASIC_NAMES[n]&&BASIC[BASIC_NAMES[n]])return BASIC[BASIC_NAMES[n]];if(BYN[n])return BYN[n];return fbCr.pop()||fbSp.pop()||BASIC[d.c]}).filter(Boolean);while(cards.length<20&&BASIC[d.c])cards.push(BASIC[d.c]);return cards.slice(0,20)}
-const packLabel=i=>{const d=PACKS[i];return d?(d.cards?d.n:(ES_THEMES[d.n]||d.n)):'?'};
+const themeLabel=n=>LANG.ui==='en'?(n||''):(ES_THEMES[n]||n);
+const packLabel=i=>{const d=PACKS[i];return d?(d.cards?d.n:themeLabel(d.n)):'?'};
 const mkP=(deck,life=20)=>({life,lib:R(deck.filter(Boolean).map(inst)),hand:[],bf:[],gy:[],exile:[],landPlayed:0,creatureDiedThisTurn:false,attackedThisTurn:false});
 
 /* ============================================================
@@ -2960,6 +3022,31 @@ function genCjsPack(colors,seed,avoidTheme,wantTheme){
     star,dual,rareCount:deck.filter(c=>rar(c)===2).length,uncCount:deck.filter(c=>rar(c)===1).length,
     cmc5:deck.filter(c=>!c.ld&&genCmc(c)>=5).length};
 }
+/* Custom Jumpstart es singleton: al unir los dos sobres no puede repetirse
+   ninguna carta (las básicas sí). Sustituye duplicados por cartas del mismo color. */
+function cjsDedupePair(a,b){
+  if(!a||!b||!a.cards||!b.cards)return;
+  const isBasic=c=>!!(c&&BASIC_NAMES[c.name]);
+  const rar=c=>c.rarity==='uncommon'?1:(c.rarity==='rare'||c.rarity==='mythic')?2:0;
+  const used=new Set([...a.cards,...b.cards].filter(c=>c&&!isBasic(c)).map(c=>c.name));
+  const pool=genPool().filter(c=>c&&!c.ld&&!isBasic(c)&&(c.col||[]).every(x=>x===b.c));
+  b.cards.forEach((c,i)=>{
+    if(!c||isBasic(c)||!used.has(c.name))return;
+    let cands=pool.filter(x=>!used.has(x.name)&&(!!x.cr===!!c.cr));
+    if(!cands.length)cands=pool.filter(x=>!used.has(x.name));
+    cands.sort((x,y)=>Math.abs(genCmc(x)-genCmc(c))-Math.abs(genCmc(y)-genCmc(c))||rar(x)-rar(y));
+    const rep=cands[0];
+    if(rep){used.add(rep.name);b.cards[i]=rep;if(b.star&&b.star.name===c.name)b.star=rep}
+    else{const basic=activeBasic(b.c)||c;b.cards[i]=basic;if(b.star&&b.star.name===c.name)b.star=null}
+  });
+  const curve={};b.cards.filter(c=>!c.ld).forEach(c=>{const k=genCmc(c);curve[k]=(curve[k]||0)+1});
+  b.curve=curve;b.lands=b.cards.filter(c=>c.ld).length;
+  b.creatures=b.cards.filter(c=>c.cr&&!c.ld).length;
+  b.spells=b.cards.filter(c=>!c.cr&&!c.ld&&c!==b.star).length;
+  b.rareCount=b.cards.filter(c=>rar(c)===2).length;
+  b.uncCount=b.cards.filter(c=>rar(c)===1).length;
+  b.cmc5=b.cards.filter(c=>!c.ld&&genCmc(c)>=5).length;
+}
 function genCjsPair(colors,seed,themes){
   colors=(colors||[]).filter(k=>activeBasic(k));
   if(!colors.length)return null;
@@ -2968,6 +3055,7 @@ function genCjsPair(colors,seed,themes){
   let a=genCjsPack([colors[0]],s1,null,t0);
   let b=colors[1]?genCjsPack([colors[1]],s2,null,t1):genCjsPack([colors[0]],s2,a?(a.dom||a.theme):null,t1);
   if(!a||!b||a.cards.length<20||b.cards.length<20)return null;
+  cjsDedupePair(a,b);
   b.n=genAltTitle(b,a);
   return {packs:[a,b],colors:colors.slice(0,2),seed,themes:[t0,t1]};
 }
@@ -3042,8 +3130,8 @@ function renderGen(){
   $('#gen-packs').querySelectorAll('.gen-row').forEach(el=>{el.onclick=()=>{const c=TMPL[el.dataset.i];if(c)showCardDetail(c)}});
   $('#gen-packs').querySelectorAll('.gen-swap').forEach(el=>{el.onclick=()=>genSwap(+el.dataset.i)});
   $('#gen-packs').querySelectorAll('.gen-theme').forEach(el=>{el.onchange=()=>genTheme(+el.dataset.i,el.value)});
-  const codes=(GEN_SETS.length?GEN_SETS:[ACTIVE_SET]).map(c=>setShort(c)).join(' + ');
-  $('#gen-note').textContent=`Sets: ${codes} · ${genPool().filter(c=>!c.ld).length} hechizos. ${fmt==='jump'?'Elige el tema de cada mazo y cámbialo sin perder el otro.':fmt==='cjs'?'Cada sobre: 1 estrella, 7 criaturas, 5 hechizos, 6 básicas y 1 tierra doble. Máx. 1 rara/mítica, 3 infrecuentes y 1 carta de coste 5+.':'Cambia el tema o el mazo entero y guárdalo o juégalo.'}`;
+  const codes=(GEN_SETS.length?GEN_SETS:[ACTIVE_SET]).map(c=>setLabel(c)).join(' + ');
+  $('#gen-note').textContent=`Sets: ${codes} · ${genPool().filter(c=>!c.ld).length} hechizos. ${fmt==='jump'?'Elige el tema de cada mazo y cámbialo sin perder el otro.':fmt==='cjs'?'Cada sobre: 1 estrella, 7 criaturas, 5 hechizos, 6 básicas y 1 tierra doble. Singleton: no se repiten cartas entre los dos sobres (salvo básicas).':'Cambia el tema o el mazo entero y guárdalo o juégalo.'}`;
   renderGenSets();
 }
 function genRoll(){
@@ -3083,6 +3171,7 @@ function genSwap(i){
     if(p&&p.cards.length>=20)break;
   }
   if(!p)return;
+  if(fmt==='cjs'&&other)cjsDedupePair(other,p);
   p.n=genAltTitle(p,other);
   b.packs[i]=p;
   renderGen();
@@ -3099,6 +3188,7 @@ function genTheme(i,th){
   const build=(b.fmt==='cjs')?genCjsPack:genPack;
   const p=build([col],Math.floor(Math.random()*1e9)+1,other?(other.dom||other.theme):null,th||null);
   if(!p)return;
+  if((b.fmt==='cjs')&&other)cjsDedupePair(other,p);
   p.n=genAltTitle(p,other);
   b.packs[i]=p;
   if(!b.themes)b.themes=[null,null];
@@ -3111,7 +3201,7 @@ function genSave(){
   const auto=GEN_ACTIVE.packs.map(p=>p.n).join(' + ');
   const name=(genName||'').trim()||auto;
   const colors=[...new Set(cards.filter(c=>!c.ld).flatMap(c=>c.col||[]))].filter(k=>'WUBRG'.includes(k));
-  BD_SAVED.unshift({id:'g'+Date.now().toString(36),name,cards:cards.map(c=>c.name),entries:cards.map(c=>({n:c.name,s:c.set||ACTIVE_SET})),sets:[...new Set(cards.map(c=>c.set||ACTIVE_SET))],colors,set:ACTIVE_SET,target:cards.length,fmt:GEN_ACTIVE.fmt||'jump',updated:Date.now()});
+  BD_SAVED.unshift({id:'g'+Date.now().toString(36),name,cards:cards.map(c=>c.name),entries:cards.map(c=>({n:c.name,s:c.set||ACTIVE_SET})),sets:[...new Set(cards.map(c=>c.set||ACTIVE_SET))],colors,set:ACTIVE_SET,target:cards.length,fmt:GEN_ACTIVE.fmt||'jump',singleton:(GEN_ACTIVE.fmt||genFormat)==='cjs',updated:Date.now()});
   bdPersist();bdRenderSaved();bdToast('Mazo guardado: '+name);
 }
 function openDeckGen(){
@@ -3159,7 +3249,7 @@ function buildMenu(){
       const size=d&&(d.cards?d.cards.length:(d.list?d.list.length:0));
       if(!size||size<20)return;
       const el=document.createElement('div');el.className='deck-card';el.dataset.i=i;
-      el.innerHTML=`<div class="dc-name">${ES_THEMES[d.n]||d.n}</div><div class="dc-color">${COL_ES[d.c]||d.c} · ${size} cartas</div>`;
+      el.innerHTML=`<div class="dc-name">${themeLabel(d.n)}</div><div class="dc-color">${COL_ES[d.c]||d.c} · ${size} cartas</div>`;
       el.style.borderColor=CC[d.c]||'#888';el.onclick=()=>togglePick(i,el);grid.append(el);
     });
     if(!grid.children.length)grid.innerHTML=`<div class="bd-empty" style="grid-column:1/-1">No hay mazos generados para ${setName()}. Usa el 🧬 Generador de mazos o prueba otro set.</div>`;
@@ -3172,7 +3262,7 @@ function buildMenu(){
   $('#bd-pdf').onclick=()=>{bdClose();openProxy('current')};
   $('#gen-edit').onclick=()=>{
     if(!GEN_ACTIVE||!GEN_ACTIVE.packs)return;
-    bdImport(GEN_ACTIVE.packs.flatMap(p=>p.cards),(genName||'').trim()||GEN_ACTIVE.packs.map(p=>p.n).join(' + '));
+    bdImport(GEN_ACTIVE.packs.flatMap(p=>p.cards),(genName||'').trim()||GEN_ACTIVE.packs.map(p=>p.n).join(' + '),(GEN_ACTIVE.fmt||genFormat)==='cjs');
     closeDeckGen();bdOpen();
   };
   $('#gen-save').onclick=genSave;
@@ -4220,7 +4310,7 @@ window.addEventListener('error',e=>{
 /* ============================================================
    CONSTRUCTOR DE MAZOS (manual)
 ============================================================ */
-const BD={cards:[],side:[],maybe:[],board:'main',dsort:'cat',dq:'',name:'Mi mazo',q:'',color:'all',type:'all',rarity:'all',cmc:'all',sort:'cmc',fit:false,universal:false,target:40,saveId:null};
+const BD={cards:[],side:[],maybe:[],board:'main',dsort:'cat',dq:'',name:'Mi mazo',q:'',color:'all',type:'all',rarity:'all',cmc:'all',sort:'cmc',fit:false,universal:false,target:40,singleton:false,saveId:null};
 let BD_UNDO=[];
 const bdTarget=()=>(BD.target===60||BD.target===100)?BD.target:40;
 let BD_EXTRA=[];
@@ -4364,6 +4454,172 @@ function bdSimulate(cards){
   return {runs,keep7:Math.round(keep7/runs*100),lands:sumL/runs,
     color:Math.round((runs-screw)/runs*100),early:Math.round(early/runs*100)};
 }
+/* ============================================================
+   SIMULACIÓN DE PARTIDAS (Monte Carlo)
+   Duelo abstracto turno a turno: tierras, curva, criaturas,
+   removal y combate. Sirve para estimar winrate, no para
+   resolver reglas exactas.
+============================================================ */
+function bdRng(seed){let a=(seed>>>0)||1;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function bdProf(c){
+  if(!c)return null;
+  const o=c.oracle||'';
+  return {
+    land:!!c.ld,cmc:c.cmc||0,pow:+c.pow||0,tou:+c.tou||0,cr:!!c.cr,
+    removal:/destroy target|exile target|deals? \d+ damage to target creature|target creature gets -\d|fight/i.test(o),
+    burn:/deals? \d+ damage to (?:any target|target player|target opponent)|each opponent loses \d+ life/i.test(o),
+    draw:/draw (?:a|one|two|three|four|five|\d+) cards?/i.test(o),
+    gain:/gain \d+ life|gains? \d+ life/i.test(o),
+    wipe:/destroy all|deals? \d+ damage to each creature|each creature gets -\d/i.test(o),
+    evasive:/\b(?:flying|menace|trample|haste|double strike|deathtouch|lifelink)\b/i.test(o)
+  };
+}
+function bdProfDeck(cards){
+  const prof=cards.map(bdProf);
+  const colors=[...new Set(cards.filter(c=>!c.ld).flatMap(c=>c.col||[]))].filter(k=>'WUBRG'.includes(k));
+  return {cards:prof,colors,name:colors.length===1?'Mono '+colors[0]:(colors.join('/')||'C'),tough:prof.reduce((a,c)=>a+(c.tou||0),0)/Math.max(1,prof.filter(c=>c.cr).length)};
+}
+function bdShuffle(a,rng){for(let i=a.length-1;i>0;i--){const j=(rng()*(i+1))|0;const t=a[i];a[i]=a[j];a[j]=t}return a}
+function bdMulligan(deck,rng){
+  let size=7,hand=[];
+  while(true){
+    const lib=bdShuffle(deck.cards.map((c,i)=>({...c,i})),rng);
+    hand=lib.splice(0,size);
+    const L=hand.filter(c=>c.land).length;
+    if((L>=2&&L<=5)||size<=5)return{lib,hand};
+    size--;
+  }
+}
+function bdRaceGame(A,B,rng){
+  const side=[bdMulligan(A,rng),bdMulligan(B,rng)];
+  const st=[
+    {P:side[0],life:20,bf:[],land:0},
+    {P:side[1],life:20,bf:[],land:0}
+  ];
+  const first=rng()<.5?0:1;
+  for(let t=1;t<=12;t++){
+    for(let k=0;k<2;k++){
+      const i=(t===1)?((k===0)?first:1-first):k;
+      const me=st[i],op=st[i+1-i%2===0?1:0];
+      const opp=st[i===0?1:0];
+      if(!(t===1&&i===first)){
+        const c=me.P.lib.shift();if(c)me.P.hand.push(c);
+      }
+      /* tierras */
+      let li=me.P.hand.findIndex(c=>c.land);
+      if(li>=0&&me.land<8){me.P.hand.splice(li,1);me.land++}
+      /* hechizos: removal primero, luego la mejor criatura asequible */
+      let pool=Math.min(me.land,8);
+      for(let guard=0;guard<3;guard++){
+        let idx=-1,best=-1;
+        me.P.hand.forEach((c,j)=>{
+          if(c.land||c.cmc>pool)return;
+          let v=0;
+          if(c.removal&&opp.bf.length)v=60+c.cmc;
+          else if(c.wipe&&opp.bf.length>=2)v=90+c.cmc;
+          else if(c.cr)v=(c.pow*2+c.tou)+10-c.cmc*0.5;
+          else if(c.draw)v=30;
+          else if(c.burn)v=25+c.cmc;
+          if(v>best){best=v;idx=j}
+        });
+        if(idx<0)break;
+        const c=me.P.hand.splice(idx,1)[0];
+        pool-=Math.max(0,c.cmc||0);
+        if(c.removal&&opp.bf.length){
+          opp.bf.sort((a,b)=>(b.pow+b.tou)-(a.pow+a.tou));
+          opp.bf.shift();
+        }else if(c.wipe&&opp.bf.length>=2){
+          opp.bf=[];
+        }else if(c.cr){
+          me.bf.push({...c,sick:true});
+        }else if(c.draw){
+          const d=me.P.lib.shift();if(d)me.P.hand.push(d);
+        }else if(c.burn){
+          opp.life-=Math.max(1,Math.round(c.cmc||1));
+          if(opp.life<=0)return i;
+        }
+        if(c.gain)me.life+=1;
+      }
+      /* combate */
+      if(t>1){
+        const atk=me.bf.filter(c=>!c.sick),def=opp.bf;
+        atk.sort((a,b)=>b.pow-a.pow);
+        let dmg=0;
+        for(const a of atk){
+          let blocker=null;
+          if(def.length){
+            def.sort((x,y)=>y.tou-x.tou);
+            blocker=def[0];
+            def.shift();
+          }
+          if(blocker){
+            if(blocker.pow>=a.tou)me.bf=me.bf.filter(x=>x!==a);
+            if(a.pow>=blocker.tou)opp.bf=opp.bf.filter(x=>x!==blocker);
+          }else{
+            dmg+=a.pow+(a.evasive?1:0);
+          }
+        }
+        me.bf.forEach(c=>c.sick=false);
+        opp.life-=dmg;
+        if(opp.life<=0)return i;
+        if(me.life<=0)return 1-i;
+      }
+    }
+  }
+  /* empate técnico al turno 12: gana quien esté más cerca */
+  const d=st[0].life-st[1].life;
+  return Math.abs(d)<=2?.5:(d>0?0:1);
+}
+function bdGauntlet(T){
+  const key=ACTIVE_SET+'|'+T+'|'+(GEN_SETS.join(','));
+  if(bdGaunt.key===key&&bdGaunt.decks.length)return bdGaunt.decks;
+  const fmt=T>=100?'cmd':T>=60?'std':'cjs';
+  const decks=[];
+  const orig=Math.random;
+  Math.random=bdRng(4242+T*7+(ACTIVE_SET||'').length);
+  try{
+  for(let i=0;i<36&&decks.length<6;i++){
+    let cards=null;
+    try{cards=genAiDeck(fmt)}catch(e){}
+    if(!cards||cards.filter(Boolean).length<T*.75)continue;
+    const cut=cards.slice(0,T).filter(Boolean);
+    const p=bdProfDeck(cut);
+    if(decks.some(d=>d.label===p.name))continue;
+    decks.push({cards:cut,prof:p,label:p.name});
+  }
+  }finally{Math.random=orig}
+  bdGaunt={key,decks};
+  return bdGaunt.decks;
+}
+function bdWinrate(cards,T){
+  const key=T+'|'+ACTIVE_SET+'|'+cards.map(c=>c&&c.name).join(',');
+  if(bdWr.key===key&&bdWr.val)return bdWr.val;
+  const opps=bdGauntlet(T);
+  if(!opps.length)return null;
+  const me=bdProfDeck(cards);
+  const games=120;
+  const per=[];
+  let wins=0,total=0;
+  const base=cards.reduce((a,c)=>a+((c&&c.name)||'').length,0)+T;
+  opps.forEach((o,oi)=>{
+    const rng=bdRng(9001+base+oi*733);
+    let w=0;
+    for(let g=0;g<games;g++){
+      const r=bdRaceGame(me,o.prof,rng);
+      if(r===0)w+=1;else if(r===.5)w+=.5;
+      total++;
+    }
+    wins+=w;
+    per.push({label:o.label,pct:Math.round(w/games*100)});
+  });
+  const pct=Math.round(wins/total*100);
+  const ci=Math.round(Math.sqrt(Math.max(.0001,pct/100*(1-pct/100)/total))*196*10)/10;
+  const sorted=per.slice().sort((a,b)=>a.pct-b.pct);
+  const val={pct,ci,games:total,opps:per,best:sorted[sorted.length-1],worst:sorted[0]};
+  bdWr={key,val};
+  return val;
+}
+let bdGaunt={key:'',decks:[]},bdWr={key:'',val:null};
 function bdLegalCheck(cards,T){
   const out=[],cnt={};
   cards.forEach(c=>{if(!c.ld)cnt[c.name]=(cnt[c.name]||0)+1});
@@ -4376,6 +4632,9 @@ function bdLegalCheck(cards,T){
     }
     const dup=Object.keys(cnt).filter(n=>cnt[n]>1);
     if(dup.length)out.push(`Commander es singleton: ${dup.slice(0,3).join(', ')}${dup.length>3?'…':''}.`);
+  }else if(BD.singleton){
+    const dup=Object.keys(cnt).filter(n=>cnt[n]>1);
+    if(dup.length)out.push(`Custom Jumpstart es singleton: ${dup.slice(0,3).join(', ')}${dup.length>3?'…':''}.`);
   }else{
     const over=Object.keys(cnt).filter(n=>cnt[n]>4);
     if(over.length)out.push(`Máximo 4 copias: ${over.slice(0,3).join(', ')}${over.length>3?'…':''}.`);
@@ -4406,17 +4665,44 @@ function bdAnalyze(cards,opts){
   const inter=roles.removal+roles.wipe,interIdeal=Math.max(3,Math.round(T*.11));
   const adv=roles.draw+roles.tutor,advIdeal=Math.max(3,Math.round(T*.09));
   const creIdeal=Math.round(T*.3);
+  const worstMana=mana.rows.slice().sort((a,b)=>a.ratio-b.ratio)[0]||null;
   const parts=[
-    {k:'size',label:'Tamaño',w:16,v:n===T?1:Math.max(0,1-Math.abs(n-T)/Math.max(6,T))},
-    {k:'lands',label:'Tierras',w:16,v:1-Math.min(1,Math.abs(s.lands-landIdeal)/Math.max(4,landIdeal*.35))},
-    {k:'curve',label:'Curva',w:14,v:1-Math.min(1,Math.abs(early-curveTarget)/.45)},
-    {k:'mana',label:'Maná',w:20,v:mana.score},
-    {k:'inter',label:'Interacción',w:14,v:Math.min(1,inter/interIdeal)},
-    {k:'adv',label:'Ventaja',w:10,v:Math.min(1,adv/advIdeal)},
-    {k:'cre',label:'Amenazas',w:10,v:Math.min(1,s.cre/creIdeal)}
+    {k:'size',label:'Tamaño',w:14,v:n===T?1:Math.max(0,1-Math.abs(n-T)/Math.max(6,T)),
+      why:`${n}/${T} cartas`,tip:n<T?`Faltan ${T-n} cartas para el formato`:(n>T?`Sobran ${n-T} cartas`:'Cuadra el tamaño del formato')},
+    {k:'lands',label:'Tierras',w:14,v:1-Math.min(1,Math.abs(s.lands-landIdeal)/Math.max(4,landIdeal*.35)),
+      why:`${s.lands} tierras (ideal ${landIdeal})`,tip:s.lands<landIdeal-1?`Añade ${landIdeal-s.lands} tierras`:s.lands>landIdeal+1?`Quita ${s.lands-landIdeal} tierras`:'Tierras en rango'},
+    {k:'curve',label:'Curva',w:14,v:1-Math.min(1,Math.abs(early-curveTarget)/.45),
+      why:`${Math.round(early*100)}% de cartas de coste ≤3 (objetivo ${Math.round(curveTarget*100)}%)`,
+      tip:early<curveTarget?'Falta juego temprano: baja la curva':'Curva sana para el plan'},
+    {k:'mana',label:'Maná',w:18,v:mana.score,
+      why:worstMana?`Media ${Math.round(mana.score*100)}% de fuentes; peor color ${worstMana.k} ${worstMana.src}/${worstMana.need}`:'Sin símbolos de color',
+      tip:mana.score>=.9?'Base de maná fiable':(worstMana?`Refuerza ${worstMana.k}: faltan ${Math.max(0,Math.round(worstMana.need-worstMana.src))} fuentes`:'Añade tierras de los colores que usas')},
+    {k:'inter',label:'Interacción',w:12,v:Math.min(1,inter/interIdeal),
+      why:`${inter} removal/barridos (objetivo ${interIdeal})`,tip:inter<interIdeal?`Añade ${interIdeal-inter} respuestas`:'Interacción suficiente'},
+    {k:'adv',label:'Ventaja',w:10,v:Math.min(1,adv/advIdeal),
+      why:`${adv} robo/tutor (objetivo ${advIdeal})`,tip:adv<advIdeal?`Añade ${advIdeal-adv} fuentes de cartas`:'Ventaja correcta'},
+    {k:'cre',label:'Amenazas',w:10,v:Math.min(1,s.cre/creIdeal),
+      why:`${s.cre} criaturas (objetivo ${creIdeal})`,tip:s.cre<creIdeal?`Añade ${creIdeal-s.cre} criaturas`:'Cuerpo suficiente'}
   ];
-  const score=n?Math.round(parts.reduce((a,p)=>a+p.v*p.w,0)/parts.reduce((a,p)=>a+p.w,0)*100):0;
+  const partV=k=>{const pp=parts.find(x=>x.k===k);return pp?pp.v:0};
+  const rampV=Math.min(1,roles.ramp/Math.max(2,Math.round(T*.07)));
+  let planFit;
+  if(/Aggro|Tempo/.test(plan.n))planFit=.55*partV('curve')+.45*partV('cre');
+  else if(plan.n==='Control')planFit=.55*partV('inter')+.45*partV('adv');
+  else if(/Ramp/.test(plan.n))planFit=.5*rampV+.3*partV('curve')+.2*partV('cre');
+  else planFit=.4*partV('curve')+.3*partV('inter')+.3*partV('cre');
+  parts.push({k:'plan',label:'Plan',w:8,v:Math.max(0,Math.min(1,planFit)),
+    why:`${plan.n}: ${Math.round(planFit*100)}% de apoyo`,
+    tip:planFit>=.8?'El mazo cumple su plan':'El mazo no termina de apoyar su plan'});
+  parts.forEach(p=>{p.pts=Math.round(p.v*p.w);p.pct=Math.round(p.v*100);p.status=p.v>=.85?'ok':p.v>=.6?'warn':'bad'});
+  const sortedParts=parts.slice().sort((a,b)=>b.v-a.v);
+  const strengths=sortedParts.filter(p=>p.v>=.85).map(p=>p.label);
+  const weaknesses=sortedParts.filter(p=>p.v<.7).map(p=>p.label);
+  /* media geométrica: una carencia grave pesa mucho más que varias medias */
+  const wsum=parts.reduce((a,p)=>a+p.w,0);
+  const score=n?Math.round(Math.exp(parts.reduce((a,p)=>a+p.w*Math.log(Math.max(.05,p.v)),0)/wsum)*100):0;
   const grade=!n?'Sin cartas':n<T*.5?'Incompleto':score>=85?'Muy afinado':score>=70?'Sólido':score>=55?'Mejorable':'Flojo';
+  const letter=!n||n<T*.5?'—':score>=90?'S':score>=80?'A':score>=70?'B':score>=55?'C':'D';
   const tips=[];
   bdLegalCheck(cards,T).forEach(t=>tips.push({k:'bad',t}));
   if(n&&s.lands>landIdeal+2)tips.push({k:'warn',t:`Quita ${s.lands-landIdeal} tierras: con ${T} cartas van mejor ${landIdeal}.`});
@@ -4427,7 +4713,8 @@ function bdAnalyze(cards,opts){
   if(n&&adv<advIdeal)tips.push({k:'warn',t:`Poca ventaja de cartas: ${adv} efectos de robo/tutor (orientativo ≥${advIdeal}).`});
   mana.rows.filter(r=>r.ratio<.8).forEach(r=>tips.push({k:'bad',t:`${GEN_COL_ES[r.k]}: ${r.src} fuentes para ${r.pips} símbolos (conviene ≥${r.need}).`}));
   if(!tips.length&&n)tips.push({k:'ok',t:`Mazo equilibrado: ${n} cartas, maná y roles en rango.`});
-  return {T,n,s,roles,plan,parts,score,grade,mana,sim,tips:tips.slice(0,6),sheets:Math.ceil(n/9)};
+  const wr=(opts&&opts.fast)?null:(n<T*.7?null:bdWinrate(cards,T));
+  return {T,n,s,roles,plan,parts,score,grade,letter,mana,sim,wr,tips:tips.slice(0,6),strengths,weaknesses,sheets:Math.ceil(n/9)};
 }
 function bdRenderAnalysis(s){
   const box=$('#bd-ana');if(!box)return;
@@ -4452,15 +4739,37 @@ function bdRenderAnalysis(s){
     <div><b>${a.sim.early}%</b><span>juego en T1-3</span></div>
   </div>`:'';
   const tips=a.tips.map(t=>`<div class="bd-warn ${t.k}">${t.t}</div>`).join('');
+  const partsHtml=a.parts.map(p=>`<div class="bd-part ${p.status}">
+    <span class="bd-part-l">${p.label}</span>
+    <div class="bd-part-bar"><i style="width:${p.pct}%"></i></div>
+    <b>${p.pts}/${p.w}</b>
+    <em>${p.why}</em>
+  </div>`).join('');
+  const strong=a.strengths.slice(0,3).map(x=>`<span class="bd-tag ok">💪 ${x}</span>`).join('');
+  const weak=a.weaknesses.slice(0,3).map(x=>`<span class="bd-tag bad">⚠ ${x}</span>`).join('');
+  const wr=a.wr?`<div class="bd-ana-h">Winrate estimado · ${a.wr.games} partidas simuladas</div>
+    <div class="bd-wr">
+      <div class="bd-wr-top"><b class="${a.wr.pct>=55?'good':a.wr.pct<45?'bad':''}">${a.wr.pct}%</b><span>±${a.wr.ci} (95%)</span></div>
+      <div class="bd-wr-bar"><i style="width:${a.wr.pct}%"></i><u style="left:50%"></u></div>
+      <div class="bd-wr-list">${a.wr.opps.slice().sort((x,y)=>x.pct-y.pct).map(o=>`<div class="bd-wr-row"><span>${o.label}</span><div><i style="width:${o.pct}%"></i></div><b>${o.pct}%</b></div>`).join('')}</div>
+      <div class="bd-dim">Monte Carlo contra ${a.wr.opps.length} mazos del set activo. Es una estimación, no sustituye a jugar.</div>
+    </div>`:'';
   box.innerHTML=`
   <div class="bd-ana-top">
     <div class="bd-ring" style="--v:${a.score};--c:${col}" title="${ringTitle}"><b>${a.score}</b></div>
-    <div class="bd-ana-id"><em>${a.plan.n} · ${a.grade}</em><span>${a.plan.d}</span></div>
+    <div class="bd-ana-id"><em><span class="bd-plan-n">${a.plan.n}</span> · ${a.grade}</em><span>${a.plan.d}</span></div>
+    <span class="bd-grade ${a.score>=80?'good':a.score<55?'bad':''}" title="Escala S/A/B/C/D">${a.letter}</span>
   </div>
   <div class="bd-chips">${chips}</div>
+  <div class="bd-ana-h">Puntos fuertes y débiles</div>
+  <div class="bd-tags">${strong||'<span class="bd-tag">Sin puntos fuertes claros</span>'}${weak}</div>
+  <div class="bd-ana-h">Por qué esta nota</div>
+  <div class="bd-parts">${partsHtml}</div>
+  <div class="bd-dim">Nota = media geométrica ponderada de 8 apartados: una carencia grave pesa más que varias medias.</div>
   <div class="bd-ana-h">Base de maná</div>
   ${mana}
-  ${sim?`<div class="bd-ana-h">Simulación · ${a.sim.runs} manos</div>${sim}`:''}
+  ${sim?`<div class="bd-ana-h">Simulación de manos · ${a.sim.runs}</div>${sim}`:''}
+  ${wr}
   <div class="bd-ana-h">Ajustes sugeridos</div>
   <div class="bd-warns">${tips}</div>
   <div class="bd-print"><b>${a.n} caras</b> · ${a.sheets} hoja${a.sheets===1?'':'s'} a una cara · <b>${a.sheets*2} hojas</b> con reversos <span>(9 por hoja, A4)</span></div>`;
@@ -4468,11 +4777,15 @@ function bdRenderAnalysis(s){
 function bdAnalysisText(){
   const a=bdAnalyze(BD.cards);
   const L=[(BD.name||'Mazo')+' · '+a.T+' cartas — Análisis'];
-  L.push('Puntuación: '+a.score+'/100 ('+a.grade+') · Plan: '+a.plan.n);
+  L.push('Puntuación: '+a.score+'/100 · '+a.letter+' ('+a.grade+') · Plan: '+a.plan.n);
+  L.push('Desglose: '+a.parts.map(p=>p.label+' '+p.pts+'/'+p.w+' ('+p.why+')').join(' · '));
+  if(a.strengths.length)L.push('Puntos fuertes: '+a.strengths.join(', '));
+  if(a.weaknesses.length)L.push('A mejorar: '+a.weaknesses.join(', '));
   L.push('Hechizos '+a.s.sp+' · Criaturas '+a.s.cre+' · Tierras '+a.s.lands+' · Coste medio '+a.s.avg.toFixed(2));
   L.push('Roles: '+(BD_ROLES.filter(r=>a.roles[r.k]).map(r=>r.n+' '+a.roles[r.k]).join(' · ')||'sin efectos detectados'));
   if(a.mana.rows.length)L.push('Maná: '+a.mana.rows.map(r=>r.k+' '+r.src+' fuentes / '+r.pips+' pips ('+Math.round(r.pT3*100)+'% en T3)').join(' · '));
-  if(a.sim)L.push('Simulación: '+a.sim.keep7+'% manos de 7 jugables · '+a.sim.lands.toFixed(1)+' tierras de media · '+a.sim.color+'% color en T3 · '+a.sim.early+'% juego temprano');
+  if(a.sim)L.push('Simulación de manos: '+a.sim.keep7+'% manos de 7 jugables · '+a.sim.lands.toFixed(1)+' tierras de media · '+a.sim.color+'% color en T3 · '+a.sim.early+'% juego temprano');
+  if(a.wr)L.push('Winrate estimado: '+a.wr.pct+'% ±'+a.wr.ci+' ('+a.wr.games+' partidas vs '+a.wr.opps.length+' mazos) · contra '+a.wr.worst.label+' '+a.wr.worst.pct+'% · contra '+a.wr.best.label+' '+a.wr.best.pct+'%');
   L.push('Ajustes:');
   a.tips.forEach(t=>L.push('- '+t.t));
   L.push('Impresión: '+a.n+' caras · '+a.sheets+' hojas a una cara · '+(a.sheets*2)+' con reversos (9 por hoja).');
@@ -4540,7 +4853,7 @@ function bdOptimize(ban){
     curve:Math.max(0,big-bigIdeal),
     excess:Math.max(0,s.lands-landIdeal-1)
   };
-  const cmd=T>=100?bdCommander():null,lim=T>=100?1:4,cols=bdOptColors();
+  const cmd=T>=100?bdCommander():null,lim=(T>=100||BD.singleton)?1:4,cols=bdOptColors();
   const cands=bdAll().filter(c=>{
     if(!c||!c.name||c.ld||BASIC_NAMES[c.name])return false;
     if(c===cmd||addBan.has(c.name))return false;
@@ -4611,7 +4924,7 @@ function bdOptSwap(s){
   if(!s||!s.out||!s.in)return false;
   const i=BD.cards.findIndex(c=>c&&c.name===s.out.name);
   if(i<0)return false;
-  const lim=bdTarget()>=100?1:4;
+  const lim=(bdTarget()>=100||BD.singleton)?1:4;
   if(!s.in.ld&&bdTotalCopies(s.in.name)>=lim)return false;
   BD.cards.splice(i,1,s.in);
   return true;
@@ -4713,6 +5026,7 @@ function bdAdd(c){
   const board=bdBoard(),main=(board===BD.cards);
   if(main&&BD.cards.length>=bdTarget()){bdToast('El mazo ya tiene '+bdTarget()+' cartas.');return}
   if(main&&!c.ld&&bdTarget()>=100&&bdTotalCopies(c.name)>=1){bdToast('Commander es singleton: 1 copia por carta.');return}
+  if(main&&!c.ld&&BD.singleton&&bdTotalCopies(c.name)>=1){bdToast('Custom Jumpstart es singleton: 1 copia por carta.');return}
   if(!c.ld&&bdTotalCopies(c.name)>=4){bdToast('Máximo 4 copias de '+c.pname+' entre mazo y banquillo.');return}
   bdSnap();board.push(c);bdRefresh();
 }
@@ -4864,7 +5178,7 @@ function bdRenderSide(){
   BD.cards.forEach(c=>{const g=groups[c.name]||(groups[c.name]={c,n:0});g.n++});
   const rows=Object.values(groups).sort((a,b)=>(a.c.ld?1:0)-(b.c.ld?1:0)||(a.c.cmc||0)-(b.c.cmc||0)||a.c.pname.localeCompare(b.c.pname));
   const tot=$('#bd-total');if(tot){tot.textContent=s.n+'/'+bdTarget();tot.classList.toggle('ok',s.n===bdTarget())}
-  const tsel=$('#bd-target');if(tsel&&+tsel.value!==bdTarget())tsel.value=String(bdTarget());
+  const tsel=$('#bd-target');if(tsel){const want=BD.singleton?'40s':String(bdTarget());if(tsel.value!==want)tsel.value=want}
   bdRenderDeck();
   const max=Math.max(1,...s.curve),curve=$('#bd-curve');
   if(curve)curve.innerHTML=s.curve.map((v,i)=>`<div class="bd-cbar" title="${i===6?'6+':i} de maná: ${v}"><div class="bd-cfill" style="height:${Math.round(v/max*100)}%"></div><b>${v||''}</b><span>${i===6?'6+':i}</span></div>`).join('');
@@ -4946,12 +5260,12 @@ function bdSave(){
   if(!BD.cards.length){bdToast('El mazo está vacío.');return}
   const colors=[...new Set(BD.cards.filter(c=>!c.ld).flatMap(c=>c.col||[]))].filter(k=>'WUBRG'.includes(k));
   const boardEnt=a=>a.map(c=>({n:c.name,s:c.set||ACTIVE_SET}));
-  const def={id:BD.saveId||('d'+Date.now().toString(36)),name,cards:BD.cards.map(c=>c.name),entries:boardEnt(BD.cards),side:BD.side.map(c=>c.name),sideEntries:boardEnt(BD.side),maybe:BD.maybe.map(c=>c.name),maybeEntries:boardEnt(BD.maybe),sets:[...new Set(BD.cards.concat(BD.side,BD.maybe).map(c=>c.set||ACTIVE_SET))],colors,set:ACTIVE_SET,target:bdTarget(),updated:Date.now()};
+  const def={id:BD.saveId||('d'+Date.now().toString(36)),name,cards:BD.cards.map(c=>c.name),entries:boardEnt(BD.cards),side:BD.side.map(c=>c.name),sideEntries:boardEnt(BD.side),maybe:BD.maybe.map(c=>c.name),maybeEntries:boardEnt(BD.maybe),sets:[...new Set(BD.cards.concat(BD.side,BD.maybe).map(c=>c.set||ACTIVE_SET))],colors,set:ACTIVE_SET,target:bdTarget(),singleton:!!BD.singleton,updated:Date.now()};
   const i=BD_SAVED.findIndex(d=>d.id===def.id);
   if(i>=0)BD_SAVED[i]=def;else BD_SAVED.unshift(def);
   BD.saveId=def.id;bdPersist();bdRenderSaved();bdToast('Mazo guardado.');
 }
-function bdNew(){bdSnap();BD.cards=[];BD.side=[];BD.maybe=[];BD.board='main';BD.dq='';const q=$('#bd-dq');if(q)q.value='';BD.name='Mi mazo';BD.saveId=null;BD.target=40;$('#bd-name').value=BD.name;bdRefresh();bdToast('Mazo nuevo.')}
+function bdNew(){bdSnap();BD.cards=[];BD.side=[];BD.maybe=[];BD.board='main';BD.dq='';const q=$('#bd-dq');if(q)q.value='';BD.name='Mi mazo';BD.saveId=null;BD.target=40;BD.singleton=false;$('#bd-name').value=BD.name;bdRefresh();bdToast('Mazo nuevo.')}
 function bdDeckCards(d){
   const e=(d&&d.entries&&d.entries.length)?d.entries:(((d&&d.cards)||[]).map(n=>({n,s:(d&&d.set)||ACTIVE_SET})));
   return e.map(x=>bdResolve(x.n,x.s)).filter(Boolean);
@@ -4972,6 +5286,7 @@ async function bdLoadDef(i){
   BD.side=bdResolveEntries(d.sideEntries&&d.sideEntries.length?d.sideEntries:(d.side||[]).map(n=>({n,s:set}))).slice(0,30);
   BD.maybe=bdResolveEntries(d.maybeEntries&&d.maybeEntries.length?d.maybeEntries:(d.maybe||[]).map(n=>({n,s:set}))).slice(0,60);
   BD.board='main';
+  BD.singleton=!!(d.singleton||d.fmt==='cjs');
   BD.target=(d.target===60||d.target===100)?d.target:(stored>=100?100:stored>=60?60:40);
   if(cards.length<stored)bdToast(`Se cargaron ${cards.length} de ${stored} cartas.`);
   BD.name=d.name;BD.saveId=d.id;
@@ -4982,10 +5297,11 @@ function bdDelDef(i){
   if(!confirm('¿Borrar el mazo «'+d.name+'»?'))return;
   BD_SAVED.splice(i,1);if(BD.saveId===d.id)BD.saveId=null;bdPersist();bdRenderSaved();bdToast('Mazo borrado.');
 }
-function bdImport(cards,name){
+function bdImport(cards,name,singleton){
   bdSnap();
   BD.cards=(cards||[]).filter(Boolean).slice(0,200);
   BD.side=[];BD.maybe=[];BD.board='main';
+  BD.singleton=!!singleton;
   BD.target=BD.cards.length>=100?100:BD.cards.length>=60?60:40;
   BD.name=name||'Mazo importado';BD.saveId=null;
   if($('#bd-name'))$('#bd-name').value=BD.name;
@@ -5154,7 +5470,7 @@ function dlComboList(){
   for(let a=0;a<BEGINNER_DECKS.length;a++)for(let b=a+1;b<BEGINNER_DECKS.length;b++){
     const da=BEGINNER_DECKS[a],db=BEGINNER_DECKS[b];
     const cards=[...dlPack(da),...dlPack(db)];
-    out.push({kind:'combo',a,b,cards,size:cards.length,
+    out.push({kind:'combo',a,b,cards,size:cards.length,titleA:da.n,titleB:db.n,
       name:(ES_THEMES[da.n]||da.n)+' + '+(ES_THEMES[db.n]||db.n),
       colors:[...new Set([da.c,db.c])]});
   }
@@ -5169,9 +5485,9 @@ function dlStarOf(cards){
 }
 /* Análisis de una lista sin tocar el mazo abierto ni lanzar la simulación. */
 function dlAnalyzeCards(cards,T){
-  const oc=BD.cards,ot=BD.target;
-  BD.cards=cards;BD.target=T||40;
-  try{return bdAnalyze(cards,{fast:true})}finally{BD.cards=oc;BD.target=ot}
+  const oc=BD.cards,ot=BD.target,os=BD.singleton;
+  BD.cards=cards;BD.target=T||40;BD.singleton=false;
+  try{return bdAnalyze(cards,{fast:true})}finally{BD.cards=oc;BD.target=ot;BD.singleton=os}
 }
 function dlSavedEntries(){
   return BD_SAVED.map((d,i)=>{
@@ -5192,6 +5508,7 @@ function dlRender(){
   }
   let list=isBox?dlComboList():dlSavedEntries();
   list.forEach(e=>{
+    if(e.kind==='combo'&&e.titleA)e.name=themeLabel(e.titleA)+' + '+themeLabel(e.titleB);
     if(e.kind==='combo'){
       if(!e.star){e.star=dlStarOf(e.cards);e.hay=e.cards.map(c=>((c.pname||'')+' '+(c.name||''))).join(' ').toLowerCase()}
       if(!e.ana)e.ana=dlAnalyzeCards(e.cards,40);
@@ -5345,8 +5662,21 @@ function bdInit(){
   $('#bd-close').onclick=bdClose;
   $('#bd-play').onclick=bdPlay;
   const uni=$('#bd-universal');if(uni)uni.onchange=()=>{BD.universal=uni.checked;bdRenderPool()};
+  const bdr=$('#bd-reset');if(bdr)bdr.onclick=()=>{
+    BD.q='';BD.color='all';BD.type='all';BD.rarity='all';BD.cmc='all';BD.sort='cmc';BD.fit=false;BD.universal=false;BD_EXTRA=[];
+    const q=$('#bd-search');if(q)q.value='';
+    ['#bd-type','#bd-rarity','#bd-cmc'].forEach(x=>{const el=$(x);if(el)el.value='all'});
+    const so=$('#bd-sort');if(so)so.value='cmc';
+    const f=$('#bd-fit'),u=$('#bd-universal');if(f)f.checked=false;if(u)u.checked=false;
+    document.querySelectorAll('#deckbuilder .bd-color').forEach(b=>b.classList.toggle('on',b.dataset.c==='all'));
+    bdRenderPool();bdToast('Filtros restablecidos.');
+  };
   const onl=$('#bd-online');if(onl)onl.onclick=bdOnlineSearch;
-  const tgt=$('#bd-target');if(tgt)tgt.onchange=()=>{BD.target=+tgt.value||40;bdRefresh();bdToast('Formato: '+tgt.value+' cartas.')};
+  const tgt=$('#bd-target');if(tgt)tgt.onchange=()=>{
+    if(tgt.value==='40s'){BD.target=40;BD.singleton=true}else{BD.target=+tgt.value||40;BD.singleton=false}
+    bdRefresh();
+    bdToast(BD.singleton?'Custom Jumpstart: 40 cartas singleton.':'Formato: '+BD.target+' cartas.');
+  };
   document.querySelectorAll('#deckbuilder .bd-tab').forEach(b=>{
     b.onclick=()=>{BD.board=b.dataset.bdboard||'main';BD.dq='';const q=$('#bd-dq');if(q)q.value='';bdRenderDeck()};
   });
@@ -5390,7 +5720,7 @@ function pxPrintCards(d){
 
 function pxDecks(){
   const list=[],cur=(BD.cards||[]).filter(Boolean);
-  if(cur.length)list.push({key:'current',name:'Mazo actual · '+(BD.name||'sin nombre'),cards:cur});
+  if(cur.length)list.push({key:'current',name:(LANG.ui==='en'?'Current deck · ':'Mazo actual · ')+(BD.name||(LANG.ui==='en'?'unnamed':'sin nombre')),cards:cur});
   BD_SAVED.forEach((d,i)=>{
     const cards=bdDeckCards(d);
     if(cards.length)list.push({key:'saved:'+i,name:d.name+(d.set&&d.set!==ACTIVE_SET?' ('+d.set.toUpperCase()+')':''),cards});
@@ -6074,6 +6404,60 @@ const I18N_EN={
 "🔍 Buscar en mi colección…":"🔍 Search my collection…","🔍 Buscar por nombre…":"🔍 Search by name…","🔍 Filtrar en la lista…":"🔍 Filter the list…",
 "🔍 Nombre o texto de reglas…":"🔍 Name or rules text…",
 "Interfaz":"Interface","Cartas":"Cards","Español":"Spanish","Recomendados":"Recommended",
+"Puntos fuertes y débiles":"Strengths & weaknesses","Por qué esta nota":"Why this score",
+"mano de 7 jugable":"7-card hand kept","color en turno 3":"color by turn 3","juego en T1-3":"plays on turns 1-3",
+
+"Nota = media geométrica ponderada de 8 apartados: una carencia grave pesa más que varias medias.":"Score = weighted geometric mean of 8 areas: one severe gap hurts more than several average ones.",
+
+"Rampa":"Ramp","Plan":"Plan","Midrange agresivo":"Aggressive midrange","Sin cartas":"No cards",
+"Curva baja y muchas criaturas: gana antes de que el rival estabilice.":"Low curve and many creatures: win before the opponent stabilizes.",
+"Respuestas y barridos hasta rematar con pocas amenazas.":"Answers and wraths until a few threats close the game.",
+"Acelera el maná y domina con amenazas grandes desde el turno 4.":"Ramp your mana and dominate with big threats from turn 4.",
+"Criaturas eficientes con respuestas puntuales.":"Efficient creatures with spot answers.",
+"Mezcla de amenazas y respuestas: valora carta a carta.":"Mix of threats and answers: evaluate card by card.",
+"El mazo cumple su plan":"The deck supports its plan","El mazo no termina de apoyar su plan":"The deck does not fully support its plan",
+
+"Puntos fuertes":"Strengths","A mejorar":"To improve","Sin puntos fuertes claros":"No clear strengths",
+"Winrate estimado · ":"Estimated winrate · "," partidas simuladas":" simulated games",
+"Monte Carlo contra ":"Monte Carlo against "," mazos del set activo. Es una estimación, no sustituye a jugar.":" decks from the active set. An estimate, not a substitute for playing.",
+"Simulación de manos · ":"Hand simulation · ","Simulación de manos: ":"Hand simulation: ",
+"Desglose: ":"Breakdown: ","Puntuación: ":"Score: ","Winrate estimado: ":"Estimated winrate: ",
+"Puntos fuertes: ":"Strengths: ","A mejorar: ":"To improve: ",
+"Cuadra el tamaño del formato":"Matches the format size","Tierras en rango":"Lands in range",
+"Curva sana para el plan":"Healthy curve for the plan","Base de maná fiable":"Reliable mana base",
+"Interacción suficiente":"Enough interaction","Ventaja correcta":"Card advantage is fine","Cuerpo suficiente":"Enough bodies",
+"Sin símbolos de color":"No color symbols","Falta juego temprano: baja la curva":"Missing early plays: lower the curve",
+"Añade tierras de los colores que usas":"Add lands in your colors",
+
+"Pasa el ratón sobre una carta para verla en grande":"Hover a card to see it large",
+"Toca una carta para verla":"Tap a card to see it","tierras en mano":"lands in hand",
+"🧬 Doble Jumpstart":"🧬 Double Jumpstart","🎁 Custom Jumpstart":"🎁 Custom Jumpstart",
+"🃏 Estándar 60":"🃏 Standard 60","👑 Commander 100":"👑 Commander 100",
+"Limitado · 40":"Limited · 40","Estándar · 60":"Standard · 60","Commander · 100":"Commander · 100",
+"Duplicar":"Duplicate","Borrar":"Delete","sin nombre":"unnamed","Mazo actual · ":"Current deck · ",
+"Blanco":"White","Azul":"Blue","Negro":"Black","Rojo":"Red","Verde":"Green",
+
+
+"Biblioteca de mazos":"Deck library",
+"Cualquier set de Magic se descarga al momento. Generador, constructor, biblioteca, galería y proxies usan el set elegido.":"Any Magic set downloads on demand. Generator, builder, library, gallery and proxies use the selected set.",
+"Idioma de la interfaz":"Interface language","Idioma de las cartas":"Card language",
+"Buscar y cargar mazos con análisis":"Search and load decks with analysis","Orden de la lista":"List order",
+"Quitar":"Remove","Quitar una copia":"Remove one copy","Añadir":"Add","Tema automático":"Automatic theme",
+"Sets del mazo":"Deck sets","Curva de maná":"Mana curve","Mano de 7":"7-card hand","2-5 tierras":"2-5 lands",
+"Aplica todas las sustituciones sugeridas":"Apply all suggested swaps",
+"Pasa el ratón sobre una carta para verla en grande":"Hover a card to see it large",
+"Toca una carta para verla":"Tap a card to see it",
+"Faltan cartas":"Not enough cards","sin tierra doble":"no dual land",
+"Borrar la búsqueda y volver a los filtros por defecto":"Clear the search and reset the filters",
+"↺ Limpiar":"↺ Clear","Filtros restablecidos.":"Filters reset.",
+"Cerrar":"Close","Combinaciones de iniciación y mazos guardados":"Beginner box combos and saved decks",
+
+"Sin material para ": "Not enough material for ",
+
+"Custom Jumpstart · 40 · singleton":"Custom Jumpstart · 40 · singleton",
+"Custom Jumpstart: 40 cartas singleton.":"Custom Jumpstart: 40-card singleton.",
+"Custom Jumpstart es singleton: 1 copia por carta.":"Custom Jumpstart is singleton: 1 copy per card.",
+
 "Taller de mazos":"Deck workshop","Crear y editar mazos":"Create & edit decks","Jugar y explorar":"Play & explore",
 "Genera, crea y edita mazos de Magic con análisis al instante. Cuando quieras, elige dos mazos y juega contra la IA.":"Generate, build and edit Magic decks with instant analysis. Pick two decks and play the AI whenever you like.",
 "Jumpstart, Estándar o Commander al instante":"Jumpstart, Standard or Commander instantly",
@@ -6125,6 +6509,56 @@ const I18N_EN={
 };
 const UI_COL={Blanco:'White',Azul:'Blue',Negro:'Black',Rojo:'Red',Verde:'Green'};
 const UI_RULES=[
+[/^Simulación de manos · (\d+)$/,'Hand simulation · $1'],
+[/^Winrate estimado · (\d+) partidas simuladas$/,'Estimated winrate · $1 simulated games'],
+[/^💪 (.+)$/,(m,x)=>(I18N_EN[x]||x)+' (strength)'],
+[/^⚠ (.+)$/,(m,x)=>(I18N_EN[x]||x)+' (weakness)'],
+[/^(.+): (\d+)% de apoyo$/,(m,x,n)=>(I18N_EN[x]||x)+': '+n+'% plan support'],
+[/^(\d+)\/(\d+) cartas$/,'$1/$2 cards'],
+[/^Faltan (\d+) cartas para el formato$/,'$1 cards short of the format'],
+[/^Sobran (\d+) cartas$/,'$1 cards over'],
+[/^(\d+) tierras \(ideal (\d+)\)$/,'$1 lands (ideal $2)'],
+[/^Añade (\d+) tierras$/,'Add $1 lands'],
+[/^Quita (\d+) tierras$/,'Cut $1 lands'],
+[/^(\d+)% de cartas de coste ≤3 \(objetivo (\d+)%\)$/,'$1% of cards cost ≤3 (target $2%)'],
+[/^Media (\d+)% de fuentes; peor color ([WUBRG]) (\d+)\/(\d+)$/,(m,a,c,s,n)=>'Average '+a+'% of sources; worst color '+c+' '+s+'/'+n],
+[/^Refuerza ([WUBRG]): faltan (\d+) fuentes$/,(m,c,n)=>'Reinforce '+c+': '+n+' sources short'],
+[/^(\d+) removal\/barridos \(objetivo (\d+)\)$/,'$1 removal\/wraths (target $2)'],
+[/^Añade (\d+) respuestas$/,'Add $1 answers'],
+[/^(\d+) robo\/tutor \(objetivo (\d+)\)$/,'$1 draw\/tutor (target $2)'],
+[/^Añade (\d+) fuentes de cartas$/,'Add $1 card sources'],
+[/^(\d+) criaturas \(objetivo (\d+)\)$/,'$1 creatures (target $2)'],
+[/^Añade (\d+) criaturas$/,'Add $1 creatures'],
+[/^Monte Carlo contra (\d+) mazos del set activo\. Es una estimación, no sustituye a jugar\.$/,'Monte Carlo against $1 decks from the active set. An estimate, not a substitute for playing.'],
+[/^(Blanco|Azul|Negro|Rojo|Verde) · (\d+) cartas$/,(m,c,n)=>(I18N_EN[c]||c)+' · '+n+' cards'],
+[/^📖 Galería (.+)$/,'📖 $1 Gallery'],
+[/^Cargadas (\d+) cartas de (.+)\.$/,'Loaded $1 cards from $2.'],
+[/^(\d+) cartas de (.+) listas\.$/,'$1 cards from $2 ready.'],
+[/^Carga interrumpida con (\d+) cartas\.$/,'Loading stopped at $1 cards.'],
+[/^Selecciona 2 mazos de (.+) \((\d)\/2\)$/,'Pick 2 decks from $1 ($2/2)'],
+[/^Selecciona 2 mazos \((\d)\/2\)$/,'Pick 2 decks ($1/2)'],
+[/^Página (\d+) de (\d+) · (\d+) cartas$/,'Page $1 of $2 · $3 cards'],
+[/^([A-Z0-9]{2,4}) · Mostrando (\d+) de (\d+) cartas$/,'$1 · Showing $2 of $3 cards'],
+[/^(\d+) de maná: (\d+) cartas$/,'$1 mana: $2 cards'],
+[/^(\d+)\+ de maná: (\d+) cartas$/,'$1+ mana: $2 cards'],
+[/^(\d+)\+ de maná: (\d+)$/,'$1+ mana: $2'],
+[/^(\d+) de maná: (\d+)$/,'$1 mana: $2'],
+[/^(.+): (\d+) efecto\(s\) · orientativo (\d+)$/,(m,a,b,c)=>((I18N_EN[a]||a)+': '+b+' effect(s) · target '+c)],
+[/^Tamaño: (\d+) · Tierras: (\d+) · Curva: (\d+) · Maná: (\d+) · Interacción: (\d+) · Ventaja: (\d+) · Amenazas: (\d+)$/,'Size: $1 · Lands: $2 · Curve: $3 · Mana: $4 · Interaction: $5 · Advantage: $6 · Threats: $7'],
+[/^20 \+ 20 = 40 cartas · (\d+) tierras · (\d+) criaturas(.*)$/,'20 + 20 = 40 cards · $1 lands · $2 creatures$3'],
+[/^(\d+) cartas · (\d+) tierras · (\d+) criaturas(.*)$/,'$1 cards · $2 lands · $3 creatures$4'],
+[/^· (\d+) cartas · (\d+) criaturas · (\d+) hechizos · (\d+) tierras · (\d+) raras?$/,'· $1 cards · $2 creatures · $3 spells · $4 lands · $5 rares'],
+[/^· (\d+) rara\/mítica · (\d+) infrecuentes? · (\d+) de coste 5\+ · tierra doble: (.+)$/,'· $1 rare/mythic · $2 uncommons · $3 at cost 5+ · dual land: $4'],
+[/^· (\d+) rara\/mítica · (\d+) infrecuentes? · (\d+) de coste 5\+ · sin tierra doble$/,'· $1 rare/mythic · $2 uncommons · $3 at cost 5+ · no dual land'],
+[/^Listo: (\d+) cartas \+ portada en (\d+) hojas?\.$/,'Ready: $1 cards + cover on $2 sheets.'],
+[/^Listo: (\d+) cartas en (\d+) hojas?\.$/,'Ready: $1 cards on $2 sheets.'],
+[/^Mazo actual · (.+) · (\d+) cartas$/,'Current deck · $1 · $2 cards'],
+[/^Sin material para (.+)$/,'Not enough material for $1'],
+[/^Sets: (.+) · (\d+) hechizos\. (.*)$/,(m,st,n,tail)=>'Sets: '+st+' · '+n+' spells. '+({
+  'Elige el tema de cada mazo y cámbialo sin perder el otro.':'Pick each deck theme without losing the other.',
+  'Cada sobre: 1 estrella, 7 criaturas, 5 hechizos, 6 básicas y 1 tierra doble. Singleton: no se repiten cartas entre los dos sobres (salvo básicas).':'Each pack: 1 star, 7 creatures, 5 spells, 6 basics and 1 dual land. Singleton: no repeated cards across the two packs (except basics).',
+  'Cambia el tema o el mazo entero y guárdalo o juégalo.':'Change the theme or the whole deck, then save or play it.'
+}[tail]||tail)],
 [/^Piloto: SÍ$/,'Autopilot: ON'],
 [/^Piloto: NO$/,'Autopilot: OFF'],
 [/^(\d+) cartas$/,'$1 cards'],
@@ -6147,7 +6581,7 @@ const UI_RULES=[
 [/^(\d+) cartas encontradas: clic para añadir\.$/,'$1 cards found: click to add.'],
 [/^Todos los sets · (\d+) cartas$/,'All sets · $1 cards'],
 [/^(.+) · (\d+) cartas$/,'$1 · $2 cards'],
-[/ · (Muy afinado|Sólido|Mejorable|Flojo|Incompleto|Sin cartas)$/,(m,g)=>' · '+({'Muy afinado':'Well tuned','Sólido':'Solid','Mejorable':'Improvable','Flojo':'Weak','Incompleto':'Incomplete','Sin cartas':'No cards'})[g]],
+[/^· (Muy afinado|Sólido|Mejorable|Flojo|Incompleto|Sin cartas)$/,(m,g)=>'· '+({'Muy afinado':'Well tuned','Sólido':'Solid','Mejorable':'Improvable','Flojo':'Weak','Incompleto':'Incomplete','Sin cartas':'No cards'})[g]],
 [/^Falta el comandante: añade una criatura legendaria\.$/,'Missing commander: add a legendary creature.'],
 [/^Singleton: (\d+) cartas? repetidas? \(/,'Singleton: $1 repeated cards ('],
 [/^Faltan (\d+) cartas para llegar a (\d+)\.$/,'You need $1 more cards to reach $2.'],
@@ -6194,7 +6628,7 @@ const UI_RULES=[
 [/^(\d+) cartas? · (\d+) hojas? · (\d+) reversos? · A4 · a sangre$/,'$1 cards · $2 sheets · $3 backs · A4 · full bleed'],
 [/^Portada$/,'Cover']
 ];
-const I18N_SKIP='#cd-name,#cd-type,#cd-text,#cd-kw,.cd-abil,#bd-list,#bd-deck,#bd-saved,#gen-list,.gen-row,#gal-grid,#gal-empty,#coll-grid,#album-grid,#px-cards,#px-preview,#px-deck,#reveal-cards,#mull-fan,#zoom,.zone,.gal-card,#cd-img,#toast,.card,[data-i18n-off]';
+const I18N_SKIP='#cd-name,#cd-type,#cd-text,#cd-kw,.cd-abil,#bd-list,#bd-deck,#gen-list,.gen-row,#gal-grid,#gal-empty,#coll-grid,#album-grid,#px-cards,#px-preview,#px-deck,#reveal-cards,#mull-fan,.zone,.gal-card,#cd-img,#toast,.card,[data-i18n-off]';
 function uiSkipEl(el){return !!(el&&el.closest&&el.closest(I18N_SKIP))}
 const UI_ORIG=new WeakMap(),UI_AORIG=new WeakMap();
 function uiRules(k){
@@ -6233,8 +6667,9 @@ function uiAttrs(el){
       if(store&&store[a]!==undefined){el.setAttribute(a,store[a]);delete store[a]}
       return;
     }
-    const t=I18N_EN[k];
-    if(t===undefined||t===k)return;
+    let t=I18N_EN[k];
+    if(t===undefined)t=uiRules(k);
+    if(t===null||t===undefined||t===k)return;
     if(!store){store={};UI_AORIG.set(el,store)}
     if(store[a]===undefined)store[a]=v;
     el.setAttribute(a,t);
@@ -6264,11 +6699,15 @@ const uiObserver=new MutationObserver(muts=>{
 function langSave(){try{localStorage.setItem('mtg_lang',JSON.stringify(LANG))}catch(e){}}
 function langApplyUI(){
   document.documentElement.lang=LANG.ui;
+  try{updateSetUI()}catch(e){}
+  try{if($('#picker')&&$('#picker').classList.contains('on'))$('#msg').textContent=`Selecciona 2 mazos de ${setName()} (${picked.length}/2)`}catch(e){}
+  try{if($('#deckgen')&&$('#deckgen').classList.contains('on')&&typeof renderGen==='function')renderGen()}catch(e){}
+  try{if($('#gallery')&&$('#gallery').classList.contains('on')&&typeof renderGallery==='function')renderGallery()}catch(e){}
   uiApply(document.body);
 }
 function langRefreshCards(){
   const call=(f)=>{try{typeof window[f]==='function'&&window[f]()}catch(e){}};
-  ['bdRenderPool','bdRenderSide','renderGenSets','renderGen','renderGallery'].forEach(call);
+  ['bdRenderPool','bdRenderSide','renderGenSets','renderGen','renderGallery','dlRender'].forEach(call);
   if(typeof G!=='undefined'&&G&&G.p&&typeof render==='function')try{render()}catch(e){}
   if(typeof currentDetailCard!=='undefined'&&currentDetailCard&&typeof showCardDetail==='function'){
     try{showCardDetail(currentDetailCard)}catch(e){}
