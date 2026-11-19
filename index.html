@@ -727,6 +727,11 @@ button:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 #7a5c2
 #go{background:linear-gradient(180deg,#a9dcff,#3f93d6 55%,#2a72ad);box-shadow:0 2px 0 #14405f,0 8px 22px #2f86c999,0 0 26px #2f86c955,inset 0 1px 0 #fff8}
 #end{background:linear-gradient(180deg,#fff0c8,#e8b64c 55%,#c99a3b);box-shadow:0 2px 0 #7a5c2a,0 8px 22px #e0a83c99,0 0 26px #e0a83c55,inset 0 1px 0 #fff9}
 #st{padding:5px 14px;border-radius:20px;background:#ffffff07;border:1px solid #ffffff12;color:#cfd8e2;letter-spacing:.02em}
+#mid{flex-wrap:wrap}
+#coach{display:none;flex:0 0 100%;margin:2px auto 0;max-width:min(780px,98%);text-align:center;color:#efdfb4;background:linear-gradient(180deg,#2b2413e0,#151009e0);border:1px solid #e8c5743d;border-radius:12px;padding:4px 12px;font:600 11.5px "Segoe UI",system-ui,sans-serif;line-height:1.35;box-shadow:0 6px 18px #0006}
+#coach.on{display:block;animation:coachIn .32s cubic-bezier(.2,1.3,.4,1)}
+@keyframes coachIn{from{opacity:0;translate:0 4px}to{opacity:1;translate:0 0}}
+@media (max-width:820px){#coach{font-size:11px;padding:3px 8px}}
 #st.thinking{background:#8fd0ff10;border-color:#8fd0ff33;color:#a9dbff}
 
 /* ==================== CARTAS ==================== */
@@ -1144,6 +1149,17 @@ button:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 #7a5c2
 #vignette.on{opacity:1;animation:lowPulse 2.6s ease-in-out infinite}
 @keyframes lowPulse{0%,100%{opacity:.5}50%{opacity:1}}
 .fly-card.spell{box-shadow:0 18px 44px #000d,0 0 36px #6fc7ffaa,0 0 0 1px #bfe6ff66}
+/* ---------- hechizo: traza, mira e impacto ---------- */
+.spell-trace{position:fixed;height:2px;z-index:244;pointer-events:none;transform-origin:0 50%;border-radius:2px;background:linear-gradient(90deg,#fff0,var(--tc,#bfe6ff),#fff0);box-shadow:0 0 14px var(--tc,#bfe6ff),0 0 4px #fff;animation:traceGrow .62s ease-out forwards}
+@keyframes traceGrow{0%{clip-path:inset(0 100% 0 0);opacity:0}18%{opacity:1}55%{clip-path:inset(0 0 0 0);opacity:1}100%{clip-path:inset(0 0 0 0);opacity:0}}
+.spell-lock{position:fixed;z-index:243;pointer-events:none;translate:-50% -50%;border-radius:14px;border:2px solid var(--tc,#bfe6ff);box-shadow:0 0 22px var(--tc,#bfe6ff),inset 0 0 22px #00000055;animation:lockIn .8s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes lockIn{0%{opacity:0;scale:1.45;rotate:-8deg}25%{opacity:1;scale:.94;rotate:0deg}45%{scale:1.04}100%{opacity:0;scale:1;rotate:0deg}}
+.spell-burst{position:fixed;z-index:242;pointer-events:none;translate:-50% -50%;width:26px;height:26px;border-radius:50%;border:3px solid var(--tc,#f66);box-shadow:0 0 26px var(--tc,#f66);animation:spellBurst .62s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes spellBurst{0%{opacity:1;scale:.3;border-width:6px}70%{opacity:.9}100%{opacity:0;scale:7;border-width:1px}}
+.card.aim{box-shadow:0 0 0 2px var(--tc,#f55),0 0 30px 8px #f557,0 10px 20px #000a;animation:aimPulse .5s ease-in-out infinite alternate;z-index:75}
+@keyframes aimPulse{to{box-shadow:0 0 0 2px #fff,0 0 42px 12px var(--tc,#f55),0 10px 20px #000a}}
+.card.spell-hit{animation:spellHit .5s cubic-bezier(.3,1.3,.4,1)}
+@keyframes spellHit{0%,100%{translate:0 0}22%{translate:-6px 0;filter:brightness(1.9) saturate(1.4)}58%{translate:5px 0;filter:brightness(1.25)}}
 /* ---------- constructor: filtros nuevos ---------- */
 .bd-check{display:flex;align-items:center;gap:5px;color:#a9b4c0;font:600 11.5px "Segoe UI",system-ui,sans-serif;cursor:pointer;user-select:none;padding:6px 8px;border:1px solid #3f4f5e;border-radius:6px;background:#080d12;white-space:nowrap}
 .bd-check input{accent-color:#c99a3b;width:15px;height:15px;cursor:pointer}
@@ -1344,7 +1360,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       <div class="zone hand ai" id="aiHand"></div>
       <div class="zone ai lands" id="aiLand"></div>
       <div class="zone ai" id="aiCre"></div>
-      <div id="mid"><span id="st"></span><button id="go" style="display:none"></button><button id="end" style="display:none">Terminar turno</button></div>
+      <div id="mid"><span id="st"></span><button id="go" style="display:none"></button><button id="end" style="display:none">Terminar turno</button><div id="coach" aria-live="polite"></div></div>
       <div class="zone me" id="myCre"></div>
       <div class="zone me lands" id="myLand"></div>
       <div class="info me">
@@ -1906,6 +1922,17 @@ function hideHoverCard(){hoverCard.classList.remove('on')}
 document.addEventListener('pointerdown',hideHoverCard,{passive:true});
 document.addEventListener('scroll',hideHoverCard,{capture:true,passive:true});
 window.addEventListener('resize',hideHoverCard);
+/* Al elegir objetivo, una traza une el hechizo de la mano con la carta señalada */
+document.addEventListener('pointerover',e=>{
+  if(!G||G.mode!=='target')return;
+  const el=e.target.closest&&e.target.closest('.card.tgt');
+  if(!el)return;
+  const h=document.getElementById('myHand');
+  if(!h)return;
+  const a=h.getBoundingClientRect(),b=el.getBoundingClientRect();
+  if(!a.width||!b.width)return;
+  spellTrace(a.left+a.width/2,a.top+a.height/2,b.left+b.width/2,b.top+b.height/2,spellColor(G.pend&&(G.pend._mode||G.pend.fx)));
+},{passive:true});
 /* Vista previa grande también en las pantallas de edición/generación de mazos */
 function bindCardHover(container,selector,resolve){
   if(!container)return;
@@ -3441,6 +3468,52 @@ function info(){G.p.forEach((P,i)=>{const k=i?'ai':'my';const dice=$('#'+k+'Life
   if(i===0){const v=$('#vignette');if(v)v.classList.toggle('on',P.life<=5&&!G.over)}
   updatePile(k+'Lib',P.lib.length);updatePile(k+'Gy',P.gy.length);updatePile(k+'Ex',(P.exile||[]).length)})}
 function render(){const[me,ai]=G.p;const f=(sel,arr,hand,hidden)=>{const el=$(sel);el.replaceChildren(...arr.map(c=>cardEl(c,hand,hidden)));if(sel=='#myHand'){const n=arr.length,mid=(n-1)/2;[...el.children].forEach((e,i)=>{const off=i-mid;e.style.setProperty('--rot',(off*4)+'deg');e.style.setProperty('--lift',(Math.abs(off)*5)+'px')})}};f('#aiHand',ai.hand,1,1);f('#aiLand',ai.bf.filter(c=>c.ld));f('#aiCre',ai.bf.filter(c=>!c.ld));f('#myCre',me.bf.filter(c=>!c.ld));f('#myLand',me.bf.filter(c=>c.ld));f('#myHand',me.hand,1);info();ui();setTimeout(()=>{G.p.forEach(P=>{P.bf.forEach(c=>c._enter=0);P.hand.forEach(c=>c._enter=0)})},700)}
+/* --- Consejo: qué haría la IA con tu mano y tu mesa en este momento --- */
+let _coachK='',_coachT='';
+const coachES=()=>LANG.ui!=='en';
+function coachKey(){
+  if(!G||G.over||G.busy||G.auto||G.t!==0)return '';
+  if(!/^(main1|main2|atk|block)$/.test(G.mode))return '';
+  const me=G.p[0],sig=P=>P.bf.map(c=>c.id+(c.tapped?'t':'')+(c.pac?'p':'')).join('.')+'/'+P.life;
+  return [LANG.ui,G.mode,me.landPlayed?1:0,me.hand.map(c=>c.id).join('.'),sig(me),sig(G.p[1]),(G.att||[]).map(c=>c.id).join(';')].join('|');
+}
+function coachAdvice(){
+  const es=coachES(),me=G.p[0],ai=G.p[1];
+  if(G.mode==='block'){
+    const bm=aiBlocks(G.att||[],0),parts=[];
+    for(const a of G.att||[]){const bs=bm.get(a.id);if(bs&&bs.length)parts.push(bs.map(b=>b.pname).join(' + ')+' → '+a.pname)}
+    if(!parts.length)return es?'💡 La IA aquí no bloquearía con nadie.':'💡 The AI here would block with no one.';
+    return (es?'💡 La IA aquí bloquearía: ':'💡 The AI here would block: ')+parts.join('; ')+'.';
+  }
+  if(G.mode==='atk'){
+    const att=aiAttackers(me,ai);
+    if(!att.length)return es?'💡 La IA aquí no atacaría con nadie.':'💡 The AI here would attack with no one.';
+    const dmg=att.reduce((s,c)=>s+Math.max(0,pw(c)),0);
+    const seen={};att.forEach(c=>seen[c.pname]=(seen[c.pname]||0)+1);
+    const names=Object.entries(seen).map(([n,k])=>k>1?n+' ×'+k:n).join(', ');
+    return (es?'💡 La IA aquí atacaría con ':'💡 The AI here would attack with ')+names+(es?` (${dmg} de daño).`:` (${dmg} damage).`);
+  }
+  const acts=[];
+  try{
+    if(!me.landPlayed){const l=me.hand.find(c=>c.ld&&playable(c));if(l)acts.push((es?'jugar ':'play ')+l.pname)}
+    for(const c of (bestPlay(me,0)||[]).slice(0,2)){
+      let s=(es?'lanza ':'cast ')+c.pname;
+      if(c.fx&&isSp(c)){const tg=aiTg(c,0);if(tg&&tg.pname)s+=' → '+tg.pname}
+      acts.push(s);
+    }
+  }catch(e){}
+  if(acts.length)return (es?'💡 La IA aquí haría: ':'💡 The AI here would: ')+acts.join(es?'; luego ':'; then ')+'.';
+  const combat=G.mode==='main1'&&aiAttackers(me,ai).length;
+  return es?('💡 La IA aquí '+(combat?'pasaría al combate.':'pasaría el turno.'))
+           :('💡 The AI here would '+(combat?'move to combat.':'pass the turn.'));
+}
+function coachRender(){
+  const el=document.getElementById('coach');if(!el)return;
+  const k=coachKey();
+  if(k!==_coachK){_coachK=k;_coachT=k?coachAdvice():''}
+  if(el.textContent!==_coachT)el.textContent=_coachT;
+  el.classList.toggle('on',!!_coachT);
+}
 function ui(){
   const m=G.mode,me=G.p[0],ai=G.p[1],sel=me.bf.filter(c=>c.sel),n=sel.length;
   $('#go').style.display=['main1','atk','block','target','mull','prio'].includes(m)?'':'none';
@@ -3457,6 +3530,7 @@ function ui(){
   document.querySelectorAll('#phasebar .ph').forEach(e=>e.classList.toggle('active',e.dataset.p===p));
   $('.info.ai')?.classList.toggle('turn',G.t===1&&!G.over);
   $('.info.me')?.classList.toggle('turn',G.t===0&&!G.over);
+  try{coachRender()}catch(e){}
 }
 
 /* ============================================================
@@ -3520,19 +3594,87 @@ function flyLand(P,land){
   const an=g.animate([{transform:'translate(0,0) scale(1)',opacity:.9},{transform:`translate(${dx*.6}px,${dy*.55-40}px) scale(1.15)`,opacity:1,offset:.6},{transform:`translate(${dx}px,${dy}px) scale(.95)`,opacity:0}],{duration:430,easing:'cubic-bezier(.25,.8,.3,1)'});
   an.onfinish=()=>g.remove();setTimeout(()=>g.remove(),650);
 }
-function flySpell(P,c){
-  if(!G||!G.started||!c||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  const from=document.getElementById(P===G.p[0]?'myHand':'aiHand'),to=$('#mid');
-  if(!from||!to)return;
-  const a=from.getBoundingClientRect(),b=to.getBoundingClientRect();
-  if(!a.width||!b.width)return;
+/* --- animación de hechizo: la carta vuela hasta su objetivo real, deja una
+   traza desde la mano y golpea justo donde afecta (carta, vida o centro) --- */
+function spellColor(f){
+  const k=(f&&f.k)||'';
+  if(/^(dmg|wrath|wrath_dmg|dmg_tapped|dmg_gain|dmg_gain_tapped|dmg_gain_combat|dmg_controller|fight_you|bite_you|stomp|primal_might|ctr_bite|drain|drainX|drain_noheal)$/.test(k))return '#ff6a4d';
+  if(/^(destroy|destroy_art|destroy_tapped|exile_until)$/.test(k))return '#c07bff';
+  if(/^(pump|pump_kwt|pump_all|pump_att_all|ctr|ctrs_two|ctr_att|regen|pump_gain|debuff_gain|protChoice|kwt)$/.test(k))return '#7dffa8';
+  if(/^(gain|gain_draw|tok|tres)$/.test(k))return '#ffd76a';
+  if(/^(draw|drawX|draw_discard|mill|scry|tutor|ramp5|gy_hand|reanimate|reanimate_all|bounce|bounce_att)$/.test(k))return '#7fd8ff';
+  if(k=='pac')return '#b98cff';
+  return '#b7d6ea';
+}
+function spellHeavy(f){const k=(f&&f.k)||'';return /^(wrath|wrath_dmg|destroy|destroy_tapped|destroy_art|exile_until|fight_you|bite_you|stomp|primal_might|ctr_bite)$/.test(k)||!!(f&&(f.n>=3||f.dmg>=3))}
+function spellTargetRect(t){
+  if(t&&t.life!==undefined){const p=$('#'+(t===G.p[0]?'myLife':'aiLife'));const e=p&&p.querySelector('.die');return e?e.getBoundingClientRect():null}
+  if(t&&t.id!=null){const e=document.getElementById('c'+t.id);if(e){const r=e.getBoundingClientRect();if(r.width)return r}}
+  const m=$('#mid');return m?m.getBoundingClientRect():null;
+}
+function spellTrace(x1,y1,x2,y2,col){
+  const dx=x2-x1,dy=y2-y1,len=Math.max(1,Math.hypot(dx,dy)),ang=Math.atan2(dy,dx);
+  const el=document.createElement('div');el.className='spell-trace';
+  el.style.cssText=`left:${x1}px;top:${y1}px;width:${len}px;transform:rotate(${ang}rad);--tc:${col}`;
+  document.body.append(el);setTimeout(()=>el.remove(),700);
+  return el;
+}
+function spellImpact(x,y,col,heavy){
+  const r=document.createElement('div');r.className='spell-burst';
+  r.style.cssText=`left:${x}px;top:${y}px;--tc:${col}`;
+  document.body.append(r);setTimeout(()=>r.remove(),700);
+  burst(x,y,col,heavy?22:12);
+  impact();
+  if(heavy){shake();screenFlash(col)}
+}
+function spellSweep(col){
+  [...document.querySelectorAll('#myCre .card,#aiCre .card,#myLand .card,#aiLand .card')]
+    .forEach((el,i)=>setTimeout(()=>burstAt(el,col,8),i*35));
+}
+function flySpell(P,c,t){
+  if(!G||!G.started||!c||matchMedia('(prefers-reduced-motion: reduce)').matches)return Promise.resolve();
+  const mine=P===G.p[0];
+  const own=document.getElementById('c'+c.id);
+  const fromEl=(mine&&own&&own.getBoundingClientRect().width)?own:document.getElementById(mine?'myHand':'aiHand');
+  const a=fromEl&&fromEl.getBoundingClientRect();
+  const b=spellTargetRect(t);
+  if(!a||!a.width||!b)return Promise.resolve();
+  const f=c._mode||c.fx;
+  const col=spellColor(f),heavy=spellHeavy(f);
+  const ax=a.left+a.width/2,ay=a.top+a.height/2;
+  const bx=b.left+b.width/2,by=b.top+b.height/2;
+  const tEl=(t&&t.id!=null)?document.getElementById('c'+t.id):null;
+  if(tEl){tEl.style.setProperty('--tc',col);tEl.classList.add('aim')}
+  spellTrace(ax,ay,bx,by,col);
+  const size=Math.max(46,Math.min(190,Math.max(b.width,b.height)));
+  const lock=document.createElement('div');lock.className='spell-lock';
+  lock.style.cssText=`left:${bx}px;top:${by}px;width:${size}px;height:${size}px;--tc:${col}`;
+  document.body.append(lock);setTimeout(()=>lock.remove(),900);
   const g=document.createElement('div');g.className='fly-card spell';
-  g.style.cssText=`left:${a.left+a.width/2-34}px;top:${a.top+a.height/2-48}px;width:68px;height:95px;opacity:.95`;
+  g.style.cssText=`left:${ax-34}px;top:${ay-48}px;width:68px;height:95px;opacity:.95`;
   g.innerHTML=`<img src="${c.small||c.img||''}" alt="">`;
   document.body.appendChild(g);
-  const dx=(b.left+b.width/2)-(a.left+a.width/2),dy=(b.top+b.height/2)-(a.top+a.height/2);
-  const an=g.animate([{transform:'translate(0,0) scale(.9) rotate(0deg)',opacity:.8},{transform:`translate(${dx*.55}px,${dy*.55-50}px) scale(1.25) rotate(-6deg)`,opacity:1,offset:.55},{transform:`translate(${dx}px,${dy}px) scale(.6) rotate(2deg)`,opacity:0}],{duration:520,easing:'cubic-bezier(.3,.8,.3,1)'});
-  an.onfinish=()=>g.remove();setTimeout(()=>g.remove(),800);
+  const dx=bx-ax,dy=by-ay;
+  return new Promise(res=>{
+    let done=false;
+    const fin=()=>{
+      if(done)return;done=true;
+      g.remove();lock.remove();
+      if(tEl)tEl.classList.remove('aim');
+      spellImpact(bx,by,col,heavy);
+      if(/^(wrath|wrath_dmg|pump_all|bounce_att|reanimate_all)$/.test((f&&f.k)||''))spellSweep(col);
+      if(tEl)burstAt(tEl,col,14);
+      const flash=()=>{const el=(t&&t.id!=null)?document.getElementById('c'+t.id):null;if(!el)return;el.classList.add('spell-hit');setTimeout(()=>el.classList.remove('spell-hit'),520)};
+      flash();setTimeout(flash,70);
+      res();
+    };
+    g.animate([{transform:'translate(0,0) scale(.85) rotate(0deg)',opacity:.85},
+      {transform:`translate(${dx*.28}px,${dy*.25-72}px) scale(1.3) rotate(-9deg)`,opacity:1,offset:.4},
+      {transform:`translate(${dx*.78}px,${dy*.74-14}px) scale(.9) rotate(4deg)`,opacity:1,offset:.82},
+      {transform:`translate(${dx}px,${dy}px) scale(.42) rotate(8deg)`,opacity:0}],
+      {duration:420,easing:'cubic-bezier(.32,.7,.25,1)'});
+    setTimeout(fin,520);
+  });
 }
 async function playLand(P,land){
   flyLand(P,land);
@@ -3650,7 +3792,7 @@ async function cast(P,c,t,opts={}){
   tapAll(P,lands);
   if(opts.fromGY){P.gy.splice(P.gy.indexOf(c),1)}else{P.hand.splice(P.hand.indexOf(c),1)}
   if(handRect&&!isSp(c))flyToField(c,handRect);
-  else if(isSp(c))flySpell(P,c);
+  else if(isSp(c))await flySpell(P,c,t);
   SFX.cast();
   const me=P===G.p[0];
   log(`${me?'Lanzas':'La IA lanza'} ${c.pname}${kicked?' (patada)':''}${opts.fromGY?' (retrospectiva)':''}${x?` (X=${x})`:''}`+(t?' → '+(t.life!==undefined?(t===G.p[0]?'ti':'la IA'):t.pname):''));
@@ -6815,6 +6957,7 @@ function langApplyUI(){
   try{if($('#deckgen')&&$('#deckgen').classList.contains('on')&&typeof renderGen==='function')renderGen()}catch(e){}
   try{if($('#gallery')&&$('#gallery').classList.contains('on')&&typeof renderGallery==='function')renderGallery()}catch(e){}
   uiApply(document.body);
+  try{if(typeof coachRender==='function'){_coachK='';coachRender()}}catch(e){}
 }
 function langRefreshCards(){
   const call=(f)=>{try{typeof window[f]==='function'&&window[f]()}catch(e){}};
