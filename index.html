@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#150e08">
@@ -1320,6 +1320,112 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   #px-generate{min-height:46px}
 }
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style id="visual-refresh">
+/* ===== Visual refresh: capa final (sobrescribe los bloques anteriores) ===== */
+:root{
+  --vr-gold:#e8c574;--vr-gold-d:#a9843c;--vr-ink:#0b1117;--vr-glass:#0b111799;
+  --vr-line:#e8c5742e;--vr-txt:#f1ead7;--vr-mut:#9aa6b2;
+  --vr-display:"Cinzel",Georgia,serif;--vr-ui:"Inter","Segoe UI",system-ui,sans-serif;
+  --vr-ease:cubic-bezier(.22,1,.36,1)
+}
+body{font-family:var(--vr-ui);color:var(--vr-txt);background:radial-gradient(ellipse at 50% 0,#1d1710,#0a0705 70%)}
+h1,h2,.reveal-title,.mull-head h2{font-family:var(--vr-display)!important;letter-spacing:.04em}
+
+/* Mesa: marco de madera + fieltro con profundidad */
+#main{border:10px solid #3b2412;border-radius:20px;
+  background:
+    radial-gradient(ellipse at 50% 38%,#ffffff14,#0000 55%),
+    radial-gradient(ellipse at 50% 45%,#2f6b4d,#17402d 62%,#0a2217);
+  box-shadow:inset 0 0 0 2px #7a5430,inset 0 0 90px #000d,inset 0 2px 0 #ffffff22,
+    0 0 0 2px #1c1008,0 18px 50px #000d}
+#main::before{opacity:.55}
+#main::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;border-radius:10px;
+  background:radial-gradient(ellipse at 50% 50%,#0000 55%,#000a 100%)}
+
+/* Barra de fases */
+#phasebar{gap:6px;padding:7px 12px;background:linear-gradient(#000b,#0007);border-bottom:1px solid var(--vr-line);backdrop-filter:blur(6px)}
+#phasebar .ph{padding:4px 14px;border-radius:999px;font:600 10.5px var(--vr-ui);letter-spacing:.12em;color:#7d8794;border:1px solid transparent}
+#phasebar .ph.active{color:#201505;background:linear-gradient(180deg,#f3d98f,#d3a94e);border-color:#f6e2a8;text-shadow:none;box-shadow:0 0 16px #e8c57477,inset 0 1px 0 #fff8}
+
+/* Columna de pilas */
+#piles-col{background:linear-gradient(180deg,#000a,#0006);backdrop-filter:blur(6px);border-right:1px solid var(--vr-line)}
+.pile-label{font:700 9.5px var(--vr-ui);letter-spacing:.2em;color:var(--vr-gold);opacity:.85}
+.pile-mini{border-radius:12px;border:1.5px solid #8a6a3a;box-shadow:0 6px 14px #000a,inset 0 1px 0 #ffffff1f,inset 0 0 14px #0009;transition:transform .25s var(--vr-ease),box-shadow .25s,opacity .2s}
+.pile-mini:hover{transform:translateY(-3px) scale(1.06);box-shadow:0 10px 22px #000b,0 0 22px #e8c57466}
+.pile-mini .cnt{font:700 11.5px var(--vr-ui);border-radius:999px;border:1.5px solid var(--vr-gold);background:linear-gradient(180deg,#2e2008,#140d03)}
+
+/* Paneles de jugador y dado de vida */
+.info{background:linear-gradient(90deg,#0000,#0008 20%,#0008 80%,#0000);border-top:1px solid #ffffff0a;border-bottom:1px solid #ffffff0a}
+.life .die{font:700 30px/1 var(--vr-display);border-radius:50%;min-width:66px;height:66px;border:3px solid #7a5a22;
+  background:radial-gradient(circle at 32% 28%,#fff6d6,#efd18a 38%,#c79a45 72%,#8a6a2c);
+  box-shadow:0 10px 20px #000b,0 0 26px #e8c57455,inset 0 -8px 14px #5a3c0a88,inset 0 5px 8px #fffb}
+.life .die::before,.life .die::after{display:none}
+.meta{color:#c9c2ae;font:500 12.5px var(--vr-ui);text-decoration:none;padding:3px 10px;border-radius:999px;background:#ffffff0c;border:1px solid #ffffff14}
+.meta:hover{background:#e8c57422;border-color:var(--vr-line);color:#fff}
+
+/* Zonas */
+.zone.lands{background:linear-gradient(90deg,#0000,#00000030 20%,#00000030 80%,#0000);box-shadow:inset 0 1px 0 #ffffff08}
+#mid{background:linear-gradient(90deg,#0000,#000b 18%,#000b 82%,#0000);border-block:1px solid var(--vr-line)}
+#st{font:600 13px var(--vr-ui);color:var(--vr-gold);letter-spacing:.03em}
+
+/* Botones */
+button{font:700 13.5px var(--vr-ui);letter-spacing:.02em;border-radius:10px;color:#241704;
+  background:linear-gradient(180deg,#f6dc95,#d9ad52 55%,#c0953f);
+  box-shadow:0 3px 0 #6b4a17,0 8px 16px #0008,inset 0 1px 0 #fff9;
+  transition:transform .15s var(--vr-ease),filter .15s,box-shadow .15s}
+button:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}
+button:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #6b4a17,0 3px 8px #000a}
+#tools button,.mob-close,#mobile-menu-toggle{background:linear-gradient(180deg,#26323e,#161e27);color:#e9dfc2;border:1px solid #ffffff1f;box-shadow:0 3px 8px #0008,inset 0 1px 0 #ffffff1a}
+#tools button:hover{border-color:var(--vr-gold)}
+
+/* Cartas */
+.card{border-radius:8px;box-shadow:0 6px 14px #000b,0 1px 3px #000a,inset 0 0 0 1px #ffffff14;transition:box-shadow .25s,translate .5s cubic-bezier(.34,1.56,.64,1),rotate .5s cubic-bezier(.34,1.56,.64,1),scale .25s,filter .2s}
+.card img{border-radius:8px}
+.card:hover{box-shadow:0 22px 34px #000e,0 0 0 2px var(--vr-gold),0 0 30px #e8c57477}
+.pt,.loy,.lore{font-family:var(--vr-ui);border-radius:6px;border:1px solid #ffffff2e;backdrop-filter:blur(3px)}
+.ok{box-shadow:0 0 16px 3px #f6d57a,0 0 6px 1px #fff3b0}
+
+/* Panel lateral */
+aside{padding:10px 10px 10px 2px}
+#zoom{background:linear-gradient(160deg,#101a24cc,#070b10cc);border:1px solid var(--vr-line);border-radius:14px;color:var(--vr-mut);font:500 13px/1.5 var(--vr-ui);box-shadow:inset 0 0 40px #000b,0 10px 24px #0008}
+#zoom img{border-radius:12px}
+#log{background:linear-gradient(180deg,#0a1016dd,#06090dcc);border:1px solid var(--vr-line);border-radius:14px;color:#c9d2da;font:400 12px/1.6 var(--vr-ui);box-shadow:inset 0 0 24px #000a}
+
+/* Menú principal */
+#menu{background:
+  radial-gradient(ellipse at 50% -10%,#e8c57422,#0000 50%),
+  radial-gradient(ellipse at 50% 20%,#1d2c3a,#0a1118 55%,#04070a)}
+#menu h1{font-size:clamp(26px,4vw,44px)!important;letter-spacing:.08em}
+.hero-card{position:relative;overflow:hidden;border-radius:16px;border:1px solid #ffffff1f;
+  background:linear-gradient(165deg,#1f2e3c,#0c141b 70%);box-shadow:0 14px 34px #000a,inset 0 1px 0 #ffffff1c;
+  transition:transform .3s var(--vr-ease),border-color .3s,box-shadow .3s}
+.hero-card::before{content:'';position:absolute;inset:0;background:linear-gradient(115deg,#0000 35%,#e8c5742a 50%,#0000 65%);transform:translateX(-120%);transition:transform .7s var(--vr-ease)}
+.hero-card:hover::before{transform:translateX(120%)}
+.hero-card:hover{transform:translateY(-6px);border-color:#e8c574aa;box-shadow:0 24px 50px #000c,0 0 36px #e8c57433,inset 0 1px 0 #ffffff2a}
+.hero-card .icon{font-size:42px;filter:drop-shadow(0 6px 12px #000a)}
+.hero-card h2{font:600 15.5px var(--vr-ui);letter-spacing:.01em}
+.mini-card{font-family:var(--vr-ui);background:#ffffff0a;border:1px solid #ffffff22;color:#e5ddc6;box-shadow:none;transform:none}
+.mini-card:hover{background:#e8c57420;border-color:#e8c574aa;color:#fff}
+input,select{font-family:var(--vr-ui)!important;border-radius:10px!important;border:1px solid #ffffff26!important;background:#0b121a!important;color:var(--vr-txt)!important}
+input:focus,select:focus{outline:none;border-color:var(--vr-gold)!important;box-shadow:0 0 0 3px #e8c57433}
+.deck-card{border-radius:12px;border:1px solid #ffffff22;background:linear-gradient(165deg,#18232e,#0c1218);transition:transform .2s var(--vr-ease),box-shadow .2s,border-color .2s}
+.deck-card:hover{border-color:#e8c574aa;box-shadow:0 12px 26px #000a,0 0 20px #e8c57433}
+.deck-card.sel{border-color:var(--vr-gold);background:linear-gradient(165deg,#3a2c10,#171006);box-shadow:0 0 0 1px var(--vr-gold),0 0 28px #e8c57466}
+.gal-card{border-radius:10px}.gal-card:hover{box-shadow:0 18px 40px #000,0 0 0 2px var(--vr-gold)}
+
+/* Scrollbars */
+*{scrollbar-width:thin;scrollbar-color:#e8c57466 transparent}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#e8c57455;border-radius:9px}::-webkit-scrollbar-thumb:hover{background:#e8c574aa}
+
+/* Accesibilidad */
+:focus-visible{outline:2px solid var(--vr-gold);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+/* Cartas giradas: sin inclinación 3D (evita el temblor al pasar el ratón) */
+.card.tap,.card.tap:hover{transform:none!important;scale:1!important;transform-origin:50% 50%!important}
+.card.tap::after{display:none!important}
+</style>
 </head>
 <body>
 <div id="langbar" role="group" title="Idioma / Language">
@@ -1955,7 +2061,7 @@ document.addEventListener('pointerover',e=>{
   if(!el||!G)return;
   const c=reg[el.dataset.i];if(!c)return;
   const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
-  el.style.transformOrigin=(cx<innerWidth*.3?'0%':cx>innerWidth*.7?'100%':'50%')+' '+(cy<innerHeight*.45?'0%':'100%');
+  if(!el.classList.contains('tap'))el.style.transformOrigin=(cx<innerWidth*.3?'0%':cx>innerWidth*.7?'100%':'50%')+' '+(cy<innerHeight*.45?'0%':'100%');
   updateZoom(c);
   showHoverCard(c,el);
 });
@@ -1972,7 +2078,7 @@ document.addEventListener('pointermove',e=>{
   const el=e.target.closest('.card[data-i]');
   if(!el||!G)return;
   const r=el.getBoundingClientRect();
-  if(!r.width||!r.height)return;
+  if(!r.width||!r.height||el.classList.contains('tap'))return;
   const px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
   el.style.setProperty('--ry',(px*16).toFixed(2)+'deg');
   el.style.setProperty('--rx',(-py*14).toFixed(2)+'deg');
@@ -2178,6 +2284,7 @@ function eff(s){
   if(m=s.match(/^scry (\d+)/i))return{k:'scry',n:+m[1]};
   if(m=s.match(/^mill (a|one|two|three|four|\d+) cards?/i))return{k:'mill',n:{a:1,one:1,two:2,three:3,four:4}[m[1]]||+m[1]};
   if(/^return target (?:nonland )?creature to (?:its|their) owner'?s? hand/i.test(s))return{k:'bounce',auto:1};
+  if(m=s.match(/^search your library for up to (one|two|three) basic land cards?, put (?:it|them) onto the battlefield tapped/i))return{k:'fetchland',n:{one:1,two:2,three:3}[m[1].toLowerCase()],auto:1};
   if(/^search your library for (?:a|up to one) (?:creature|land|artifact|enchantment|instant|sorcery|card)/i.test(s))return{k:'tutor',auto:1};
   return null;
 }
@@ -2212,14 +2319,14 @@ function fx(o,t){
   if(m=o.match(/(?:When|Whenever) (?!another |one or more other )[^,.\n]*enters[^,.\n]*, ([^.\n]*)/))return eff(m[1]);
   return null;
 }
-function abilOf(o,t){if(/Instant|Sorcery|Land/.test(t))return null;const out=[];
+function abilOf(o,t,n){if(/Instant|Sorcery|Land/.test(t))return null;const out=[];
  for(const l of o.split('\n')){
   let m=l.match(/^([+\-\u2212]\d+):\s*(.*)$/);
   if(m){const loy=parseInt(m[1].replace('\u2212','-'));const f=eff(m[2].replace(/\.$/,''))||{k:'generic'};out.push({loy,f,txt:l,tap:false,mana:''});continue}
   const i=l.indexOf(': ');if(i<1)continue;const cs=l.slice(0,i),ef=l.slice(i+2);if(/^Add /.test(ef))continue;
   if(/(?:Exile a|Remove a|Tap an untapped|Return .* to its owner)/.test(cs))continue;
   const sy=cs.match(/\{[^}]+\}/g)||[];const payLife=(cs.match(/Pay (\d+) life/)||[])[1];
-  const tap=sy.includes('{T}');const sacSelf=/Sacrifice this/.test(cs);const sacOther=!sacSelf&&/Sacrifice (?:another |a |an |two )/.test(cs);const sacType=(cs.match(/Sacrifice (?:another |a |an |two )([A-Za-z]+)/)||[])[1]||null;const disc=/Discard a card/.test(cs);
+  const tap=sy.includes('{T}');const sacSelf=/Sacrifice this/.test(cs)||!!(n&&[n,n.split(',')[0],n.split(' // ')[0]].some(x=>x&&cs.includes('Sacrifice '+x)));const sacOther=!sacSelf&&/Sacrifice (?:another |a |an |two )/.test(cs);const sacType=(cs.match(/Sacrifice (?:another |a |an |two )([A-Za-z]+)/)||[])[1]||null;const disc=/Discard a card/.test(cs);
   if(!tap&&!sacSelf&&!sacOther&&!disc&&!sy.length&&!payLife)continue;
   const f=eff(ef.replace(/\.$/,''));
   if(!f)continue;
@@ -2345,7 +2452,7 @@ function mk(c){
     ward:wardMatch?{n:+wardMatch[1]}:null,
     conditionalElf,
     conditionalOther:conditionalOther?{type:conditionalOther[1]}:null,
-    abil:abilOf(o,t),eqp:eqpOf(o,t),lord:lordOf(o),mana:!/Land/.test(t)&&/\{T\}: Add/.test(o),
+    abil:abilOf(o,t,c.name),eqp:eqpOf(o,t),lord:lordOf(o),mana:!/Land/.test(t)&&/\{T\}: Add/.test(o),
     rarity:c.rarity||'common',set:c.set||'fdn',
     thresholdBuff:parseThreshold(o),flashbackCost:parseFlashback(o),kickerCost:parseKicker(o),landfall:parseLandfall(o),
     choice:/choose a color/i.test(o),
@@ -3577,6 +3684,7 @@ function triggerGainLife(P){
 }
 
 function scry(P,n){if(!P.lib.length)return;if(P===G.p[0]&&!G.auto){for(let i=0;i<n&&P.lib.length;i++){const c=P.lib[P.lib.length-1];const keep=confirm(`Adivinar: ¿mantener "${c.pname}" arriba?\n(Aceptar = mantener · Cancelar = al fondo)`);if(keep)break;P.lib.pop();P.lib.unshift(c);log('Al fondo: '+c.pname)}}else{for(let i=0;i<n&&P.lib.length;i++){const c=P.lib[P.lib.length-1];if(!c.ld)break;P.lib.pop();P.lib.unshift(c)}}render()}
+function fetchLands(P,n){const me=P===G.p[0]&&!G.auto;let got=[];for(let k=0;k<n;k++){const opts=P.lib.filter(c=>c.ld&&/Basic/.test(c.type||''));if(!opts.length)break;let ch=null;if(me){const i=pick('Busca una tierra básica:',opts.map(c=>c.pname));ch=i!=null?opts[i]:opts[0]}else{const cnt=x=>P.bf.filter(y=>y.ld&&y.prod&&x.prod&&y.prod[0]===x.prod[0]).length;ch=[...opts].sort((a,b)=>cnt(a)-cnt(b))[0]}P.lib=P.lib.filter(x=>x!==ch);ch.tapped=1;ch._enter=1;P.bf.push(ch);got.push(ch.pname)}P.lib=R(P.lib);log(`${me?'Buscas':'La IA busca'} ${got.length?got.join(' y '):'nada'} y baraja.`);SFX.draw();render()}
 async function tutor(P){const isLand=/land/i.test(P._tutorTx||'');let candidates=P.lib.filter(c=>isLand?c.ld:c.cr);if(!candidates.length)return log('No hay cartas válidas en el mazo.');let chosen=null;if(P===G.p[0]&&!G.auto){const k=pick('Busca en tu mazo:',candidates.map(c=>c.pname));if(k!=null)chosen=candidates[k]}else chosen=candidates.sort((a,b)=>val(b)-val(a))[0];if(!chosen)return;P.lib=P.lib.filter(c=>c!==chosen);chosen._enter=1;P.hand.push(chosen);log(`${P===G.p[0]?'Buscas':'La IA busca'} ${chosen.pname} y baraja.`);P.lib=R(P.lib);SFX.draw();render();await sleep(600)}
 async function sacrifice(P,src,target){if(!target||!alive(target))return;P.bf=P.bf.filter(x=>x!==target);if(!target.tok)P.gy.push(target);target.dmg=0;mark(target,'die-anim');shockwave(target);const el=document.getElementById('c'+target.id);if(el)burstAt(el,'#f55',15);SFX.kill();log(`${P===G.p[0]?'Sacrificas':'La IA sacrifica'} ${target.pname}`);render();await sleep(500);if(target.dies)effect(P,target.dies,null,target);await sweep()}
 
@@ -3755,6 +3863,7 @@ function effect(P,f,t,src){
   else if(f.k=='scry'){scry(P,f.n)}
   else if(f.k=='mill'){for(let k=0;k<f.n&&P.lib.length;k++)P.gy.push(P.lib.pop());log((P===G.p[0]?'Mueles ':'La IA muele ')+f.n)}
   else if(f.k=='tutor'){tutor(P)}
+  else if(f.k=='fetchland'){fetchLands(P,f.n)}
 }
 
 function askT(f){return new Promise(res=>{G.prev=G.mode;G.mode='target';G.pend={fx:f,res,type:'Instant',pname:'efecto'};G.busy=0;render()})}
@@ -3953,7 +4062,7 @@ function entersTapped(P,card){
 function canAct(P,c,a){if(!alive(c)||muted(c))return null;if(a.tap&&(c.tapped||(c.cr&&c.sick)))return null;if(a.disc&&!P.hand.length)return null;if(a.sacOther&&!P.bf.some(x=>x.cr&&x!==c&&(!a.sacType||(x.type||'').includes(a.sacType))))return null;if(a.loy!==undefined&&c.loy+a.loy<0)return null;if(a.payLife&&P.life<=a.payLife+2)return null;if(a.f&&a.f.k=='ctr_att'&&!P.bf.some(x=>x.cr&&x!==c&&x.att))return null;if(a.f&&a.f.k=='destroy_art'&&!bfAll().some(x=>!x.cr&&!x.ld))return null;const w=c.tapped;if(a.tap)c.tapped=1;const p=a.mana?plan(P,{cost:a.mana}):[];c.tapped=w;return p}
 async function activate(P,c,a){const p=canAct(P,c,a);if(p===null)return;const me=P===G.p[0]&&!G.auto;tapAll(P,p);if(a.tap)c.tapped=1;if(a.loy){c.loy+=a.loy;floatDmg(document.getElementById('c'+c.id),(a.loy>0?'+':'')+a.loy,'#a8f')}if(a.payLife&&P.life>a.payLife){P.life-=a.payLife;log(`${me?'Pagas':'La IA paga'} ${a.payLife} vidas`);floatDmg($('#'+(P===G.p[0]?'myLife':'aiLife')).querySelector('.die'),'-'+a.payLife,'#f55')}if(a.sacOther){const opts=P.bf.filter(x=>x.cr&&x!==c&&(!a.sacType||(x.type||'').includes(a.sacType)));let v=null;if(me){const k=pick('Sacrifica una criatura:',opts.map(x=>x.pname));v=k!=null?opts[k]:null}else v=opts.sort((x,y)=>val(x)-val(y))[0];if(v)await sacrifice(P,c,v);else return}if(a.sac){log(`${me?'Sacrificas':'La IA sacrifica'} ${c.pname} (coste)`);const own=owner(c)||P;own.bf=own.bf.filter(x=>x!==c);if(!c.tok)own.gy.push(c);c.dmg=0;mark(c,'die-anim');shockwave(c);const el=document.getElementById('c'+c.id);if(el)burstAt(el,'#f55',15);SFX.kill();render();await sleep(500);if(c.dies)effect(own,c.dies,null,c);await sweep()}if(a.disc){const h=P.hand;const k=me?pick('Descarta:',h.map(x=>x.pname)):null;const ls=h.filter(x=>x.ld);const d=k!=null?h[k]:(ls.length>3?ls[0]:[...h].sort((x,y)=>y.cmc-x.cmc)[0]);if(d){h.splice(h.indexOf(d),1);P.gy.push(d);log((me?'Descartas ':'La IA descarta ')+d.pname)}}log(`${me?'Activas':'La IA activa'}: ${c.pname}`);SFX.act();render();await sleep(400);await resolveFx(P,a.f,c,true);checkEnd();render();await sleep(500);await sweep()}
 
-async function aiAbil(i=1){const A=G.p[i];const diff=G.difficulty||'normal';for(let r=0;r<4;r++){let done=0;for(const c of A.bf){for(const a of c.abil||[]){if(!canAct(A,c,a))continue;const fk=a.f.k;if(!/^(draw|gain|tok|tres|drain|ctr|dmg|destroy|destroy_art|pump_att_all|regen|scry|tutor)$/.test(fk))continue;if(fk=='gain'&&A.life>=16)continue;if(a.sac){const valuable=c.tok||c.dies||(fk==='draw'&&A.life>5)||fk==='tutor';if(!valuable&&diff!=='hard')continue}if(a.sacOther){const others=A.bf.filter(x=>x.cr&&x!==c);if(others.length<2&&!(fk==='draw'||fk==='destroy'||fk==='tutor'))continue;if(diff==='easy')continue}if(a.disc&&A.hand.length<5)continue;if(a.payLife&&A.life-a.payLife<=6)continue;if((fk=='dmg'||fk=='destroy'||fk=='destroy_art')&&!aiTg({fx:a.f,type:'Instant'},i))continue;await activate(A,c,a);done=1;await sleep(1000);break}if(done)break}if(!done)return}}
+async function aiAbil(i=1){const A=G.p[i];const diff=G.difficulty||'normal';for(let r=0;r<4;r++){let done=0;for(const c of A.bf){for(const a of c.abil||[]){if(!canAct(A,c,a))continue;const fk=a.f.k;if(!/^(draw|gain|tok|tres|drain|ctr|dmg|destroy|destroy_art|pump_att_all|regen|scry|tutor|fetchland)$/.test(fk))continue;if(fk=='gain'&&A.life>=16)continue;if(a.sac){const valuable=c.tok||c.dies||(fk==='draw'&&A.life>5)||fk==='tutor';if(!valuable&&diff!=='hard')continue}if(a.sacOther){const others=A.bf.filter(x=>x.cr&&x!==c);if(others.length<2&&!(fk==='draw'||fk==='destroy'||fk==='tutor'))continue;if(diff==='easy')continue}if(a.disc&&A.hand.length<5)continue;if(a.payLife&&A.life-a.payLife<=6)continue;if((fk=='dmg'||fk=='destroy'||fk=='destroy_art')&&!aiTg({fx:a.f,type:'Instant'},i))continue;await activate(A,c,a);done=1;await sleep(1000);break}if(done)break}if(!done)return}}
 
 function checkLinked(){
   for(const P of G.p)for(const z of [P.gy,P.exile])for(const c of [...z]){
