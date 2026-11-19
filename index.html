@@ -1190,6 +1190,16 @@ button:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 #7a5c2
 .dl-tag i{font-style:normal}
 .dl-score{font:700 11px "Segoe UI",system-ui,sans-serif;padding:1px 6px;border-radius:5px;background:#e8c57422;color:#f0d79a}
 .dl-score.hi{background:#6fcf7a26;color:#a8e6b0}
+.dl-rate{display:flex;gap:3px;align-items:center}
+.dl-wr{font:700 10.5px "Segoe UI",system-ui,sans-serif;padding:1px 5px;border-radius:5px;background:#ffffff0d;border:1px solid #ffffff14;color:#a9bccb}
+.dl-wr.hi{background:#6fcf7a1f;border-color:#6fcf7a55;color:#a8e6b0}
+.dl-wr.lo{background:#f07a5a1a;border-color:#f07a5a55;color:#ffb3a0}
+.bd-rate{flex:none;display:flex;gap:3px;align-items:center}
+.bd-rate b{font:800 11px "Segoe UI",system-ui,sans-serif;padding:3px 6px;border-radius:6px;white-space:nowrap}
+.bd-rate-r{background:#e8c57422;border:1px solid #e8c57440;color:#f0d79a}
+.bd-rate-w{background:#ffffff0d;border:1px solid #ffffff18;color:#a9bccb}
+.bd-rate-w.good{background:#6fcf7a1f;border-color:#6fcf7a55;color:#a8e6b0}
+.bd-rate-w.bad{background:#f07a5a1a;border-color:#f07a5a55;color:#ffb3a0}
 .dl-star{font:500 11.5px "Segoe UI",system-ui,sans-serif;color:#a9bccb;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dl-star b{color:#e6d7ae;font-weight:600}
 .dl-acts{margin-top:auto;display:flex;gap:6px}
@@ -1583,6 +1593,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     </div>
     <select id="dl-sort" title="Orden de la lista">
       <option value="score">Orden: análisis</option>
+      <option value="winrate">Orden: winrate</option>
       <option value="name">Orden: nombre</option>
       <option value="size">Orden: cartas</option>
       <option value="color">Orden: color</option>
@@ -2641,7 +2652,7 @@ const BEGINNER_DECKS=[
  {n:'Primal',c:'G',list:['Giant Growth','Prey Upon','Rabid Bite','Savage Stomp','Primal Might','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest','Forest']}
 ];
 let PACKS=BEGINNER_DECKS.slice();
-function packOf(i){const d=PACKS[i];if(!d)return[];if(d.cards)return d.cards.slice();const fbPool=POOL.filter(c=>c.col.includes(d.c)||c.col.length===0);const fbCr=R(fbPool.filter(c=>c.cr)),fbSp=R(fbPool.filter(c=>!c.cr));const cards=d.list.map(n=>{if(BASIC_NAMES[n]&&BASIC[BASIC_NAMES[n]])return BASIC[BASIC_NAMES[n]];if(BYN[n])return BYN[n];return fbCr.pop()||fbSp.pop()||BASIC[d.c]}).filter(Boolean);while(cards.length<20&&BASIC[d.c])cards.push(BASIC[d.c]);return cards.slice(0,20)}
+function packOf(i){const d=PACKS[i];if(!d)return[];return d.cards?d.cards.slice():beginnerPack(d)}
 const themeLabel=n=>LANG.ui==='en'?(n||''):(ES_THEMES[n]||n);
 const packLabel=i=>{const d=PACKS[i];return d?(d.cards?d.n:themeLabel(d.n)):'?'};
 const mkP=(deck,life=20)=>({life,lib:R(deck.filter(Boolean).map(inst)),hand:[],bf:[],gy:[],exile:[],landPlayed:0,creatureDiedThisTurn:false,attackedThisTurn:false});
@@ -4464,20 +4475,36 @@ function bdRng(seed){let a=(seed>>>0)||1;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=
 function bdProf(c){
   if(!c)return null;
   const o=c.oracle||'';
+  const kw=' '+((c.kw||[]).join(' ').toLowerCase())+' ';
+  const tl=String(c.type||'').split('—')[1]||'';
+  const subs=tl.toLowerCase().replace(/[.]/g,'').split(/[\/,]/).map(x=>x.trim()).filter(Boolean);
   return {
-    land:!!c.ld,cmc:c.cmc||0,pow:+c.pow||0,tou:+c.tou||0,cr:!!c.cr,
+    land:!!c.ld,cmc:c.cmc||0,pow:+c.pow||0,tou:+c.tou||0,cr:!!c.cr,subs,
+    rar:({mythic:.9,rare:.65,uncommon:.35,common:.15})[c.rarity]||.15,
+    fly:/\bflying\b/.test(kw),reach:/\breach\b/.test(kw),haste:/\bhaste\b/.test(kw),
+    trample:/\btrample\b/.test(kw),dt:/\bdeathtouch\b/.test(kw),ll:/\blifelink\b/.test(kw),
+    menace:/\bmenace\b/.test(kw),fs:/\b(?:first|double) strike\b/.test(kw),
     removal:/destroy target|exile target|deals? \d+ damage to target creature|target creature gets -\d|fight/i.test(o),
     burn:/deals? \d+ damage to (?:any target|target player|target opponent)|each opponent loses \d+ life/i.test(o),
     draw:/draw (?:a|one|two|three|four|five|\d+) cards?/i.test(o),
     gain:/gain \d+ life|gains? \d+ life/i.test(o),
     wipe:/destroy all|deals? \d+ damage to each creature|each creature gets -\d/i.test(o),
-    evasive:/\b(?:flying|menace|trample|haste|double strike|deathtouch|lifelink)\b/i.test(o)
+    ramp:/\{T\}: Add|search your library for (?:a|up to \w+) (?:basic )?land card|add \{[^}]+\}/i.test(o)
   };
 }
 function bdProfDeck(cards){
   const prof=cards.map(bdProf);
   const colors=[...new Set(cards.filter(c=>!c.ld).flatMap(c=>c.col||[]))].filter(k=>'WUBRG'.includes(k));
-  return {cards:prof,colors,name:colors.length===1?'Mono '+colors[0]:(colors.join('/')||'C'),tough:prof.reduce((a,c)=>a+(c.tou||0),0)/Math.max(1,prof.filter(c=>c.cr).length)};
+  const creatures=prof.filter(c=>c.cr);
+  const tc={};creatures.forEach(c=>c.subs.forEach(x=>{tc[x]=(tc[x]||0)+1}));
+  let tribe='',tribeN=0;for(const k in tc)if(tc[k]>tribeN){tribe=k;tribeN=tc[k]}
+  const nonland=prof.filter(c=>!c.land);
+  const cmcAvg=nonland.length?nonland.reduce((a,c)=>a+c.cmc,0)/nonland.length:0;
+  return {cards:prof,colors,name:colors.length===1?'Mono '+colors[0]:(colors.join('/')||'C'),
+    tribe,tribeN,cmcAvg,lands:prof.filter(c=>c.land).length,
+    ramp:prof.filter(c=>c.ramp&&!c.land).length,
+    flyers:creatures.filter(c=>c.fly).length,
+    tough:prof.reduce((a,c)=>a+(c.tou||0),0)/Math.max(1,creatures.length)};
 }
 function bdShuffle(a,rng){for(let i=a.length-1;i>0;i--){const j=(rng()*(i+1))|0;const t=a[i];a[i]=a[j];a[j]=t}return a}
 function bdMulligan(deck,rng){
@@ -4493,33 +4520,42 @@ function bdMulligan(deck,rng){
 function bdRaceGame(A,B,rng){
   const side=[bdMulligan(A,rng),bdMulligan(B,rng)];
   const st=[
-    {P:side[0],life:20,bf:[],land:0},
-    {P:side[1],life:20,bf:[],land:0}
+    {P:side[0],life:20,bf:[],land:0,ramp:0},
+    {P:side[1],life:20,bf:[],land:0,ramp:0}
   ];
+  const profs=[A,B];
   const first=rng()<.5?0:1;
-  for(let t=1;t<=12;t++){
+  const boost=(c,pr)=>{
+    let p=c.pow,t=c.tou;
+    if(pr&&pr.tribeN>=4&&c.subs&&c.subs.indexOf(pr.tribe)>=0){p+=1;if(pr.tribeN>=7)t+=1}
+    return {...c,pow:p,tou:t};
+  };
+  for(let t=1;t<=14;t++){
     for(let k=0;k<2;k++){
       const i=(t===1)?((k===0)?first:1-first):k;
-      const me=st[i],op=st[i+1-i%2===0?1:0];
-      const opp=st[i===0?1:0];
+      const me=st[i],opp=st[i===0?1:0],prof=profs[i];
       if(!(t===1&&i===first)){
         const c=me.P.lib.shift();if(c)me.P.hand.push(c);
       }
-      /* tierras */
-      let li=me.P.hand.findIndex(c=>c.land);
-      if(li>=0&&me.land<8){me.P.hand.splice(li,1);me.land++}
-      /* hechizos: removal primero, luego la mejor criatura asequible */
-      let pool=Math.min(me.land,8);
-      for(let guard=0;guard<3;guard++){
+      const li=me.P.hand.findIndex(c=>c.land);
+      if(li>=0&&me.land<9){me.P.hand.splice(li,1);me.land++}
+      let pool=Math.min(me.land+me.ramp,9);
+      for(let guard=0;guard<4;guard++){
         let idx=-1,best=-1;
         me.P.hand.forEach((c,j)=>{
           if(c.land||c.cmc>pool)return;
           let v=0;
-          if(c.removal&&opp.bf.length)v=60+c.cmc;
-          else if(c.wipe&&opp.bf.length>=2)v=90+c.cmc;
-          else if(c.cr)v=(c.pow*2+c.tou)+10-c.cmc*0.5;
-          else if(c.draw)v=30;
-          else if(c.burn)v=25+c.cmc;
+          if(c.removal&&opp.bf.length)v=70+c.cmc;
+          else if(c.wipe&&opp.bf.length>=2)v=100+c.cmc;
+          else if(c.cr){
+            v=c.pow*2+c.tou+10-c.cmc*0.4+c.rar*4
+              +(c.fly?8:0)+(c.dt?3:0)+(c.ll?2:0)+(c.trample?2:0)+(c.haste?2:0)
+              +((prof.tribeN>=4&&c.subs&&c.subs.indexOf(prof.tribe)>=0)?5:0);
+          }
+          else if(c.draw)v=34;
+          else if(c.ramp)v=36;
+          else if(c.burn)v=26+c.cmc;
+          else if(c.gain)v=12;
           if(v>best){best=v;idx=j}
         });
         if(idx<0)break;
@@ -4531,47 +4567,81 @@ function bdRaceGame(A,B,rng){
         }else if(c.wipe&&opp.bf.length>=2){
           opp.bf=[];
         }else if(c.cr){
-          me.bf.push({...c,sick:true});
+          me.bf.push({...boost(c,prof),sick:!c.haste});
         }else if(c.draw){
           const d=me.P.lib.shift();if(d)me.P.hand.push(d);
+        }else if(c.ramp){
+          me.ramp=Math.min(me.ramp+1,3);
         }else if(c.burn){
           opp.life-=Math.max(1,Math.round(c.cmc||1));
           if(opp.life<=0)return i;
         }
         if(c.gain)me.life+=1;
       }
-      /* combate */
       if(t>1){
-        const atk=me.bf.filter(c=>!c.sick),def=opp.bf;
+        const atk=me.bf.filter(c=>!c.sick);
         atk.sort((a,b)=>b.pow-a.pow);
         let dmg=0;
         for(const a of atk){
-          let blocker=null;
-          if(def.length){
-            def.sort((x,y)=>y.tou-x.tou);
-            blocker=def[0];
-            def.shift();
+          let cand=opp.bf.slice();
+          if(a.fly)cand=cand.filter(b=>b.fly||b.reach);
+          if(a.menace&&cand.length<2)cand=[];
+          if(!cand.length){
+            dmg+=a.pow;if(a.ll)me.life+=a.pow;continue;
           }
-          if(blocker){
-            if(blocker.pow>=a.tou)me.bf=me.bf.filter(x=>x!==a);
-            if(a.pow>=blocker.tou)opp.bf=opp.bf.filter(x=>x!==blocker);
-          }else{
-            dmg+=a.pow+(a.evasive?1:0);
-          }
+          cand.sort((x,y)=>{
+            const kx=(x.pow>=a.tou||x.dt?2:0)+(a.pow<x.tou&&!a.dt?1:0);
+            const ky=(y.pow>=a.tou||y.dt?2:0)+(a.pow<y.tou&&!a.dt?1:0);
+            return ky-kx||x.tou-y.tou;
+          });
+          const b=cand[0];
+          let spill=0;
+          if(a.trample&&a.pow>b.tou&&!a.dt)spill=a.pow-b.tou;
+          let bDies=a.dt||a.pow>=b.tou;
+          let aDies=b.dt||b.pow>=a.tou;
+          if(a.fs&&!b.fs&&bDies)aDies=false;
+          else if(b.fs&&!a.fs&&aDies)bDies=false;
+          if(aDies)me.bf=me.bf.filter(x=>x!==a);
+          if(bDies)opp.bf=opp.bf.filter(x=>x!==b);
+          if(a.ll)me.life+=Math.min(a.pow,Math.max(1,b.tou));
+          dmg+=spill;
         }
         me.bf.forEach(c=>c.sick=false);
         opp.life-=dmg;
         if(opp.life<=0)return i;
-        if(me.life<=0)return 1-i;
       }
     }
   }
-  /* empate técnico al turno 12: gana quien esté más cerca */
+  const power=s=>s.bf.reduce((a,c)=>a+c.pow,0);
   const d=st[0].life-st[1].life;
-  return Math.abs(d)<=2?.5:(d>0?0:1);
+  if(Math.abs(d)>3)return d>0?0:1;
+  const p0=power(st[0]),p1=power(st[1]);
+  if(Math.abs(p0-p1)>2)return p0>p1?0:1;
+  return .5;
+}
+function bdBalDeck(cards,T){
+  const need=Math.round(T*.4);
+  const out=cards.slice();
+  const colors=[...new Set(out.filter(c=>c&&!c.ld).flatMap(c=>c.col||[]))].filter(k=>'WUBRG'.includes(k));
+  const pool=colors.length?colors:['W','U','B','R','G'];
+  let guard=0;
+  while(out.filter(c=>c&&c.ld).length<need&&guard++<T){
+    let idx=-1,worst=1e9;
+    out.forEach((c,i)=>{
+      if(!c||c.ld)return;
+      const v=(c.cr?(+c.pow||0)+(+c.tou||0):0)+({mythic:3,rare:2,uncommon:1,common:0}[c.rarity]||0)-c.cmc*1.5;
+      if(v<worst){worst=v;idx=i}
+    });
+    if(idx<0)break;
+    out.splice(idx,1);
+    const b=BASIC[pool[guard%pool.length]];
+    if(!b)break;
+    out.push(b);
+  }
+  return out;
 }
 function bdGauntlet(T){
-  const key=ACTIVE_SET+'|'+T+'|'+(GEN_SETS.join(','));
+  const key='v5|'+ACTIVE_SET+'|'+T+'|'+(GEN_SETS.join(','));
   if(bdGaunt.key===key&&bdGaunt.decks.length)return bdGaunt.decks;
   const fmt=T>=100?'cmd':T>=60?'std':'cjs';
   const decks=[];
@@ -4582,7 +4652,7 @@ function bdGauntlet(T){
     let cards=null;
     try{cards=genAiDeck(fmt)}catch(e){}
     if(!cards||cards.filter(Boolean).length<T*.75)continue;
-    const cut=cards.slice(0,T).filter(Boolean);
+    const cut=bdBalDeck(cards.slice(0,T).filter(Boolean),T);
     const p=bdProfDeck(cut);
     if(decks.some(d=>d.label===p.name))continue;
     decks.push({cards:cut,prof:p,label:p.name});
@@ -4591,13 +4661,35 @@ function bdGauntlet(T){
   bdGaunt={key,decks};
   return bdGaunt.decks;
 }
-function bdWinrate(cards,T){
-  const key=T+'|'+ACTIVE_SET+'|'+cards.map(c=>c&&c.name).join(',');
-  if(bdWr.key===key&&bdWr.val)return bdWr.val;
+const bdParMap=new Map();
+function bdGauntPar(T){
+  if(bdParMap.has(T))return bdParMap.get(T);
+  const g=bdGauntlet(T);
+  if(g.length<2){bdParMap.set(T,50);return 50}
+  let w=0,n=0;
+  for(let i=0;i<g.length;i++)for(let j=0;j<g.length;j++){
+    if(i===j)continue;
+    const rng=bdRng(555+T*13+i*97+j);
+    for(let k=0;k<40;k++){
+      const r=bdRaceGame(g[i].prof,g[j].prof,rng);
+      if(r===0)w++;else if(r===.5)w+=.5;
+      n++;
+    }
+  }
+  const par=Math.round(w/n*100);
+  bdParMap.set(T,par);
+  return par;
+}
+/* Escala donde la media del gauntlet es 50 %. */
+function bdCalib(x,par){return Math.max(2,Math.min(98,Math.round(50+(x-par)*.70)))}
+function bdWinrate(cards,T,opt){
+  const games=(opt&&opt.games)||120;
+  const key='v5|'+T+'|'+ACTIVE_SET+'|'+games+'|'+cards.map(c=>c&&c.name).join(',');
+  if(bdWrMap.has(key))return bdWrMap.get(key);
   const opps=bdGauntlet(T);
   if(!opps.length)return null;
   const me=bdProfDeck(cards);
-  const games=120;
+  const par=bdGauntPar(T);
   const per=[];
   let wins=0,total=0;
   const base=cards.reduce((a,c)=>a+((c&&c.name)||'').length,0)+T;
@@ -4610,16 +4702,18 @@ function bdWinrate(cards,T){
       total++;
     }
     wins+=w;
-    per.push({label:o.label,pct:Math.round(w/games*100)});
+    per.push({label:o.label,pct:bdCalib(Math.round(w/games*100),par)});
   });
-  const pct=Math.round(wins/total*100);
+  const pct=bdCalib(Math.round(wins/total*100),par);
   const ci=Math.round(Math.sqrt(Math.max(.0001,pct/100*(1-pct/100)/total))*196*10)/10;
   const sorted=per.slice().sort((a,b)=>a.pct-b.pct);
-  const val={pct,ci,games:total,opps:per,best:sorted[sorted.length-1],worst:sorted[0]};
-  bdWr={key,val};
+  const val={pct,ci,games:total,par,opps:per,best:sorted[sorted.length-1],worst:sorted[0]};
+  if(bdWrMap.size>160)bdWrMap.clear();
+  bdWrMap.set(key,val);
   return val;
 }
-let bdGaunt={key:'',decks:[]},bdWr={key:'',val:null};
+let bdGaunt={key:'',decks:[]};
+const bdWrMap=new Map();
 function bdLegalCheck(cards,T){
   const out=[],cnt={};
   cards.forEach(c=>{if(!c.ld)cnt[c.name]=(cnt[c.name]||0)+1});
@@ -4752,12 +4846,13 @@ function bdRenderAnalysis(s){
       <div class="bd-wr-top"><b class="${a.wr.pct>=55?'good':a.wr.pct<45?'bad':''}">${a.wr.pct}%</b><span>±${a.wr.ci} (95%)</span></div>
       <div class="bd-wr-bar"><i style="width:${a.wr.pct}%"></i><u style="left:50%"></u></div>
       <div class="bd-wr-list">${a.wr.opps.slice().sort((x,y)=>x.pct-y.pct).map(o=>`<div class="bd-wr-row"><span>${o.label}</span><div><i style="width:${o.pct}%"></i></div><b>${o.pct}%</b></div>`).join('')}</div>
-      <div class="bd-dim">Monte Carlo contra ${a.wr.opps.length} mazos del set activo. Es una estimación, no sustituye a jugar.</div>
+      <div class="bd-dim">Monte Carlo contra ${a.wr.opps.length} mazos del set activo (${a.wr.par}% de referencia). Modela tierras, curva, vuelo, arrollar, prisa, dañar primero, removal, tribal y ramp en 14 turnos. Es una estimación, no sustituye a jugar.</div>
     </div>`:'';
   box.innerHTML=`
   <div class="bd-ana-top">
     <div class="bd-ring" style="--v:${a.score};--c:${col}" title="${ringTitle}"><b>${a.score}</b></div>
     <div class="bd-ana-id"><em><span class="bd-plan-n">${a.plan.n}</span> · ${a.grade}</em><span>${a.plan.d}</span></div>
+    <div class="bd-rate"><b class="bd-rate-r" title="Rating del mazo">R${a.score}</b><b class="bd-rate-w ${a.wr?(a.wr.pct>=55?'good':a.wr.pct<45?'bad':''):''}" title="Winrate estimado">W${a.wr?a.wr.pct+'%':'—'}</b></div>
     <span class="bd-grade ${a.score>=80?'good':a.score<55?'bad':''}" title="Escala S/A/B/C/D">${a.letter}</span>
   </div>
   <div class="bd-chips">${chips}</div>
@@ -5453,17 +5548,26 @@ async function bdImportText(){
 const DL={view:'box',q:'',color:'all',sort:'score'};
 let DL_COMBOS=null;
 /* Igual que packOf() pero para una definición concreta de la caja. */
-function dlPack(def){
+function beginnerPack(def){
+  const rnd=bdRng((String(def.n||'x').split('').reduce((a,ch)=>a*31+ch.charCodeAt(0),7)>>>0)||9);
   const fbPool=POOL.filter(c=>c.col.includes(def.c)||c.col.length===0);
-  const fbCr=R(fbPool.filter(c=>c.cr)),fbSp=R(fbPool.filter(c=>!c.cr));
-  const cards=def.list.map(n=>{
+  const fbCr=bdShuffle(fbPool.filter(c=>c.cr),rnd),fbSp=bdShuffle(fbPool.filter(c=>!c.cr),rnd);
+  const cards=(def.list||[]).map(n=>{
     if(BASIC_NAMES[n]&&BASIC[BASIC_NAMES[n]])return BASIC[BASIC_NAMES[n]];
     if(BYN[n])return BYN[n];
     return fbCr.pop()||fbSp.pop()||BASIC[def.c];
   }).filter(Boolean);
-  while(cards.length<20&&BASIC[def.c])cards.push(BASIC[def.c]);
-  return cards.slice(0,20);
+  const LAND_N=8;
+  let lands=cards.filter(c=>c.ld),spells=cards.filter(c=>!c.ld);
+  if(lands.length>LAND_N)lands=lands.slice(0,LAND_N);
+  if(spells.length>20-LAND_N)spells=spells.slice(0,20-LAND_N);
+  const used=new Set(spells.map(c=>c.name));
+  const extra=bdShuffle(POOL.filter(c=>c.set===ACTIVE_SET&&!c.ld&&c.cmc<=5&&(c.col.includes(def.c)||c.col.length===0)&&!used.has(c.name)),rnd);
+  while(spells.length<20-LAND_N&&extra.length)spells.push(extra.pop());
+  while(lands.length<LAND_N&&BASIC[def.c])lands.push(BASIC[def.c]);
+  return spells.concat(lands).slice(0,20);
 }
+function dlPack(def){return beginnerPack(def)}
 function dlComboList(){
   if(DL_COMBOS)return DL_COMBOS;
   const out=[];
@@ -5512,9 +5616,12 @@ function dlRender(){
     if(e.kind==='combo'){
       if(!e.star){e.star=dlStarOf(e.cards);e.hay=e.cards.map(c=>((c.pname||'')+' '+(c.name||''))).join(' ').toLowerCase()}
       if(!e.ana)e.ana=dlAnalyzeCards(e.cards,40);
+      if(e.ana&&!e.wr&&e.cards.length>=28)e.wr=bdWinrate(e.cards,40,{games:40});
     }else{
       e.star=e.cards.length?dlStarOf(e.cards):null;
       e.ana=(e.cards.length&&e.cards.length===e.size)?dlAnalyzeCards(e.cards,e.T):null;
+      e.wr=null;
+      if(e.ana&&e.cards.length>=e.T*.7)e.wr=bdWinrate(e.cards,e.T,{games:40});
       e.hay=((e.d&&e.d.cards)||[]).join(' ').toLowerCase();
     }
   });
@@ -5530,6 +5637,7 @@ function dlRender(){
     if(DL.sort==='name')return a.name.localeCompare(b.name);
     if(DL.sort==='size')return (b.size||0)-(a.size||0)||a.name.localeCompare(b.name);
     if(DL.sort==='color')return (a.colors.join('')).localeCompare(b.colors.join(''))||a.name.localeCompare(b.name);
+    if(DL.sort==='winrate')return ((b.wr&&b.wr.pct)||-1)-((a.wr&&a.wr.pct)||-1)||((b.ana&&b.ana.score)||-1)-((a.ana&&a.ana.score)||-1)||a.name.localeCompare(b.name);
     return ((b.ana&&b.ana.score)||-1)-((a.ana&&a.ana.score)||-1);
   });
   const cnt=$('#dl-count');
@@ -5538,7 +5646,7 @@ function dlRender(){
   grid.innerHTML=list.map(e=>{
     const star=e.star,art=star?`<img loading="lazy" src="${star.small||star.img||''}" alt="">`:'';
     const pips=(e.colors||[]).map(k=>`<span class="dl-pip" style="background:${CC[k]||'#bbb'}">${k}</span>`).join('');
-    const score=e.ana?`<span class="dl-score${e.ana.score>=85?' hi':''}" title="Análisis del mazo">${e.ana.score}</span>`:'';
+    const score=e.ana?`<span class="dl-rate" title="Análisis del mazo: R${e.ana.score}${e.wr?' · W'+e.wr.pct+'%':''}"><b class="dl-score${e.ana.score>=85?' hi':''}">R${e.ana.score}</b>${e.wr?`<b class="dl-wr ${e.wr.pct>=55?'hi':e.wr.pct<45?'lo':''}">W${e.wr.pct}%</b>`:''}</span>`:'';
     const plan=e.ana?`<span class="dl-tag">${e.ana.plan.n}</span>`:'<span class="dl-tag">Análisis disponible al abrir el mazo.</span>';
     const load=e.kind==='combo'?`<button data-dl-combo="${e.a}:${e.b}">🛠️ Cargar en el constructor</button>`:`<button data-dl-saved="${e.i}">🛠️ Cargar en el constructor</button>`;
     return `<div class="dl-item">`+
@@ -6405,6 +6513,8 @@ const I18N_EN={
 "🔍 Nombre o texto de reglas…":"🔍 Name or rules text…",
 "Interfaz":"Interface","Cartas":"Cards","Español":"Spanish","Recomendados":"Recommended",
 "Puntos fuertes y débiles":"Strengths & weaknesses","Por qué esta nota":"Why this score",
+"Rating del mazo":"Deck rating","Winrate estimado":"Estimated winrate",
+
 "mano de 7 jugable":"7-card hand kept","color en turno 3":"color by turn 3","juego en T1-3":"plays on turns 1-3",
 
 "Nota = media geométrica ponderada de 8 apartados: una carencia grave pesa más que varias medias.":"Score = weighted geometric mean of 8 areas: one severe gap hurts more than several average ones.",
@@ -6419,7 +6529,6 @@ const I18N_EN={
 
 "Puntos fuertes":"Strengths","A mejorar":"To improve","Sin puntos fuertes claros":"No clear strengths",
 "Winrate estimado · ":"Estimated winrate · "," partidas simuladas":" simulated games",
-"Monte Carlo contra ":"Monte Carlo against "," mazos del set activo. Es una estimación, no sustituye a jugar.":" decks from the active set. An estimate, not a substitute for playing.",
 "Simulación de manos · ":"Hand simulation · ","Simulación de manos: ":"Hand simulation: ",
 "Desglose: ":"Breakdown: ","Puntuación: ":"Score: ","Winrate estimado: ":"Estimated winrate: ",
 "Puntos fuertes: ":"Strengths: ","A mejorar: ":"To improve: ",
@@ -6466,7 +6575,7 @@ const I18N_EN={
 "🎁 Elegir mazos de iniciación":"🎁 Pick beginner decks","📖 Galería de cartas":"📖 Card gallery",
 
 "📚 Biblioteca de mazos":"📚 Deck library","Combinaciones de iniciación y mazos guardados":"Beginner box combos and saved decks","Iniciación · combinaciones":"Beginner · combinations","Mis mazos":"My decks",
-"🔍 Buscar mazo, tema o carta…":"🔍 Search deck, theme or card…","Orden: análisis":"Sort: analysis","Orden: cartas":"Sort: cards",
+"🔍 Buscar mazo, tema o carta…":"🔍 Search deck, theme or card…","Orden: análisis":"Sort: analysis","Orden: winrate":"Sort: winrate","Orden: cartas":"Sort: cards",
 "combinaciones":"combinations","mazos":"decks","cartas":"cards","Carta más representativa":"Signature card",
 "🛠️ Cargar en el constructor":"🛠️ Load into builder","📚 Mazos":"📚 Decks","📚 Biblioteca":"📚 Library",
 "Análisis disponible al abrir el mazo.":"Analysis available once the deck is loaded.",
@@ -6510,7 +6619,10 @@ const I18N_EN={
 const UI_COL={Blanco:'White',Azul:'Blue',Negro:'Black',Rojo:'Red',Verde:'Green'};
 const UI_RULES=[
 [/^Simulación de manos · (\d+)$/,'Hand simulation · $1'],
+[/^Análisis del mazo: R(\d+) · W(\d+)%$/,'Deck analysis: R$1 · W$2%'],
+[/^Análisis del mazo: R(\d+)$/,'Deck analysis: R$1'],
 [/^Winrate estimado · (\d+) partidas simuladas$/,'Estimated winrate · $1 simulated games'],
+    [/^Monte Carlo contra (\d+) mazos del set activo \((\d+)% de referencia\)\. Modela tierras, curva, vuelo, arrollar, prisa, dañar primero, removal, tribal y ramp en 14 turnos\. Es una estimación, no sustituye a jugar\.$/,'Monte Carlo vs $1 decks from the active set ($2% reference). Models lands, curve, flying, trample, haste, first strike, removal, tribal and ramp over 14 turns. It is an estimate, not a substitute for playing.'],
 [/^💪 (.+)$/,(m,x)=>(I18N_EN[x]||x)+' (strength)'],
 [/^⚠ (.+)$/,(m,x)=>(I18N_EN[x]||x)+' (weakness)'],
 [/^(.+): (\d+)% de apoyo$/,(m,x,n)=>(I18N_EN[x]||x)+': '+n+'% plan support'],
@@ -6529,7 +6641,6 @@ const UI_RULES=[
 [/^Añade (\d+) fuentes de cartas$/,'Add $1 card sources'],
 [/^(\d+) criaturas \(objetivo (\d+)\)$/,'$1 creatures (target $2)'],
 [/^Añade (\d+) criaturas$/,'Add $1 creatures'],
-[/^Monte Carlo contra (\d+) mazos del set activo\. Es una estimación, no sustituye a jugar\.$/,'Monte Carlo against $1 decks from the active set. An estimate, not a substitute for playing.'],
 [/^(Blanco|Azul|Negro|Rojo|Verde) · (\d+) cartas$/,(m,c,n)=>(I18N_EN[c]||c)+' · '+n+' cards'],
 [/^📖 Galería (.+)$/,'📖 $1 Gallery'],
 [/^Cargadas (\d+) cartas de (.+)\.$/,'Loaded $1 cards from $2.'],
