@@ -1,0 +1,2063 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Captain Jumpstart · Dos sobres, un capitán</title>
+<meta name="description" content="Captain Jumpstart: dos sobres de 20 cartas, un mazo singleton de 40 y un capitán en la zona de mando. Crea, analiza y juega.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,850&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f141c;--bg2:#0a0e14;--pn:#18212c;--pn2:#1e2937;--ln:#2b3a4c;--tx:#eae6da;--mu:#93a0b1;--au:#e3b64b;--au2:#f3d489;--rd:#e0613f;--ok:#5bbd7a;--W:#f0e5b4;--U:#6db2ee;--B:#a690c4;--R:#ee7e5e;--G:#6fcb7c;--r:14px;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(1200px 700px at 50% -10%,#1c2836 0,#0f141c 55%,#090d12 100%) fixed;color:var(--tx);font:16px/1.55 'Hanken Grotesk',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:Fraunces,Georgia,serif;line-height:1.08;margin:0;letter-spacing:-.015em}
+h1{font-size:clamp(42px,7.6vw,88px);font-weight:850}
+h2{font-size:clamp(26px,3.4vw,40px);font-weight:850}
+h3{font-size:21px;font-weight:600}
+p{margin:0 0 10px}
+a{color:var(--au)}
+header{position:sticky;top:0;z-index:30;display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:12px 22px;border-bottom:1px solid var(--ln);background:#0f141ce8;backdrop-filter:blur(12px)}
+.logo{display:flex;align-items:center;gap:10px;font:850 21px Fraunces,serif;color:var(--au);cursor:pointer;letter-spacing:-.02em}
+.logo svg{width:26px;height:26px;fill:currentColor}
+nav{display:flex;gap:2px;flex-wrap:wrap;margin-left:auto}
+nav button{background:none;border:0;color:var(--mu);font:600 14.5px inherit;padding:8px 12px;border-radius:9px;cursor:pointer;transition:.15s}
+nav button:hover{color:var(--tx);background:#ffffff0a}
+nav button.on{color:var(--tx);background:var(--pn);box-shadow:inset 0 -2px var(--au)}
+main{max-width:1180px;margin:0 auto;padding:26px 22px 90px}
+section{display:none}section.on{display:block;animation:fade .28s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}}
+.hero{padding:48px 0 26px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:32px;align-items:center}
+@media(max-width:900px){.hero{grid-template-columns:1fr;gap:18px;padding-top:26px}}
+.hero h1 span{color:var(--au)}
+.hero .lede{font-size:19px;color:var(--mu);max-width:56ch;margin:16px 0 22px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font:700 11px inherit;letter-spacing:.16em;text-transform:uppercase;color:var(--au);border:1px solid #e3b64b44;background:#e3b64b12;border-radius:999px;padding:5px 12px;margin-bottom:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.tight{gap:6px}
+.btn{background:linear-gradient(180deg,var(--au2),var(--au));color:#1a1305;border:0;border-radius:10px;padding:11px 18px;font:700 15px inherit;cursor:pointer;transition:.15s;box-shadow:0 6px 20px #e3b64b26}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn.sec{background:#ffffff0c;color:var(--tx);border:1px solid var(--ln);box-shadow:none}
+.btn.ghost{background:none;border:1px solid transparent;color:var(--mu)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.sm{padding:6px 11px;font-size:13.5px;border-radius:8px}
+button,input,select,textarea{font:inherit;color:inherit}
+input,select,textarea{background:var(--pn);border:1px solid var(--ln);border-radius:9px;padding:9px 11px;width:100%;transition:.15s}
+input:focus,select:focus,textarea:focus{outline:2px solid #e3b64b66;outline-offset:1px;border-color:#e3b64b66}
+textarea{resize:vertical;min-height:120px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.5}
+label{display:block;font:600 12px inherit;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);margin:0 0 5px}
+.mu{color:var(--mu)}.sm{font-size:13.5px}.xs{font-size:12px}
+.panel{background:linear-gradient(180deg,#18212c,#141c26);border:1px solid var(--ln);border-radius:var(--r);padding:18px}
+.panel.flat{background:#141c26}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:16px;margin:22px 0}
+.rule{border-left:3px solid var(--au);padding:2px 0 2px 14px}
+.rule b{display:block;font:600 19px Fraunces,serif;margin-bottom:2px}
+.rule span{color:var(--mu);font-size:14.5px}
+.feature{background:linear-gradient(180deg,#18212c,#121a24);border:1px solid var(--ln);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
+.feature:before{content:'';position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,transparent,var(--au),transparent);opacity:.5}
+.feature .ico{font-size:24px;line-height:1}
+.feature b{font:600 17px Fraunces,serif}
+.feature p{color:var(--mu);font-size:14px;margin:0}
+.fan{position:relative;height:340px;display:flex;justify-content:center;align-items:center}
+.fan .fc{position:absolute;width:190px;aspect-ratio:.716;border-radius:13px;border:1px solid #00000066;box-shadow:0 22px 44px #000a,0 0 0 1px #ffffff14 inset;background:linear-gradient(160deg,#243244,#0d131a);overflow:hidden;transition:.35s}
+.fan .fc img{width:100%;height:100%;object-fit:cover;display:block}
+.fan .fc:nth-child(1){transform:rotate(-11deg) translateX(-120px) translateY(14px) scale(.94)}
+.fan .fc:nth-child(2){transform:rotate(0) translateY(-6px);z-index:2}
+.fan .fc:nth-child(3){transform:rotate(11deg) translateX(120px) translateY(14px) scale(.94)}
+.fan .fc .cap{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 10px;background:linear-gradient(180deg,#0000,#000000d9);font:700 11px inherit;letter-spacing:.1em;text-transform:uppercase;color:var(--au2)}
+.fan:hover .fc:nth-child(1){transform:rotate(-13deg) translateX(-140px) translateY(18px) scale(.95)}
+.fan:hover .fc:nth-child(3){transform:rotate(13deg) translateX(140px) translateY(18px) scale(.95)}
+.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ln);background:#ffffff08;border-radius:999px;padding:3px 9px;font:600 11.5px inherit;color:var(--mu)}
+.badge.gold{border-color:#e3b64b55;color:var(--au2);background:#e3b64b12}
+.pip{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font:700 9.5px/1 inherit;color:#141a22;vertical-align:-2px}
+.pW{background:var(--W)}.pU{background:var(--U)}.pB{background:var(--B)}.pR{background:var(--R)}.pG{background:var(--G)}.pC{background:#b9c4cf}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 16px;border-bottom:1px solid var(--ln);padding-bottom:12px}
+.tabs button{background:#ffffff08;border:1px solid var(--ln);color:var(--mu);border-radius:999px;padding:7px 14px;font:600 13.5px inherit;cursor:pointer}
+.tabs button.on{background:var(--au);color:#1a1305;border-color:var(--au)}
+.tabp{display:none}.tabp.on{display:block}
+.field{margin-bottom:12px}
+.packgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.pack{background:linear-gradient(180deg,#18212c,#121a24);border:1px solid var(--ln);border-radius:13px;overflow:hidden;display:flex;flex-direction:column;transition:.2s}
+.pack:hover{border-color:#e3b64b55;transform:translateY(-2px)}
+.pack .art{position:relative;height:120px;background:linear-gradient(160deg,#26374a,#0d131a);overflow:hidden}
+.pack .art img{width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block}
+.pack .art:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#0000 20%,#121a24e6)}
+.pack .art .nm{position:absolute;left:11px;right:11px;bottom:8px;z-index:2;font:600 17px Fraunces,serif;text-shadow:0 2px 10px #000}
+.pack .bd{padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px;flex:1}
+.pack .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--mu)}
+.pack .acts{display:flex;gap:5px;margin-top:auto}
+.pack .acts button{flex:1;background:#ffffff0c;border:1px solid var(--ln);color:var(--tx);border-radius:7px;padding:5px 4px;font:600 12px inherit;cursor:pointer}
+.pack .acts button:hover{border-color:var(--au);color:var(--au2)}
+.cardlist{display:flex;flex-direction:column;gap:1px;max-height:260px;overflow:auto;font-size:13.5px}
+.cline{display:flex;gap:7px;align-items:center;padding:3px 6px;border-radius:6px;cursor:help}
+.cline:hover{background:#ffffff0d}
+.cline .q{color:var(--au);font-weight:700;min-width:20px;text-align:right;font-variant-numeric:tabular-nums}
+.cline .n{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cline .m{margin-left:auto;color:var(--mu);font-size:12px;white-space:nowrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:#ffffff0a;border:1px solid var(--ln);border-radius:999px;padding:5px 11px;font:600 13px inherit;cursor:pointer;color:var(--mu)}
+.chip.on{background:var(--au);color:#1a1305;border-color:var(--au)}
+.col-dot{width:34px;height:34px;border-radius:50%;border:2px solid #ffffff22;cursor:pointer;opacity:.42;transition:.15s;font:700 13px inherit;color:#10151c}
+.col-dot.on{opacity:1;border-color:var(--tx);transform:scale(1.06)}
+.stat{display:flex;align-items:flex-end;gap:5px;height:96px;margin:8px 0 2px}
+.stat i{flex:1;background:linear-gradient(180deg,var(--au2),#b98d26);border-radius:4px 4px 0 0;min-height:2px;position:relative}
+.stat i b{position:absolute;bottom:100%;left:0;right:0;text-align:center;font:700 10.5px inherit;color:var(--mu);margin-bottom:2px}
+.lab{display:flex;gap:5px}.lab span{flex:1;text-align:center;font:600 10.5px inherit;color:var(--mu)}
+.metric{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed #ffffff12;font-size:13.5px}
+.metric b{font-variant-numeric:tabular-nums}
+.warn{border-left:3px solid var(--rd);background:#e0613f0f;padding:7px 11px;border-radius:0 8px 8px 0;font-size:13.5px;margin:6px 0}
+.warn.ok{border-left-color:var(--ok);background:#5bbd7a10}
+.warn.tip{border-left-color:#6db2ee;background:#6db2ee0f}
+.select-list{display:flex;flex-direction:column;gap:4px;max-height:420px;overflow:auto;padding-right:4px}
+.dline{display:flex;gap:8px;align-items:center;background:#ffffff06;border:1px solid #ffffff0d;border-radius:8px;padding:5px 8px;font-size:13.5px}
+.dline .n{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dline .sw{background:#ffffff0c;border:1px solid var(--ln);border-radius:6px;padding:3px 7px;font:600 11.5px inherit;color:var(--mu);cursor:pointer}
+.dline .sw:hover{border-color:var(--au);color:var(--au2)}
+.hand{display:flex;gap:7px;flex-wrap:wrap}
+.hcard{width:88px;border-radius:8px;overflow:hidden;border:1px solid #ffffff1a;cursor:pointer;background:#0b1118;transition:.15s;position:relative}
+.hcard:hover{transform:translateY(-4px);border-color:var(--au)}
+.hcard img{width:100%;display:block;aspect-ratio:.716;object-fit:cover}
+.hcard span{display:block;padding:2px 4px;font:600 9.5px inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mu)}
+.hcard.off{opacity:.4;filter:grayscale(1)}
+/* Juego */
+.board{display:grid;gap:12px}
+.bf{min-height:112px;border:1px dashed #ffffff1a;border-radius:12px;padding:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:#0b1118a6}
+.bf .empty{color:#5c6a7a;font-size:13px;margin:auto}
+.bcard{width:104px;border-radius:8px;overflow:hidden;border:1px solid #ffffff1a;background:#0b1118;position:relative;transition:.15s;cursor:pointer}
+.bcard img{width:100%;display:block;aspect-ratio:.716;object-fit:cover}
+.bcard.tapped{transform:rotate(90deg) scale(.86);margin:0 12px}
+.bcard.sel{outline:2px solid var(--au);outline-offset:2px}
+.bcard .tag{position:absolute;top:3px;left:3px;background:#000000b8;border-radius:4px;padding:0 4px;font:700 9.5px inherit;color:var(--au2)}
+.bcard .pt{position:absolute;right:3px;bottom:3px;background:#000000c4;border-radius:4px;padding:0 4px;font:700 10px inherit}
+.bcard.dead{filter:grayscale(1) brightness(.6)}
+.life{display:flex;align-items:center;gap:10px;font:850 26px Fraunces,serif}
+.life small{font:600 11px inherit;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
+.log{height:180px;overflow:auto;background:#080d13;border:1px solid var(--ln);border-radius:10px;padding:8px 10px;font:12.5px/1.55 ui-monospace,Consolas,monospace;color:#a8b6c6}
+.log div{padding:1px 0;border-bottom:1px solid #ffffff05}
+.log div.you{color:#bcd7ff}.log div.ai{color:#ffc9b6}.log div.sys{color:var(--au2)}
+.overlay{position:fixed;inset:0;background:#06090dd9;display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.overlay.on{display:flex}
+.dialog{max-width:520px;width:100%;background:linear-gradient(180deg,#18212c,#101821);border:1px solid #e3b64b4d;border-radius:16px;padding:22px;box-shadow:0 30px 80px #000b}
+dialog{border:1px solid var(--ln);border-radius:14px;background:#131b25;color:var(--tx);max-width:560px;width:94vw;padding:20px}
+dialog::backdrop{background:#06090dcc}
+dialog h3{margin-bottom:6px}
+dialog .sel-search{display:flex;flex-direction:column;gap:4px;max-height:44vh;overflow:auto;margin:10px 0}
+dialog .sel-search button{text-align:left;background:#ffffff06;border:1px solid #ffffff10;border-radius:7px;padding:6px 9px;cursor:pointer;font-size:13.5px}
+dialog .sel-search button:hover{border-color:var(--au)}
+.proxygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;max-height:300px;overflow:auto}
+.proxygrid img{width:100%;border-radius:6px;border:1px solid #ffffff14}
+footer{border-top:1px solid var(--ln);margin-top:40px;padding:18px 22px;color:var(--mu);font-size:12.5px;display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between}
+#cardZoom{position:fixed;z-index:70;width:250px;border-radius:12px;border:1px solid #ffffff2b;box-shadow:0 26px 60px #000c;pointer-events:none;display:none}
+#cardZoom.on{display:block}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:#1d2836;border:1px solid #e3b64b66;color:var(--tx);padding:10px 18px;border-radius:10px;z-index:60;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;font-size:14px;box-shadow:0 16px 40px #000a}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid #ffffff33;border-top-color:var(--au);border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:760px){
+ header{padding:10px 14px;gap:10px}nav{margin-left:0;width:100%;overflow:auto;flex-wrap:nowrap}
+ main{padding:18px 14px 70px}.panel{padding:14px}
+ .fan{height:250px}.fan .fc{width:150px}
+ .fan .fc:nth-child(1){transform:rotate(-10deg) translateX(-74px) translateY(12px) scale(.93)}
+ .fan .fc:nth-child(3){transform:rotate(10deg) translateX(74px) translateY(12px) scale(.93)}
+ .hcard{width:74px}.bcard{width:78px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<header>
+  <div class="logo" data-go="inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h12l4 4v14H4V3zm2 2v14h12V7.8L15.2 5H6zm2 4h8v2H8V9zm0 4h8v2H8v-2z"/></svg>Captain Jumpstart</div>
+  <nav id="nav">
+    <button data-go="inicio" class="on">Inicio</button>
+    <button data-go="formato">El formato</button>
+    <button data-go="sobres">Sobres</button>
+    <button data-go="mazo">Mazo y análisis</button>
+    <button data-go="jugar">Jugar</button>
+    <button data-go="imprimir">Imprimir</button>
+  </nav>
+</header>
+<main>
+<section id="inicio" class="on">
+  <div class="hero">
+    <div>
+      <span class="eyebrow">Formato de 40 cartas · singleton</span>
+      <h1>Dos sobres.<br>Un <span>capitán</span>.</h1>
+      <p class="lede">Abre dos sobres Jumpstart de 20 cartas, mézclalos en un mazo singleton de 40 y elige una criatura para que te mande desde la zona de mando. Partidas rápidas, mazos irrepetibles y una historia distinta cada noche.</p>
+      <div class="row">
+        <button class="btn" data-go="jugar">Jugar una partida</button>
+        <button class="btn sec" data-go="sobres">Crear mis sobres</button>
+        <button class="btn ghost" id="quickDemo">Mazo de demostración</button>
+      </div>
+      <p class="mu xs" style="margin-top:12px" id="homeStatus">Todo se guarda en tu navegador. Las cartas se cargan de Scryfall.</p>
+    </div>
+    <div class="fan" id="homeFan">
+      <div class="fc"><img alt="" src=""></div>
+      <div class="fc"><img alt="" src=""><div class="cap">Capitán</div></div>
+      <div class="fc"><img alt="" src=""></div>
+    </div>
+  </div>
+  <div class="grid g4" style="margin-top:8px">
+    <div class="feature"><span class="ico">🎲</span><b>Cuatro formas de crear</b><p>Editor manual, generador virtual, tu colección física y sobres oficiales importados.</p></div>
+    <div class="feature"><span class="ico">♛</span><b>Capitán de verdad</b><p>Elige tu criatura, empieza en la zona de mando y paga {2} más cada vez que vuelve.</p></div>
+    <div class="feature"><span class="ico">🧪</span><b>Análisis que explica</b><p>Curva, colores, roles y manos jugables, con consejos concretos y cambios aplicables.</p></div>
+    <div class="feature"><span class="ico">⚔️</span><b>Partida contra la IA</b><p>Campo de batalla, combate, pilotos automáticos y registro de todo lo que ocurre.</p></div>
+  </div>
+  <div class="panel" style="margin-top:22px">
+    <h3 style="margin-bottom:10px">La noche perfecta en cinco pasos</h3>
+    <div class="grid g2">
+      <div>
+        <div class="rule"><b>1 · Genera dos sobres</b><span>Cada uno de 20 cartas, con su tema y sus colores. No hace falta colección: el generador virtual usa todo Scryfall.</span></div>
+        <div class="rule" style="margin-top:12px"><b>2 · Mézclalos</b><span>Cuarenta cartas, sin repetir ninguna que no sea tierra básica. Si dos sobres chocan, la app resuelve el duplicado y te lo cuenta.</span></div>
+      </div>
+      <div>
+        <div class="rule"><b>3 · Elige capitán</b><span>Una criatura del mazo. Manda desde la zona de mando y se puede lanzar más de una vez: cada regreso cuesta {2} adicionales.</span></div>
+        <div class="rule" style="margin-top:12px"><b>4 · Analiza</b><span>Curva, tierras, interacción y probabilidad real de mano jugable. Los consejos proponen cambios concretos.</span></div>
+        <div class="rule" style="margin-top:12px"><b>5 · Juega e imprime</b><span>Duelo contra la IA con piloto automático, lista para llevar y proxies a tamaño real.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="formato">
+  <span class="eyebrow">Reglas del formato</span>
+  <h1 style="font-size:clamp(34px,5.4vw,60px)">Cuarenta cartas.<br>Ninguna repetida.</h1>
+  <p class="lede mu" style="max-width:62ch;margin-top:12px">Captain Jumpstart toma lo mejor de Jumpstart y de Commander: la sorpresa de abrir sobres y la presencia constante de un líder. Todas las reglas de Magic: The Gathering se aplican salvo las que se indican aquí.</p>
+  <div class="rules">
+    <div class="rule"><b>Dos sobres · 40 cartas</b><span>Cada sobre tiene 20 cartas. Se mezclan en un único mazo de exactamente 40.</span></div>
+    <div class="rule"><b>Singleton</b><span>No se repite ninguna carta, salvo las tierras básicas. Si dos sobres traen la misma, una de las dos se sustituye.</span></div>
+    <div class="rule"><b>Un capitán</b><span>Eliges una criatura del mazo. Empieza en la zona de mando y no cuenta para la biblioteca: juegas con 39.</span></div>
+    <div class="rule"><b>Impuesto de mando</b><span>Lanzar al capitán desde la zona de mando cuesta {2} más por cada vez que ya lo hayas lanzado antes en la partida.</span></div>
+    <div class="rule"><b>20 vidas</b><span>Se empieza a 20. Pierde quien llegue a 0 o intente robar con la biblioteca vacía.</span></div>
+    <div class="rule"><b>Primer mulligan gratis</b><span>La primera tirada de 7 no tiene penalización. A partir de la segunda, cada mulligan devuelve una carta al fondo.</span></div>
+  </div>
+  <div class="grid g2" style="margin-top:8px">
+    <div class="panel">
+      <h3>La zona de mando</h3>
+      <p class="sm mu">Tu capitán no está en la biblioteca: empieza aparte, visible para todos, y se lanza como cualquier hechizo pagando su coste. Cuando muere o es exiliado, vuelve a la zona de mando y el siguiente lanzamiento cuesta {2} más. Si tu capitán es tu única criatura, piénsalo dos veces antes de atacar.</p>
+      <div class="warn tip">El capitán no hace daño de comandante: en este formato es un líder, no una condición de victoria alterna.</div>
+    </div>
+    <div class="panel">
+      <h3>Qué hace bueno a un capitán</h3>
+      <p class="sm mu">No tiene que ser legendario, pero sí barato de repetir y útil cuando ya tienes el tablero montado. Una criatura de 2-3 maná con una habilidad relevante suele rendir más que un dragón de 7 que solo entra una vez.</p>
+      <div class="rules" style="grid-template-columns:1fr 1fr;margin:12px 0 0;gap:10px">
+        <div class="rule"><b>Barato</b><span>2-3 maná</span></div>
+        <div class="rule"><b>Relevante</b><span>Robar, crecer, remover</span></div>
+        <div class="rule"><b>Resistente</b><span>Más de 3 de resistencia</span></div>
+        <div class="rule"><b>Coherente</b><span>Con el plan del mazo</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <h3>Dudas razonables</h3>
+    <div class="grid g2" style="margin-top:10px">
+      <div>
+        <p class="sm"><b>¿Y si mi capitán muere?</b><br><span class="mu">Vuelve a la zona de mando. Puedes volver a lanzarlo pagando su coste más {2} por cada lanzamiento anterior.</span></p>
+        <p class="sm"><b>¿Puedo cambiar de capitán entre partidas?</b><br><span class="mu">Sí. El capitán se elige al construir el mazo, no durante la partida. La app te deja cambiarlo y recalcula el análisis.</span></p>
+      </div>
+      <div>
+        <p class="sm"><b>¿Las tierras básicas rompen el singleton?</b><br><span class="mu">No. Son la única excepción, como en cualquier formato singleton. Todo lo demás debe ser único.</span></p>
+        <p class="sm"><b>¿Cuántas tierras?</b><br><span class="mu">Cada sobre trae 8, así que lo normal es empezar con 16. El análisis te avisa si tu curva pide 17 o si vas justo de color.</span></p>
+      </div>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <button class="btn" data-go="sobres">Empezar a crear</button>
+      <button class="btn sec" data-go="mazo">Ver un mazo analizado</button>
+    </div>
+  </div>
+</section>
+
+<section id="sobres">
+  <div class="row" style="justify-content:space-between;align-items:flex-end">
+    <div><span class="eyebrow">Fábrica de sobres</span><h1 style="font-size:clamp(30px,4.6vw,50px)">Mis sobres</h1></div>
+    <span class="badge gold" id="packCount">0 sobres</span>
+  </div>
+  <div class="tabs" id="packTabs">
+    <button data-tab="packs" class="on">Biblioteca</button>
+    <button data-tab="editor">Editor manual</button>
+    <button data-tab="virt">Generador virtual</button>
+    <button data-tab="phys">Colección física</button>
+    <button data-tab="off">Oficiales</button>
+  </div>
+
+  <div class="tabp on" id="t-packs">
+    <div class="packgrid" id="packGrid"></div>
+    <div class="panel" id="packEmpty" style="margin-top:8px">
+      <h3>Aún no hay sobres</h3>
+      <p class="sm mu">Crea el primero con el generador virtual, o pulsa «Mazo de demostración» en Inicio para ver la app completa funcionando.</p>
+      <div class="row"><button class="btn" data-tab-go="virt">Generador virtual</button><button class="btn sec" data-tab-go="editor">Editor manual</button></div>
+    </div>
+  </div>
+
+  <div class="tabp" id="t-editor">
+    <div class="grid" style="grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);align-items:start">
+      <div class="panel">
+        <div class="row" style="justify-content:space-between"><h3 id="edTitle">Nuevo sobre</h3><span class="badge" id="edCount">0/20</span></div>
+        <div class="field" style="margin-top:12px"><label for="edName">Nombre del sobre</label><input id="edName" placeholder="p. ej. Vampiros de la cripta" autocomplete="off"></div>
+        <div class="field"><label for="edSearch">Añadir carta</label>
+          <div class="row tight"><input id="edSearch" list="acList" placeholder="Busca una carta y pulsa Enter" autocomplete="off" style="flex:1;min-width:180px"><button class="btn" id="edAdd">Añadir</button></div>
+          <datalist id="acList"></datalist>
+        </div>
+        <div class="row tight" style="margin-bottom:10px">
+          <select id="edBasic" style="max-width:170px"><option value="Plains">Llanura</option><option value="Island">Isla</option><option value="Swamp">Pantano</option><option value="Mountain">Montaña</option><option value="Forest">Bosque</option></select>
+          <button class="btn sec sm" id="edBasicAdd">+ Tierra básica</button>
+          <button class="btn sec sm" id="edFill">Autocompletar con básicas</button>
+        </div>
+        <div class="cardlist" id="edList"></div>
+        <div class="row" style="margin-top:12px"><button class="btn" id="edSave">Guardar sobre</button><button class="btn sec" id="edClear">Vaciar</button><span class="mu xs" id="edHint"></span></div>
+      </div>
+      <div class="panel flat">
+        <h3>Cómo se construye un sobre</h3>
+        <p class="sm mu">Un sobre Jumpstart son 20 cartas pensadas para jugarse solas: unas 12 criaturas y hechizos de uno o dos colores, más 8 tierras. No necesita ser perfecto; la gracia es que sea temático y legible.</p>
+        <div class="metric"><span>Hechizos</span><b>12</b></div>
+        <div class="metric"><span>Tierras</span><b>8</b></div>
+        <div class="metric"><span>Colores</span><b>1-2</b></div>
+        <p class="sm mu" style="margin-top:10px">Desde aquí también puedes editar un sobre existente: pulsa «Editar» en la biblioteca.</p>
+        <div class="warn tip" style="margin-top:6px">El singleton se comprueba al combinar dos sobres. Dos cartas iguales en sobres distintos se resuelven automáticamente.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabp" id="t-virt">
+    <div class="panel">
+      <h3>Generador virtual</h3>
+      <p class="sm mu">Cada tanda son <b>5 sobres: uno por color</b>. Todos son monocolor y ninguna carta se repite entre los cinco, así el mazo final sale singleton. Se usan todas las cartas, sin filtros de legalidad ni baneos.</p>
+      <div class="grid g2" style="margin-top:16px">
+        <div>
+          <label>Un sobre por color</label>
+          <div class="row tight" id="vColors"></div>
+          <p class="mu xs" style="margin-top:10px">Blanco, azul, negro, rojo y verde. Siempre los cinco, en ese orden.</p>
+        </div>
+        <div>
+          <label>Tema</label>
+          <p class="sm" style="color:var(--tx)">Lo elige la app, distinto en cada sobre y adecuado a su color: vampiros en negro, goblins en rojo, elfos en verde…</p>
+          <p class="mu xs" style="margin-top:8px">El tema solo perfuma el sobre: 4 cartas del tema y el resto del mismo color, para que no sean doce criaturas idénticas.</p>
+        </div>
+      </div>
+      <div class="row" style="margin-top:18px"><button class="btn" id="vGo">Generar 5 sobres</button><span class="mu sm" id="vStatus"></span></div>
+    </div>
+  </div>
+
+  <div class="tabp" id="t-phys">
+    <div class="panel">
+      <h3>Generador con tu colección</h3>
+      <p class="sm mu">Pega tu colección, una carta por línea con su cantidad. Las tierras básicas se suponen ilimitadas.</p>
+      <div class="field" style="margin-top:12px"><label for="fColl">Colección</label><textarea id="fColl" placeholder="3 Lightning Bolt&#10;1 Sol Ring&#10;2 Llanura"></textarea></div>
+      <div class="row" style="margin-bottom:12px"><input type="file" id="fFile" accept=".txt,.csv" style="max-width:260px"><span class="mu xs" id="fInfo"></span></div>
+      <div class="row"><label for="fCount" style="margin:0">Sobres</label><select id="fCount" style="max-width:110px"><option>2</option><option selected>4</option><option>6</option></select><button class="btn" id="fGo">Generar con mi colección</button><span class="mu sm" id="fStatus"></span></div>
+    </div>
+  </div>
+
+  <div class="tabp" id="t-off">
+    <div class="grid g2" style="align-items:start">
+      <div class="panel">
+        <h3>Desde un set oficial</h3>
+        <p class="sm mu">Genera sobres temáticos con las cartas de un set Jumpstart real.</p>
+        <div class="field" style="margin-top:12px"><label for="oSet">Set</label><select id="oSet"><option value="">Cargando sets…</option></select></div>
+        <div class="row"><label for="oCount" style="margin:0">Sobres</label><select id="oCount" style="max-width:110px"><option>2</option><option selected>4</option><option>6</option></select><button class="btn" id="oGo">Generar</button><span class="mu sm" id="oStatus"></span></div>
+      </div>
+      <div class="panel">
+        <h3>Importar listas</h3>
+        <p class="sm mu">Una línea en blanco separa sobres. La primera línea puede ser el nombre; después, «1 Nombre de carta».</p>
+        <textarea id="oLists" placeholder="Vampiros&#10;1 Blood Artist&#10;1 Vampire of the Dire Moon&#10;&#10;Goblins&#10;1 Goblin Guide"></textarea>
+        <div class="row" style="margin-top:10px"><button class="btn" id="oImport">Importar sobres</button><span class="mu sm" id="oImportStatus"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="mazo">
+  <span class="eyebrow">Laboratorio</span>
+  <h1 style="font-size:clamp(30px,4.6vw,50px)">Mazo y análisis</h1>
+  <div class="panel" style="margin-top:16px">
+    <div class="grid g3" style="align-items:end">
+      <div><label for="deckA">Sobre A</label><select id="deckA"></select></div>
+      <div><label for="deckB">Sobre B</label><select id="deckB"></select></div>
+      <div class="row tight"><button class="btn" id="mix">Combinar y analizar</button><button class="btn sec" id="randomMix" title="Dos sobres al azar">🎲</button></div>
+    </div>
+    <p class="mu xs" style="margin-top:8px" id="mixStatus">Elige dos sobres distintos. Se combinan en 40 cartas singleton.</p>
+  </div>
+  <div id="deckOut"></div>
+</section>
+
+<section id="jugar">
+  <div class="row" style="justify-content:space-between;align-items:flex-end">
+    <div><span class="eyebrow">Mesa de juego</span><h1 style="font-size:clamp(30px,4.6vw,50px)">Jugar</h1></div>
+    <div class="row"><span class="badge" id="jDiffBadge">IA normal</span><button class="btn sec sm" id="jRestart">Reiniciar</button></div>
+  </div>
+  <div class="panel" style="margin-top:14px" id="jSetup">
+    <h3>Prepara la partida</h3>
+    <p class="sm mu">Tu mazo sale del análisis de la sección anterior. La IA jugará con otra pareja de sobres de tu biblioteca.</p>
+    <div class="grid g3" style="margin-top:12px;align-items:end">
+      <div><label for="jMine">Mi combinación</label><select id="jMine"></select></div>
+      <div><label for="jTheir">Rival</label><select id="jTheir"></select></div>
+      <div><label for="jDiff">Dificultad de la IA</label><select id="jDiff"><option value="easy">Fácil</option><option value="normal" selected>Normal</option><option value="hard">Difícil</option></select></div>
+    </div>
+    <div class="row" style="margin-top:14px"><button class="btn" id="jStart">Empezar partida</button><span class="mu sm" id="jSetupStatus"></span></div>
+  </div>
+
+  <div id="jTable" style="display:none">
+    <div class="grid" style="grid-template-columns:minmax(0,1fr) 320px;align-items:start;margin-top:14px">
+      <div class="panel" style="padding:14px">
+        <div class="row" style="justify-content:space-between;margin-bottom:10px">
+          <div class="life"><small>IA</small><span id="jLifeAi">20</span></div>
+          <div class="row tight">
+            <span class="badge" id="jTurn">Turno 1</span>
+            <span class="badge" id="jPhase">Principal 1</span>
+            <span class="badge" id="jAutoBadge" style="display:none">Piloto auto</span>
+          </div>
+          <div class="life"><small>Tú</small><span id="jLifeYou">20</span></div>
+        </div>
+        <label class="xs">Mano de la IA <span class="mu" id="jAiHand"></span></label>
+        <div class="bf" id="jAiBf" style="min-height:92px;margin-bottom:10px"><span class="empty">Campo de la IA</span></div>
+        <label class="xs">Tu campo</label>
+        <div class="bf" id="jYouBf"><span class="empty">Tu campo de batalla</span></div>
+        <label class="xs" style="margin-top:10px">Tu mano</label>
+        <div class="hand" id="jYouHand"></div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn" id="jNext">Siguiente fase</button>
+          <button class="btn sec" id="jAuto">Piloto: NO</button>
+          <button class="btn sec" id="jConcede">Conceder</button>
+        </div>
+        <div class="row" id="jBlockWrap" style="display:none;margin-top:10px">
+          <div class="panel flat" style="width:100%;padding:12px"><b class="sm">Declarar bloqueos</b><div id="jBlockList" style="margin-top:8px"></div><button class="btn sm" id="jBlockOk" style="margin-top:8px">Confirmar bloqueos</button></div>
+        </div>
+      </div>
+      <aside class="panel" style="padding:14px">
+        <h3 style="font-size:17px">Zona de mando</h3>
+        <div id="jCmd" class="mu sm">Cargando…</div>
+        <h3 style="font-size:17px;margin-top:14px">Registro</h3>
+        <div class="log" id="jLog"></div>
+        <div id="jHelp" class="mu xs" style="margin-top:8px"></div>
+      </aside>
+    </div>
+  </div>
+  <div class="overlay" id="jOver"><div class="dialog"><h2 id="jOverT">Fin</h2><p id="jOverP" class="mu"></p><div class="row"><button class="btn" id="jOverAgain">Otra partida</button><button class="btn sec" data-go="mazo">Volver al análisis</button></div></div></div>
+</section>
+
+<section id="imprimir">
+  <span class="eyebrow">Para la mesa</span>
+  <h1 style="font-size:clamp(30px,4.6vw,50px)">Imprimir</h1>
+  <div class="grid g2" style="align-items:start;margin-top:16px">
+    <div class="panel">
+      <h3>Lista del mazo</h3>
+      <p class="sm mu">Una hoja limpia con el capitán, la lista agrupada y los datos del mazo. Perfecta para llevar a la tienda.</p>
+      <div id="pListInfo" class="sm" style="margin:10px 0">Combina dos sobres en «Mazo y análisis» para generar la lista.</div>
+      <button class="btn" id="pList">Imprimir lista</button>
+    </div>
+    <div class="panel">
+      <h3>Proxies</h3>
+      <p class="sm mu">Nueve cartas por hoja a tamaño real (63 × 88 mm), con guías de corte y reversos opcionales.</p>
+      <div class="grid g2" style="margin:12px 0 4px">
+        <div><label for="pPaper">Papel</label><select id="pPaper"><option value="a4">A4 · 210 × 297 mm</option><option value="letter">Carta · 215,9 × 279,4 mm</option></select></div>
+        <div><label for="pScope">Qué imprimir</label><select id="pScope"><option value="deck">El mazo (30 cartas + capitán)</option><option value="packs">Los dos sobres completos (40)</option></select></div>
+      </div>
+      <label class="row" style="text-transform:none;letter-spacing:0;font:500 14px inherit;color:var(--tx);gap:8px;margin:8px 0"><input type="checkbox" id="pLands" checked style="width:auto"> Incluir tierras</label>
+      <label class="row" style="text-transform:none;letter-spacing:0;font:500 14px inherit;color:var(--tx);gap:8px;margin:8px 0"><input type="checkbox" id="pDuplex" checked style="width:auto"> Doble cara: hoja de reversos</label>
+      <label class="row" style="text-transform:none;letter-spacing:0;font:500 14px inherit;color:var(--tx);gap:8px;margin:8px 0"><input type="checkbox" id="pMarks" checked style="width:auto"> Marcas de corte</label>
+      <label class="row" style="text-transform:none;letter-spacing:0;font:500 14px inherit;color:var(--tx);gap:8px;margin:8px 0"><input type="checkbox" id="pCover" checked style="width:auto"> Portada del mazo</label>
+      <div class="row" style="margin-top:12px"><button class="btn" id="pProxy">Imprimir proxies</button><span class="mu xs" id="pProxyInfo"></span></div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="row" style="justify-content:space-between"><h3>Vista previa</h3><span class="mu xs" id="pPreviewInfo"></span></div>
+    <div class="proxygrid" id="pPreview" style="margin-top:10px"></div>
+  </div>
+</section>
+</main>
+<footer><span>Captain Jumpstart · formato no oficial, hecho por jugadores. Cartas y arte: Scryfall / Wizards of the Coast.</span><span>Datos en tu navegador · sin cuentas</span></footer>
+<img id="cardZoom" alt="" aria-hidden="true"><div class="toast" id="toast"></div>
+<dialog id="pickDlg"><h3 id="pickT">Elegir carta</h3><p class="mu sm" id="pickP"></p><input id="pickQ" placeholder="Buscar…" style="margin:8px 0"><div class="sel-search" id="pickList"></div><div class="row" style="justify-content:flex-end"><button class="btn sec sm" id="pickCancel">Cancelar</button></div></dialog>
+<dialog id="handDlg"><h3>Mano inicial</h3><p class="mu sm" id="handP"></p><div class="hand" id="handCards" style="margin:12px 0"></div><div class="row"><button class="btn sm" id="handAgain">Otra mano</button><button class="btn sec sm" id="handKeep">Quedármela</button></div></dialog>
+<script>
+/* ============================================================
+   Captain Jumpstart · núcleo: datos, Scryfall, sobres y análisis
+============================================================ */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const API='https://api.scryfall.com';
+const CN={W:'Blanco',U:'Azul',B:'Negro',R:'Rojo',G:'Verde'};
+const BASIC={W:'Plains',U:'Island',B:'Swamp',R:'Mountain',G:'Forest'};
+const BASIC_NAMES=new Set(['Plains','Island','Swamp','Mountain','Forest','Wastes','Snow-Covered Plains','Snow-Covered Island','Snow-Covered Swamp','Snow-Covered Mountain','Snow-Covered Forest']);
+const CH={W:'#f0e5b4',U:'#6db2ee',B:'#a690c4',R:'#ee7e5e',G:'#6fcb7c',C:'#b9c4cf'};
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('No se pudo guardar: almacenamiento lleno.')}}
+};
+const state={packs:[],cur:{id:null,name:'',cards:[]},deck:null,game:null,homeArt:0};
+
+/* ---------- utilidades ---------- */
+function toast(t,ms){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>e.classList.remove('on'),ms||3400)}
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* zoom de carta al pasar el ratón por cualquier nombre */
+function hideZoom(){const z=$('#cardZoom');if(z)z.classList.remove('on')}
+function showZoom(name,x,y){
+  const z=$('#cardZoom');if(!z)return;
+  const c=cardOf(name)||basicCard(name);
+  if(!c||!c.img){hideZoom();return}
+  if(z.getAttribute('src')!==c.img)z.src=c.img;
+  z.classList.add('on');
+  const w=250,h=Math.round(250/0.716);
+  let left=x+20;if(left+w>innerWidth-8)left=x-w-20;
+  let top=y-h/2;top=Math.max(8,Math.min(innerHeight-h-8,top));
+  z.style.left=left+'px';z.style.top=top+'px';
+}
+document.addEventListener('mouseover',e=>{
+  const t=e.target.closest('[data-nm]');
+  if(!t){hideZoom();return}
+  showZoom(t.dataset.nm,e.clientX,e.clientY);
+});
+document.addEventListener('mousemove',e=>{
+  const z=$('#cardZoom');if(!z||!z.classList.contains('on'))return;
+  const t=e.target.closest('[data-nm]');
+  if(t)showZoom(t.dataset.nm,e.clientX,e.clientY);
+});
+document.addEventListener('mouseout',e=>{if(!e.relatedTarget)hideZoom()});
+document.addEventListener('click',()=>hideZoom(),true);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const isBasicName=n=>BASIC_NAMES.has(n);
+const basicColor=n=>Object.keys(BASIC).find(k=>BASIC[k]===n)||null;
+const cardOf=n=>CARD[n]||null;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const pip=c=>c?(c==='C'?'<span class="pip pC">C</span>':`<span class="pip p${c}">${c}</span>`):'';
+function manaHtml(cost){
+  return String(cost||'').replace(/\{([^}]+)\}/g,(m,x)=>'WUBRG'.includes(x)?`<span class="pip p${x}">${x}</span>`:`<span class="badge" style="padding:0 4px;font-size:10px">${esc(x)}</span>`);
+}
+const COLORS_OF=c=>{
+  if(!c)return [];
+  if(c.colors&&c.colors.length)return c.colors;
+  if(c.ci&&c.ci.length)return c.ci;
+  return [];
+};
+
+/* ---------- Scryfall ---------- */
+const CARD={};
+let _cardStore=store.get('cj2_cards',{});
+Object.keys(_cardStore).forEach(k=>{CARD[k]=_cardStore[k]});
+let _saveCardsT=null;
+function persistCards(){
+  clearTimeout(_saveCardsT);
+  _saveCardsT=setTimeout(()=>{
+    const keys=Object.keys(CARD);
+    const obj={};
+    keys.slice(-1400).forEach(k=>{obj[k]=CARD[k]});
+    store.set('cj2_cards',obj);
+  },400);
+}
+function normCard(c){
+  const faces=c.card_faces||[];
+  const f=faces[0]||{};
+  const im=(c.image_uris||f.image_uris||{});
+  const o=[c.oracle_text||f.oracle_text||''];
+  if(faces[1])o.push(faces[1].oracle_text||'');
+  const type=c.type_line||f.type_line||'';
+  const card={
+    name:c.name,type,
+    oracle:o.filter(Boolean).join('\n'),
+    cmc:c.cmc||0,mana:c.mana_cost||f.mana_cost||'',
+    colors:(c.colors||f.colors||[]).slice(),
+    ci:(c.color_identity||[]).slice(),
+    prod:(c.produced_mana||[]).slice(),
+    pow:c.power!=null?parseInt(c.power,10):(f.power!=null?parseInt(f.power,10):null),
+    tou:c.toughness!=null?parseInt(c.toughness,10):(f.toughness!=null?parseInt(f.toughness,10):null),
+    rarity:c.rarity||'common',
+    kw:(c.keywords||[]).map(k=>String(k).toLowerCase()),
+    img:im.normal||im.large||'', sm:im.small||im.normal||'',
+    legendary:/Legendary/i.test(type),
+    land:/Land/i.test(type), creature:/Creature/i.test(type),
+    basic:/Basic/i.test(type)||BASIC_NAMES.has(c.name),
+    set:c.set||'', price:c.prices&&c.prices.usd?parseFloat(c.prices.usd):null
+  };
+  if(c.name.includes(' // '))CARD[c.name.split(' // ')[0]]=card;
+  CARD[card.name]=card;
+  persistCards();
+  return card;
+}
+async function api(url,opt){
+  const r=await fetch(url,opt);
+  if(!r.ok){
+    let msg='HTTP '+r.status;
+    try{const j=await r.json();if(j&&j.details)msg=j.details}catch(e){}
+    throw new Error(msg);
+  }
+  return r.json();
+}
+async function resolveNames(names){
+  const need=[...new Set(names)].filter(n=>n&&!CARD[n]);
+  const miss=[];
+  for(let i=0;i<need.length;i+=75){
+    const chunk=need.slice(i,i+75);
+    try{
+      const d=await api(API+'/cards/collection',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identifiers:chunk.map(name=>({name}))})});
+      (d.data||[]).forEach(normCard);
+      (d.not_found||[]).forEach(x=>miss.push(x.name||''));
+    }catch(e){
+      for(const n of chunk){
+        if(CARD[n])continue;
+        try{normCard(await api(API+'/cards/named?exact='+encodeURIComponent(n)))}catch(err){miss.push(n)}
+      }
+    }
+    await sleep(80);
+  }
+  return names.filter(n=>!CARD[n]||miss.includes(n));
+}
+async function searchCards(q,pages){
+  const out=[];let url=API+'/cards/search?unique=cards&order=edhrec&q='+encodeURIComponent(q);
+  for(let p=0;p<(pages||2)&&url;p++){
+    let d;
+    try{d=await api(url)}catch(e){break}
+    (d.data||[]).forEach(c=>{
+      if(c.layout==='token'||c.layout==='emblem')return;
+      const card=normCard(c);
+      if(card.img)out.push(card);
+    });
+    url=d.has_more?d.next_page:null;
+    await sleep(70);
+  }
+  return out;
+}
+async function autocomplete(q){
+  try{
+    const d=await api(API+'/cards/autocomplete?q='+encodeURIComponent(q));
+    $('#acList').innerHTML=(d.data||[]).slice(0,20).map(n=>`<option value="${esc(n)}">`).join('');
+  }catch(e){}
+}
+/* básicas: se resuelven una vez para tener arte */
+const BASIC_CACHE={};
+async function ensureBasics(){
+  for(const k of 'WUBRG'){
+    const n=BASIC[k];
+    if(BASIC_CACHE[k])continue;
+    try{
+      const c=normCard(await api(API+'/cards/named?exact='+encodeURIComponent(n)));
+      BASIC_CACHE[k]={...c,basic:true,land:true,colors:[],ci:[k],prod:[k],type:'Basic Land — '+n};
+      await sleep(60);
+    }catch(e){BASIC_CACHE[k]={name:n,type:'Basic Land',basic:true,land:true,colors:[],ci:[k],prod:[k],img:'',sm:'',cmc:0,mana:'',oracle:'',pow:null,tou:null,rarity:'common',kw:[],legendary:false,set:''}}
+  }
+}
+function basicCard(name){
+  const col=basicColor(name);
+  if(col&&BASIC_CACHE[col])return BASIC_CACHE[col];
+  return {name,type:'Basic Land',basic:true,land:true,colors:[],ci:col?[col]:[],prod:col?[col]:[],img:'',sm:'',cmc:0,mana:'',oracle:'',pow:null,tou:null,rarity:'common',kw:[],legendary:false,set:''};
+}
+
+/* ---------- navegación ---------- */
+function go(id){
+  hideZoom();
+  $$('section').forEach(s=>s.classList.toggle('on',s.id===id));
+  $$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===id));
+  const h='#'+id;
+  if(location.hash!==h)history.replaceState(null,'',h);
+  if(id==='sobres')renderPacks();
+  if(id==='mazo'){fillDeckSelects();renderDeck()}
+  if(id==='jugar')fillGameSelects();
+  if(id==='imprimir')renderPrintInfo();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return}
+  const tg=e.target.closest('[data-tab-go]');if(tg){go('sobres');setTab(tg.dataset.tabGo);return}
+});
+addEventListener('hashchange',()=>go(location.hash.slice(1)||'inicio'));
+
+/* ---------- pestañas de sobres ---------- */
+function setTab(t){
+  $$('#packTabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
+  $$('.tabp').forEach(p=>p.classList.toggle('on',p.id==='t-'+t));
+}
+$('#packTabs').addEventListener('click',e=>{const b=e.target.closest('button[data-tab]');if(b)setTab(b.dataset.tab)});
+
+/* ---------- sobres ---------- */
+function loadPacks(){
+  const p=store.get('cj2_packs',[]);
+  state.packs=Array.isArray(p)?p.filter(x=>x&&x.cards&&x.cards.length).map(x=>({id:x.id||Date.now()+Math.random(),name:x.name||'Sobre',cards:x.cards.slice(),theme:x.theme||'',source:x.source||'manual'})):[];
+}
+function savePacks(){store.set('cj2_packs',state.packs.map(p=>({id:p.id,name:p.name,cards:p.cards,theme:p.theme,source:p.source})))}
+function packColors(p){
+  const cnt={};
+  p.cards.forEach(n=>{const c=cardOf(n);if(!c||c.land)return;COLORS_OF(c).forEach(k=>{if(CN[k])cnt[k]=(cnt[k]||0)+1})});
+  return Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]).slice(0,2);
+}
+function packArt(p){
+  const cs=p.cards.map(cardOf).filter(c=>c&&c.img&&!c.land);
+  if(!cs.length)return '';
+  cs.sort((a,b)=>(b.legendary?2:0)+(b.rarity==='mythic'?1.5:b.rarity==='rare'?1:0)+(b.pow||0)*.06-((a.legendary?2:0)+(a.rarity==='mythic'?1.5:a.rarity==='rare'?1:0)+(a.pow||0)*.06));
+  return cs[0].img;
+}
+function renderPacks(){
+  const grid=$('#packGrid');
+  $('#packCount').textContent=state.packs.length+' sobre'+(state.packs.length===1?'':'s');
+  $('#packEmpty').style.display=state.packs.length?'none':'block';
+  grid.innerHTML=state.packs.map(p=>{
+    const cols=packColors(p),art=packArt(p);
+    return `<article class="pack" data-pack="${p.id}">
+      <div class="art">${art?`<img src="${esc(art)}" alt="" loading="lazy">`:''}<span class="nm">${esc(p.name)}</span></div>
+      <div class="bd">
+        <div class="meta">${cols.length?cols.map(k=>pip(k)).join(''):'<span class="mu">Sin color</span>'}
+          <span>${p.cards.length}/20</span><span class="badge">${esc(p.source)}</span></div>
+        <div class="acts">
+          <button data-act="edit" data-id="${p.id}">Editar</button>
+          <button data-act="A" data-id="${p.id}">Mazo A</button>
+          <button data-act="B" data-id="${p.id}">Mazo B</button>
+          <button data-act="del" data-id="${p.id}">Borrar</button>
+        </div>
+      </div></article>`;
+  }).join('');
+}
+$('#packGrid').addEventListener('click',async e=>{
+  const b=e.target.closest('button[data-act]');if(!b)return;
+  const p=state.packs.find(x=>String(x.id)===String(b.dataset.id));if(!p)return;
+  if(b.dataset.act==='del'){
+    if(!confirm('¿Borrar «'+p.name+'»?'))return;
+    state.packs=state.packs.filter(x=>x!==p);savePacks();renderPacks();fillDeckSelects();toast('Sobre borrado');
+  }else if(b.dataset.act==='edit'){
+    state.cur={id:p.id,name:p.name,cards:p.cards.slice()};$('#edName').value=p.name;renderEditor();setTab('editor');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }else{
+    const sel=b.dataset.act==='A'?$('#deckA'):$('#deckB');
+    fillDeckSelects();sel.value=String(p.id);
+    toast(p.name+' → sobre '+b.dataset.act+'. Abriendo el laboratorio.');
+    go('mazo');
+  }
+});
+
+/* ---------- editor ---------- */
+function renderEditor(){
+  $('#edTitle').textContent=state.cur.id?'Editando sobre':'Nuevo sobre';
+  $('#edCount').textContent=state.cur.cards.length+'/20';
+  $('#edHint').textContent=state.cur.cards.length===20?'Sobre completo ✓':'Faltan '+(20-state.cur.cards.length)+' cartas';
+  $('#edList').innerHTML=state.cur.cards.length?state.cur.cards.map((n,i)=>{
+    const c=cardOf(n);
+    return `<div class="cline" data-card="${esc(n)}" data-nm="${esc(n)}"><span class="q">1×</span><span class="n">${esc(n)}</span><span class="m">${c?manaHtml(c.mana):''}</span><button class="sw" data-rm="${i}" title="Quitar">✕</button></div>`;
+  }).join(''):'<p class="mu sm">Busca cartas arriba o añade tierras básicas.</p>';
+}
+$('#edList').addEventListener('click',e=>{
+  const b=e.target.closest('[data-rm]');if(!b)return;
+  state.cur.cards.splice(+b.dataset.rm,1);renderEditor();
+});
+async function addCardByName(name){
+  name=String(name||'').trim();if(!name)return;
+  if(state.cur.cards.length>=20){toast('El sobre ya tiene 20 cartas.');return}
+  if(!cardOf(name)){
+    $('#edHint').innerHTML='<span class="spin"></span> Buscando…';
+    const miss=await resolveNames([name]);
+    if(miss.length||!cardOf(name)){toast('No encuentro «'+name+'».');renderEditor();return}
+  }
+  const c=cardOf(name);
+  if(!c.basic&&state.cur.cards.includes(c.name)){toast('Singleton: esa carta ya está en el sobre.');return}
+  state.cur.cards.push(c.name);renderEditor();
+}
+$('#edAdd').onclick=()=>{const v=$('#edSearch').value;addCardByName(v);$('#edSearch').value=''};
+$('#edSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#edAdd').click()}});
+let _acT=null;
+$('#edSearch').addEventListener('input',e=>{clearTimeout(_acT);const q=e.target.value.trim();if(q.length<3)return;_acT=setTimeout(()=>autocomplete(q),220)});
+$('#edBasicAdd').onclick=()=>addCardByName($('#edBasic').value);
+$('#edFill').onclick=()=>{
+  const left=20-state.cur.cards.length;if(left<=0)return;
+  const cols=state.cur.cards.map(cardOf).filter(c=>c&&!c.land).flatMap(COLORS_OF);
+  const col=cols.sort((a,b)=>cols.filter(x=>x===b).length-cols.filter(x=>x===a).length)[0]||'G';
+  for(let i=0;i<left;i++)state.cur.cards.push(BASIC[col]||'Forest');
+  renderEditor();toast('Añadidas '+left+' tierras básicas.');
+};
+$('#edClear').onclick=()=>{state.cur={id:null,name:'',cards:[]};$('#edName').value='';renderEditor()};
+$('#edSave').onclick=()=>{
+  const name=$('#edName').value.trim()||('Sobre '+(state.packs.length+1));
+  if(!state.cur.cards.length){toast('Añade alguna carta antes de guardar.');return}
+  if(state.cur.id){
+    const p=state.packs.find(x=>x.id===state.cur.id);
+    if(p){p.name=name;p.cards=state.cur.cards.slice();p.source=p.source||'manual'}
+  }else{
+    state.packs.push({id:Date.now()+''+Math.floor(Math.random()*99),name,cards:state.cur.cards.slice(),theme:'',source:'manual'});
+  }
+  const total=state.cur.cards.length;
+  savePacks();
+  state.cur={id:null,name:'',cards:[]};$('#edName').value='';renderEditor();renderPacks();
+  toast(total===20?'Sobre guardado.':'Sobre guardado con '+total+' cartas.');
+  setTab('packs');
+};
+
+/* ---------- generador virtual: 5 sobres, uno por color ---------- */
+$('#vColors').innerHTML='WUBRG'.split('').map(k=>`<span class="col-dot p${k} on" style="background:${CH[k]};opacity:1;cursor:default" title="${CN[k]}">${k}</span>`).join('');
+const THEMES={
+  W:[{n:'Soldados',q:'t:soldier'},{n:'Ángeles',q:'t:angel'},{n:'Gatos',q:'t:cat'},{n:'Clérigos',q:'t:cleric'},{n:'Guerreros',q:'t:warrior'},{n:'Equipo',q:'t:equipment'}],
+  U:[{n:'Hechiceros',q:'t:wizard'},{n:'Merfolk',q:'t:merfolk'},{n:'Ilusiones',q:'t:illusion'},{n:'Artefactos',q:'t:artifact'},{n:'Aves',q:'t:bird'},{n:'Sirenas',q:'t:siren'}],
+  B:[{n:'Vampiros',q:'t:vampire'},{n:'Zombis',q:'t:zombie'},{n:'Demonios',q:'t:demon'},{n:'Ratas',q:'t:rat'},{n:'Sacrificio',q:'o:sacrifice'},{n:'Peste',q:'o:"-1/-1"'}],
+  R:[{n:'Goblins',q:'t:goblin'},{n:'Dragones',q:'t:dragon'},{n:'Elementales',q:'t:elemental'},{n:'Bárbaros',q:'t:barbarian'},{n:'Daño directo',q:'o:"damage to any target"'}],
+  G:[{n:'Elfos',q:'t:elf'},{n:'Bestias',q:'t:beast'},{n:'Lobos',q:'t:wolf'},{n:'Plantas',q:'t:plant'},{n:'Gusanos',q:'t:wurm'},{n:'Contadores',q:'o:"+1/+1 counter"'}]
+};
+function pickTheme(color){
+  const list=THEMES[color]||[{n:'Criaturas',q:''}];
+  state.lastThemes=state.lastThemes||{};
+  const prev=state.lastThemes[color];
+  let pool=list.filter(t=>t.n!==prev);
+  if(!pool.length)pool=list;
+  const t=pool[Math.floor(Math.random()*pool.length)];
+  state.lastThemes[color]=t.n;
+  return t;
+}
+/* 12 hechizos: hasta 4 del tema (para que sea temático, no monotemático) y el resto del color */
+function buildMonoPack(color,base,themed,theme,idx,used){
+  const take=[];
+  const push=c=>{
+    if(!c||used.has(c.name)||take.some(x=>x.name===c.name))return false;
+    take.push(c);used.add(c.name);return true;
+  };
+  const th=(themed||[]).filter(c=>!used.has(c.name));
+  let themeCount=0;
+  for(const c of th){if(themeCount>=4)break;if(c.creature&&push(c))themeCount++}
+  for(const c of th){if(themeCount>=4)break;if(push(c))themeCount++}
+  for(const c of base){if(take.filter(x=>x.creature).length>=7)break;if(c.creature)push(c)}
+  for(const c of base){if(take.length>=12)break;if(!c.creature)push(c)}
+  for(const c of base){if(take.length>=12)break;push(c)}
+  const cards=take.slice(0,12).map(c=>c.name);
+  for(let i=0;i<8;i++)cards.push(BASIC[color]);
+  return {id:Date.now()+''+idx,name:CN[color]+' · '+theme.n+' · #'+(idx+1),cards,theme:theme.n,source:'virtual'};
+}
+function packTitle(cols,theme,source,idx){
+  const base=theme?theme.replace(/^\s*(t|o|ci|id):/i,'').replace(/["']/g,'').trim():'';
+  const label=base?(base[0].toUpperCase()+base.slice(1)):cols.map(k=>CN[k]).join('/');
+  return (label||'Sobre')+' #'+(idx+1);
+}
+function buildPackFrom(pool,cols,theme,idx,used){
+  const taken=[];
+  const free=pool.filter(c=>!used.has(c.name));
+  const creatures=free.filter(c=>c.creature), others=free.filter(c=>!c.creature);
+  for(const c of creatures){if(taken.length>=8)break;if(taken.includes(c))continue;taken.push(c);used.add(c.name)}
+  for(const c of others){if(taken.length>=12)break;if(taken.includes(c))continue;taken.push(c);used.add(c.name)}
+  for(const c of free){if(taken.length>=12)break;if(!taken.includes(c)){taken.push(c);used.add(c.name)}}
+  const cards=taken.map(c=>c.name);
+  const primary=cols[0]||'G', secondary=cols[1];
+  for(let i=0;i<8;i++){
+    const col=secondary&&i>=5?secondary:primary;
+    cards.push(BASIC[col]||BASIC.G);
+  }
+  return {id:Date.now()+''+idx,name:packTitle(cols,theme,'virtual',idx),cards,theme:theme||'',source:'virtual'};
+}
+async function genVirtual(){
+  const btn=$('#vGo'),st=$('#vStatus');btn.disabled=true;
+  const out=[],used=new Set();
+  try{
+    const colors='WUBRG'.split('');
+    for(let i=0;i<colors.length;i++){
+      const color=colors[i],theme=pickTheme(color);
+      st.innerHTML=`<span class="spin"></span> ${CN[color]} · ${theme.n}: buscando cartas…`;
+      const themed=theme.q?await searchCards(`game:paper -t:land id<=${color} ${theme.q}`,1):[];
+      const base=await searchCards(`game:paper -t:land id<=${color} -is:digital`,2);
+      if(!base.length)throw new Error('Scryfall no devolvió cartas para '+CN[color]);
+      out.push(buildMonoPack(color,base,themed,theme,out.length,used));
+    }
+    state.packs.push(...out);savePacks();renderPacks();fillDeckSelects();
+    st.textContent='5 sobres · '+out.map(p=>p.name).join(' | ');
+    toast('5 sobres listos, uno por color.');
+    setTab('packs');
+  }catch(e){
+    console.error(e);st.textContent='';toast('Error al generar: '+(e.message||e));
+  }finally{btn.disabled=false}
+}
+$('#vGo').onclick=genVirtual;
+
+/* ---------- generador físico ---------- */
+function parseCollection(txt){
+  const out={};
+  String(txt||'').split(/\r?\n/).forEach(line=>{
+    let l=line.replace(/\([^)]*\)/g,'').replace(/"|“|”/g,'').trim();
+    if(!l)return;
+    const m=l.match(/^(\d+)\s*[x×]?[\s,]+(.+)$/i);
+    const qty=m?+m[1]:1;
+    let name=(m?m[2]:l).replace(/\s+\d+[a-z]?$/,'').trim();
+    if(!name)return;
+    if(!BASIC_NAMES.has(name))out[name]=(out[name]||0)+qty;
+  });
+  return out;
+}
+function collInfo(){
+  const c=parseCollection($('#fColl').value);
+  $('#fInfo').textContent=Object.keys(c).length+' cartas distintas · '+Object.values(c).reduce((s,v)=>s+v,0)+' copias';
+}
+$('#fColl').addEventListener('input',()=>{collInfo();store.set('cj2_coll',$('#fColl').value)});
+$('#fFile').addEventListener('change',async e=>{
+  const f=e.target.files[0];if(!f)return;
+  $('#fColl').value=await f.text();collInfo();
+});
+async function genPhysical(){
+  const coll=parseCollection($('#fColl').value);
+  const names=Object.keys(coll);
+  if(!names.length){toast('Pega tu colección primero.');return}
+  const btn=$('#fGo'),st=$('#fStatus');btn.disabled=true;
+  try{
+    st.innerHTML='<span class="spin"></span> Resolviendo '+names.length+' cartas…';
+    const miss=await resolveNames(names);
+    if(miss.length)st.textContent='No encontradas: '+miss.slice(0,5).join(', ')+(miss.length>5?'…':'');
+    const pool=names.map(cardOf).filter(c=>c&&!c.land&&c.img);
+    if(pool.length<14)throw new Error('necesitas al menos 14 hechizos distintos');
+    const byColor={};
+    'WUBRG'.split('').forEach(k=>byColor[k]=[]);
+    pool.forEach(c=>{const ci=COLORS_OF(c);if(ci.length===1&&byColor[ci[0]])byColor[ci[0]].push(c)});
+    const usable='WUBRG'.split('').filter(k=>byColor[k].length>=8);
+    if(!usable.length)throw new Error('ningún color tiene 8 cartas distintas');
+    const n=+$('#fCount').value||2,used=new Set(),out=[];
+    for(let i=0;i<n;i++){
+      const a=usable[i%usable.length],b=usable.length>1?usable[(i+1)%usable.length]:null;
+      const cols=b?[a,b]:[a];
+      const mix=shuffle(byColor[a].concat(b?byColor[b]:[]));
+      out.push(buildPackFrom(mix,cols,'',out.length,used));
+    }
+    state.packs.push(...out);savePacks();renderPacks();fillDeckSelects();
+    st.textContent=out.length+' sobres con tu colección.';
+    toast(out.length+' sobres listos.');
+    setTab('packs');
+  }catch(e){console.error(e);toast('No se pudo generar: '+(e.message||e));st.textContent=''}
+  finally{btn.disabled=false}
+}
+$('#fGo').onclick=genPhysical;
+
+/* ---------- sets oficiales ---------- */
+async function loadSets(){
+  try{
+    const d=await api(API+'/sets');
+    const js=(d.data||[]).filter(s=>/jumpstart|jump start|j22|jmp/i.test(s.name+' '+s.code));
+    $('#oSet').innerHTML=(js.length?js:[{code:'jmp',name:'Jumpstart (JMP)'}]).map(s=>`<option value="${esc(s.code)}">${esc(s.name)} (${esc(s.code)})</option>`).join('');
+  }catch(e){
+    $('#oSet').innerHTML='<option value="jmp">Jumpstart (jmp)</option><option value="j22">Jumpstart 2022 (j22)</option><option value="j25">Jumpstart 2025 (j25)</option>';
+  }
+}
+async function genOfficial(){
+  const set=$('#oSet').value;if(!set){toast('Elige un set.');return}
+  const n=+$('#oCount').value||2,btn=$('#oGo'),st=$('#oStatus');
+  btn.disabled=true;
+  try{
+    st.innerHTML='<span class="spin"></span> Descargando '+set.toUpperCase()+'…';
+    const pool=await searchCards(`e:${set} game:paper -t:land`,3);
+    if(!pool.length)throw new Error('ese set no tiene cartas disponibles');
+    const byColor={};
+    'WUBRG'.split('').forEach(k=>byColor[k]=[]);
+    pool.forEach(c=>{
+      const ci=COLORS_OF(c);
+      if(ci.length===1&&byColor[ci[0]])byColor[ci[0]].push(c);
+      else if(ci.length===2){ci.forEach(k=>{if(byColor[k])byColor[k].push(c)})}
+    });
+    const themes=['Vampiros','Goblins','Elfos','Dragones','Zombis','Soldados','Hechiceros','Bestias'];
+    const used=new Set(),out=[];
+    for(let i=0;i<n;i++){
+      const a='WUBRG'[i%5],b='WUBRG'[(i+1)%5];
+      const cols=i%2?[a,b]:[a];
+      const mix=shuffle(byColor[a].concat(byColor[b]));
+      const p=buildPackFrom(mix,cols,'',out.length,used);
+      p.name=(themes[i%themes.length])+' · '+set.toUpperCase();
+      p.source='oficial';
+      out.push(p);
+    }
+    state.packs.push(...out);savePacks();renderPacks();fillDeckSelects();
+    st.textContent=out.length+' sobres desde '+set.toUpperCase();toast('Sobres oficiales generados.');setTab('packs');
+  }catch(e){console.error(e);toast('No se pudo generar: '+(e.message||e));st.textContent=''}
+  finally{btn.disabled=false}
+}
+$('#oGo').onclick=genOfficial;
+function parseLists(txt){
+  return String(txt||'').split(/\r?\n\s*\r?\n/).map((block,i)=>{
+    const lines=block.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+    if(!lines.length)return null;
+    let name='Sobre importado '+(i+1);
+    if(!/^\d/.test(lines[0]))name=lines.shift();
+    const cards=[];
+    lines.forEach(l=>{
+      const m=l.match(/^(\d+)\s*[x×]?\s+(.+?)(\s*\([^)]*\)\s*\d*)?$/);
+      if(m){for(let k=0;k<+m[1];k++)cards.push(m[2].trim())}
+      else cards.push(l);
+    });
+    return cards.length?{id:Date.now()+''+i,name,cards:cards.slice(0,20),theme:'',source:'importado'}:null;
+  }).filter(Boolean);
+}
+$('#oImport').onclick=async()=>{
+  const packs=parseLists($('#oLists').value);
+  if(!packs.length){toast('No encuentro sobres en ese texto.');return}
+  const st=$('#oImportStatus');st.innerHTML='<span class="spin"></span> Resolviendo cartas…';
+  const miss=await resolveNames(packs.flatMap(p=>p.cards));
+  state.packs.push(...packs);savePacks();renderPacks();fillDeckSelects();
+  st.textContent=miss.length?('Faltan '+miss.length+' cartas: '+miss.slice(0,3).join(', ')+'…'):'Importados '+packs.length+' sobres.';
+  toast(packs.length+' sobres importados.');setTab('packs');
+};
+
+/* ---------- fusión y análisis ---------- */
+function deckColors(cards){
+  const cnt={};
+  cards.forEach(n=>{const c=cardOf(n);if(!c||c.land)return;COLORS_OF(c).forEach(k=>{if(CN[k])cnt[k]=(cnt[k]||0)+1})});
+  return Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);
+}
+function combinePacks(a,b){
+  const all=[...a.cards,...b.cards];
+  const seen=new Set(),dup=[],kept=[];
+  all.forEach(n=>{
+    if(isBasicName(n)){kept.push(n);return}
+    if(seen.has(n)){dup.push(n);return}
+    seen.add(n);kept.push(n);
+  });
+  const cols=deckColors(kept);
+  const fill=cols[0]||'G';
+  const replaced=dup.map(n=>{const withBasic=BASIC[fill];kept.push(withBasic);return {name:n,with:withBasic}});
+  while(kept.length<40)kept.push(BASIC[fill]);
+  while(kept.length>40){
+    const i=kept.map((n,ix)=>({n,ix})).reverse().find(x=>isBasicName(x.n));
+    if(!i)break;
+    kept.splice(i.ix,1);
+  }
+  /* base de maná: si un color tiene símbolos pero pocas fuentes, se convierte
+     una básica sobrante de otro color (así el mazo no sale injugable) */
+  const pips={W:0,U:0,B:0,R:0,G:0},src={W:0,U:0,B:0,R:0,G:0};
+  kept.forEach(n=>{const c=cardOf(n);if(!c||c.land)return;(c.mana||'').replace(/\{([WUBRG])\}/g,(m,k)=>{pips[k]++;return m})});
+  kept.forEach(n=>{
+    if(!isBasicName(n))return;
+    const col=basicColor(n);if(col)src[col]++;
+  });
+  Object.keys(pips).filter(k=>pips[k]>0&&src[k]<4).forEach(k=>{
+    const donor=Object.keys(src).filter(c=>src[c]>4&&pips[c]<pips[k]).sort((a,b)=>src[b]-src[a])[0];
+    if(!donor)return;
+    const ix=kept.map((n,i)=>({n,i})).reverse().find(x=>basicColor(x.n)===donor);
+    if(!ix)return;
+    kept[ix.i]=BASIC[k];src[donor]--;src[k]++;
+  });
+  const creatures=[...new Set(kept.map(cardOf).filter(c=>c&&c.creature&&!c.land).map(c=>c.name))];
+  const cap=creatures.slice().sort((x,y)=>{
+    const A=cardOf(x),B=cardOf(y);
+    const sc=c=>(c.legendary?8:0)+Math.max(0,6-c.cmc)*2+(c.tou||0)*.4+(c.pow||0)*.3;
+    return sc(B)-sc(A);
+  })[0]||null;
+  return {
+    id:Date.now(),a:a.id,b:b.id,aName:a.name,bName:b.name,
+    cards:kept,captain:cap,replaced,colors:cols,
+    side:[...new Set(state.packs.flatMap(p=>p.cards).filter(n=>!kept.includes(n)&&!isBasicName(n)))],
+    created:Date.now()
+  };
+}
+function analyzeDeck(deck){
+  const cards=deck.cards.map(n=>cardOf(n)||basicCard(n));
+  const lands=cards.filter(c=>c.land);
+  const spells=cards.filter(c=>!c.land);
+  const curve=[0,0,0,0,0,0,0,0];
+  spells.forEach(c=>curve[Math.min(7,Math.max(0,Math.floor(c.cmc||0)))]++);
+  const avg=spells.length?spells.reduce((s,c)=>s+(c.cmc||0),0)/spells.length:0;
+  const roles={removal:0,draw:0,ramp:0,counters:0,tokens:0};
+  const removal=/\b(destroy|exile|deals? \d+ damage|counter target|-X\/-X|fights?)\b/i;
+  const draw=/draw (a|two|three|four|x) cards?/i;
+  const ramp=/search your library for (a|up to two) (basic )?land|add \{[^}]+\}/i;
+  const ctr=/\+1\/\+1 counter/i;
+  const token=/create .*token/i;
+  spells.forEach(c=>{
+    const o=c.oracle||'';
+    if(removal.test(o))roles.removal++;
+    if(draw.test(o))roles.draw++;
+    if(ramp.test(o))roles.ramp++;
+    if(ctr.test(o))roles.counters++;
+    if(token.test(o))roles.tokens++;
+  });
+  const creatures=spells.filter(c=>c.creature);
+  const pipCount={W:0,U:0,B:0,R:0,G:0};
+  spells.forEach(c=>{(c.mana||'').replace(/\{([WUBRG])\}/g,(m,k)=>{pipCount[k]++;return m})});
+  const totalPips=Object.values(pipCount).reduce((a,b)=>a+b,0)||1;
+  return {cards,lands,spells,curve,avg,creatures,roles,pipCount,totalPips,
+    nonbasicLands:lands.filter(l=>!l.basic).length};
+}
+function handOdds(deck,sims){
+  sims=sims||2500;
+  const lib=deck.cards.filter(n=>n!==deck.captain);
+  let ok=0;
+  for(let s=0;s<sims;s++){
+    const h=shuffle(lib).slice(0,7);
+    const lands=h.filter(n=>{const c=cardOf(n);return (c&&c.land)||isBasicName(n)}).length;
+    const playable=h.some(n=>{const c=cardOf(n);return c&&!c.land&&(c.cmc||0)<=3});
+    if(lands>=2&&lands<=5&&playable)ok++;
+  }
+  return Math.round(ok/sims*100);
+}
+function deckPower(deck){
+  const a=analyzeDeck(deck);
+  const bodies=a.creatures.reduce((s,c)=>s+((c.pow||0)+(c.tou||0)*.6),0)/(a.creatures.length||1);
+  const early=a.spells.filter(c=>(c.cmc||0)<=3).length;
+  return bodies*2.2+early*1.7+a.roles.removal*2.4+a.roles.draw*1.6+a.roles.ramp*.8+(a.avg<3.2?4:a.avg>4.2?-4:0)+a.lands.length*.15;
+}
+function matchup(a,b){
+  const pa=deckPower(a),pb=deckPower(b);
+  return Math.max(8,Math.min(92,Math.round(100/(1+Math.pow(10,(pb-pa)/12)))));
+}
+function coachTips(deck,an){
+  const tips=[];const sp=an.spells;
+  const expensive=sp.filter(c=>(c.cmc||0)>=5).sort((x,y)=>(y.cmc||0)-(x.cmc||0));
+  if(an.lands.length<15)tips.push({t:'Vas justo de tierras ('+an.lands.length+'). Con 40 cartas y curva '+an.avg.toFixed(2)+', subiría a 16-17 cambiando la carta más floja por una tierra.',c:'warn'});
+  if(an.lands.length>18)tips.push({t:'Tienes '+an.lands.length+' tierras: demasiadas para 40. Cambia una o dos por hechizos de coste 2-3.',c:'warn'});
+  const src={W:0,U:0,B:0,R:0,G:0};
+  an.lands.forEach(l=>{try{landMana({card:l}).forEach(k=>{if(src[k]!=null)src[k]++})}catch(e){}});
+  const thin=Object.keys(an.pipCount).filter(k=>an.pipCount[k]>0&&src[k]<4);
+  if(thin.length)tips.push({t:'Pocas fuentes de '+thin.map(k=>k+' ('+src[k]+' tierras para '+an.pipCount[k]+' símbolos)').join(', ')+'. Cambia una tierra por una básica de ese color o baja las cartas de ese color.',c:'warn'});
+  if(an.avg>3.9)tips.push({t:'La curva es alta (coste medio '+an.avg.toFixed(2)+'). '+expensive.slice(0,2).map(c=>c.name).join(' y ')+' llegan tarde: cambiaría al menos una por algo de 2-3 maná.',c:'warn'});
+  if(an.creatures.length<10)tips.push({t:'Solo '+an.creatures.length+' criaturas. Necesitas cuerpos para atacar y bloquear; busca dos criaturas del pool sin usar.',c:'warn'});
+  if(an.roles.removal===0)tips.push({t:'No hay eliminación. Un mazo sin interacción pierde contra la primera criatura grande: añade 2-3 hechizos que maten o exilien.',c:'warn'});
+  if(an.roles.draw===0&&an.roles.ramp===0)tips.push({t:'Sin robo ni aceleración: si la mano se vacía, pierdes el ritmo. Un par de cartas de robo baratas arreglan esto.',c:'tip'});
+  const cap=deck.captain?cardOf(deck.captain):null;
+  if(cap){
+    if(cap.cmc>=6)tips.push({t:cap.name+' cuesta '+cap.cmc+': como capitán volverá a costar {2} más cada vez. Mejor un líder de 3-4 maná si tienes uno.',c:'tip'});
+    else if(cap.cmc<=3)tips.push({t:cap.name+' es un capitán barato: puedes lanzarlo, perderlo y volver a lanzarlo sin quedarte sin maná. Aprovecha esa presión.',c:'ok'});
+  }
+  if(!deck.captain)tips.push({t:'No hay ninguna criatura que pueda ser capitán. Añade al menos una criatura al mazo.',c:'warn'});
+  if(deck.replaced.length)tips.push({t:'Se resolvieron '+deck.replaced.length+' duplicado'+(deck.replaced.length===1?'':'s')+' por singleton: '+deck.replaced.slice(0,3).map(r=>r.name).join(', ')+'.',c:''});
+  if(!tips.length)tips.push({t:'Mazo equilibrado: curva, colores y roles en orden. Elige bien el capitán y guarda tu mejor carta para el turno decisivo.',c:'ok'});
+  return tips;
+}
+function renderDeck(){
+  const out=$('#deckOut'),deck=state.deck;
+  if(!deck){out.innerHTML='';$('#mixStatus').textContent='Elige dos sobres distintos. Se combinan en 40 cartas singleton.';return}
+  const an=analyzeDeck(deck);
+  const keep=handOdds(deck,1200);
+  const creatures=[...new Set(deck.cards.map(cardOf).filter(c=>c&&c.creature&&!c.land).map(c=>c.name))];
+  const tips=coachTips(deck,an);
+  const maxCurve=Math.max(1,...an.curve);
+  const cols=deck.colors;
+  $('#mixStatus').innerHTML=`<b>${esc(deck.aName)}</b> + <b>${esc(deck.bName)}</b> · ${deck.cards.length} cartas · ${cols.map(k=>pip(k)).join(' ')}`;
+  out.innerHTML=`
+  <div class="grid g2" style="margin-top:16px;align-items:start">
+    <div class="panel">
+      <div class="row" style="justify-content:space-between"><h3>El mazo</h3><span class="badge gold">40 cartas · singleton</span></div>
+      <div class="row" style="margin:10px 0 4px;align-items:center">
+        ${deck.captain?`<img src="${esc(cardOf(deck.captain).img)}" alt="" style="width:64px;border-radius:6px;border:1px solid #ffffff1f">`:''}
+        <div><div class="mu xs" style="letter-spacing:.1em;text-transform:uppercase">Capitán</div><b style="font-family:Fraunces,serif;font-size:19px">${esc(deck.captain||'Sin capitán')}</b>
+        <div class="mu xs">${deck.captain?esc(cardOf(deck.captain).type):''}</div></div>
+      </div>
+      <div class="row tight" style="margin:8px 0 12px">${creatures.map(n=>`<button class="chip ${n===deck.captain?'on':''}" data-cap="${esc(n)}" data-nm="${esc(n)}">${esc(n)}</button>`).join('')}</div>
+      <div class="grid g2">
+        <div>
+          <div class="metric"><span>Hechizos</span><b>${an.spells.length}</b></div>
+          <div class="metric"><span>Tierras</span><b>${an.lands.length} <span class="mu xs">(${an.nonbasicLands} no básicas)</span></b></div>
+          <div class="metric"><span>Coste medio</span><b>${an.avg.toFixed(2)}</b></div>
+          <div class="metric"><span>Criaturas</span><b>${an.creatures.length}</b></div>
+        </div>
+        <div>
+          <div class="metric"><span>Eliminación</span><b>${an.roles.removal}</b></div>
+          <div class="metric"><span>Robo</span><b>${an.roles.draw}</b></div>
+          <div class="metric"><span>Aceleración</span><b>${an.roles.ramp}</b></div>
+          <div class="metric"><span>Manos jugables</span><b>${keep}%</b></div>
+        </div>
+      </div>
+      <div class="mu xs" style="margin-top:14px">Curva de maná (sin tierras)</div>
+      <div class="stat">${an.curve.map((v,i)=>`<i style="height:${Math.max(2,v/maxCurve*100)}%" title="${i===7?'7+':i} maná: ${v}"><b>${v||''}</b></i>`).join('')}</div>
+      <div class="lab">${an.curve.map((_,i)=>`<span>${i===7?'7+':i}</span>`).join('')}</div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn sm" id="deckHand">Ver mano de prueba</button>
+        <button class="btn sec sm" data-go="jugar">Jugar este mazo</button>
+        <button class="btn sec sm" data-go="imprimir">Imprimir</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Consejos del laboratorio</h3>
+      <div style="margin-top:10px">${tips.map(t=>`<div class="warn ${t.c||''}">${esc(t.t)}</div>`).join('')}</div>
+      <div class="grid g2" style="margin-top:14px">
+        <div><div class="mu xs">Contra otra pareja</div><b style="font-family:Fraunces,serif;font-size:26px">${state.packs.length>2?matchup(deck,combinePacks(state.packs[0],state.packs[1])):52}%</b></div>
+        <div><div class="mu xs">Colores del mazo</div><b style="font-family:Fraunces,serif;font-size:26px">${cols.map(k=>pip(k)).join(' ')||'—'}</b></div>
+      </div>
+      <p class="mu xs" style="margin-top:10px">El porcentaje es una estimación del modelo (cuerpos, curva y roles), no un winrate medido en mesa.</p>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="row" style="justify-content:space-between"><h3>Las 40 cartas</h3><span class="mu xs">Pulsa ⇄ para cambiar una carta</span></div>
+    <div class="grid g2" style="margin-top:10px">
+      ${['main'].map(()=>{
+        const groups={'Criaturas':[],'Hechizos':[],'Tierras':[]};
+        deck.cards.map(n=>cardOf(n)||basicCard(n)).forEach(c=>{
+          const g=c.land?groups.Tierras:(c.creature?groups.Criaturas:groups.Hechizos);
+          const ex=g.find(x=>x.name===c.name);
+          if(ex)ex.q=(ex.q||1)+1;else g.push({...c,q:1});
+        });
+        return Object.keys(groups).map(k=>{
+          if(!groups[k].length)return '';
+          return `<div><div class="mu xs" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">${k} · ${groups[k].reduce((s,c)=>s+c.q,0)}</div><div class="cardlist">${groups[k].sort((a,b)=>(a.cmc||0)-(b.cmc||0)||a.name.localeCompare(b.name)).map(c=>`<div class="cline" data-nm="${esc(c.name)}"><span class="q">${c.q>1?c.q+'×':'1×'}</span><span class="n" title="${esc(c.name)}">${esc(c.name)}${c.name===deck.captain?' ♛':''}</span><span class="m">${c.land?'':manaHtml(c.mana)}</span><button class="sw" data-swap="${esc(c.name)}">⇄</button></div>`).join('')}</div></div>`;
+        }).join('');
+      }).join('')}
+    </div>
+  </div>`;
+  out.querySelectorAll('[data-cap]').forEach(b=>{
+    b.onclick=()=>{deck.captain=b.dataset.cap;renderDeck();toast('Capitán: '+b.dataset.cap)}
+  });
+  const handBtn=$('#deckHand');if(handBtn)handBtn.onclick=()=>openHand(deck);
+  out.querySelectorAll('[data-swap]').forEach(b=>{
+    b.onclick=()=>openSwap(deck,b.dataset.swap);
+  });
+}
+function openHand(deck){
+  const lib=deck.cards.filter(n=>n!==deck.captain);
+  $('#handP').textContent='Robas 7 de una biblioteca de '+lib.length+' cartas (sin el capitán).';
+  const draw=()=>{
+    const h=shuffle(lib).slice(0,7);
+    $('#handCards').innerHTML=h.map(n=>{const c=cardOf(n)||basicCard(n);return `<div class="hcard" data-nm="${esc(n)}" title="${esc(n)}">${c.img?`<img src="${esc(c.img)}" alt="">`:`<div style="aspect-ratio:.716;background:linear-gradient(160deg,${CH[COLORS_OF(c)[0]]||'#555'},#0b1118)"></div>`}<span>${esc(n)}</span></div>`}).join('');
+    const lands=h.filter(n=>{const c=cardOf(n);return (c&&c.land)||isBasicName(n)}).length;
+    const early=h.some(n=>{const c=cardOf(n);return c&&!c.land&&(c.cmc||0)<=3});
+    $('#handP').textContent=lands+' tierras · '+(early?'tienes jugada temprana':'sin jugada de 3 o menos')+' · '+(lands>=2&&lands<=5&&early?'mano jugable':'mano arriesgada');
+  };
+  draw();
+  $('#handAgain').onclick=draw;
+  $('#handDlg').showModal();
+}
+$('#handKeep').onclick=()=>$('#handDlg').close();
+
+/* cambio de carta */
+function openSwap(deck,outName){
+  const dlg=$('#pickDlg');
+  const opts=[];
+  const basics=['Plains','Island','Swamp','Mountain','Forest'];
+  basics.forEach(b=>opts.push(b));
+  const pool=[...new Set(state.packs.flatMap(p=>p.cards))].filter(n=>!deck.cards.includes(n)&&!isBasicName(n));
+  pool.slice(0,80).forEach(n=>opts.push(n));
+  $('#pickT').textContent='Cambiar '+outName;
+  $('#pickP').textContent='Elige la carta que entra. Se mantiene el singleton y el total de 40.';
+  const paint=(q)=>{
+    const list=opts.filter(n=>!q||n.toLowerCase().includes(q.toLowerCase())).slice(0,60);
+    $('#pickList').innerHTML=list.map(n=>{const c=cardOf(n)||basicCard(n);return `<button data-pick="${esc(n)}" data-nm="${esc(n)}"><b>${esc(n)}</b> <span class="mu">${c.land?'Tierra':(c.type||'').split('—')[0]}</span></button>`}).join('')||'<span class="mu sm">Sin resultados.</span>';
+  };
+  paint('');
+  $('#pickQ').value='';$('#pickQ').oninput=e=>paint(e.target.value);
+  $('#pickList').onclick=e=>{
+    const b=e.target.closest('[data-pick]');if(!b)return;
+    const inName=b.dataset.pick;
+    if(deck.cards.includes(inName)&&!isBasicName(inName)){toast('Esa carta ya está en el mazo.');return}
+    deck.cards=deck.cards.map(n=>n===outName?inName:n);
+    deck.replaced=deck.replaced.filter(r=>r.name!==outName);
+    dlg.close();renderDeck();toast('Entra '+inName+', sale '+outName+'.');
+  };
+  dlg.showModal();
+}
+$('#pickCancel').onclick=()=>$('#pickDlg').close();
+
+/* ---------- selects y acciones ---------- */
+function fillDeckSelects(){
+  const opts=state.packs.map(p=>`<option value="${p.id}">${esc(p.name)} · ${p.cards.length}</option>`).join('');
+  const a=$('#deckA'),b=$('#deckB');
+  const va=a.value,vb=b.value;
+  a.innerHTML=opts||'<option value="">Sin sobres</option>';
+  b.innerHTML=opts||'<option value="">Sin sobres</option>';
+  if(va&&a.querySelector(`option[value="${va}"]`))a.value=va;
+  if(vb&&b.querySelector(`option[value="${vb}"]`))b.value=vb;
+  else if(state.packs.length>1)b.value=state.packs[1].id;
+}
+$('#mix').onclick=()=>{
+  const a=state.packs.find(p=>String(p.id)===$('#deckA').value);
+  const b=state.packs.find(p=>String(p.id)===$('#deckB').value);
+  if(!a||!b){toast('Necesitas dos sobres guardados.');go('sobres');return}
+  if(a===b){toast('Elige dos sobres distintos.');return}
+  state.deck=combinePacks(a,b);
+  renderDeck();
+  toast('Mazo combinado: '+state.deck.cards.length+' cartas'+(state.deck.replaced.length?' · '+state.deck.replaced.length+' duplicados resueltos':'.'));
+  $('#deckOut').scrollIntoView({behavior:'smooth',block:'start'});
+};
+$('#randomMix').onclick=()=>{
+  if(state.packs.length<2){toast('Genera al menos dos sobres.');return}
+  const [a,b]=shuffle(state.packs);
+  $('#deckA').value=a.id;$('#deckB').value=b.id;$('#mix').click();
+};
+
+/* ---------- inicio ---------- */
+async function paintFan(){
+  const names=['Ragavan, Nimble Pilferer','Blood Artist','Llanowar Elves'];
+  const imgs=$$('#homeFan .fc img');
+  const src=[];
+  const withArt=state.packs.map(packArt).filter(Boolean).slice(0,3);
+  withArt.forEach(u=>src.push(u));
+  if(src.length<3){
+    try{
+      await resolveNames(names);
+      names.forEach(n=>{if(cardOf(n)&&cardOf(n).img)src.push(cardOf(n).img)});
+    }catch(e){}
+  }
+  imgs.forEach((im,i)=>{if(src[i]){im.src=src[i];im.alt='Carta de ejemplo'}else{im.style.display='none'}});
+}
+$('#quickDemo').onclick=async()=>{
+  go('sobres');setTab('virt');
+  if(state.packs.length>=2){$('#deckA').value=state.packs[0].id;$('#deckB').value=state.packs[1].id;$('#mix').click();go('mazo');return}
+  await genVirtual();
+  if(state.packs.length>=2){$('#deckA').value=state.packs[0].id;$('#deckB').value=state.packs[1].id;$('#mix').click();go('mazo')}
+};
+
+/* ---------- arranque ---------- */
+loadPacks();
+ensureBasics();
+loadSets();
+paintFan();
+renderPacks();
+renderEditor();
+fillDeckSelects();
+$('#fColl').value=store.get('cj2_coll','');
+collInfo();
+go(location.hash.slice(1)||'inicio');
+/* ============================================================
+   Capitán Jumpstart · motor de juego, IA e impresión
+============================================================ */
+const G={you:null,ai:null,turn:'you',turnNo:1,phase:'main1',log:[],busy:false,over:false,auto:false,diff:'normal',pending:null,selected:new Set()};
+let gid=0;
+
+/* ---------- cartas de la partida ---------- */
+function cardOfSafe(n){return cardOf(n)||basicCard(n)}
+function instantiate(name,token){
+  const c=cardOfSafe(name);
+  const kw=(c.kw||[]).slice();
+  const o=(c.oracle||'').toLowerCase();
+  ['flying','trample','haste','vigilance','lifelink','deathtouch','menace','first strike','double strike','reach','defender','hexproof','indestructible','ward'].forEach(k=>{
+    if(o.includes(k)&&!kw.includes(k))kw.push(k);
+  });
+  return {id:++gid,name:c.name,card:c,tapped:false,dmg:0,summoning:!kw.includes('haste'),token:!!token,
+    pow:c.pow||0,tou:c.tou||0,a:0,b:0,attached:null};
+}
+const pwOf=x=>Math.max(0,(x.pow||0)+x.a);
+const thOf=x=>Math.max(1,(x.tou||0)+x.b);
+const hasKw=(x,k)=>x.card&&(x.card.kw||[]).includes(k);
+const isCreature=x=>x.card&&x.card.creature&&!x.card.land;
+const isLand=x=>x.card&&x.card.land;
+
+function mkPlayer(name,deck){
+  const lib=shuffle(deck.cards.filter(n=>n!==deck.captain));
+  const p={name,deck,life:20,lib,hand:[],bf:[],gy:[],cmd:deck.captain?instantiate(deck.captain):null,cmdCount:0,landPlayed:false,mulligans:0};
+  return p;
+}
+function logLine(txt,cls){
+  G.log.push({t:txt,c:cls||''});
+  if(G.log.length>250)G.log.shift();
+  renderLog();
+}
+function renderLog(){
+  const box=$('#jLog');if(!box)return;
+  box.innerHTML=G.log.slice(-120).map(l=>`<div class="${l.c}">${esc(l.t)}</div>`).join('');
+  box.scrollTop=box.scrollHeight;
+}
+function draw(P,n){
+  for(let i=0;i<(n||1);i++){
+    if(!P.lib.length){endGame(P===G.you?'ai':'you','biblioteca vacía');return}
+    P.hand.push(P.lib.shift());
+  }
+}
+function untapAll(P){P.bf.forEach(x=>{x.tapped=false;x.dmg=0;if(isCreature(x))x.summoning=false});P.landPlayed=false}
+
+/* ---------- maná ---------- */
+function landMana(x){
+  const c=x.card;
+  if(c.prod&&c.prod.length)return c.prod.filter(k=>'WUBRG'.includes(k));
+  if(c.ci&&c.ci.length)return c.ci.filter(k=>'WUBRG'.includes(k));
+  return ['C'];
+}
+/* fuente de maná: tierras y artefactos con «Add {…}» */
+function manaOf(x){
+  const c=x.card||{};
+  const o=String(c.oracle||'').toLowerCase();
+  if(!(c.land||/add \{/.test(o)))return [];
+  if(c.prod&&c.prod.length)return c.prod.filter(k=>'WUBRG'.includes(k));
+  if(c.land)return landMana(x);
+  const out=[];
+  (o.match(/add \{[^}]+\}/g)||[]).forEach(s=>{const m=s.match(/\{([WUBRG])\}/);if(m)out.push(m[1])});
+  return out.length?[...new Set(out)]:['C'];
+}
+const NONPERM=/\b(Instant|Sorcery)\b/i;
+function isPermanentCard(c){return !!c&&!NONPERM.test(c.type||'')&&(c.creature||/\b(Artifact|Enchantment|Planeswalker|Battle)\b/i.test(c.type||''))}
+function costOf(card){
+  const out={generic:0,colors:{},raw:card.mana||''};
+  String(card.mana||'').replace(/\{([^}]+)\}/g,(m,k)=>{
+    if(/^\d+$/.test(k))out.generic+=+k;
+    else if('WUBRG'.includes(k))out.colors[k]=(out.colors[k]||0)+1;
+    else if(k==='X'||k==='S'){}
+    else out.generic+=1;
+    return m;
+  });
+  return out;
+}
+function costText(card,extra){
+  const c=costOf(card);
+  const parts=[];
+  if(c.generic+(extra||0)>0)parts.push('{'+((c.generic||0)+(extra||0))+'}');
+  Object.keys(c.colors).forEach(k=>{for(let i=0;i<c.colors[k];i++)parts.push('{'+k+'}')});
+  return parts.join('')||'{0}';
+}
+function untapBack(tapped){(tapped||[]).forEach(x=>x.tapped=false)}
+function payMana(P,cost,extra){
+  const need={...cost.colors};
+  let generic=(cost.generic||0)+(extra||0);
+  const sources=P.bf.filter(x=>!x.tapped&&manaOf(x).length);
+  const tapped=[];
+  const tap=x=>{x.tapped=true;tapped.push(x)};
+  const fail=()=>{untapBack(tapped);return false};
+  for(const col of Object.keys(need)){
+    for(let i=0;i<need[col];i++){
+      const l=sources.find(x=>!x.tapped&&manaOf(x).includes(col));
+      if(!l)return fail();
+      tap(l);
+    }
+  }
+  while(generic>0){
+    const l=sources.find(x=>!x.tapped);
+    if(!l)return fail();
+    tap(l);generic--;
+  }
+  return tapped;
+}
+function canPay(P,cost,extra){
+  const t=payMana(P,cost,extra);
+  if(!t)return false;
+  untapBack(t);
+  return true;
+}
+
+/* ---------- lanzar hechizos ---------- */
+function bestTargets(P,role){
+  const foe=P===G.you?G.ai:G.you;
+  if(role==='self'){
+    const mine=P.bf.filter(isCreature).sort((a,b)=>pwOf(b)-pwOf(a));
+    return mine;
+  }
+  const theirs=foe.bf.filter(isCreature).sort((a,b)=>pwOf(b)*thOf(b)-pwOf(a)*thOf(a));
+  return theirs;
+}
+function applySpell(P,card,srcName){
+  const o=(card.oracle||'').toLowerCase();
+  const foe=P===G.you?G.ai:G.you;
+  const self=P;
+  let did=false;
+  const dmg=o.match(/deals? (\d+) damage/);
+  const pump=o.match(/gets \+(\d+)\/\+(\d+)/);
+  const drain=o.match(/each opponent loses (\d+) life/);
+  const gain=o.match(/you gain (\d+) life/);
+  const ctr=o.match(/put (a|two|three) \+1\/\+1 counters?/);
+  const tok=o.match(/create (a|an|one|two|three|four) (\d+)\/(\d+) ([a-z ]*?)creature tokens?/);
+  const destroys=/destroy target creature|exile target creature|destroy all creatures/.test(o);
+  if(destroys){
+    const targets=bestTargets(P,'foe');
+    if(targets.length){
+      const t=targets[0];
+      killPermanent(foe,t);
+      logLine(srcName+' destruye '+t.card.name+'.',P===G.you?'you':'ai');
+      did=true;
+    }
+  }else if(dmg){
+    const n=+dmg[1];
+    const any=/any target|target player|target opponent/.test(o);
+    const t=bestTargets(P,'foe')[0];
+    if(t&&!any){t.dmg+=n;logLine(srcName+' hace '+n+' de daño a '+t.card.name+'.',P===G.you?'you':'ai');checkDeaths();did=true}
+    else{
+      const faceHit=n>=foe.life||!t;
+      if(faceHit){foe.life-=n;logLine(srcName+' hace '+n+' de daño a '+foe.name+'.',P===G.you?'you':'ai');did=true}
+      else{t.dmg+=n;logLine(srcName+' hace '+n+' de daño a '+t.card.name+'.',P===G.you?'you':'ai');checkDeaths();did=true}
+    }
+  }else if(pump){
+    const t=bestTargets(P,'self')[0];
+    if(t){t.a+=+pump[1];t.b+=+pump[2];logLine(srcName+': '+t.card.name+' gets +'+pump[1]+'/+'+pump[2]+'.',P===G.you?'you':'ai');did=true}
+  }else if(drain){
+    foe.life-=+drain[1];logLine(srcName+': '+foe.name+' pierde '+drain[1]+' vidas.',P===G.you?'you':'ai');
+    if(gain){self.life+=+gain[1]}
+    did=true;
+  }else if(gain){
+    self.life+=+gain[1];logLine(srcName+': '+self.name+' gana '+gain[1]+' vidas.',P===G.you?'you':'ai');did=true;
+  }else if(ctr){
+    const t=bestTargets(P,'self')[0];
+    if(t){const n={a:1,two:2,three:3}[ctr[1]]||1;t.a+=n;t.b+=n;logLine(srcName+': '+n+' contador(es) +1/+1 en '+t.card.name+'.',P===G.you?'you':'ai');did=true}
+  }else if(tok){
+    const n={a:1,an:1,one:1,two:2,three:3,four:4}[tok[1]]||1;
+    for(let i=0;i<n;i++){
+      const t=instantiate('Ficha '+tok[4].trim(),true);
+      t.card={...t.card,name:'Ficha '+tok[4],creature:true,type:'Token Creature',img:'',sm:'',pow:+tok[2],tou:+tok[3],kw:[]};
+      t.pow=+tok[2];t.tou=+tok[3];t.summoning=true;
+      P.bf.push(t);
+    }
+    logLine(srcName+' crea '+n+' ficha(s) de '+tok[4].trim()+'.',P===G.you?'you':'ai');did=true;
+  }
+  if(/draw (a|two|three) cards?/.test(o)){
+    const n=/three/.test(o)?3:/two/.test(o)?2:1;
+    draw(P,n);logLine(srcName+': '+P.name+' roba '+n+'.',P===G.you?'you':'ai');did=true;
+  }
+  if(!did)logLine(srcName+' se resuelve sin efecto en el simulador.',P===G.you?'you':'ai');
+}
+function killPermanent(P,perm){
+  P.bf=P.bf.filter(x=>x!==perm);
+  if(!perm.token)P.gy.push(perm.name);
+  if(P.cmd&&perm.name===P.cmd.name&&perm.card.name===P.cmd.card.name){
+    G.log.push({t:'El capitán vuelve a la zona de mando.',c:'sys'});
+  }
+}
+function checkDeaths(){
+  [G.you,G.ai].forEach(P=>{
+    P.bf.filter(x=>isCreature(x)&&x.dmg>=thOf(x)).slice().forEach(x=>{
+      logLine((x.card.name)+' muere.',P===G.you?'you':'ai');
+      P.bf=P.bf.filter(y=>y!==x);
+      if(!x.token)P.gy.push(x.name);
+      if(G.you.cmd&&x.name===G.you.cmd.name)logLine('Tu capitán vuelve a la zona de mando.','sys');
+    });
+  });
+}
+function castable(P,card,extra){
+  if(!card||card.land)return false;
+  return canPay(P,costOf(card),extra||0);
+}
+function playFromHand(P,idx,asCommander){
+  const isCmd=!!asCommander;
+  const name=isCmd?P.cmd.name:P.hand[idx];
+  const card=cardOfSafe(name);
+  if(!card)return false;
+  if(!isCmd&&card.land){
+    if(P.landPlayed){toast('Ya has jugado una tierra este turno.');return false}
+    P.hand.splice(idx,1);
+    const l=instantiate(card.name);l.summoning=false;
+    P.bf.push(l);P.landPlayed=true;
+    logLine(P.name+' juega '+card.name+'.',P===G.you?'you':'ai');
+    renderBoard();return true;
+  }
+  const extra=isCmd?P.cmdCount*2:0;
+  const cost=costOf(card);
+  if(!canPay(P,cost,extra)){toast('No tienes maná suficiente.');return false}
+  const tapped=payMana(P,cost,extra);
+  if(!tapped){toast('No hay maná suficiente.');return false}
+  if(isCmd)P.cmdCount++;
+  else P.hand.splice(idx,1);
+  const perm=instantiate(card.name);
+  perm.summoning=!hasKw(perm,'haste');
+  if(card.creature){
+    P.bf.push(perm);
+    logLine(P.name+' lanza a '+(isCmd?'su capitán ':'')+card.name+' ('+costText(card,extra)+').',P===G.you?'you':'ai');
+  }else if(isPermanentCard(card)){
+    perm.summoning=false;P.bf.push(perm);
+    logLine(P.name+' pone '+card.name+' en el campo ('+costText(card,extra)+').',P===G.you?'you':'ai');
+  }else{
+    applySpell(P,card,card.name);
+    P.gy.push(card.name);
+    logLine(P.name+' lanza '+card.name+' ('+costText(card,extra)+').',P===G.you?'you':'ai');
+    checkDeaths();
+  }
+  renderBoard();checkLife();
+  return true;
+}
+
+/* ---------- combate ---------- */
+function beginCombat(){
+  G.phase='combat';G.selected.clear();renderBoard();renderPhase();
+}
+function toggleAttacker(id){
+  if(G.phase!=='combat'||G.turn!=='you')return;
+  const c=G.you.bf.find(x=>x.id===id);
+  if(!c||!isCreature(c))return;
+  if(c.tapped||c.summoning||hasKw(c,'defender')){toast('Esa criatura no puede atacar.');return}
+  if(G.selected.has(id))G.selected.delete(id);else G.selected.add(id);
+  renderBoard();
+}
+function aiBlocks(attackers,defP,atkP){
+  const blocks={};
+  const free=defP.bf.filter(x=>isCreature(x)&&!x.tapped);
+  const used=new Set();
+  const sorted=attackers.slice().sort((a,b)=>pwOf(b)-pwOf(a));
+  sorted.forEach(a=>{
+    const flying=hasKw(a,'flying');
+    const cands=free.filter(b=>!used.has(b.id)&&(!flying||hasKw(b,'flying')||hasKw(b,'reach')));
+    if(!cands.length)return;
+    const lethal=pwOf(a)>=defP.life;
+    let best=null;
+    cands.forEach(b=>{
+      const kills=pwOf(b)>=thOf(a)||hasKw(b,'deathtouch');
+      const survives=thOf(b)>pwOf(a)||hasKw(b,'indestructible');
+      const score=(kills?6:0)+(survives?4:0)+pwOf(b)*.2-thOf(b)*.1;
+      if(!best||score>best.s)best={b,s:score,kills,survives};
+    });
+    if(best&&(best.kills||lethal||Math.random()<.55)){
+      blocks[a.id]=best.b.id;used.add(best.b.id);
+    }
+  });
+  return blocks;
+}
+function resolveCombat(atkP,defP,attackers,blocks){
+  attackers.forEach(a=>{a.tapped=true});
+  const dmgToPlayer={n:0,from:[]};
+  const pending=[];
+  attackers.forEach(a=>{
+    const bid=blocks[a.id];
+    const b=bid?defP.bf.find(x=>x.id===bid):null;
+    if(b){pending.push({a,b})}
+    else{
+      const trample=hasKw(a,'trample');
+      dmgToPlayer.n+=pwOf(a);dmgToPlayer.from.push(a);
+    }
+  });
+  pending.forEach(({a,b})=>{
+    const fa=hasKw(a,'first strike')||hasKw(a,'double strike');
+    const fb=hasKw(b,'first strike')||hasKw(b,'double strike');
+    if(fa&&!fb){
+      b.dmg+=pwOf(a);if(hasKw(a,'lifelink'))atkP.life+=pwOf(a);
+      if(b.dmg<thOf(b)){a.dmg+=pwOf(b);if(hasKw(b,'lifelink'))defP.life+=pwOf(b)}
+    }else{
+      a.dmg+=pwOf(b);b.dmg+=pwOf(a);
+      if(hasKw(a,'lifelink'))atkP.life+=pwOf(a);
+      if(hasKw(b,'lifelink'))defP.life+=pwOf(b);
+      if(hasKw(a,'trample')&&pwOf(a)>thOf(b))dmgToPlayer.n+=pwOf(a)-thOf(b);
+    }
+  });
+  if(dmgToPlayer.n>0){
+    defP.life-=dmgToPlayer.n;
+    logLine(atkP.name+' hace '+dmgToPlayer.n+' de daño directo a '+defP.name+'.',atkP===G.you?'you':'ai');
+  }
+  checkDeaths();
+  renderBoard();checkLife();
+  G.phase='main2';G.selected.clear();renderPhase();
+}
+function attackStep(){
+  if(G.turn!=='you')return;
+  const attackers=G.you.bf.filter(x=>G.selected.has(x.id));
+  if(!attackers.length){G.phase='main2';renderPhase();renderBoard();return}
+  const blocks=aiBlocks(attackers,G.ai,G.you);
+  logLine('Atacas con '+attackers.map(a=>a.card.name).join(', ')+'.','you');
+  resolveCombat(G.you,G.ai,attackers,blocks);
+}
+
+/* ---------- IA ---------- */
+function aiBestLand(P){
+  const lands=P.hand.map((n,i)=>({n,i,c:cardOfSafe(n)})).filter(x=>x.c&&x.c.land);
+  if(!lands.length)return -1;
+  const need={};
+  P.bf.filter(isCreature).forEach(c=>{});
+  const colors={};
+  P.hand.forEach(n=>{const c=cardOfSafe(n);(c.mana||'').replace(/\{([WUBRG])\}/g,(m,k)=>{colors[k]=(colors[k]||0)+1;return m})});
+  const score=l=>{
+    const m=landMana(instantiate(l.c.name));
+    return m.reduce((s,k)=>s+(colors[k]||0)*2,0)+(l.c.basic?1:0);
+  };
+  lands.sort((a,b)=>score(b)-score(a));
+  return lands[0].i;
+}
+function aiCast(P,max){
+  let casts=0;
+  const order=(card,idx)=>{
+    const o=(card.oracle||'').toLowerCase();
+    const enemy=G.ai===P?G.you:G.ai;
+    const threat=enemy.bf.filter(isCreature).some(c=>pwOf(c)>=3);
+    let s=0;
+    if(/destroy|deals \d+ damage|exile target/.test(o)&&threat)s+=30;
+    if(card.creature)s+=16+pwOf(instantiate(card.name));
+    if(/draw/.test(o))s+=10;
+    if(/\+1\/\+1 counter|gets \+/.test(o))s+=6;
+    if(costOf(card).generic>3)s-=2;
+    return s;
+  };
+  for(let k=0;k<(max||6);k++){
+    const opts=P.hand.map((n,i)=>({n,i,c:cardOfSafe(n)})).filter(x=>x.c&&!x.c.land&&canPay(P,costOf(x.c),0));
+    if(!opts.length)break;
+    opts.sort((a,b)=>order(b.c,b.i)-order(a.c,a.i));
+    const pick=opts[0];
+    if(!playFromHand(P,pick.i,false))break;
+    casts++;
+  }
+  if(P.cmd&&!P.bf.some(x=>x.name===P.cmd.name)&&canPay(P,costOf(cardOfSafe(P.cmd.name)),P.cmdCount*2)){
+    playFromHand(P,-1,true);casts++;
+  }
+  return casts;
+}
+function aiAttack(P,defP){
+  const canAttack=P.bf.filter(x=>isCreature(x)&&!x.tapped&&!x.summoning&&!hasKw(x,'defender'));
+  if(!canAttack.length)return false;
+  const blockers=defP.bf.filter(x=>isCreature(x)&&!x.tapped);
+  let chosen=canAttack;
+  if(G.diff==='easy')chosen=canAttack.filter(()=>Math.random()<.6);
+  if(G.diff==='normal'&&blockers.length){
+    chosen=canAttack.filter(a=>{
+      const best=blockers.reduce((m,b)=>(pwOf(b)>m?pwOf(b):m),0);
+      return pwOf(a)>=best||hasKw(a,'flying')||hasKw(a,'menace')||Math.random()<.35;
+    });
+  }
+  if(!chosen.length)return false;
+  logLine(P.name+' ataca con '+chosen.map(a=>a.card.name).join(', ')+'.',P===G.you?'you':'ai');
+  if(defP===G.you&&!G.auto&&G.you.bf.some(x=>isCreature(x)&&!x.tapped)){
+    startBlocks(chosen);
+    return true;
+  }
+  const blocks=defP===G.you?aiBlocks(chosen,G.you,P):{};
+  resolveCombat(P,defP,chosen,blocks);
+  return false;
+}
+function finishAiTurn(){
+  if(G.over)return;
+  G.turn='you';G.turnNo++;G.phase='main1';untapAll(G.you);G.you.landPlayed=false;
+  G.selected.clear();
+  logLine('— Tu turno ('+G.turnNo+') —','sys');
+  renderBoard();renderPhase();renderCommand();
+  if(G.auto)autoPlayYou();
+}
+async function aiTurn(){
+  if(G.over)return;
+  const P=G.ai;
+  untapAll(P);logLine('— Turno de la IA ('+G.turnNo+') —','sys');renderBoard();
+  await sleep(350);draw(P,1);renderBoard();await sleep(250);
+  const li=aiBestLand(P);
+  if(li>=0){playFromHand(P,li,false);await sleep(300)}
+  aiCast(P,6);renderBoard();await sleep(350);
+  const pending=aiAttack(P,G.you);
+  if(pending)return;
+  await sleep(450);
+  finishAiTurn();
+}
+async function autoPlayYou(){
+  if(G.over||G.turn!=='you'||G.phase!=='main1')return;
+  const P=G.you;
+  G.selected.clear();
+  const li=aiBestLand(P);
+  if(li>=0){playFromHand(P,li,false);await sleep(280)}
+  aiCast(P,8);renderBoard();await sleep(320);
+  if(G.over)return;
+  beginCombat();
+  const canAttack=P.bf.filter(x=>isCreature(x)&&!x.tapped&&!x.summoning&&!hasKw(x,'defender'));
+  const blockers=G.ai.bf.filter(x=>isCreature(x)&&!x.tapped);
+  const bestBlock=blockers.length?blockers.reduce((m,b)=>Math.max(m,pwOf(b)),0):0;
+  const chosen=blockers.length
+    ? canAttack.filter(a=>pwOf(a)>bestBlock||hasKw(a,'flying')||hasKw(a,'menace')||(pwOf(a)>=bestBlock&&thOf(a)>bestBlock))
+    : canAttack;
+  chosen.forEach(c=>G.selected.add(c.id));
+  renderBoard();await sleep(300);
+  if(G.over)return;
+  if(G.selected.size)attackStep();else{G.phase='main2';renderPhase()}
+  await sleep(300);
+  endTurn();
+}
+
+/* ---------- turnos ---------- */
+function endTurn(){
+  if(G.over||G.busy)return;
+  G.busy=true;
+  G.phase='end';renderPhase();
+  setTimeout(()=>{
+    G.busy=false;
+    if(G.over)return;
+    G.turn='ai';
+    aiTurn();
+  },260);
+}
+function nextPhase(){
+  if(G.over||G.turn!=='you'||G.busy)return;
+  if(G.phase==='main1'){renderPhase();return}
+  if(G.phase==='combat'){renderPhase();return}
+  endTurn();
+}
+function startGame(myDeck,oppDeck){
+  G.you=mkPlayer('Tú',myDeck);
+  G.ai=mkPlayer('IA',oppDeck);
+  G.turn='you';G.turnNo=1;G.phase='main1';G.log=[];G.over=false;G.busy=false;G.auto=false;G.selected.clear();
+  G.diff=$('#jDiff').value;
+  $('#jAuto').textContent='Piloto: NO';
+  $('#jAutoBadge').style.display='none';
+  $('#jOver').classList.remove('on');
+  $('#jSetup').style.display='none';$('#jTable').style.display='block';
+  $('#jDiffBadge').textContent='IA '+({easy:'fácil',normal:'normal',hard:'difícil'}[G.diff]);
+  draw(G.you,7);draw(G.ai,7);
+  /* mulligan gratuito automático si la mano es injugable */
+  [G.you,G.ai].forEach(P=>{
+    const lands=P.hand.filter(n=>(cardOfSafe(n)||{}).land).length;
+    if((lands<2||lands>5)&&P.mulligans===0){
+      P.mulligans=1;
+      P.lib=shuffle(P.lib.concat(P.hand));P.hand=[];
+      draw(P,7);
+      logLine(P.name+' usa el mulligan gratuito.','sys');
+    }
+  });
+  logLine('— Tu turno (1) —','sys');
+  logLine('Capitán: '+(myDeck.captain||'ninguno')+'. 20 vidas, primer mulligan gratis.','sys');
+  renderBoard();renderPhase();
+}
+function endGame(winner,why){
+  if(G.over)return;
+  G.over=true;
+  const win=winner==='you';
+  $('#jOverT').textContent=win?'¡Ganas!':'La IA gana';
+  $('#jOverP').textContent=win?'Tu capitán se lleva la partida. '+(why||''):'La IA se impone'+(why?': '+why:'')+'. Cambia el capitán o ajusta la curva y vuelve a intentarlo.';
+  $('#jOver').classList.add('on');
+  logLine((win?'Ganas':'Pierde la IA')+(why?' ('+why+')':''),'sys');
+}
+function checkLife(){
+  if(G.over)return;
+  if(G.you.life<=0)endGame('ai','llegaste a 0 vidas');
+  else if(G.ai.life<=0)endGame('you','la IA llegó a 0 vidas');
+}
+
+/* ---------- pintado del tablero ---------- */
+function permHtml(x,extra){
+  const img=x.card.img;
+  const t=x.card.type||'';
+  const isBg=isLand(x);
+  return `<div class="bcard ${x.tapped?'tapped':''} ${G.selected.has(x.id)?'sel':''} ${isBg?'land':''}" data-perm="${x.id}" data-nm="${esc(x.card.name)}" title="${esc(x.card.name)}${x.dmg?' · '+x.dmg+' daño':''}">
+    ${img?`<img src="${esc(img)}" alt="" loading="lazy">`:`<div style="aspect-ratio:.716;display:flex;align-items:center;justify-content:center;font-size:26px;background:linear-gradient(160deg,${CH[(COLORS_OF(x.card)[0])||'C']||'#333'},#0b1118)">${isBg?'🌍':'✦'}</div>`}
+    ${x.tapped?'<span class="tag">girada</span>':''}
+    ${!isBg&&isCreature(x)?`<span class="pt">${pwOf(x)}/${thOf(x)}</span>`:''}
+  </div>`;
+}
+function renderBoard(){
+  if(!G.you)return;
+  $('#jLifeYou').textContent=G.you.life;
+  $('#jLifeAi').textContent=G.ai.life;
+  $('#jAiHand').textContent='· '+G.ai.hand.length+' cartas';
+  const aiPerms=G.ai.bf.filter(x=>!isLand(x)).concat(G.ai.bf.filter(isLand));
+  $('#jAiBf').innerHTML=aiPerms.length?aiPerms.map(x=>permHtml(x)).join(''):'<span class="empty">Campo de la IA</span>';
+  const myPerms=G.you.bf.filter(x=>!isLand(x)).concat(G.you.bf.filter(isLand));
+  $('#jYouBf').innerHTML=myPerms.length?myPerms.map(x=>permHtml(x)).join(''):'<span class="empty">Tu campo de batalla</span>';
+  $('#jYouHand').innerHTML=G.you.hand.length?G.you.hand.map((n,i)=>{
+    const c=cardOfSafe(n);
+    const ok=c.land?(!G.you.landPlayed&&G.turn==='you'&&G.phase!=='combat'):(G.turn==='you'&&castable(G.you,c,0)&&G.phase!=='combat');
+    return `<div class="hcard ${ok?'':'off'}" data-hand="${i}" data-nm="${esc(n)}" title="${esc(n)}">${c.img?`<img src="${esc(c.img)}" alt="">`:`<div style="aspect-ratio:.716;background:linear-gradient(160deg,${CH[(COLORS_OF(c)[0])||'C']||'#333'},#0b1118)"></div>`}<span>${esc(n)}</span></div>`;
+  }).join(''):'<span class="mu sm">Mano vacía</span>';
+  renderCommand();
+  bindBoardEvents();
+}
+function renderCommand(){
+  const box=$('#jCmd');if(!box)return;
+  const c=G.you&&G.you.cmd;
+  if(!c){box.innerHTML='<span class="mu">Este mazo no tiene capitán.</span>';return}
+  const tax=G.you.cmdCount*2;
+  const cost=cardOfSafe(c.name);
+  const ok=canPay(G.you,costOf(cost),tax)&&G.turn==='you'&&G.phase!=='combat';
+  box.innerHTML=`<div style="display:flex;gap:10px;align-items:flex-start">
+    ${cost.img?`<img src="${esc(cost.img)}" alt="" style="width:64px;border-radius:6px;border:1px solid #ffffff1f">`:''}
+    <div style="flex:1"><b style="font-family:Fraunces,serif;font-size:16px">${esc(c.name)}</b>
+      <div class="mu xs">${esc(cardOfSafe(c.name).type||'')}</div>
+      <div class="sm" style="margin-top:4px">${manaHtml(cost.mana)}${tax?` <span class="mu">+{${tax}} impuesto</span>`:''}</div>
+      <button class="btn sm" id="jCastCmd" ${ok?'':'disabled'} style="margin-top:6px">Lanzar (${esc(costText(cost,tax))})</button>
+    </div></div>
+    <div class="mu xs" style="margin-top:6px">Lanzado ${G.you.cmdCount} ${G.you.cmdCount===1?'vez':'veces'} desde la zona de mando.</div>`;
+  const b=$('#jCastCmd');if(b)b.onclick=()=>{if(playFromHand(G.you,-1,true))renderBoard()};
+}
+function renderPhase(){
+  const names={main1:'Principal 1',combat:'Combate',main2:'Principal 2',end:'Fin del turno'};
+  $('#jPhase').textContent=names[G.phase]||G.phase;
+  $('#jTurn').textContent='Turno '+G.turnNo+(G.turn==='ai'?' · IA':' · tú');
+  const b=$('#jNext');
+  if(!b)return;
+  if(G.phase==='main1'){b.textContent='Ir a combate';b.onclick=beginCombat;b.disabled=G.turn!=='you'}
+  else if(G.phase==='combat'){b.textContent=G.selected.size?'Atacar con '+G.selected.size:'Pasar a principal 2';b.onclick=()=>{if(G.selected.size)attackStep();else{G.phase='main2';renderPhase();renderBoard()}};b.disabled=G.turn!=='you'}
+  else{b.textContent='Terminar turno';b.onclick=endTurn;b.disabled=G.turn!=='you'}
+  if(G.turn==='ai'){b.disabled=true;b.textContent='Turno de la IA…'}
+}
+function bindBoardEvents(){
+  $$('#jYouBf .bcard').forEach(el=>{
+    el.onclick=()=>toggleAttacker(+el.dataset.perm);
+  });
+  $$('#jYouHand .hcard').forEach(el=>{
+    el.onclick=()=>{
+      if(G.over||G.turn!=='you')return;
+      if(G.phase==='combat'){toast('No puedes lanzar hechizos en combate en este simulador.');return}
+      const i=+el.dataset.hand;
+      if(playFromHand(G.you,i,false)){renderBoard();renderPhase()}
+    };
+  });
+  $$('#jAiBf .bcard').forEach(el=>{el.onclick=()=>{const p=G.ai.bf.find(x=>x.id===+el.dataset.perm);if(p&&p.card.img)showCardPreview(p.card)}});
+}
+function showCardPreview(card){
+  toast(card.name+' · '+(card.type||'')+(card.oracle?(' — '+card.oracle.slice(0,110)+'…'):''),5200);
+}
+
+/* ---------- bloqueos manuales ---------- */
+function startBlocks(attackers){
+  G.pending={attackers};
+  const wrap=$('#jBlockWrap');wrap.style.display='flex';
+  const opts=G.you.bf.filter(x=>isCreature(x)&&!x.tapped);
+  $('#jBlockList').innerHTML=attackers.map(a=>`
+    <div class="row" style="margin:4px 0;align-items:center;font-size:13px">
+      <span style="flex:1">${esc(a.card.name)} <b class="mu">${pwOf(a)}/${thOf(a)}</b></span>
+      <select data-blk="${a.id}" style="max-width:190px"><option value="">No bloquear</option>${opts.map(o=>`<option value="${o.id}">${esc(o.card.name)} (${pwOf(o)}/${thOf(o)})</option>`).join('')}</select>
+    </div>`).join('');
+  $('#jBlockOk').onclick=()=>{
+    const blocks={};
+    $$('#jBlockList select').forEach(s=>{if(s.value)blocks[+s.dataset.blk]=+s.value});
+    wrap.style.display='none';
+    G.pending=null;
+    resolveCombat(G.ai,G.you,attackers,blocks);
+    setTimeout(finishAiTurn,320);
+  };
+}
+
+/* ---------- preparación de la partida ---------- */
+function combos(){
+  const out=[];
+  for(let i=0;i<state.packs.length;i++)for(let j=i+1;j<state.packs.length;j++)out.push({a:state.packs[i],b:state.packs[j]});
+  return out;
+}
+function comboDeck(c){
+  const keep={...state.deck};
+  return combinePacks(c.a,c.b);
+}
+function fillGameSelects(){
+  const cs=combos();
+  const opts=cs.map((c,i)=>`<option value="${i}">${esc(c.a.name)} + ${esc(c.b.name)}</option>`).join('');
+  const mine=$('#jMine'),theirs=$('#jTheir');
+  if(!cs.length){
+    mine.innerHTML='<option value="">Sin combinaciones</option>';
+    theirs.innerHTML=mine.innerHTML;
+    $('#jSetupStatus').textContent='Necesitas al menos dos sobres guardados.';
+    return;
+  }
+  mine.innerHTML=opts;theirs.innerHTML=opts;
+  let cur=0;
+  if(state.deck){
+    const k=cs.findIndex(c=>c.a.id===state.deck.a&&c.b.id===state.deck.b);
+    if(k>=0)cur=k;
+  }
+  mine.value=String(cur);
+  theirs.value=String(cs.length>1?(cur+1)%cs.length:cur);
+  $('#jSetupStatus').textContent=cs.length+' combinaciones disponibles.';
+}
+$('#jStart').onclick=()=>{
+  const cs=combos();
+  if(cs.length<1){toast('Necesitas al menos dos sobres.');go('sobres');return}
+  const i=+$('#jMine').value||0, j=+$('#jTheir').value||0;
+  if(i===j&&cs.length>1){toast('Elige combinaciones distintas para el duelo.');return}
+  const mine=comboDeck(cs[i]), opp=comboDeck(cs[j]||cs[0]);
+  state.deck=mine;
+  startGame(mine,opp);
+  toast('Partida iniciada. Tu capitán: '+(mine.captain||'ninguno'));
+};
+$('#jRestart').onclick=()=>{
+  $('#jOver').classList.remove('on');
+  $('#jTable').style.display='none';$('#jSetup').style.display='block';
+  fillGameSelects();
+};
+$('#jAuto').onclick=()=>{
+  if(!G.you){toast('Empieza una partida primero.');return}
+  G.auto=!G.auto;
+  $('#jAuto').textContent='Piloto: '+(G.auto?'SÍ':'NO');
+  $('#jAutoBadge').style.display=G.auto?'inline-flex':'none';
+  if(G.auto&&G.turn==='you'&&G.phase==='main1')autoPlayYou();
+};
+$('#jConcede').onclick=()=>{if(G.you&&!G.over)endGame('ai','concediste')};
+$('#jDiff').onchange=()=>{G.diff=$('#jDiff').value;toast('Dificultad: '+$('#jDiff').selectedOptions[0].text)};
+$('#jOverAgain').onclick=()=>{$('#jOver').classList.remove('on');$('#jStart').click()};
+
+/* ============================================================
+   Impresión: lista y proxies
+============================================================ */
+function deckGroups(deck){
+  const groups={cre:[],sp:[],ld:[]};
+  deck.cards.map(cardOfSafe).forEach(c=>{
+    const g=c.land?groups.ld:(c.creature?groups.cre:groups.sp);
+    const e=g.find(x=>x.name===c.name);
+    if(e)e.q++;else g.push({...c,q:1});
+  });
+  ['cre','sp'].forEach(k=>groups[k].sort((a,b)=>(a.cmc||0)-(b.cmc||0)||a.name.localeCompare(b.name)));
+  groups.ld.sort((a,b)=>a.name.localeCompare(b.name));
+  return groups;
+}
+function proxyCards(){
+  const deck=state.deck;if(!deck)return [];
+  const scope=$('#pScope').value;
+  let cards;
+  if(scope==='packs'){
+    const a=state.packs.find(p=>p.id===deck.a),b=state.packs.find(p=>p.id===deck.b);
+    cards=[...(a?a.cards:[]),...(b?b.cards:[])].map(cardOfSafe);
+  }else{
+    cards=deck.cards.map(cardOfSafe);
+    if(deck.captain&&!cards.some(c=>c.name===deck.captain))cards.unshift(cardOfSafe(deck.captain));
+  }
+  if(!$('#pLands').checked)cards=cards.filter(c=>!c.land);
+  return cards;
+}
+function printWindow(html){
+  const w=window.open('','_blank');
+  if(!w){toast('Permite las ventanas emergentes para imprimir.');return null}
+  w.document.open();w.document.write(html);w.document.close();
+  let done=false;
+  const fire=()=>{if(done)return;done=true;try{w.focus();w.print()}catch(e){}};
+  w.addEventListener('load',()=>setTimeout(fire,350));
+  setTimeout(fire,2600);
+  return w;
+}
+function printList(){
+  const deck=state.deck;
+  if(!deck){toast('Combina dos sobres primero.');go('mazo');return}
+  const g=deckGroups(deck);
+  const an=analyzeDeck(deck);
+  const row=x=>`<tr><td class="q">${x.q}×</td><td>${esc(x.name)}</td><td class="c">${esc(x.mana||'')}</td></tr>`;
+  const block=(title,arr)=>arr.length?`<h3>${title} <span>(${arr.reduce((s,x)=>s+x.q,0)})</span></h3><table>${arr.map(row).join('')}</table>`:'';
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Captain Jumpstart · ${esc(deck.aName)} + ${esc(deck.bName)}</title><style>
+    @page{size:A4;margin:16mm}
+    *{box-sizing:border-box}
+    body{font:11.5px/1.45 "Segoe UI",Arial,sans-serif;color:#111;margin:0}
+    header{border-bottom:2px solid #b8860b;padding-bottom:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-end}
+    h1{font:800 22px Georgia,serif;margin:0}
+    .sub{color:#555;font-size:10px;margin:2px 0 0}
+    h2{font:800 14px Georgia,serif;margin:14px 0 4px}
+    h3{font:700 10.5px Arial;text-transform:uppercase;letter-spacing:.06em;margin:10px 0 3px;color:#7a5a00}
+    h3 span{color:#777;font-weight:400}
+    table{width:100%;border-collapse:collapse}
+    td{padding:1px 3px;font-size:10.5px;border-bottom:1px solid #eee}
+    td.q{width:26px;text-align:right;color:#7a5a00;font-weight:700}
+    td.c{width:70px;text-align:right;color:#666;font-family:monospace}
+    .cols{column-count:2;column-gap:14px}
+    .cap{display:flex;gap:8px;align-items:center;border:1px solid #ccc;border-radius:6px;padding:6px 8px;margin:8px 0;background:#faf7ee}
+    .cap img{width:46px;border-radius:4px}
+    .stats{color:#555;font-size:10px}
+    footer{margin-top:14px;border-top:1px solid #ccc;padding-top:5px;font-size:9px;color:#777}
+  </style></head><body>
+    <header><div><h1>Captain Jumpstart</h1><p class="sub">${esc(deck.aName)} + ${esc(deck.bName)} · ${new Date().toLocaleDateString('es-ES')}</p></div><div class="stats">${an.spells.length} hechizos · ${an.lands.length} tierras · coste medio ${an.avg.toFixed(2)}</div></header>
+    <div class="cap">${deck.captain?`<img src="${esc(cardOfSafe(deck.captain).img)}" alt="">`:''}<div><b>Capitán: ${esc(deck.captain||'—')}</b><div class="stats">Empieza en la zona de mando · {2} adicional por cada lanzamiento anterior · biblioteca de ${deck.cards.length-(deck.captain?1:0)} cartas</div></div></div>
+    <div class="cols">${block('Criaturas',g.cre)}${block('Hechizos',g.sp)}${block('Tierras',g.ld)}</div>
+    <footer>40 cartas · singleton (solo las tierras básicas se repiten) · 20 vidas · primer mulligan gratis. Generado con Captain Jumpstart.</footer>
+  </body></html>`;
+  printWindow(html);
+  toast('Lista lista para imprimir o guardar como PDF.');
+}
+function backHtml(){
+  return `<div class="px back"><div class="emblem">♛</div><div class="bk">PROXY</div><div class="bk2">CAPTAIN JUMPSTART</div></div>`;
+}
+function printProxies(){
+  const deck=state.deck;
+  if(!deck){toast('Combina dos sobres primero.');go('mazo');return}
+  const cards=proxyCards();
+  if(!cards.length){toast('No hay cartas que imprimir con esos ajustes.');return}
+  const paper=$('#pPaper').value;
+  const size=paper==='letter'?'215.9mm 279.4mm':'210mm 297mm';
+  const cover=$('#pCover').checked;
+  const duplex=$('#pDuplex').checked;
+  const marks=$('#pMarks').checked;
+  const pages=[];
+  for(let i=0;i<cards.length;i+=9)pages.push(cards.slice(i,i+9));
+  const coverHtml=cover?`<section class="cover">
+      ${deck.captain&&cardOfSafe(deck.captain).img?`<img class="capart" src="${esc(cardOfSafe(deck.captain).img)}" alt="">`:''}
+      <div class="cov-in"><div class="eyebrow">CAPTAIN JUMPSTART</div><h1>${esc(deck.aName)}<br>+ ${esc(deck.bName)}</h1>
+      <div class="capname">Capitán · ${esc(deck.captain||'—')}</div>
+      <div class="cov-meta">${deck.cards.length} cartas · singleton · 20 vidas</div></div>
+    </section>`:'';
+  const fronts=pages.map(pg=>`<section class="sheet">${pg.map(c=>`<div class="px">${c.img?`<img src="${esc(c.img)}" alt="">`:`<div class="ph"><b>${esc(c.name)}</b><span>${esc(c.type||'')}</span></div>`}</div>`).join('')}</section>`).join('');
+  const backs=duplex?pages.map(pg=>`<section class="sheet backsheet">${pg.map(()=>backHtml()).join('')}</section>`).join(''):'';
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Proxies · Captain Jumpstart</title><style>
+    @page{size:${size};margin:6mm}
+    *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#fff}
+    .sheet{display:grid;grid-template-columns:repeat(3,63mm);grid-auto-rows:88mm;gap:2mm;justify-content:center;page-break-after:always;padding:2mm 0}
+    .sheet:last-child{page-break-after:auto}
+    .px{width:63mm;height:88mm;overflow:hidden;position:relative;background:#0b1117;border:.3mm solid #999;${marks?'outline:.2mm dashed #bbb;outline-offset:-1.4mm;':''}}
+    .px img{width:100%;height:100%;object-fit:cover;display:block}
+    .px .ph{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2mm;padding:4mm;text-align:center;background:linear-gradient(160deg,#243244,#0b1117);color:#e8dcc0}
+    .px .ph b{font:700 5mm Georgia,serif}
+    .px .ph span{font:3mm Arial;color:#9fb0c0}
+    .back{background:radial-gradient(circle at 50% 42%,#31546e,#12222f 55%,#05090d);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#e8c574;border:.3mm solid #c9a860}
+    .back .emblem{font-size:16mm;line-height:1;text-shadow:0 0 6mm #e8c57466}
+    .back .bk{font:700 6mm Georgia,serif;letter-spacing:.2em;margin-top:3mm}
+    .back .bk2{font:600 2.4mm Arial;letter-spacing:.14em;color:#9fb0c0;margin-top:1mm}
+    .cover{height:250mm;page-break-after:always;position:relative;overflow:hidden;border-radius:4mm;background:linear-gradient(160deg,#12202c,#05090d);color:#f3e7c8;display:flex;align-items:flex-end}
+    .cover .capart{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;filter:saturate(1.05)}
+    .cover:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#0000 20%,#05090de6 70%,#05090d)}
+    .cov-in{position:relative;z-index:2;padding:14mm;width:100%}
+    .cov-in .eyebrow{font:700 2.6mm Arial;letter-spacing:.24em;color:#e8c574}
+    .cov-in h1{font:800 12mm/1.05 Georgia,serif;margin:3mm 0}
+    .capname{font:600 4.6mm Georgia,serif;color:#e8c574}
+    .cov-meta{font:3mm Arial;color:#9fb0c0;margin-top:2mm}
+  </style></head><body>${coverHtml}${fronts}${backs}</body></html>`;
+  printWindow(html);
+  const sheets=pages.length;
+  toast(sheets+' hoja(s) de caras'+(duplex?' + '+sheets+' de reversos':'')+'. Elige 100 % y sin ajustar a página.');
+}
+$('#pList').onclick=printList;
+$('#pProxy').onclick=printProxies;
+function renderPrintInfo(){
+  const deck=state.deck;
+  const scope=$('#pScope').value;
+  const cards=deck?proxyCards():[];
+  const sheets=Math.ceil(cards.length/9);
+  $('#pListInfo').textContent=deck?`${deck.aName} + ${deck.bName} · ${deck.cards.length} cartas · capitán ${deck.captain||'—'}`:'Combina dos sobres en «Mazo y análisis» para generar la lista.';
+  $('#pProxyInfo').textContent=cards.length+' cartas · '+sheets+' hoja'+(sheets===1?'':'s')+' de caras'+($('#pDuplex').checked?' + '+sheets+' de reversos':'');
+  $('#pPreviewInfo').textContent=deck?((scope==='packs'?'Los dos sobres completos':'El mazo completo')+' · 63 × 88 mm'):'Sin mazo';
+  $('#pPreview').innerHTML=cards.slice(0,18).map(c=>c.img?`<img src="${esc(c.img)}" alt="${esc(c.name)}" loading="lazy">`:`<div class="mu xs" style="border:1px dashed var(--ln);border-radius:6px;padding:8px">${esc(c.name)}</div>`).join('')||'<span class="mu sm">Sin vista previa.</span>';
+}
+function coins(n){return n===1?'1 carta ·':n+' cartas ·'}
+['#pScope','#pLands','#pDuplex','#pCover','#pMarks','#pPaper'].forEach(s=>{
+  const el=$(s);if(el)el.addEventListener('change',renderPrintInfo);
+});
+renderPrintInfo();
+
+</script>
+</body>
+</html>
