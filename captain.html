@@ -116,8 +116,57 @@ nav button.on{color:var(--tx);background:var(--pn);box-shadow:inset 0 -2px var(-
 .anamatrix td.analose{background:#f5555518;color:#ff9b9b;border-radius:4px}
 .anamatrix td.anatied{color:#cbd6e2}
 .anamatrix td.anaself{color:#4a5a6a}
+.anamatrix thead th{position:sticky;top:0;background:#0f141c;z-index:2}
+.anamatrix tbody th{position:sticky;left:0;background:#0f141c;text-align:left;max-width:118px;z-index:1}
+.anamatrix th .mnum{display:block;color:#eae6da;font-weight:800}
+.anamatrix th .mname{display:block;max-width:106px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 9px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:var(--mu)}
+.anatblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;margin-top:6px}
+.anatblwrap .anatbl{min-width:330px;margin-top:0}
+.anamatrix td[data-pid]{cursor:pointer}
+.anamatrix td[data-pid]:hover{background:#ffffff12}
+#jCap{min-width:0}
+.anaalts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.anaalts span{font:600 10.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:var(--mu);border:1px solid #ffffff14;border-radius:999px;padding:2px 8px}
+.anatier{display:inline-flex;width:19px;height:19px;align-items:center;justify-content:center;border-radius:6px;font:800 11px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;line-height:1;vertical-align:middle}
+.anaroles{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.anarole{font:700 11px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#ffb07a;background:#ffb07a14;border:1px solid #ffb07a3d;border-radius:999px;padding:3px 9px}
+.anarole.ok{color:#9bf2b5;background:#9bf2b514;border-color:#9bf2b53d}
+.anarole b{font-weight:800;letter-spacing:0}
+.anahist{display:flex;flex-direction:column;gap:2px}
+.anahist>div{display:grid;grid-template-columns:88px 1fr auto;gap:8px;align-items:center;padding:4px 2px;border-bottom:1px solid #ffffff0d;font:600 12px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#dbe4ee}
+.anahist .d{color:var(--mu);font-size:10.5px}
+.anahist .up{color:#9bf2b5}.anahist .down{color:#ff9b7a}
+.anares{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:4px}
+.anares label{display:flex;gap:6px;align-items:center;font:600 11px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:var(--mu)}
+.anares input{width:64px;background:#0a1118;border:1px solid var(--ln);border-radius:8px;color:var(--tx);padding:5px 7px;font:700 12px 'Hanken Grotesk',system-ui,-apple-system,sans-serif}
+.anacal{margin-top:8px;font:600 11px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:var(--mu);line-height:1.45;border-left:2px solid #ffffff1a;padding:2px 0 2px 8px}
+@media(max-width:640px){
+  .anamatrix{max-height:300px;padding:4px}
+  .anamatrix table{font-size:9.5px}
+  .anamatrix th,.anamatrix td{min-width:28px;padding:3px 4px}
+  .anamatrix th .mname{max-width:72px}
+  .anatblwrap .anatbl{min-width:300px}
+  .anares label{flex:1}
+  .anahist>div{grid-template-columns:72px 1fr auto}
+  .anarow{grid-template-columns:minmax(0,1fr) 42px 76px;gap:8px}
+  .anarow b{font-size:12.5px}
+}
 
 .anamech{display:flex;flex-wrap:wrap;gap:6px}
+.anacap{font:600 12.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#e9f0f7;background:#ffffff08;border:1px solid #ffffff14;border-left:2px solid var(--au2);border-radius:8px;padding:8px 10px}
+.anacaplead{line-height:1.45}
+.anacap{display:flex;gap:10px;align-items:flex-start}
+.anacapimg{flex:0 0 74px;width:74px;align-self:center;border-radius:6px;box-shadow:0 8px 18px #000a,0 0 0 1px #ffffff1f}
+.anacapbody{flex:1;min-width:0}
+.anacaprow .nmb small .pt{color:#e9f0f7;font-weight:700}
+.anacapt{margin:9px 0 2px;color:var(--au2);font:700 9.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+.anacaprow{display:grid;grid-template-columns:16px minmax(0,1fr) auto;gap:8px;align-items:center;padding:5px 0;border-top:1px solid #ffffff12}
+.anacaprow .rk{font:700 11px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:var(--mu);text-align:center}
+.anacaprow.top .rk{color:var(--au2)}
+.anacaprow .nmb{min-width:0}
+.anacaprow .nmb b{display:block;font:600 12.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.anacaprow .nmb small{display:block;margin-top:1px;color:var(--mu);font:500 10.5px/1.35 'Hanken Grotesk',system-ui,-apple-system,sans-serif;white-space:normal}
+.anacaprow .g{font:800 15px Fraunces,serif;font-variant-numeric:tabular-nums}
 .anamech span{font:600 11px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#d8e2ec;background:#ffffff0a;border:1px solid #ffffff16;border-radius:999px;padding:3px 9px}
 .anamech span b{color:var(--au2)}
 .anacurve i.cv-easy{background:linear-gradient(180deg,var(--au2),#6d5316)}
@@ -127,9 +176,9 @@ nav button.on{color:var(--tx);background:var(--pn);box-shadow:inset 0 -2px var(-
 .anagrid b.dl-mid{color:#f2d08b}
 .anagrid b.dl-hard{color:#ff9b7a}
 .anahead{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
-.anagradebox{display:flex;flex-direction:column;align-items:center;min-width:58px}
+.anagradebox{display:flex;flex-direction:column;align-items:center;min-width:64px}
 .anagrade{font:800 40px/1 Fraunces,serif;color:var(--au2)}
-.anagradebox small{font:700 10px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.12em;color:var(--mu)}
+.anagradebox small{font:700 10px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.08em;color:var(--mu);white-space:nowrap;line-height:1.4}
 .anacity{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
 .anacta{font:600 11px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:var(--mu)}
 .anatbl{width:100%;border-collapse:collapse;font:600 12px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;margin-top:6px}
@@ -218,12 +267,18 @@ label{display:block;font:600 12px 'Hanken Grotesk',system-ui,-apple-system,sans-
 @media(min-width:1240px){.packgrid{grid-template-columns:repeat(5,minmax(0,1fr))}}
 .pack{background:linear-gradient(180deg,#18212c,#121a24);border:1px solid var(--ln);border-radius:13px;overflow:hidden;display:flex;flex-direction:column;transition:.2s}
 .pack:hover{border-color:#e3b64b55;transform:translateY(-2px)}
-.pack .art{position:relative;height:120px;background:linear-gradient(160deg,#26374a,#0d131a);overflow:hidden}
-.pack .art img{width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block}
-.pack .art:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#0000 20%,#121a24e6)}
-.pack .art .nm{position:absolute;left:11px;right:11px;bottom:8px;z-index:2;font:600 17px Fraunces,serif;text-shadow:0 2px 10px #000}
+.pack .art{position:relative;height:240px;background:linear-gradient(160deg,#26374a,#0d131a);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.pack .art .abg{position:absolute;inset:-14%;background-position:center;background-size:cover;filter:blur(18px) saturate(1.3);opacity:.5;transform:scale(1.05)}
+.pack .art img{position:relative;z-index:1;display:block;height:188px;width:auto;max-width:88%;margin-bottom:18px;object-fit:contain;border-radius:8px;box-shadow:0 14px 26px #000c,0 0 0 1px #ffffff26;transition:transform .25s ease}
+.pack:hover .art img{transform:translateY(-4px) scale(1.03)}
+.pack .art:after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#0000 58%,#121a24f2)}
+.pack .art .nm{position:absolute;left:11px;right:11px;bottom:8px;z-index:2;text-align:center;font:600 16px Fraunces,serif;text-shadow:0 2px 10px #000}
 .pack .bd{padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px;flex:1}
 .pack .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--mu)}
+.pack .pkrow{display:flex;gap:8px;align-items:flex-start;justify-content:space-between;min-width:0;font:600 11px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:var(--mu)}
+.pack .pkstyle{flex:0 0 auto;border:1px solid #ffffff16;border-radius:999px;padding:2px 8px;background:#ffffff08}
+.pack .pkcap{min-width:0;white-space:normal;line-height:1.25;text-align:right;color:#dbe4ee}
+.pack .pkcap b{font:800 11.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;font-variant-numeric:tabular-nums}
 .pack .acts{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:auto}
 .pack .acts button{background:#ffffff0c;border:1px solid var(--ln);color:var(--tx);border-radius:7px;padding:7px 6px;font:600 12.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;cursor:pointer;white-space:nowrap}
 .pack .acts button:hover{border-color:var(--au);color:var(--au2)}
@@ -748,6 +803,15 @@ body.playing .jside{height:100%}
       <div><label for="jMine" data-i18n="gp.mine">Mi combinación</label><select id="jMine"></select></div>
       <div><label for="jTheir" data-i18n="gp.their">Rival</label><select id="jTheir"></select></div>
       <div><label for="jDiff" data-i18n="gp.diff">Dificultad de la IA</label><select id="jDiff"><option value="easy">Fácil</option><option value="normal" selected>Normal</option><option value="hard">Difícil</option></select></div>
+    </div>
+    <div class="row" style="margin-top:12px;align-items:center">
+      <label for="jCap" style="margin:0" data-i18n="gp.captain">Capitán</label>
+      <select id="jCap" style="max-width:340px"></select>
+      <span class="mu xs" id="jCapInfo"></span>
+    </div>
+    <div class="row" style="margin-top:10px;align-items:center;gap:8px">
+      <span class="mu xs" data-i18n="gp.roles">Roles del mazo</span>
+      <div id="jRoles" class="anaroles"></div>
     </div>
     <div class="row" style="margin-top:14px"><button class="btn" id="jStart" data-i18n="gp.start">Empezar partida</button><span class="mu sm" id="jSetupStatus"></span></div>
   </div>
@@ -1999,7 +2063,10 @@ I18N.es['an.copyFail']='No se pudo copiar el informe';I18N.en['an.copyFail']='Co
 I18N.es['an.gradeShort']='Nota {g} · {s}/100';I18N.en['an.gradeShort']='Grade {g} · {s}/100';I18N.fr['an.gradeShort']='Note {g} · {s}/100';
 I18N.es['an.h2h']='Cara a cara';I18N.en['an.h2h']='Head to head';I18N.fr['an.h2h']='Face à face';
 I18N.es['an.h2h.metric']='Métrica';I18N.en['an.h2h.metric']='Metric';I18N.fr['an.h2h.metric']='Mesure';
-I18N.es['an.rankHint']='pulsa una fila para abrir su informe';I18N.en['an.rankHint']='tap a row to open its report';I18N.fr['an.rankHint']='cliquez une ligne pour ouvrir son rapport';
+I18N.es['an.rankHint']='de S a D por winrate · el tier, el puesto y el % salen del mismo orden · pulsa una fila para abrir su informe';I18N.en['an.rankHint']='S to D by winrate · tier, place and % come from the same order · tap a row to open its report';I18N.fr['an.rankHint']='de S à D par winrate · le tier, le rang et le % suivent le même ordre · touchez une ligne pour ouvrir son rapport';
+I18N.es['an.pairBtn']='La mejor combinación que cubre 2/2/2';I18N.en['an.pairBtn']='Best pair covering 2/2/2';I18N.fr['an.pairBtn']='La meilleure paire couvrant 2/2/2';
+I18N.es['an.pairOk']='Mejor combinación: {name} · completa 2/2/2 ({r}/{d}/{a} entre los dos).';I18N.en['an.pairOk']='Best combination: {name} · covers 2/2/2 ({r}/{d}/{a} between both).';I18N.fr['an.pairOk']='Meilleure combinaison : {name} · couvre 2/2/2 ({r}/{d}/{a} entre les deux).';
+I18N.es['an.pairGap']='Ninguna pareja llega a 2/2/2; se propone la de mejor winrate: {name} ({r}/{d}/{a}).';I18N.en['an.pairGap']='No pair reaches 2/2/2; the best winrate one is suggested: {name} ({r}/{d}/{a}).';I18N.fr['an.pairGap']='Aucune paire n’atteint 2/2/2 ; on propose la meilleure en winrate : {name} ({r}/{d}/{a}).';
 I18N.es['an.need2']='Necesitas al menos dos sobres para comparar.';I18N.en['an.need2']='You need at least two packs to compare.';I18N.fr['an.need2']='Il faut au moins deux boosters pour comparer.';
 
 I18N.es['an.methodT']='Método y fuentes';I18N.en['an.methodT']='Method and sources';I18N.fr['an.methodT']='Méthode et sources';
@@ -2087,6 +2154,154 @@ I18N.es['an.broken']='Roto';I18N.en['an.broken']='Broken';I18N.fr['an.broken']='
 I18N.es['an.weak']='Flojo';I18N.en['an.weak']='Weak';I18N.fr['an.weak']='Faible';
 
 I18N.es['an.sources']='Fuentes';I18N.en['an.sources']='Sources';I18N.fr['an.sources']='Sources';
+I18N.es['an.removalShort']='Respuestas';I18N.en['an.removalShort']='Answers';I18N.fr['an.removalShort']='Réponses';
+I18N.es['an.captain']='Capitán';I18N.en['an.captain']='Captain';I18N.fr['an.captain']='Capitaine';
+I18N.es['an.captainLine']='Capitán sugerido: {card} ({g}/10, coste {mv}). Es la criatura que más aporta desde la zona de mando.';I18N.en['an.captainLine']='Suggested captain: {card} ({g}/10, cost {mv}). The creature that contributes most from the command zone.';I18N.fr['an.captainLine']='Capitaine suggéré : {card} ({g}/10, coût {mv}). La créature qui apporte le plus depuis la zone de commandement.';
+I18N.es['an.ciNote']='El intervalo cubre el azar de las partidas y el error del modelo: no baja de ±7 puntos.';I18N.en['an.ciNote']='The interval covers game randomness and model error: it never drops below ±7 points.';I18N.fr['an.ciNote']='L’intervalle couvre le hasard des parties et l’erreur du modèle : il ne descend pas sous ±7 points.';
+I18N.es['an.m4']='Notas por carta al estilo «Adjusted Win Rate» (fuerza + sinergia, datos 17Lands/GIH WR) y winrate Monte Carlo con mulligan de Londres, alternando quién sale primero y mezclado con la nota descriptiva; como el modelo es grueso, el resultado se da con un intervalo que incluye su error.';I18N.en['an.m4']='Per-card grades in the “Adjusted Win Rate” style (strength + synergy, 17Lands/GIH WR data) and a Monte Carlo winrate with London mulligan, alternating who plays first and blended with the descriptive grade; the model is coarse, so the result comes with an interval that includes its error.';I18N.fr['an.m4']='Notes par carte façon « Adjusted Win Rate » (force + synergie, données 17Lands/GIH WR) et winrate Monte Carlo avec mulligan de Londres, en alternant qui commence et mélangé à la note descriptive ; le modèle étant grossier, le résultat est donné avec un intervalle qui inclut son erreur.';
+
+Object.assign(I18N.es,{
+  'an.captainLine':'Capitán sugerido: {card} ({g}/10). Cuesta {t1}, luego {t2} y {t3} si vuelve: se espera lanzarlo dos veces, así que pesan el coste y lo que aporta al entrar.',
+  'an.capNone':'Este sobre no tiene criaturas: no hay capitán posible.',
+  'an.hist':'Historial de notas','an.histFirst':'La nota se guarda cada vez que analizas el sobre y se compara con la anterior.',
+  'an.res.t':'Tus resultados','an.res.cta':'Con tus partidas la app recalibra el winrate.','an.res.w':'Ganadas','an.res.g':'Jugadas','an.res.save':'Guardar',
+  'an.res.hint':'Se guardan solo en este navegador.','an.res.saved':'Resultados guardados: calibración recalculada.','an.res.bad':'Las victorias no pueden superar las partidas jugadas.',
+  'an.calLine':'Calibrado con {n} partidas de {p} sobres: {b} puntos de winrate por punto de nota · R² {r2}.',
+  'an.calNone':'Sin datos suficientes (3 sobres y 12 partidas) se usa el ajuste por defecto: 18 puntos de nota equivalen a una ventaja 10:1.',
+  'an.m5':'Combate con bloqueo múltiple, amenaza y dañar primero; el defensor puede gastar un removal a velocidad de instantáneo antes del daño, y los atacantes van a por los planeswalkers cuando pueden tumbarlos.',
+  'an.m6':'El capitán se puntúa con el impuesto de mando (coste, dos lanzamientos previstos, efecto al entrar y símbolos que el mazo puede pagar dos veces). La calibración sale de tus resultados anotados: el formato es casero y 17Lands no publica datos de él.'
+});
+Object.assign(I18N.en,{
+  'an.captainLine':'Suggested captain: {card} ({g}/10). It costs {t1}, then {t2} and {t3} if it returns: two casts are expected, so cost and enters-the-battlefield value both count.',
+  'an.capNone':'This pack has no creatures: there is no possible captain.',
+  'an.hist':'Grade history','an.histFirst':'The grade is stored every time you analyse the pack and compared with the previous one.',
+  'an.res.t':'Your results','an.res.cta':'With your games the app recalibrates the winrate.','an.res.w':'Won','an.res.g':'Played','an.res.save':'Save',
+  'an.res.hint':'Stored in this browser only.','an.res.saved':'Results saved: calibration recalculated.','an.res.bad':'Wins cannot exceed games played.',
+  'an.calLine':'Calibrated on {n} games across {p} packs: {b} winrate points per grade point · R² {r2}.',
+  'an.calNone':'Not enough data (3 packs and 12 games), so the default fit applies: 18 grade points equal a 10:1 edge.',
+  'an.m5':'Combat with multiple blocking, menace and first strike; the defender may spend removal at instant speed before damage, and attackers go after planeswalkers when they can take them down.',
+  'an.m6':'The captain is scored with the command tax (cost, two expected casts, enters-the-battlefield value and symbols the deck can pay twice). Calibration comes from your recorded results: the format is homebrew and 17Lands publishes no data for it.'
+});
+Object.assign(I18N.fr,{
+  'an.captainLine':'Capitaine suggéré : {card} ({g}/10). Il coûte {t1}, puis {t2} et {t3} s’il revient : on prévoit deux lancements, donc le coût et l’effet à l’arrivée comptent.',
+  'an.capNone':'Ce booster n’a aucune créature : aucun capitaine possible.',
+  'an.hist':'Historique des notes','an.histFirst':'La note est enregistrée à chaque analyse du booster et comparée à la précédente.',
+  'an.res.t':'Vos résultats','an.res.cta':'Avec vos parties, l’app recalibre le winrate.','an.res.w':'Gagnées','an.res.g':'Jouées','an.res.save':'Enregistrer',
+  'an.res.hint':'Enregistré dans ce navigateur uniquement.','an.res.saved':'Résultats enregistrés : calibrage recalculé.','an.res.bad':'Les victoires ne peuvent pas dépasser les parties jouées.',
+  'an.calLine':'Calibré sur {n} parties et {p} boosters : {b} points de winrate par point de note · R² {r2}.',
+  'an.calNone':'Pas assez de données (3 boosters et 12 parties) : l’ajustement par défaut s’applique, 18 points de note valant un avantage 10:1.',
+  'an.m5':'Combat avec blocage multiple, menace et initiative ; le défenseur peut dépenser un removal à vitesse d’éphémère avant les blessures, et les attaquants visent les planeswalkers quand ils peuvent les abattre.',
+  'an.m6':'Le capitaine est noté avec la taxe de commandement (coût, deux lancements prévus, effet à l’arrivée et symboles payables deux fois). Le calibrage vient de vos résultats enregistrés : le format est maison et 17Lands n’en publie aucune donnée.'
+});
+
+/* ---------- capitán elegible, avisos y matices de la matriz ---------- */
+Object.assign(I18N.es,{
+  'gp.captain':'Capitán','gp.captainTax':'Impuesto de mando: {t1} → {t2} → {t3}','an.manaShort':'maná',
+  'an.w.captain':'Sin criaturas para capitán','an.w.captainWeak':'Capitán flojo para el formato',
+  'an.matrixHint':'Toca una fila o una celda para abrir su informe.',
+  'an.calNeed':'Faltan {n} partidas (mínimo 3 sobres y 12 partidas) para calibrar: ahora se usa el ajuste por defecto.'
+});
+Object.assign(I18N.en,{
+  'gp.captain':'Captain','gp.captainTax':'Command tax: {t1} → {t2} → {t3}','an.manaShort':'mana',
+  'an.w.captain':'No creatures to be captain','an.w.captainWeak':'Weak captain for this format',
+  'an.matrixHint':'Tap a row or a cell to open its report.',
+  'an.calNeed':'{n} more games needed (at least 3 packs and 12 games) to calibrate: the default fit is in use.'
+});
+Object.assign(I18N.fr,{
+  'gp.captain':'Capitaine','gp.captainTax':'Taxe de commandement : {t1} → {t2} → {t3}','an.manaShort':'mana',
+  'an.w.captain':'Aucune créature pour capitaine','an.w.captainWeak':'Capitaine faible pour ce format',
+  'an.matrixHint':'Touchez une ligne ou une case pour ouvrir son rapport.',
+  'an.calNeed':'Encore {n} parties (minimum 3 boosters et 12 parties) pour calibrer : l’ajustement par défaut s’applique.'
+});
+Object.assign(I18N.es,{'an.capBase':'Nota de carta {g}','an.capCost':'Impuesto {d}','an.capEtb':'Al entrar {d}','an.capShort':'{n} color justo',
+  'an.gradeRel':'Nota sobre 100 y puesto entre tus sobres (la nota es absoluta; el puesto decide qué dos combinar)',
+  'an.rankShort':'{r}.º/{t} por nota','an.scoreShort':'{s}/100',
+  'an.libRank':'Puesto {r} de {tt} en tu biblioteca · mejor que el {p} % · media {m}',
+  'an.m7':'Cada sobre es media baraja (12 hechizos + 8 tierras): la nota sobre 100 es absoluta y se centra en 50 (cartas de nota media, sin sinergia ni carencias), mientras que el puesto (1.º de N) dice dónde cae entre tus sobres, que es lo que decide qué dos combinar. Las carencias de construcción pesan la mitad porque el otro sobre puede taparlas.'});
+Object.assign(I18N.en,{'an.capBase':'Card grade {g}','an.capCost':'Tax {d}','an.capEtb':'On entry {d}','an.capShort':'{n} tight colour',
+  'an.gradeRel':'Score out of 100 and its place among your packs (the score is absolute; the place decides which two to combine)',
+  'an.rankShort':'#{r}/{t} by score','an.scoreShort':'{s}/100',
+  'an.libRank':'Rank {r} of {tt} in your library · better than {p}% · average {m}',
+  'an.m7':'Each pack is half a deck (12 spells + 8 lands): the score out of 100 is absolute and centred on 50 (average card grades, no synergy or gaps), while the place (#1 of N) says where it sits among your packs, which is what decides which two to combine. Deck-building gaps weigh half because the other pack can cover them.'});
+Object.assign(I18N.fr,{'an.capBase':'Note de carte {g}','an.capCost':'Taxe {d}','an.capEtb':'À l’arrivée {d}','an.capShort':'{n} couleur juste',
+  'an.gradeRel':'Note sur 100 et rang parmi vos boosters (la note est absolue ; le rang décide lesquels combiner)',
+  'an.rankShort':'{r}/{t} par note','an.scoreShort':'{s}/100',
+  'an.libRank':'Rang {r} sur {tt} dans votre bibliothèque · mieux que {p} % · moyenne {m}',
+  'an.m7':'Chaque booster est un demi-deck (12 sorts + 8 terrains) : la note sur 100 est absolue et centrée sur 50 (notes de cartes moyennes, sans synergie ni manque), tandis que le rang (1er sur N) indique sa place parmi vos boosters, ce qui décide lesquels combiner. Les manques de construction comptent moitié car l’autre booster peut les couvrir.'});
+Object.assign(I18N.en,{'an.capBase':'Card grade {g}','an.capCost':'Tax {d}','an.capEtb':'On entry {d}','an.capShort':'{n} tight colour'});
+Object.assign(I18N.fr,{'an.capBase':'Note de carte {g}','an.capCost':'Taxe {d}','an.capEtb':'À l’arrivée {d}','an.capShort':'{n} couleur juste'});
+/* ---------- tiers relativos, roles del mazo y escala de color ---------- */
+Object.assign(I18N.es,{
+  'an.ramp':'Rampa','an.draw':'Robo','an.answers':'Respuestas',
+  'an.rolesT':'Roles del mazo',
+  'an.rolesShort':'R{r} · D{d} · A{a}',
+  'an.roleHint':'La baraja de 40 pide 2 de rampa, 2 de robo y 2 de respuestas: el sobre es media baraja, así que 1 de cada ya es la mitad del mínimo y el otro sobre debe poner la otra mitad.',
+  'an.roleOk':'Cubre el mínimo 2/2/2.',
+  'an.roleGap':'Le falta {list} para llegar a 2.',
+  'an.w.ramp':'Sin rampa: no acelera','an.w.draw':'Sin robo: se queda sin gas',
+  'gp.roles':'Roles del mazo',
+  'an.gradeRel':'Tier relativo a tu biblioteca (S mejor, D peor) y nota sobre 100 (absoluta: 50 = cartas de nota media)',
+  'an.m7':'Cada sobre es media baraja (12 hechizos + 8 tierras): la nota sobre 100 es absoluta (50 = cartas de nota media, sin sinergia ni carencias) y la letra es un tier relativo a tu biblioteca (S la mejor, D la peor) que ordena los mazos. Para la baraja de 40 se buscan 2 de rampa, 2 de robo y 2 de respuestas; las carencias de construcción pesan la mitad porque el otro sobre puede taparlas.'
+});
+Object.assign(I18N.en,{
+  'an.ramp':'Ramp','an.draw':'Card draw','an.answers':'Answers',
+  'an.rolesT':'Deck roles',
+  'an.rolesShort':'R{r} · D{d} · A{a}',
+  'an.roleHint':'A 40-card deck wants 2 ramp, 2 card draw and 2 answers: a pack is half a deck, so 1 of each is already half the minimum and the other pack must supply the rest.',
+  'an.roleOk':'Covers the 2/2/2 minimum.',
+  'an.roleGap':'Short on {list} for the minimum of 2.',
+  'an.w.ramp':'No ramp: it does not accelerate','an.w.draw':'No card draw: it runs out of gas',
+  'gp.roles':'Deck roles',
+  'an.gradeRel':'Tier relative to your library (S best, D worst) and score out of 100 (absolute: 50 = average card grades)',
+  'an.m7':'Each pack is half a deck (12 spells + 8 lands): the score out of 100 is absolute (50 = average card grades, no synergy or gaps) and the letter is a tier relative to your library (S best, D worst) that orders the decks. A 40-card deck wants 2 ramp, 2 card draw and 2 answers; building gaps weigh half because the other pack can cover them.'
+});
+Object.assign(I18N.fr,{
+  'an.ramp':'Ramp','an.draw':'Pioche','an.answers':'Réponses',
+  'an.rolesT':'Rôles du deck',
+  'an.rolesShort':'R{r} · P{d} · R{a}',
+  'an.roleHint':'Un deck de 40 veut 2 ramp, 2 pioches et 2 réponses : un booster est un demi-deck, donc 1 de chaque fait déjà la moitié du minimum et l’autre booster doit fournir le reste.',
+  'an.roleOk':'Couvre le minimum 2/2/2.',
+  'an.roleGap':'Il manque {list} pour atteindre 2.',
+  'an.w.ramp':'Sans ramp : n’accélère pas','an.w.draw':'Sans pioche : s’essouffle',
+  'gp.roles':'Rôles du deck',
+  'an.gradeRel':'Tier relatif à votre bibliothèque (S meilleur, D pire) et note sur 100 (absolue : 50 = notes de cartes moyennes)',
+  'an.m7':'Chaque booster est un demi-deck (12 sorts + 8 terrains) : la note sur 100 est absolue (50 = notes de cartes moyennes, sans synergie ni manque) et la lettre est un tier relatif à votre bibliothèque (S le meilleur, D le pire) qui ordonne les decks. Un deck de 40 veut 2 ramp, 2 pioches et 2 réponses ; les manques de construction comptent moitié car l’autre booster peut les couvrir.'
+});
+
+/* ---------- teoría del formato + 3 capitanes por minimazo ---------- */
+Object.assign(I18N.es,{
+  'an.capTop':'{n} mejores capitanes posibles',
+  'an.capMv':'coste {mv} · vuelve por {t1} y {t2}',
+  'an.jtT':'Teoría de Jumpstart',
+  'an.jt1':'Anatomía de un sobre oficial: 20 cartas con sus tierras dentro, 6-9 criaturas, 4-5 hechizos que no son criatura, 0-2 raras y una carta de tema. No es un mazo terminado: es media baraja pensada para jugarse sola.',
+  'an.jt2':'Monocolor por diseño: dos sobres de un color dan un mazo de dos colores. Si los sobres fueran bicolor, emparejar dos al azar dejaría mazos de 3-4 colores sin fijación y partidas perdidas por color.',
+  'an.jt3':'Curva centrada en 2-5 y ojo con los símbolos dobles: en un mazo de dos colores con una sola tierra dual, un coste MM no llega a tiempo y MMM casi nunca se lanza.',
+  'an.jt4':'Empareja velocidades parecidas: aggro con aggro o medio con medio. Dos tribus con planes distintos (Minotauros agresivos y Vampiros que drenan) se estorban en vez de sumar.',
+  'an.jt5':'Huye de los temas parásitos: una mecánica cerrada (energía, una tribu que el otro sobre no apoya) no interactúa con nada de la otra mitad. Los sobres oficiales se diseñan para encajar con cualquiera.',
+  'an.jt6':'Interacción poca pero real: los sobres oficiales llevan alrededor de dos respuestas baratas, y de ahí sale el objetivo 2/2/2 de rampa, robo y respuestas del mazo de 40. El capitán en la zona de mando es regla de esta casa, no del formato oficial.'
+});
+Object.assign(I18N.en,{
+  'an.capTop':'Top {n} possible captains',
+  'an.capMv':'cost {mv} · back for {t1} then {t2}',
+  'an.jtT':'Jumpstart theory',
+  'an.jt1':'Anatomy of an official pack: 20 cards with their lands inside, 6-9 creatures, 4-5 non-creature spells, 0-2 rares and a theme card. It is not a finished deck: it is half a deck built to play on its own.',
+  'an.jt2':'Monocolour by design: two packs of one colour make a two-colour deck. If packs were two-coloured, pairing two at random would leave 3-4 colour decks with no fixing and losses to colour screw.',
+  'an.jt3':'Curve centred on 2-5, and mind double pips: in a two-colour deck with a single dual land, an MM cost does not arrive on time and MMM almost never gets cast.',
+  'an.jt4':'Pair similar speeds: aggro with aggro, midrange with midrange. Two tribes with different plans (aggressive Minotaurs and draining Vampires) get in each other’s way instead of adding up.',
+  'an.jt5':'Avoid parasitic themes: a closed mechanic (energy, a tribe the other pack does not support) does not interact with anything in the other half. Official packs are designed to fit with any other.',
+  'an.jt6':'Little but real interaction: official packs carry around two cheap answers, and that is where the 2/2/2 goal of ramp, draw and answers for the 40-card deck comes from. The captain in the command zone is a house rule here, not part of the official format.'
+});
+Object.assign(I18N.fr,{
+  'an.capTop':'Les {n} meilleurs capitaines possibles',
+  'an.capMv':'coût {mv} · revient pour {t1} puis {t2}',
+  'an.jtT':'Théorie de Jumpstart',
+  'an.jt1':'Anatomie d’un booster officiel : 20 cartes avec leurs terrains, 6-9 créatures, 4-5 sorts non-créature, 0-2 rares et une carte de thème. Ce n’est pas un deck fini : c’est un demi-deck conçu pour se jouer seul.',
+  'an.jt2':'Monocolore par conception : deux boosters d’une couleur donnent un deck bicolore. Si les boosters étaient bicolores, en associer deux au hasard laisserait des decks de 3-4 couleurs sans fixation et des défaites par manque de couleurs.',
+  'an.jt3':'Courbe centrée sur 2-5, attention aux symboles doubles : dans un deck bicolore avec un seul terrain double, un coût MM n’arrive pas à temps et MMM ne se lance presque jamais.',
+  'an.jt4':'Associez des vitesses proches : aggro avec aggro, midrange avec midrange. Deux tribus aux plans différents (Minotaures agressifs et Vampires qui drainent) se gênent au lieu de s’additionner.',
+  'an.jt5':'Fuyez les thèmes parasites : une mécanique fermée (énergie, une tribu que l’autre booster ne soutient pas) n’interagit avec rien de l’autre moitié. Les boosters officiels sont conçus pour s’emboîter avec n’importe quel autre.',
+  'an.jt6':'Peu d’interaction mais réelle : les boosters officiels embarquent environ deux réponses bon marché, d’où l’objectif 2/2/2 de ramp, pioche et réponses du deck de 40. Le capitaine en zone de commandement est une règle maison, pas le format officiel.'
+});
 /* ============================================================
    Captain Jumpstart · núcleo: datos, Scryfall, sobres y análisis
 ============================================================ */
@@ -2194,6 +2409,7 @@ function normCard(c){
     rarity:c.rarity||'common',
     kw:(c.keywords||[]).map(k=>String(k).toLowerCase()),
     img:im.normal||im.large||'', sm:im.small||im.normal||'',
+    loyalty:c.loyalty!=null?parseInt(c.loyalty,10):null,
     legendary:/Legendary/i.test(type),
     land:/Land/i.test(type), creature:/Creature/i.test(type),
     basic:/Basic/i.test(type)||BASIC_NAMES.has(c.name),
@@ -2511,19 +2727,48 @@ function packArt(p){
   cs.sort((a,b)=>(b.legendary?2:0)+(b.rarity==='mythic'?1.5:b.rarity==='rare'?1:0)+(b.pow||0)*.06-((a.legendary?2:0)+(a.rarity==='mythic'?1.5:a.rarity==='rare'?1:0)+(a.pow||0)*.06));
   return cs[0].img;
 }
+/* nota del sobre para la biblioteca, cacheada por contenido */
+const PACK_GRADE_CACHE=new Map();
+function packGrade(p){
+  if(typeof anaStats!=='function'||!p.cards||!p.cards.length)return null;
+  if(!CARD||Object.keys(CARD).length<50)return null;
+  const key=p.id+'|'+p.cards.join(',');
+  if(!PACK_GRADE_CACHE.has(key)){
+    if(PACK_GRADE_CACHE.size>200)PACK_GRADE_CACHE.clear();
+    PACK_GRADE_CACHE.set(key,anaStats(p));
+  }
+  return PACK_GRADE_CACHE.get(key);
+}
+/* insignia de la biblioteca: letra relativa (tier) + nota, en verde→rojo */
+function anaBadge(p,gr){
+  const tr=typeof anaTierOf==='function'?anaTierOf(p):null;
+  const col=typeof anaCol==='function'?anaCol(gr.score):'var(--au2)';
+  const bg=typeof anaSoft==='function'?anaSoft(gr.score,.16):'transparent';
+  return `<span class="badge gold" style="color:${col};background:${bg};border-color:${col}" title="${t('an.gradeRel')}">${tr?`<b>${tr.letter}</b> `:''}${gr.score}${tr?' · '+t('an.rankShort',{r:tr.rank,t:tr.total}):''}${typeof anaHistDelta==='function'?anaHistDelta(p):''}</span>`;
+}
+/* resumen de la carta en la biblioteca: estilo del mazo y capitán posible */
+function packLead(gr){
+  if(!gr||!gr.style)return '';
+  const cap=gr.captains&&gr.captains[0];
+  const c=cap
+    ? `<span class="pkcap" title="${esc(t('an.captain'))}">⚑ ${esc(cap.name)}&nbsp;<b style="color:${anaCol(Math.round(cap.g*10))}">${cap.g.toFixed(1)}</b></span>`
+    : `<span class="pkcap" title="${esc(t('an.capNone'))}">⚑ —</span>`;
+  return `<div class="pkrow"><span class="pkstyle">${esc(t('an.style.'+gr.style))}</span>${c}</div>`;
+}
 function renderPacks(){
   const grid=$('#packGrid');
   const n=state.packs.length;
   $('#packCount').textContent=t(n===1?'pk.one':'pk.count',{n});
   $('#packEmpty').style.display=n?'none':'block';
   grid.innerHTML=state.packs.map(p=>{
-    const cols=packColors(p),art=packArt(p),nm=packName(p);
+    const cols=packColors(p),art=packArt(p),nm=packName(p),gr=packGrade(p);
     queueLoc(p.cards.slice(0,8));
     return `<article class="pack" data-pack="${p.id}">
-      <div class="art">${art?`<img src="${esc(art)}" alt="" loading="lazy">`:''}<span class="nm">${esc(nm)}</span></div>
+      <div class="art">${art?`<span class="abg" style="background-image:url(${esc(art)})"></span><img src="${esc(art)}" alt="" loading="lazy">`:''}<span class="nm">${esc(nm)}</span></div>
       <div class="bd">
         <div class="meta">${cols.length?cols.map(k=>pip(k)).join(''):`<span class="mu">${t('pk.noColor')}</span>`}
-          <span>${p.cards.length}/20</span><span class="badge">${esc(srcLabel(p.source))}</span></div>
+          <span>${p.cards.length}/20</span>${gr?anaBadge(p,gr):''}<span class="badge">${esc(srcLabel(p.source))}</span></div>
+        ${packLead(gr)}
         <div class="acts">
           <button data-act="edit" data-id="${p.id}">${t('pk.edit')}</button>
           <button data-act="regen" data-id="${p.id}">${t('pk.regen')}</button>
@@ -2554,7 +2799,7 @@ const _clearBtn=$('#clearPacks');
 if(_clearBtn)_clearBtn.onclick=()=>{
   if(!state.packs.length){toast(t('pk.none'));return}
   if(!confirm(t('pk.clearAsk',{n:state.packs.length})))return;
-  state.packs=[];state.ana=null;
+  state.packs=[];
   state.nextSeq=1;store.set('cj2_seq',1);
   savePacks();renderPacks();
   const ao=$('#anaOut');
@@ -2566,7 +2811,11 @@ if(_clearBtn)_clearBtn.onclick=()=>{
 /* ---------- copia de seguridad de la biblioteca ---------- */
 function packsToJson(){
   return JSON.stringify({
-    app:'captain-jumpstart', version:1, exported:new Date().toISOString(), seq:state.nextSeq||1,
+    app:'captain-jumpstart', version:2, exported:new Date().toISOString(), seq:state.nextSeq||1,
+    /* resultados e historial viajan con la biblioteca: van indexados por el
+       contenido del sobre, así se recuperan al importar en otro equipo */
+    results:(typeof anaResults==='function'?anaResults():{}),
+    hist:(typeof anaHistAll==='function'?anaHistAll():{}),
     packs:state.packs.map(p=>({seq:p.seq||0,name:p.name||'',cards:p.cards||[],prints:p.prints||{},setCode:p.setCode||'',theme:p.theme||'',themeId:p.themeId||'',color:p.color||'',source:p.source||''}))
   },null,2);
 }
@@ -2598,6 +2847,18 @@ async function importPacks(file){
   clean.forEach(p=>{if(p.seq&&used.has(p.seq))p.seq=0;else if(p.seq)used.add(p.seq)});
   state.packs.push(...clean);
   ensureSeq();
+  if(data&&typeof data==='object'&&!Array.isArray(data)){
+    ['results','hist'].forEach(k=>{
+      const src=data[k];
+      if(!src||typeof src!=='object')return;
+      const key=k==='results'?'cj2_results':'cj2_hist';
+      const cur=store.get(key,{});
+      Object.keys(src).forEach(x=>{if(src[x]&&typeof src[x]==='object')cur[x]=src[x]});
+      store.set(key,cur);
+    });
+    if(typeof ANA_CAL_CACHE!=='undefined')ANA_CAL_CACHE=null;
+    if(typeof anaCalFit==='function')anaCalFit();
+  }
   renderPacks();setTab('packs');
   resolveNames(clean.flatMap(p=>p.cards)).then(()=>renderPacks());
   toast(t('pk.importedN',{n:clean.length}));
@@ -2649,7 +2910,6 @@ async function regenPack(p,btn){
     /* el nombre lleva la temática: se cambia por la nueva si la incluía */
     if(oldLabel&&p.name&&p.name.includes(oldLabel))p.name=p.name.split(oldLabel).join(p.theme);
     if(typeof ANA_DECK_CACHE!=='undefined')ANA_DECK_CACHE.delete(p);
-    state.ana=null;
     savePacks();renderPacks();
     const others=new Set();
     state.packs.forEach(x=>{if(x!==p)(x.cards||[]).forEach(n=>{if(n&&!isBasicName(n))others.add(n)})});
@@ -2695,7 +2955,6 @@ async function regenPhysical(p,btn){
     state.nextSeq=seqBefore;
     p.cards=pack.cards;p.basicArt={};p.basicArtLang='';p.color=color;p.source='physical';
     if(typeof ANA_DECK_CACHE!=='undefined')ANA_DECK_CACHE.delete(p);
-    state.ana=null;
     savePacks();renderPacks();
     const others=new Set();
     state.packs.forEach(x=>{if(x!==p)(x.cards||[]).forEach(nm=>{if(nm&&!BASIC_NAMES.has(nm))others.add(nm)})});
@@ -3368,7 +3627,14 @@ function combinePacks(a,b){
     kept[ix.i]=BASIC[k];src[donor]--;src[k]++;
   });
   const creatures=[...new Set(kept.map(cardOf).filter(c=>c&&c.creature&&!c.land).map(c=>c.name))];
-  const cap=creatures.slice().sort((x,y)=>{
+  /* el capitán lo elige el analizador: pesa el impuesto de mando y que el mazo
+     pueda pagarlo; si aún no está cargado, se usa la heurística antigua */
+  let cap=null;
+  if(typeof anaBestCaptain==='function'){
+    const best=anaBestCaptain(kept);
+    if(best&&best.name)cap=best.name;
+  }
+  if(!cap)cap=creatures.slice().sort((x,y)=>{
     const A=cardOf(x),B=cardOf(y);
     const sc=c=>(c.legendary?8:0)+Math.max(0,6-c.cmc)*2+(c.tou||0)*.4+(c.pow||0)*.3;
     return sc(B)-sc(A);
@@ -3469,7 +3735,7 @@ const BACK_IMG='data:image/webp;base64,UklGRhAgAQBXRUJQVlA4IAQgAQCQ2gKdASrgAagCP
      turno M | ≥M tierras) ≥ (89 + M) %.
    · 17Lands (GIH WR, IIH): la fuerza de las cartas de un mazo
      explica alrededor de un tercio de la varianza del winrate, así
-     que el resultado se da con intervalo de confianza (Wilson 95 %).
+     que el resultado se da con intervalo de confianza del 95 %.
    · arXiv 2607.04782 «Predicting Drafted Deck Strength for MTG».
    ============================================================ */
 
@@ -3523,13 +3789,6 @@ function anaNeedSources(N,Kl,M,pips){
   for(let K=pips;K<=Kl;K++)if(anaCastCond(N,Kl,K,M,pips)>=target)return K;
   return Kl+1;
 }
-/* intervalo de Wilson 95 % */
-function anaWilson(w,n){
-  if(!n)return [0,100];
-  const z=1.96,p=w/n,d=1+z*z/n;
-  const c=(p+z*z/(2*n))/d,h=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n))/d;
-  return [Math.max(0,100*(c-h)),Math.min(100,100*(c+h))];
-}
 
 /* ---------- 2 · lectura de cartas ---------- */
 const ANA_RX={
@@ -3540,7 +3799,7 @@ const ANA_RX={
   counter:/\+1\/\+1 counter/,
   tutor:/\bsearch your library/,
   recur:/\breturn .{0,60}from your graveyard/,
-  ramp:/\badd \{[^}]+\}|\bsearch your library for a (basic )?land/,
+  ramp:/\badd \{[^}]+\}|\bsearch your library for a (basic )?land|create .{0,40}treasure/,
   burn:/\bdeals? \d+ damage to (any target|target player|each opponent|target opponent)/,
   anthem:/creatures you control get \+|other .{0,30}you control get \+/
 };
@@ -3554,6 +3813,47 @@ const ANA_MECH=[
   [/copy|enters as a copy/,'Copias'],[/return .* to (its|their) owner/,'Rebote']
 ];
 const ANA_HARD=/cascade|copy|for each|choose one|whenever .* (dies|attacks|blocks)|surveil|mill|exile .* then|instead|additional cost|as an additional/i;
+/* error del modelo de simulación en winrate (0-1): no se reduce con más partidas */
+const ANA_MODEL_SE=0.07;
+/* La calidad bruta de un sobre de este formato (12 hechizos + 8 tierras) se
+   concentra en una banda estrecha; estos tres números la reescalan para que
+   50 sea un sobre de cartas de nota media sin sinergia ni carencias y 12
+   puntos equivalgan a una desviación típica (medido sobre 600 sobres
+   sintéticos del pool real, σ≈6). */
+const ANA_SCORE_MEAN=62;
+const ANA_SCORE_GAIN=2;
+const ANA_SCORE_BASE=50;
+/* verde (mejor) → rojo (peor): notas y barras de winrate */
+function anaHue(v){return Math.round(145*Math.pow(Math.max(0,Math.min(1,(v-18)/52)),1.05))}
+function anaCol(v){return 'hsl('+anaHue(v)+' 74% 61%)'}
+function anaSoft(v,a){return 'hsla('+anaHue(v)+' 74% 61% / '+(a||0.16)+')'}
+function anaWinHue(w){return Math.round(145*Math.pow(Math.max(0,Math.min(1,(w-30)/40)),1.05))}
+function anaWinCol(w){return 'hsl('+anaWinHue(w)+' 74% 61%)'}
+/* mínimo de roles que se nota en una baraja de 40 */
+const ANA_ROLE_TARGET=2;
+function anaRoleOf(cards){
+  const spells=(cards||[]).map(cardOfSafe).filter(c=>c&&!c.land);
+  const o=c=>String(c.oracle||'').toLowerCase();
+  return {
+    ramp:spells.filter(c=>ANA_RX.ramp.test(o(c))).length,
+    draw:spells.filter(c=>anaDrawN(c)).length,
+    answers:spells.filter(c=>ANA_RX.removal.test(o(c))).length
+  };
+}
+function anaRoleChips(r,withTarget){
+  const item=(k,n)=>{
+    const ok=withTarget?n>=ANA_ROLE_TARGET:n>0;
+    return '<span class="anarole'+(ok?' ok':'')+'">'+t(k)+' <b>'+(withTarget?n+'/'+ANA_ROLE_TARGET:n)+'</b></span>';
+  };
+  return '<div class="anaroles">'+item('an.ramp',r.ramp)+item('an.draw',r.draw)+item('an.answers',r.answers)+'</div>';
+}
+function anaRoleVerdict(r){
+  const miss=[];
+  if(r.ramp<ANA_ROLE_TARGET)miss.push(t('an.ramp'));
+  if(r.draw<ANA_ROLE_TARGET)miss.push(t('an.draw'));
+  if(r.answers<ANA_ROLE_TARGET)miss.push(t('an.answers'));
+  return miss.length?t('an.roleGap',{list:miss.join(', ')}):t('an.roleOk');
+}
 
 const anaText=c=>(String(c.oracle||'')+' '+(c.kw||[]).join(' ')).toLowerCase();
 function anaCardWeight(c){
@@ -3601,19 +3901,19 @@ function anaPips(c){
    fuerza de la carta + valor de sus habilidades. Pensado para
    puntuar dentro de un mismo sobre, no para comparar sets. */
 function anaCardGrade(c){
-  if(!c||c.land)return {g:0,tags:[],why:[]};
+  if(!c||c.land)return {g:0,tags:[]};
   const o=String(c.oracle||'').toLowerCase(),kw=(c.kw||[]).join(' ').toLowerCase();
   const tx=o+' '+kw,cmc=Math.max(0,c.cmc||0);
-  let g=4.6;const tags=[],why=[];
+  let g=4.6;const tags=[];
   if(c.creature){
     const p=c.pow!=null?c.pow:1,t=c.tou!=null?c.tou:1;
     const exp=1.4+1.35*cmc;
     g+=((p+t)-exp)*0.42;
-    if(p<=0&&t>0){g-=0.6;tags.push('an.tag.wall');why.push('an.why.wall')}
-    if(/flying/.test(tx)){g+=0.85;tags.push('an.tag.evasion');why.push('an.why.evasion')}
+    if(p<=0&&t>0){g-=0.6;tags.push('an.tag.wall')}
+    if(/flying/.test(tx)){g+=0.85;tags.push('an.tag.evasion')}
     else if(/menace|can't be blocked|fear|intimidate/.test(tx)){g+=0.6;tags.push('an.tag.evasion')}
     if(/trample/.test(tx))g+=0.4;
-    if(/deathtouch/.test(tx)){g+=0.8;tags.push('an.tag.combat');why.push('an.why.death')}
+    if(/deathtouch/.test(tx)){g+=0.8;tags.push('an.tag.combat')}
     if(/first strike|double strike/.test(tx)){g+=0.6;tags.push('an.tag.combat')}
     if(/lifelink/.test(tx))g+=0.55;
     if(/vigilance/.test(tx))g+=0.25;
@@ -3623,11 +3923,11 @@ function anaCardGrade(c){
   }else{
     g-=0.5;
   }
-  if(ANA_RX.removal.test(o)){g+=1.5;tags.push('an.tag.interaction');why.push('an.why.removal')}
+  if(ANA_RX.removal.test(o)){g+=1.5;tags.push('an.tag.interaction')}
   if(ANA_RX.sweep.test(o))g+=1.1;
   const dn=anaDrawN(c);
-  if(dn){g+=Math.min(1.7,0.6+0.45*dn);tags.push('an.tag.engine');why.push('an.why.draw')}
-  if(ANA_RX.token.test(o)){g+=0.7;tags.push('an.tag.engine');why.push('an.why.tokens')}
+  if(dn){g+=Math.min(1.7,0.6+0.45*dn);tags.push('an.tag.engine')}
+  if(ANA_RX.token.test(o)){g+=0.7;tags.push('an.tag.engine')}
   if(ANA_RX.counter.test(o))g+=0.4;
   if(ANA_RX.tutor.test(o))g+=0.5;
   if(ANA_RX.recur.test(o))g+=0.4;
@@ -3641,7 +3941,7 @@ function anaCardGrade(c){
   if(g>=7.6)tags.unshift('an.tag.bomb');
   else if(g<=3.4)tags.unshift('an.tag.filler');
   if(cmc>=6&&g<=4.2)tags.unshift('an.tag.trap');
-  return {g,tags:[...new Set(tags)],why:[...new Set(why)]};
+  return {g,tags:[...new Set(tags)]};
 }
 
 /* ---------- 4 · base de maná ---------- */
@@ -3666,17 +3966,16 @@ function anaMana(cards){
     if(!cols.length)return;
     const k=cols[0],n=pips[k],M=Math.max(1,Math.min(6,c.cmc||1));
     const req=anaNeedSources(N,Kl,M,n);
-    if(!need[k]||req>need[k].n)need[k]={n:req,pips:n,mv:M,card:c.name};
+    if(!need[k]||req>need[k].n)need[k]={n:req};
   });
   Object.keys(need).forEach(k=>{
     const have=sources[k];
-    if(have<need[k].n)deficit.push({k,have,need:need[k].n,card:need[k].card});
+    if(have<need[k].n)deficit.push({k,have,need:need[k].n});
   });
   return {
-    N,lands:Kl,target,sources,nonLandSrc,need,deficit,cheap,avg,
+    N,lands:Kl,target,sources,nonLandSrc,need,deficit,
     open2:P(2,7),open3:P(3,7),t3:P(3,9),t4:P(4,10),
-    screw:anaHgAtMost(N,Kl,7,1),flood:1-anaHgAtMost(N,Kl,10,5),
-    pips:spells.reduce((a,c)=>{const p=anaPips(c);Object.keys(p).forEach(k=>a[k]=(a[k]||0)+p[k]);return a},{})
+    screw:anaHgAtMost(N,Kl,7,1),flood:1-anaHgAtMost(N,Kl,10,5)
   };
 }
 
@@ -3690,8 +3989,7 @@ function anaStyle(s){
 }
 function anaDiffLabel(d){return d>=60?'an.diff.hard':d>=35?'an.diff.mid':'an.diff.easy'}
 function anaDifficulty(spells,lands){
-  const pips={W:0,U:0,B:0,R:0,G:0},src={W:0,U:0,B:0,R:0,G:0};
-  spells.forEach(c=>String(c.mana||'').replace(/\{([WUBRG])\}/g,(m,k)=>{pips[k]++;return m}));
+  const src={W:0,U:0,B:0,R:0,G:0};
   lands.forEach(l=>anaProdOf(l).forEach(k=>{if(src[k]!=null)src[k]++}));
   let cast=0;
   spells.forEach(c=>{
@@ -3702,8 +4000,7 @@ function anaDifficulty(spells,lands){
     else if((src[hardCol]||0)<hard+2)cast++;
   });
   const mech=spells.reduce((s,c)=>s+anaCardWeight(c),0)/(spells.length||1);
-  const score=Math.max(0,Math.min(100,Math.round(mech*22+cast*5)));
-  return {score,cast,mech,pips,src};
+  return {score:Math.max(0,Math.min(100,Math.round(mech*22+cast*5)))};
 }
 function anaStats(p){
   const cards=(p.cards||[]).map(cardOfSafe);
@@ -3716,14 +4013,17 @@ function anaStats(p){
   const avg=spells.length?spells.reduce((s,c)=>s+(c.cmc||0),0)/spells.length:0;
   const removal=spells.filter(c=>ANA_RX.removal.test(o(c))).length;
   const draw=spells.filter(c=>anaDrawN(c)).length;
+  const ramp=spells.filter(c=>ANA_RX.ramp.test(o(c))).length;
   const evasion=creatures.filter(c=>/flying|menace|trample|can't be blocked/i.test(anaText(c))).length;
   const tokens=spells.filter(c=>ANA_RX.token.test(o(c))).length;
   const counters=spells.filter(c=>ANA_RX.counter.test(o(c))).length;
   const big=spells.filter(c=>(c.cmc||0)>=5).length;
-  const avgPt=creatures.length?creatures.reduce((s,c)=>s+(c.pow||0)+(c.tou||0),0)/creatures.length:0;
   const colors=[...new Set(spells.flatMap(c=>COLORS_OF(c)))].filter(k=>'WUBRG'.includes(k));
 
-  const graded=spells.map(c=>{const gr=anaCardGrade(c);return {name:c.name,g:gr.g,tags:gr.tags,why:gr.why,cmc:c.cmc||0,creature:!!c.creature}});
+  const graded=spells.map(c=>{
+    const gr=anaCardGrade(c),creature=!!c.creature;
+    return {name:c.name,g:gr.g,tags:gr.tags,cmc:c.cmc||0,creature,ev:creature&&/flying|menace|trample|can't be blocked/i.test(anaText(c))};
+  });
   graded.sort((a,b)=>b.g-a.g);
   const qMean=graded.length?graded.reduce((s,x)=>s+x.g,0)/graded.length:0;
 
@@ -3745,17 +4045,21 @@ function anaStats(p){
   const mana=anaMana(cards);
   const diff=anaDifficulty(spells,lands);
 
-  /* calidad 0-100: media de notas (base 4.6 → ~47) + sinergia + maná + curva */
-  let quality=qMean/9.8*100;
+  /* calidad bruta calibrada: una carta media de sobre (qMean 5,0) ≈ 62; cada ±0,5 ≈ ±7 puntos.
+     Un sobre es media baraja (12 hechizos + 8 tierras): las 8 tierras son la cuota del
+     formato y las carencias de construcción se reparten con el otro sobre, así que pesan
+     la mitad que en un mazo de 40 ya montado. */
+  let quality=62+(qMean-5)*14;
   quality+=synergy*1.6;
-  quality-=Math.abs(lands.length-mana.target)*2.6;
+  if(lands.length<mana.target-1||lands.length>mana.target+1)quality-=Math.abs(lands.length-mana.target)*2.6;
   quality-=mana.deficit.length*2.2;
-  if(avg>3.6)quality-=(avg-3.6)*7;
-  if(!curve[1]&&!curve[2])quality-=4;
-  if(creatures<6)quality-=6;
-  const score=Math.max(5,Math.min(99,Math.round(quality)));
+  if(avg>3.8)quality-=(avg-3.8)*3.5;
+  if(!curve[1]&&!curve[2])quality-=2;
+  if(creatures<6)quality-=4;
+  const raw=quality;
+  const score=Math.max(1,Math.min(99,Math.round(ANA_SCORE_BASE+(raw-ANA_SCORE_MEAN)*ANA_SCORE_GAIN)));
 
-  const s={n:cards.length,lands:lands.length,spells:spells.length,creatures:creatures.length,curve,avg,removal,draw,evasion,tokens,counters,big,avgPt,colors,score,diff,mana,graded,qMean,synergy,tribal};
+  const s={lands:lands.length,spells:spells.length,creatures:creatures.length,curve,avg,removal,draw,ramp,evasion,tokens,counters,big,colors,score,raw,diff,mana,graded,qMean,synergy,tribal};
   s.mech=anaMechanics(spells);
   s.curveDiff=curve.map((_,i)=>{
     const at=spells.filter(c=>Math.min(7,Math.max(0,Math.round(c.cmc||0)))===i);
@@ -3763,12 +4067,15 @@ function anaStats(p){
   });
   s.style=anaStyle(s);
   s.ratio={spells:spells.length,lands:lands.length,creaturePct:cards.length?Math.round(creatures.length/cards.length*100):0};
-  s.grade=score>=88?'S':score>=79?'A':score>=69?'B':score>=57?'C':score>=45?'D':'E';
+  /* umbrales fijados sobre la distribución medida del formato (media 50, σ 12) */
+  s.grade=score>=80?'S':score>=68?'A':score>=58?'B':score>=45?'C':score>=35?'D':'E';
   s.warn=[];
   if(lands.length<mana.target-1)s.warn.push('an.w.lands');
   if(lands.length>mana.target+1)s.warn.push('an.w.landsMax');
   if(mana.t3<0.72)s.warn.push('an.w.manaLow');
   if(removal<2)s.warn.push('an.w.removal');
+  if(!ramp)s.warn.push('an.w.ramp');
+  if(!draw)s.warn.push('an.w.draw');
   if(avg>3.6)s.warn.push('an.w.curve');
   if(creatures<6)s.warn.push('an.w.creatures');
   if(big>=6)s.warn.push('an.w.top');
@@ -3777,6 +4084,10 @@ function anaStats(p){
   if(mana.deficit.length)s.warn.push('an.w.cast');
   if(!curve[1]&&!curve[2])s.warn.push('an.w.gap2');
   if(qMean<4.3)s.warn.push('an.w.low');
+  s.captains=anaCapList(cards,mana.sources);
+  s.captain=s.captains[0]||null;
+  if(!s.captains.length)s.warn.push('an.w.captain');
+  else if(s.captains[0].g<4.5)s.warn.push('an.w.captainWeak');
   s.plan=anaPlan(s);
   s.strength=anaStrengths(s);
   return s;
@@ -3792,10 +4103,52 @@ function anaPlan(s){
     const d=s.mana.deficit.slice(0,2).map(x=>CNL(x.k)+' ('+x.have+'/'+x.need+')').join(', ');
     out.push({k:'p.sources',v:{list:d}});
   }
-  const cut=s.graded.filter(c=>!c.land&&c.g<4.6).slice(-2).reverse();
+  const cut=s.graded.filter(c=>c.g<4.6).slice(-2).reverse();
   if(cut.length&&(s.avg>3.5||s.big>=5))out.push({k:'p.cutWeaks',v:{names:cut.map(c=>c.name).join(', ')}});
   if(!out.length)out.push({k:'p.ok'});
   return out.slice(0,5);
+}
+/* ---------- 5b · capitán: quién rinde desde la zona de mando ----------
+   El capitán no cuesta solo su maná: cada regreso añade {2}. En una partida
+   normal se lanza dos veces, así que pesan el coste (cmc y cmc+2), lo que
+   aporta al entrar y si el mazo puede pagar sus símbolos dos veces. */
+function anaCapDetail(c,sources){
+  if(!c||!c.creature||c.land)return null;
+  const tx=anaText(c),cmc=c.cmc||0;
+  const base=anaCardGrade(c).g;
+  let cost=-Math.max(0,cmc-3)*0.5;    /* caro de repetir con impuesto */
+  if(cmc<=2)cost+=0.55;                /* vuelve barato una y otra vez */
+  else if(cmc>=6)cost-=0.7;
+  /* lo que aporta en cada lanzamiento: dispara al entrar, morir o atacar */
+  const etb=(/\bwhen(ever)?\b[^.]{0,70}\b(enters|dies|attacks)\b|\benters the battlefield\b/.test(tx)?0.5:0)
+    +(/flying|menace|trample|deathtouch|first strike|lifelink|vigilance|haste/.test(tx)?0.2:0);
+  /* sin fuentes para pagarlo dos veces no se puede repetir */
+  const pips=anaPips(c);
+  let short=0;
+  Object.keys(pips).forEach(k=>{if((sources[k]||0)<pips[k]+2)short++});
+  const body=(c.pow||0)<=0?-1.3:0;     /* no pelea ni bloquea: mal líder */
+  const g=Math.max(0,Math.min(10,base+cost+etb-short*0.9+body));
+  return {g,base,cost,etb,short};
+}
+function anaCapList(cards,sources){
+  const out=[];
+  (cards||[]).forEach(c=>{
+    const d=anaCapDetail(c,sources||{});
+    if(!d)return;
+    const cmc=c.cmc||0;
+    out.push({name:c.name,g:d.g,cmc,tax:[cmc,cmc+2,cmc+4],base:d.base,cost:d.cost,etb:d.etb,short:d.short,
+      /* 0/0 (Ballista, Hangarback) no dice nada útil: se omite */
+      pt:(c.pow>0&&c.tou!=null)?c.pow+'/'+c.tou:''});
+  });
+  out.sort((a,b)=>b.g-a.g||a.cmc-b.cmc);
+  return out.slice(0,3);
+}
+/* capitán de un mazo recién montado (lo usa el combinador de sobres) */
+function anaBestCaptain(names){
+  const list=(names||[]).slice();
+  if(!list.length)return null;
+  const st=anaStats({cards:list});
+  return st.captains&&st.captains[0]?st.captains[0]:null;
 }
 function anaStrengths(s){
   const out=[];
@@ -3815,14 +4168,17 @@ function anaDeckCards(p){
   return (p.cards||[]).map(cardOfSafe).map(c=>{
     const tx=anaText(c);
     const creature=!!c.creature&&!c.land;
+    const pw=!c.land&&/planeswalker/i.test(String(c.type||''));
     const pips=anaPips(c);
     return {
-      land:!!c.land,cmc:c.cmc||0,creature,
+      land:!!c.land,cmc:c.cmc||0,creature,pw,
+      loy:pw?Math.max(2,parseInt(c.loyalty,10)||Math.max(2,c.cmc||0)):0,
       pow:creature?Math.max(0,Math.min(20,c.pow!=null?c.pow:2)):0,
       tou:creature?Math.max(1,Math.min(20,c.tou!=null?c.tou:2)):0,
       fly:/flying/.test(tx),reach:/reach/.test(tx),trample:/trample/.test(tx),
       death:/deathtouch/.test(tx),fs:/first strike/.test(tx),ds:/double strike/.test(tx),
-      life:/lifelink/.test(tx),haste:/haste/.test(tx),vig:/vigilance/.test(tx),
+      life:/lifelink/.test(tx),haste:/haste/.test(tx),vig:/vigilance/.test(tx),menace:/menace/.test(tx),
+      ind:/indestructible/.test(tx),
       removal:ANA_RX.removal.test(tx),burn:ANA_RX.burn.test(tx),
       drawN:anaDrawN(c),pips,colors:Object.keys(pips),
       prod:anaProdOf(c),val:anaCardGrade(c).g,name:c.name
@@ -3836,8 +4192,25 @@ function anaDeckOf(p){
   ANA_DECK_CACHE.set(p,d);
   return d;
 }
+/* PRNG propio: la simulación debe dar exactamente lo mismo entre cargas y entre
+   el informe y el ranking. Con Math.random el orden del ranking y la pareja
+   recomendada bailaban entre dos análisis idénticos. */
+let ANA_RNG=1;
+function anaRand(){ANA_RNG=(ANA_RNG*1664525+1013904223)>>>0;return ANA_RNG/4294967296}
+function anaShuffle(a){
+  a=a.slice();
+  for(let i=a.length-1;i>0;i--){const j=anaRand()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}
+  return a;
+}
+/* semilla estable por pareja: depende solo de las cartas de los dos sobres */
+function anaSeedOf(a,b){
+  const k=[...(a.cards||[]),...(b.cards||[])].sort().join(',');
+  let h=2166136261;
+  for(let i=0;i<k.length;i++)h=(h^k.charCodeAt(i))*16777619;
+  return (h>>>0)||1;
+}
 function anaSide(deck){
-  const d=shuffle(deck.slice());
+  const d=anaShuffle(deck.slice());
   let hand=d.slice(0,7),mull=0;
   const keep=h=>{
     const L=h.filter(c=>c.land).length;
@@ -3862,34 +4235,118 @@ function anaSide(deck){
     rest=rest.concat([...back].map(i=>hand[i]));
     hand=hand.filter((c,i)=>!back.has(i));
   }
-  return {lib:shuffle(rest),hand,bf:[],lands:0,src:{W:0,U:0,B:0,R:0,G:0},life:20,turn:0,screw:0,cast:0,uid:0};
+  return {lib:anaShuffle(rest),hand,bf:[],lands:0,src:{W:0,U:0,B:0,R:0,G:0},life:20,turn:0};
 }
 function anaCanCast(c,mana,src){
   if(c.cmc>mana)return false;
   for(const k in c.pips)if((src[k]||0)<c.pips[k])return false;
   return true;
 }
-function anaCombat(atk,blk){
-  let ah=atk.tou,bh=blk.tou;
-  const dmg=(s,first)=>{
-    const deals=s.ds||(first?s.fs:!s.fs);
-    if(!deals||s.pow<=0)return 0;
-    return s.pow*(s.ds?2:1);
+/* combate con varios bloqueadores: el atacante reparte su daño en orden,
+   el exceso con arrollar pasa al jugador, y dañar primero/doble filo
+   resuelven su pasada antes que el resto. */
+function anaCombatMulti(atk,blks){
+  const ts=blks.map(b=>({b,hp:b.tou}));
+  let hp=atk.tou,spill=0,gain=0;
+  const atkFirst=!!(atk.fs||atk.ds),defFirst=ts.some(t=>t.b.fs||t.b.ds);
+  const atkHit=()=>{
+    if(hp<=0)return;                 /* muerto antes de su pasada */
+    if(atk.life&&atk.pow>0)gain+=atk.pow;
+    let left=atk.pow*(atk.ds?2:1);
+    for(const t of ts){
+      if(left<=0)break;
+      if(t.hp<=0)continue;
+      const need=atk.death?1:t.hp;
+      const use=Math.min(left,need);
+      t.hp-=use;left-=use;
+      if(atk.death&&use>0&&!t.b.ind)t.hp=-99;
+    }
+    if(left>0&&atk.trample)spill+=left;
   };
-  for(let pass=0;pass<2;pass++){
-    const first=pass===0;
-    const ad=ah>0?dmg(atk,first):0;
-    const bd=bh>0?dmg(blk,first):0;
-    if(ad>0)bh-=ad;
-    if(bd>0)ah-=bd;
-    if(atk.death&&ad>0)bh=-99;
-    if(blk.death&&bd>0)ah=-99;
+  /* el daño de cada pasada es simultáneo: se apunta quién ya estaba muerto
+     antes de la pasada para que el que cae ahora sí golpee */
+  const defHit=deadBefore=>{
+    ts.forEach((t,i)=>{
+      if(deadBefore[i])return;
+      let d=t.b.pow*(t.b.ds?2:1);
+      if(t.b.death)d=Math.max(d,1);
+      hp-=d;
+      if(t.b.death&&!atk.ind)hp=-99;
+      if(t.b.life)gain+=t.b.pow;      /* vínculo vital aunque el bloqueador muera */
+    });
+  };
+  const deadBefore=ts.map(t=>t.hp<=0);
+  if(atkFirst)atkHit();
+  if(defFirst)defHit(deadBefore);
+  ts.forEach((t,i)=>deadBefore[i]=t.hp<=0);
+  if(!atkFirst)atkHit();
+  if(!defFirst)defHit(deadBefore);
+  /* indestructible: se queda con 1 de resistencia en vez de morir */
+  ts.forEach(t=>{if(t.hp<=0&&t.b.ind)t.hp=1});
+  const dead=ts.filter(t=>t.hp<=0).map(t=>t.b);
+  return {atkDies:hp<=0,dead,trample:spill,gain};
+}
+/* elige bloqueadores: uno si el intercambio es bueno, dos (bloqueo múltiple)
+   cuando hace falta; contra amenaza solo se bloquea con dos o no se bloquea. */
+function anaBlockers(atk,foe,used,desperate){
+  const cands=foe.bf.filter(b=>b.creature&&!used.has(b)&&!(atk.fly&&!b.fly&&!b.reach));
+  if(!cands.length)return [];
+  const val=b=>(b.death||b.pow>=atk.tou?3:0)+(b.death?2:atk.pow<b.tou?2:0)+(b.tou>2?1:0);
+  cands.sort((x,y)=>val(y)-val(x));
+  if(atk.menace)return cands.length>=2?[cands[0],cands[1]]:[];
+  /* con el daño letal encima, se bloquea con lo que haya: mejor perder una
+     criatura que la partida */
+  if(desperate)return [cands[0]];
+  const best=cands[0];
+  if(val(best)>=4)return [best];
+  /* un bloqueador flojo solo entra si hay un segundo que cierra el combate */
+  if(atk.pow>=4||atk.fly){
+    const bomb=atk.pow>=5&&atk.tou>=5;   /* contra una bomba vale la pena el 2×1 */
+    for(let i=1;i<cands.length;i++){
+      const a=best,b=cands[i];
+      const kills=!!(a.death||b.death||a.pow+b.pow>=atk.tou);
+      const tough=(a.death?99:a.tou)+(b.death?99:b.tou);
+      if(kills&&(tough>atk.pow||bomb))return [a,b];
+    }
   }
-  const trample=atk.trample?Math.max(0,atk.pow-blk.tou):0;
-  return {atkDies:ah<=0,blkDies:bh<=0,trample,gain:(atk.life?atk.pow:0)+(blk.life?blk.pow:0)};
+  return val(best)>=3?[best]:[];
+}
+/* atacar solo cuando sale a cuenta: no se regala una criatura contra un
+   bloqueo que la mata sin devolver nada (salvo que remate la partida) */
+function anaWantsAttack(atk,foe,used,foeLife){
+  if(atk.pow<=0)return false;
+  if(foeLife<=atk.pow)return true;
+  const bl=anaBlockers(atk,foe,used);
+  if(!bl.length)return true;
+  const r=anaCombatMulti(atk,bl);
+  if(r.atkDies&&!r.dead.length&&!r.trample)return false;
+  return true;
+}
+/* prioridad: el defensor puede lanzar un removal al atacante antes del daño */
+function anaInstantDefense(def,atk){
+  if(def.instantUsed)return false;
+  let threat=null;
+  for(const a of atk.bf){
+    if(!a.creature||a.pow<=0||a.ind)continue;
+    if(a.born>=atk.turn&&!a.haste)continue;
+    if(!threat||a.pow>threat.pow)threat=a;
+  }
+  if(!threat||threat.pow<3)return false;
+  let bi=-1;
+  for(let i=0;i<def.hand.length;i++){
+    const c=def.hand[i];
+    if(!c.land&&c.removal&&c.cmc<=Math.min(4,def.lands)&&anaCanCast(c,def.lands,def.src)){bi=i;break}
+  }
+  if(bi<0)return false;
+  def.hand.splice(bi,1);
+  const k=atk.bf.indexOf(threat);
+  if(k>=0)atk.bf.splice(k,1);
+  def.instantUsed=true;
+  return true;
 }
 function anaTurn(s,foe){
   s.turn++;
+  s.instantUsed=false;
   if(s.lib.length)s.hand.push(s.lib.pop());
   /* tierra: la que más colores necesitados aporta */
   if(!s.landPlayed&&s.hand.some(c=>c.land)){
@@ -3902,7 +4359,7 @@ function anaTurn(s,foe){
       (c.prod||[]).forEach(k=>{if(need[k])sc+=need[k]});
       if(sc>bs){bs=sc;bi=i}
     });
-    if(bi>=0){s.hand.splice(bi,1);s.lands++;s.landPlayed=true}
+    if(bi>=0){s.bf.push(s.hand.splice(bi,1)[0]);s.lands++;s.landPlayed=true}
   }
   s.src={W:0,U:0,B:0,R:0,G:0};
   s.bf.forEach(x=>{if(x.land)(x.prod||[]).forEach(k=>{if(s.src[k]!=null)s.src[k]++})});
@@ -3911,7 +4368,7 @@ function anaTurn(s,foe){
     /* remoción contra la mayor amenaza */
     let threat=null;
     for(const b of foe.bf){
-      if(!b.creature)continue;
+      if(!b.creature||b.ind)continue;
       if(b.pow>=3||b.fly||b.tou>=5){if(!threat||b.pow>threat.pow)threat=b}
     }
     if(threat){
@@ -3937,31 +4394,44 @@ function anaTurn(s,foe){
     if(bi<0)break;
     const c=s.hand.splice(bi,1)[0];
     mana-=c.cmc;c.land=false;
-    if(c.creature){c.born=s.turn;c.uid=++s.uid;s.bf.push(c)}
+    if(c.creature){c.born=s.turn;s.bf.push(c)}
+    else if(c.pw)s.bf.push(c);
     if(c.life)s.life=Math.min(40,s.life+1);
     if(c.burn)foe.life-=2;
     if(c.drawN)for(let i=0;i<c.drawN&&s.lib.length;i++)s.hand.push(s.lib.pop());
-    s.cast++;
   }
-  /* sin nada que lanzar con maná de sobra: atasco de color */
-  if(mana>0&&s.hand.some(c=>!c.land&&c.cmc<=mana&&!anaCanCast(c,mana,s.src)))s.screw++;
+  /* prioridad del defensor: puede responder al ataque con un instantáneo */
+  anaInstantDefense(foe,s);
+  /* si el daño que entra es letal, se bloquea con cualquier cosa */
+  let incoming=0;
+  for(const a of s.bf){
+    if(!a.creature||a.pow<=0)continue;
+    if(a.born>=s.turn&&!a.haste)continue;
+    incoming+=a.pow;
+  }
+  const desperate=foe.life<=incoming;
+  /* cada criatura bloquea como mucho una vez por combate */
+  const used=new Set();
   for(let k=s.bf.length-1;k>=0;k--){
     const atk=s.bf[k];
     if(!atk.creature||atk.pow<=0)continue;
     if(atk.born>=s.turn&&!atk.haste)continue;
-    let blocker=null,bs=-1;
-    for(const b of foe.bf){
-      if(!b.creature)continue;
-      if(atk.fly&&!b.fly&&!b.reach)continue;
-      const kills=b.death||b.pow>=atk.tou;
-      const survives=b.death?true:atk.pow<b.tou;
-      const sc=(kills?3:0)+(survives?2:0)+(b.tou>2?1:0)+(b.pow>atk.tou?1:0);
-      if(sc>bs&&sc>=3){bs=sc;blocker=b}
+    if(!anaWantsAttack(atk,foe,used,foe.life))continue;
+    /* planeswalker rival: si puede tumbarlo y nadie se lo impide, va a por él */
+    const pw=foe.bf.find(x=>x.pw&&x.loy>0&&atk.pow>=x.loy
+      &&!foe.bf.some(b=>b.creature&&!(atk.fly&&!b.fly&&!b.reach)));
+    if(pw){
+      pw.loy-=atk.pow;
+      if(atk.life)s.life=Math.min(40,s.life+atk.pow);
+      if(pw.loy<=0){const i=foe.bf.indexOf(pw);if(i>=0)foe.bf.splice(i,1)}
+      continue;
     }
-    if(blocker){
-      const r=anaCombat(atk,blocker);
-      if(r.blkDies){const i=foe.bf.indexOf(blocker);if(i>=0)foe.bf.splice(i,1)}
-      if(r.atkDies)s.bf.splice(k,1);
+    const blockers=anaBlockers(atk,foe,used,desperate);
+    if(blockers.length){
+      blockers.forEach(b=>used.add(b));
+      const r=anaCombatMulti(atk,blockers);
+      r.dead.forEach(b=>{const i=foe.bf.indexOf(b);if(i>=0)foe.bf.splice(i,1)});
+      if(r.atkDies){const i=s.bf.indexOf(atk);if(i>=0)s.bf.splice(i,1)}
       else if(r.trample)foe.life-=r.trample;
       if(r.gain)s.life=Math.min(40,s.life+r.gain);
     }else{
@@ -3983,27 +4453,137 @@ function anaSimOne(A,B){
     anaTurn(b,a);turns++;
     if(a.life<=0||b.life<=0)break;
   }
-  const win=(b.life<=0&&a.life>0)?1:(a.life<=0&&b.life>0)?0:
-    (a.life===b.life?(anaBoard(a)>=anaBoard(b)?1:0):(a.life>b.life?1:0));
-  return {win,turns,screwA:a.screw,screwB:b.screw,landsA:a.lands,landsB:b.lands,castA:a.cast,castB:b.cast};
+  let win;
+  if(b.life<=0&&a.life>0)win=1;
+  else if(a.life<=0&&b.life>0)win=0;
+  else if(a.life===b.life){
+    const ba=anaBoard(a),bb=anaBoard(b);
+    win=ba>bb?1:bb>ba?0:0.5;
+  }else win=a.life>b.life?1:0;
+  return {win,turns};
 }
+/* se alterna quién sale primero para no regalar la ventaja de asiento */
 function anaSimPair(a,b,n){
+  ANA_RNG=anaSeedOf(a,b);
   const A=anaDeckOf(a),B=anaDeckOf(b);
-  let w=0,turns=0,sA=0,sB=0,lA=0,lB=0,cA=0,cB=0;
+  let w=0,turns=0;
   for(let i=0;i<n;i++){
-    const r=anaSimOne(A,B);
-    w+=r.win;turns+=r.turns;sA+=r.screwA;sB+=r.screwB;lA+=r.landsA;lB+=r.landsB;cA+=r.castA;cB+=r.castB;
+    const swap=i%2===1;
+    const r=swap?anaSimOne(B,A):anaSimOne(A,B);
+    w+=swap?1-r.win:r.win;turns+=r.turns;
   }
-  return {
-    wr:100*w/n,w,n,turns:n?turns/n:0,
-    ci:anaWilson(w,n),
-    screwA:100*sA/n,screwB:100*sB/n,
-    landsA:lA/n,landsB:lB/n,castA:cA/n,castB:cB/n
-  };
+  return {wr:100*w/n,w,n,turns:n?turns/n:0};
+}
+/* ---------- 6b · calibración con resultados reales ----------
+   La nota 0-100 se traduce a winrate con una recta: primero con el ajuste
+   por defecto (18 puntos de nota = ventaja 10:1) y, en cuanto el jugador
+   apunta resultados de partidas, con la pendiente que sale de sus datos.
+   No se usan winrates de 17Lands para el formato porque es casero: 17Lands
+   solo informa de la fuerza de cada carta (GIH WR), no del formato. */
+const ANA_DEFAULT_SCALE=18;
+const ANA_RES_KEY='cj2_results';
+const ANA_CAL_KEY='cj2_calfit';
+function anaResults(){
+  const r=store.get(ANA_RES_KEY,{});
+  return r&&typeof r==='object'?r:{};
+}
+/* la clave lleva el contenido: si el sobre se regenera o se edita, los
+   resultados y el historial viejos no se heredan por error */
+function anaContentKey(p){
+  if(!p)return '';
+  const cards=(p.cards||[]).slice().sort().join(',');
+  let h=0;
+  for(let i=0;i<cards.length;i++)h=(h*33+cards.charCodeAt(i))|0;
+  /* solo contenido: así el historial y los resultados siguen al mazo al
+     exportar/importar y desaparecen si el sobre cambia de cartas */
+  return (h>>>0).toString(36)+'-'+(p.cards||[]).length;
+}
+/* migra las claves antiguas (solo id) y borra las de sobres que ya no
+   existen o que han cambiado de cartas */
+let ANA_PRUNE_TS=0;
+function anaMetaPrune(force){
+  if(typeof ANA_HIST_KEY==='undefined')return;
+  const now=Date.now();
+  if(!force&&ANA_PRUNE_TS&&now-ANA_PRUNE_TS<60000)return;
+  ANA_PRUNE_TS=now;
+  const packs=state.packs||[];
+  const valid=new Set(packs.map(anaContentKey));
+  const byId={};
+  packs.forEach(p=>{byId[String(p.id)]=p});
+  [ANA_RES_KEY,ANA_HIST_KEY].forEach(k=>{
+    const o=store.get(k,{});
+    if(!o||typeof o!=='object')return;
+    let changed=false;
+    Object.keys(o).forEach(key=>{
+      if(valid.has(key))return;
+      /* claves antiguas («id» o «id|hash»): se pasan a la clave por contenido
+         del sobre actual; si el sobre ya no existe o cambió, se descartan */
+      const p=byId[key.split('|')[0]];
+      if(p)o[anaContentKey(p)]=o[key];
+      delete o[key];changed=true;
+    });
+    if(changed)store.set(k,o);
+  });
+}
+function anaResultSave(p,w,g){
+  const key=anaContentKey(p);
+  const r=anaResults();
+  const wins=Math.max(0,Math.round(+w||0)),games=Math.max(0,Math.round(+g||0));
+  if(!games||wins>games)delete r[key];
+  else r[key]={w:wins,g:games,ts:Date.now()};
+  store.set(ANA_RES_KEY,r);
+  anaMetaPrune(true);
+  anaCalFit();
+  return r[key]||null;
+}
+/* recta ponderada por partidas: wr = a + b·nota. b se acota a un rango
+   razonable (0,3-4,5 puntos de winrate por punto de nota) para que unas
+   pocas partidas no disparen el modelo. */
+let ANA_CAL_CACHE=null;
+function anaCalFit(){
+  const res=anaResults(),pts=[];
+  Object.keys(res).forEach(key=>{
+    const r=res[key];
+    if(!r||!r.g||r.g<3)return;
+    const p=(state.packs||[]).find(x=>anaContentKey(x)===key);
+    if(!p)return;
+    pts.push({x:anaStats(p).score,y:r.w/r.g,w:Math.min(60,r.g)});
+  });
+  const games=pts.reduce((s,p)=>s+p.w,0);
+  /* n = partidas que sostienen el ajuste; sin mínimo se queda en 0 y el
+     informe usa la escala por defecto, aunque haya alguna partida suelta */
+  let cal={n:0,games,packs:pts.length,a:0.5,b:0,r2:0,scale:ANA_DEFAULT_SCALE,ts:Date.now()};
+  if(pts.length>=3&&games>=12){
+    const sw=games;
+    const mx=pts.reduce((s,p)=>s+p.x*p.w,0)/sw;
+    const my=pts.reduce((s,p)=>s+p.y*p.w,0)/sw;
+    let num=0,den=0;
+    pts.forEach(p=>{num+=p.w*(p.x-mx)*(p.y-my);den+=p.w*(p.x-mx)*(p.x-mx)});
+    let b=den?num/den:0;
+    b=Math.max(0.003,Math.min(0.045,b));
+    const a=my-b*mx;
+    let ss=0,tot=0;
+    pts.forEach(p=>{const e=p.y-(a+b*p.x);ss+=p.w*e*e;tot+=p.w*(p.y-my)*(p.y-my)});
+    cal={n:games,games,packs:pts.length,a,b,r2:tot?Math.max(0,1-ss/tot):0,scale:25*Math.LN10/(b*100),ts:Date.now()};
+  }
+  store.set(ANA_CAL_KEY,cal);
+  ANA_CAL_CACHE=cal;
+  return cal;
+}
+function anaCal(){
+  if(ANA_CAL_CACHE)return ANA_CAL_CACHE;
+  const c=store.get(ANA_CAL_KEY,null);
+  ANA_CAL_CACHE=c&&typeof c==='object'?c:anaCalFit();
+  return ANA_CAL_CACHE;
+}
+/* puntos de nota que separan un 90 % de un 10 %: más alto = modelo más plano */
+function anaCalScale(){
+  const c=anaCal();
+  return c&&c.n>=12&&c.scale?Math.max(10,Math.min(60,c.scale)):ANA_DEFAULT_SCALE;
 }
 /* mezcla con la puntuación descriptiva: estabiliza con pocas tiradas */
 function anaBlend(mc,sa,sb,w){
-  const prior=100/(1+Math.pow(10,(sb.score-sa.score)/18));
+  const prior=100/(1+Math.pow(10,(sb.score-sa.score)/anaCalScale()));
   return mc*(1-w)+prior*w;
 }
 
@@ -4033,10 +4613,10 @@ function anaManaHtml(st){
     return `<tr><td>${CNL(k)}</td><td class="n">${have}${m.nonLandSrc[k]?' +'+m.nonLandSrc[k]:''}</td><td class="n">${need||'—'}</td><td class="${ok?'anagood':'anabad'}">${ok?t('an.src.ok'):t('an.src.short')}</td></tr>`;
   }).join('');
   return `
-    <table class="anatbl">
+    <div class="anatblwrap"><table class="anatbl">
       <thead><tr><th>${t('an.mb.h1')}</th><th class="n">${t('an.mb.h2')}</th><th class="n">${t('an.mb.h3')}</th><th>${t('an.mb.h4')}</th></tr></thead>
       <tbody>${rows||`<tr><td colspan="4" class="mu">${t('an.mb.none')}</td></tr>`}</tbody>
-    </table>
+    </table></div>
     <div class="anasrc">
       <div><small>${t('an.mb.lands')}</small><b>${m.lands}</b><span class="mu xs">${t('an.mb.target',{n:m.target})}</span></div>
       <div><small>${t('an.mb.open')}</small><b>${anaPc(m.open2)}</b><span class="mu xs">${t('an.mb.open3',{p:anaPc(m.open3)})}</span></div>
@@ -4050,13 +4630,13 @@ function anaCurveTbl(st){
     const cp=i===0?1:anaHgAtLeast(m.N,m.lands,7+i,i);
     return `<tr><td>${i===7?'7+':i}</td><td class="n">${v}</td><td class="n ${cp>=0.85?'anagood':cp>=0.7?'':'anabad'}">${anaPc(cp)}</td></tr>`;
   }).join('');
-  return `<table class="anatbl">
+  return `<div class="anatblwrap"><table class="anatbl">
     <thead><tr><th>${t('an.cv.mv')}</th><th class="n">${t('an.cv.n')}</th><th class="n">${t('an.cv.onCurve')}</th></tr></thead>
-    <tbody>${rows}</tbody></table>`;
+    <tbody>${rows}</tbody></table></div>`;
 }
 function anaCardsHtml(st){
   if(!st.graded.length)return `<span class="mu xs">${t('an.mechNone')}</span>`;
-  return `<div class="anacardlist">${st.graded.map(c=>`<div class="anacl" data-nm="${esc(c.name)}">
+  return `<div class="anacardlist">${st.graded.map(c=>`<div class="anacl">
     <div><b>${esc(c.name)}</b><div class="mu xs">${c.tags.map(k=>t(k)).join(' · ')||t('an.tag.plain')}</div></div>
     <div class="mu">${c.cmc}</div>
     <div class="anagradebar"><i style="width:${Math.round(c.g/9.8*100)}%"></i><span>${c.g.toFixed(1)}</span></div>
@@ -4068,6 +4648,106 @@ function anaPlanHtml(st){
 function anaStrengthHtml(st){
   return `<div class="anamech">${st.strength.map(s=>`<span>${t(s.k,s.v||{})}</span>`).join('')}</div>`;
 }
+/* los 3 mejores capitanes posibles del minimazo, con el desglose de cada nota */
+function anaCapBreak(c){
+  const parts=[t('an.capBase',{g:c.base.toFixed(1)})];
+  if(c.cost)parts.push(t('an.capCost',{d:(c.cost>0?'+':'')+c.cost.toFixed(1)}));
+  if(c.etb)parts.push(t('an.capEtb',{d:'+'+c.etb.toFixed(1)}));
+  if(c.short)parts.push(t('an.capShort',{n:c.short}));
+  return parts.join(' · ');
+}
+function anaCapHtml(st){
+  const list=st.captains||[];
+  if(!list.length)return `<div class="mu xs">${t('an.capNone')}</div>`;
+  const c=list[0];
+  /* la carta del capitán, para reconocerlo de un vistazo */
+  const cc=typeof cardOfSafe==='function'?cardOfSafe(c.name):null;
+  const im=cc&&typeof cardImg==='function'?cardImg(cc):'';
+  const art=im?`<img class="anacapimg" src="${esc(im)}" alt="" loading="lazy" onerror="this.style.display='none'">`:'';
+  const rows=list.map((x,i)=>`<div class="anacaprow${i?'':' top'}">
+      <span class="rk">${i+1}</span>
+      <div class="nmb"><b>${esc(x.name)}</b><small>${x.pt?`<span class="pt">${esc(x.pt)}</span> · `:''}${t('an.capMv',{mv:x.cmc,t1:x.tax[1],t2:x.tax[2]})} · ${anaCapBreak(x)}</small></div>
+      <span class="g" style="color:${anaCol(Math.round(x.g*10))}">${x.g.toFixed(1)}</span>
+    </div>`).join('');
+  return `<div class="anacap">
+    ${art}
+    <div class="anacapbody">
+      <div class="anacaplead">${t('an.captainLine',{card:esc(c.name),g:c.g.toFixed(1),mv:c.cmc,t1:c.tax[0],t2:c.tax[1],t3:c.tax[2]})}</div>
+      <div class="anacapt">${t('an.capTop',{n:list.length})}</div>
+      ${rows}
+    </div>
+  </div>`;
+}
+/* ---------- 5c · historial de notas por sobre ---------- */
+const ANA_HIST_KEY='cj2_hist';
+/* versión de la escala: las notas de antes no se comparan con las de ahora */
+const ANA_SCORE_VER=2;
+function anaHistAll(){const h=store.get(ANA_HIST_KEY,{});return h&&typeof h==='object'?h:{}}
+function anaHistList(key){
+  const l=anaHistAll()[key];
+  return Array.isArray(l)?l.filter(x=>x&&x.score!=null&&x.v===ANA_SCORE_VER):[];
+}
+function anaHistRecord(p,st){
+  anaMetaPrune();
+  const key=anaContentKey(p);
+  const h=anaHistAll();
+  const list=anaHistList(key);
+  const last=list[list.length-1],now=Date.now();
+  if(!last||last.score!==st.score||now-last.ts>86400000){
+    list.push({ts:now,score:st.score,v:ANA_SCORE_VER});
+    h[key]=list.slice(-12);
+    store.set(ANA_HIST_KEY,h);
+    return h[key];
+  }
+  return list;
+}
+/* cambio de nota para el distintivo de la biblioteca (sin abrir el informe) */
+function anaHistDelta(p){
+  const list=anaHistList(anaContentKey(p));
+  if(list.length<2)return '';
+  const d=list[list.length-1].score-list[list.length-2].score;
+  return d>0?' ▲'+d:d<0?' ▼'+d:' =';
+}
+function anaHistHtml(st,list){
+  if(!list||list.length<2)return `<div class="mu xs">${t('an.histFirst')}</div>`;
+  const rows=list.slice().reverse().map((e,i,arr)=>{
+    const prev=arr[i+1],d=prev?e.score-prev.score:0;
+    const day=new Date(e.ts).toLocaleDateString(LANG,{day:'2-digit',month:'short'});
+    return `<div><span class="d">${day}</span><b>${e.score}</b><span class="${d>0?'up':d<0?'down':'mu'}">${d>0?'▲ +'+d:d<0?'▼ '+d:'—'}</span></div>`;
+  }).join('');
+  return `<div class="anahist">${rows}</div>`;
+}
+/* ---------- 5d · resultados reales y calibración ---------- */
+function anaResultsHtml(p){
+  const r=anaResults()[anaContentKey(p)]||{w:0,g:0};
+  const cal=anaCal();
+  const need=Math.max(0,12-(cal.games||0));
+  return `<div class="anares">
+    <label>${t('an.res.w')} <input type="number" min="0" max="99" step="1" id="anaRW" value="${r.w||0}"></label>
+    <label>${t('an.res.g')} <input type="number" min="0" max="999" step="1" id="anaRG" value="${r.g||0}"></label>
+    <button class="btn sec sm" id="anaRSave">${t('an.res.save')}</button>
+    <span class="mu xs">${t('an.res.hint')}</span>
+  </div>
+  <div class="anacal">${cal.n?t('an.calLine',{n:cal.n,p:cal.packs,b:(cal.b*100).toFixed(1),r2:cal.r2.toFixed(2)}):need>0?t('an.calNeed',{n:need,p:Math.max(0,3-cal.packs)}):t('an.calNone')}</div>`;
+}
+/* teoría del formato, fuera del modelo: qué dice el diseño oficial y la
+   comunidad sobre cómo debe ser un sobre de 20 cartas y cómo se combinan */
+function anaJumpHtml(){
+  const src=[
+    ['https://magic.wizards.com/en/news/card-preview/behind-scenes-designing-jumpstart-2020-06-17','Wizards, 2020 · Behind the Scenes of Designing Jumpstart'],
+    ['https://magic.wizards.com/en/news/announcements/introducing-jumpstart-new-way-play-magic-2020-02-20','Wizards, 2020 · Introducing Jumpstart'],
+    ['https://cubecobra.com/content/article/605821e6099bcd10491f3eec','Cube Cobra, 2021 · The Ultimate Guide to Jumpstart Cube'],
+    ['https://samerv.in/blog/mtg-jumpstart','samerv.in, 2021 · MTG Jumpstart, a fun way to play and build decks'],
+    ['https://blog.cardkingdom.com/picking-jumpstart-packs-on-arena','Card Kingdom, 2020 · Picking Jumpstart Packs'],
+    ['https://blog.cardsphere.com/jumpstart-your-cube','Cardsphere, 2020 · Jumpstart Your Cube']
+  ];
+  return `<div class="anamethod">
+    <b>${t('an.jtT')}</b>
+    <ul>${['an.jt1','an.jt2','an.jt3','an.jt4','an.jt5','an.jt6'].map(k=>`<li>${t(k)}</li>`).join('')}</ul>
+    <div class="anasrcT">${t('an.sources')}</div>
+    <ul class="analinks">${src.map(([u,label])=>`<li><a href="${u}" target="_blank" rel="noopener">${label}</a></li>`).join('')}</ul>
+  </div>`;
+}
 function anaMethodHtml(){
   return `<div class="anamethod">
     <b>${t('an.methodT')}</b>
@@ -4076,6 +4756,9 @@ function anaMethodHtml(){
       <li>${t('an.m2')}</li>
       <li>${t('an.m3')}</li>
       <li>${t('an.m4')}</li>
+      <li>${t('an.m5')}</li>
+      <li>${t('an.m6')}</li>
+      <li>${t('an.m7')}</li>
     </ul>
     <div class="anasrcT">${t('an.sources')}</div>
     <ul class="analinks">
@@ -4088,38 +4771,94 @@ function anaMethodHtml(){
   </div>`;
 }
 function anaVerdict(st){
-  if(st.score>=79)return 'an.v.excellent';
-  if(st.score>=69)return 'an.v.good';
-  if(st.score>=57)return 'an.v.fair';
-  if(st.score>=45)return 'an.v.weak';
+  if(st.score>=78)return 'an.v.excellent';
+  if(st.score>=64)return 'an.v.good';
+  if(st.score>=50)return 'an.v.fair';
+  if(st.score>=38)return 'an.v.weak';
   return 'an.v.bad';
+}
+/* ---------- 5e · nota relativa a la biblioteca ----------
+   La nota 0-100 es absoluta (50 = sobre medio del formato), pero la letra
+   dice la posición entre tus sobres: es lo que decide qué dos combinar. */
+/* letra relativa: la mejor mitad de tu biblioteca es S/A, la peor C/D */
+function anaTierLetter(rank,total){
+  if(!total||!rank)return '';
+  const pct=total>1?(total-rank)/(total-1):1;
+  return pct>=0.8?'S':pct>=0.6?'A':pct>=0.4?'B':pct>=0.2?'C':'D';
+}
+let ANA_TIER_CACHE={sig:'',map:null};
+function anaTiers(){
+  const packs=(typeof state!=='undefined'&&state.packs)?state.packs:[];
+  const sig=packs.map(anaContentKey).join(',');
+  if(ANA_TIER_CACHE.sig===sig&&ANA_TIER_CACHE.map)return ANA_TIER_CACHE.map;
+  const list=[];
+  packs.forEach(p=>{
+    const st=typeof packGrade==='function'?packGrade(p):null;
+    if(st)list.push({p,score:st.score});
+  });
+  list.sort((a,b)=>b.score-a.score);
+  const n=list.length;
+  const mean=n?list.reduce((s,x)=>s+x.score,0)/n:50;
+  const map=new Map();
+  list.forEach((x,i)=>{
+    const pct=n>1?(n-1-i)/(n-1):1;
+    map.set(String(x.p.id),{pct:Math.round(pct*100),rank:i+1,total:n,mean:+mean.toFixed(0),score:x.score,letter:anaTierLetter(i+1,n)});
+  });
+  ANA_TIER_CACHE={sig,map};
+  return map;
+}
+function anaTierOf(p){return anaTiers().get(String(p&&p.id))||null}
+/* puesto del sobre dentro de la biblioteca: da sentido a una C */
+function anaLibraryStat(p,st){
+  const t=anaTierOf(p);
+  if(t)return t;
+  const list=[];
+  (state.packs||[]).forEach(x=>{
+    const s=String(x.id)===String(p.id)?st:(typeof packGrade==='function'?packGrade(x):null);
+    if(s)list.push({id:String(x.id),score:s.score});
+  });
+  list.sort((a,b)=>b.score-a.score);
+  const i=list.findIndex(x=>x.id===String(p.id));
+  const n=list.length;
+  const mean=n?list.reduce((s,x)=>s+x.score,0)/n:0;
+  return {rank:i<0?0:i+1,total:n,pct:n>1?Math.round(100*(n-1-i)/(n-1)):100,mean,letter:anaTierLetter(i+1,n)};
 }
 
 /* ---------- 8 · informe de un sobre ---------- */
 async function anaPack(p){
   const box=$('#anaOut');if(!box)return;
   const st=anaStats(p);
+  const hist=anaHistRecord(p,st);
+  const lib=anaLibraryStat(p,st);
+  const tier=anaTierOf(p);
   box.innerHTML=`<p class="mu sm"><span class="spin"></span> ${t('an.simulating')}</p>`;
   await new Promise(r=>setTimeout(r,20));
   const others=state.packs.filter(x=>x.id!==p.id);
   const n=others.length?Math.max(200,Math.min(900,Math.round(6000/others.length))):0;
-  let sum=0,wins=0,games=0,turnW=0,screw=0;
+  let sum=0,wins=0,games=0,turnW=0;
   const lines=[];
   for(const o of others){
     const so=anaStats(o);
-    const sim=n?anaSimPair(p,o,n):{wr:50,w:0,n:0,ci:[0,100],turns:0,screwA:0};
-    const wr=anaBlend(sim.wr,st,so,0.22);
-    sum+=wr;wins+=sim.w||0;games+=sim.n||0;turnW+=(sim.turns||0)*(sim.n||0);screw+=sim.screwA||0;
-    lines.push({p:o,wr,score:so.score,ci:sim.ci});
+    const sim=n?anaSimPair(p,o,n):{wr:50,w:0,n:0,turns:0};
+    const wr=anaBlend(sim.wr,st,so,0.45);
+    sum+=wr;wins+=sim.w||0;games+=sim.n||0;turnW+=(sim.turns||0)*(sim.n||0);
+    lines.push({p:o,wr,score:so.score});
   }
   const wr=others.length?sum/others.length:50;
   /* el IC describe el mismo número que se publica: centro en el winrate mezclado,
      ancho según el error estándar de las partidas realmente simuladas */
   const pRaw=games?wins/games:0.5;
-  const se=games?Math.sqrt(pRaw*(1-pRaw)/games):0.15;
+  const se=Math.sqrt((games?pRaw*(1-pRaw)/games:0.05)+ANA_MODEL_SE*ANA_MODEL_SE);
   const ci=[Math.max(0,100*(wr/100-1.96*se)),Math.min(100,100*(wr/100+1.96*se))];
   const avgTurns=games?turnW/games:0;
   lines.sort((a,b)=>b.wr-a.wr);
+  /* la pareja recomendada cubre 2/2/2 antes que ganar un punto de winrate:
+     si ninguna llega, se propone la que mejor rinde y se dice qué falta */
+  const pairs=lines.map(l=>{
+    const r=anaRoleOf([...(p.cards||[]),...(l.p.cards||[])]);
+    return {p:l.p,wr:l.wr,r,ok:r.ramp>=ANA_ROLE_TARGET&&r.draw>=ANA_ROLE_TARGET&&r.answers>=ANA_ROLE_TARGET};
+  });
+  const pair=pairs.find(x=>x.ok)||pairs[0]||null;
   box.innerHTML=`
     <div class="anacard">
       <div class="anahead">
@@ -4127,15 +4866,17 @@ async function anaPack(p){
           <b class="anabig">${esc(packName(p))}</b>
           <div class="anacity"><span class="badge gold">${t('an.style.'+st.style)}</span><span class="anacta">${t('an.verdict.lead')}</span></div>
           <p class="sm" style="margin:8px 0 0;color:var(--tx)">${t(anaVerdict(st),{score:st.score,style:t('an.style.'+st.style)})}</p>
+          ${lib.total>1?`<div class="mu xs" style="margin-top:6px">${t('an.libRank',{r:lib.rank,tt:lib.total,p:lib.pct,m:lib.mean.toFixed(0)})}</div>`:''}
         </div>
-        <div class="anagradebox">
-          <span class="anagrade">${st.grade}</span>
+        <div class="anagradebox" title="${tier?t('an.gradeRel'):t('an.quality')}">
+          <span class="anagrade" style="color:${anaCol(st.score)}">${lib.letter||''}</span>
           <small>${st.score}/100</small>
+          ${tier?`<small>${t('an.rankShort',{r:tier.rank,t:tier.total})}</small>`:''}
         </div>
       </div>
       <div class="anagrid">
-        <div><small>${t('an.winrate')}</small><b>${wr.toFixed(0)}%</b><span class="mu xs">${t('an.ci',{lo:ci[0].toFixed(0),hi:ci[1].toFixed(0)})}</span></div>
-        <div><small>${t('an.quality')}</small><b>${st.score}</b><div class="anabar"><i style="width:${st.score}%"></i></div></div>
+        <div><small>${t('an.winrate')}</small><b style="color:${anaWinCol(wr)}">${wr.toFixed(0)}%</b><span class="mu xs">${t('an.ci',{lo:ci[0].toFixed(0),hi:ci[1].toFixed(0)})}</span></div>
+        <div><small>${t('an.quality')}</small><b style="color:${anaCol(st.score)}">${st.score}</b><div class="anabar"><i style="width:${st.score}%;background:${anaCol(st.score)}"></i></div></div>
         <div><small>${t('an.diff')}</small><b class="dl-${st.diff.score>=60?'hard':st.diff.score>=35?'mid':'easy'}">${t(anaDiffLabel(st.diff.score))}</b><span class="mu xs">${t('an.diffScore',{n:st.diff.score})}</span></div>
         <div><small>${t('an.ratio')}</small><b>${st.ratio.spells}/${st.ratio.lands}</b><span class="mu xs">${t('an.ratioHint',{n:st.ratio.creaturePct})}</span></div>
         <div><small>${t('an.avg')}</small><b>${st.avg.toFixed(2)}</b><span class="mu xs">${t('an.manaLands',{n:st.lands})}</span></div>
@@ -4143,8 +4884,15 @@ async function anaPack(p){
       </div>
       <div class="analabel">${t('an.verdict')}</div>
       ${anaWarnHtml(st)}
+      <div class="analabel">${t('an.rolesT')}</div>
+      ${anaRoleChips({ramp:st.ramp,draw:st.draw,answers:st.removal},false)}
+      <div class="mu xs" style="margin-top:6px">${t('an.roleHint')}</div>
       <div class="analabel">${t('an.strengths')}</div>
       ${anaStrengthHtml(st)}
+      <div class="analabel">${t('an.captain')}</div>
+      ${anaCapHtml(st)}
+      <div class="analabel">${t('an.hist')}</div>
+      ${anaHistHtml(st,hist)}
       <div class="analabel">${t('an.mb')}</div>
       ${anaManaHtml(st)}
       <div class="analabel">${t('an.curve')} · ${t('an.curveDiff')}</div>
@@ -4157,18 +4905,31 @@ async function anaPack(p){
       <div class="analabel">${t('an.plan')}</div>
       ${anaPlanHtml(st)}
       ${lines.length?`<div class="analabel">${t('an.vsAll')}</div><div class="anarank">${lines.map(l=>`<div class="anarow"><div>${esc(packName(l.p))}</div><div class="mu">${l.score}</div><div><b>${l.wr.toFixed(0)}%</b><div class="anabar"><i style="width:${l.wr}%"></i></div></div></div>`).join('')}</div>`:''}
+      <div class="analabel">${t('an.res.t')} <span class="anacta">${t('an.res.cta')}</span></div>
+      ${anaResultsHtml(p)}
+      ${pair?`<div class="mu xs" style="margin-top:8px">${pair.ok?t('an.pairOk',{name:esc(packName(pair.p)),r:pair.r.ramp,d:pair.r.draw,a:pair.r.answers}):t('an.pairGap',{name:esc(packName(pair.p)),r:pair.r.ramp,d:pair.r.draw,a:pair.r.answers})}</div>`:''}
       <div class="row" style="margin-top:12px">
-        <button class="btn sec sm" id="anaHalf">${t('an.compare')}</button>
+        <button class="btn sec sm" id="anaHalf">${pair&&pair.ok?t('an.pairBtn'):t('an.compare')}</button>
         <button class="btn sec sm" id="anaCopy">${t('an.copy')}</button>
         <button class="btn sec sm" id="anaAll2">${t('an.all')}</button>
       </div>
       <p class="mu xs" style="margin-top:8px">${t('an.mcHint',{n})} ${others.length?t('an.ciNote'):''}</p>
       ${anaMethodHtml()}
+      ${anaJumpHtml()}
     </div>`;
-  state.ana={one:{p,st,wr,ci,lines}};
-  const bh=$('#anaHalf');if(bh)bh.onclick=()=>{if(lines[0])anaCompare(p,lines[0].p)};
-  const bc=$('#anaCopy');if(bc)bc.onclick=()=>anaCopy(p,st,wr,ci,lines);
+  const bh=$('#anaHalf');if(bh)bh.onclick=()=>{if(pair)anaCompare(p,pair.p)};
+  const bc=$('#anaCopy');if(bc)bc.onclick=()=>anaCopy(p,st,wr,ci);
   const ba=$('#anaAll2');if(ba)ba.onclick=()=>anaAll();
+  const rs=$('#anaRSave');
+  if(rs)rs.onclick=()=>{
+    const wEl=$('#anaRW'),gEl=$('#anaRG');
+    const w=parseInt(wEl?wEl.value:'0',10)||0;
+    const g=parseInt(gEl?gEl.value:'0',10)||0;
+    if(g&&w>g){toast(t('an.res.bad'));return}
+    anaResultSave(p.id,w,g);
+    toast(t('an.res.saved'));
+    anaPack(p);
+  };
   box.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 async function anaCompare(a,b){
@@ -4178,30 +4939,36 @@ async function anaCompare(a,b){
   box.innerHTML=`<p class="mu sm"><span class="spin"></span> ${t('an.simulating')}</p>`;
   await new Promise(r=>setTimeout(r,20));
   const sim=anaSimPair(a,b,n);
-  const wa=anaBlend(sim.wr,sa,sb,0.15);
+  const wa=anaBlend(sim.wr,sa,sb,0.4);
+  const rc=anaRoleOf([...a.cards,...b.cards]);
+  const la=anaTierOf(a),lb=anaTierOf(b);
+  const tierChip=t=>t?`<span class="anatier" style="color:${anaCol(t.score)};background:${anaSoft(t.score,.16)};border:1px solid ${anaSoft(t.score,.45)}">${t.letter}</span>`:'';
   const diffRow=(label,x,y)=>`<tr><td>${label}</td><td class="n">${x}</td><td class="n">${y}</td></tr>`;
   box.innerHTML=`
     <div class="anacard">
       <div class="anavs">
-        <div><b>${esc(packName(a))}</b><span class="badge gold">${t('an.style.'+sa.style)}</span><b class="anaPct">${wa.toFixed(0)}%</b><span class="mu xs">${t('an.gradeShort',{g:sa.grade,s:sa.score})}</span></div>
+        <div><b>${esc(packName(a))}</b><span class="row" style="gap:6px;justify-content:center">${tierChip(la)}<span class="badge gold">${t('an.style.'+sa.style)}</span></span><b class="anaPct" style="color:${anaWinCol(wa)}">${wa.toFixed(0)}%</b><span class="mu xs">${t('an.scoreShort',{s:sa.score})}</span></div>
         <div class="mu">vs</div>
-        <div><b>${esc(packName(b))}</b><span class="badge">${t('an.style.'+sb.style)}</span><b class="anaPct">${(100-wa).toFixed(0)}%</b><span class="mu xs">${t('an.gradeShort',{g:sb.grade,s:sb.score})}</span></div>
+        <div><b>${esc(packName(b))}</b><span class="row" style="gap:6px;justify-content:center">${tierChip(lb)}<span class="badge">${t('an.style.'+sb.style)}</span></span><b class="anaPct" style="color:${anaWinCol(100-wa)}">${(100-wa).toFixed(0)}%</b><span class="mu xs">${t('an.scoreShort',{s:sb.score})}</span></div>
       </div>
+      <div class="analabel">${t('an.rolesT')}</div>
+      ${anaRoleChips(rc,true)}
+      <div class="mu xs" style="margin-top:6px">${anaRoleVerdict(rc)}</div>
       <div class="anagrid2">
         <div>${anaCurveHtml(sa)}<div class="mu xs">${t('an.curve')}</div></div>
         <div>${anaCurveHtml(sb)}<div class="mu xs">${t('an.curve')}</div></div>
       </div>
       <div class="analabel">${t('an.h2h')}</div>
-      <table class="anatbl"><thead><tr><th>${t('an.h2h.metric')}</th><th class="n">#${a.seq||'?'}</th><th class="n">#${b.seq||'?'}</th></tr></thead><tbody>
+      <div class="anatblwrap"><table class="anatbl"><thead><tr><th>${t('an.h2h.metric')}</th><th class="n">#${a.seq||'?'}</th><th class="n">#${b.seq||'?'}</th></tr></thead><tbody>
         ${diffRow(t('an.quality'),sa.score,sb.score)}
         ${diffRow(t('an.avg'),sa.avg.toFixed(2),sb.avg.toFixed(2))}
         ${diffRow(t('an.creatures'),sa.creatures,sb.creatures)}
-        ${diffRow(t('an.removal'),sa.removal,sb.removal)}
+        ${diffRow(t('an.removalShort'),sa.removal,sb.removal)}
         ${diffRow(t('an.evasion'),sa.evasion,sb.evasion)}
         ${diffRow(t('an.mb.lands'),sa.lands,sb.lands)}
         ${diffRow(t('an.mb.targetN'),sa.mana.target,sb.mana.target)}
         ${diffRow(t('an.mb.open2short'),anaPc(sa.mana.open2),anaPc(sb.mana.open2))}
-      </tbody></table>
+      </tbody></table></div>
       <div class="mu sm" style="margin-top:8px">${t('an.compareHint',{n})}</div>
     </div>`;
 }
@@ -4213,54 +4980,69 @@ async function anaAll(){
   const box=$('#anaOut');if(!box)return;
   box.innerHTML=`<p class="mu sm"><span class="spin"></span> ${t('an.simulating')}</p>`;
   await new Promise(r=>setTimeout(r,30));
-  const st={},pairs={},games={};
-  packs.forEach(p=>{st[p.id]=anaStats(p);games[p.id]=0});
+  const st={},pairs={};
+  anaMetaPrune();
+  packs.forEach(p=>{st[p.id]=anaStats(p);anaHistRecord(p,st[p.id])});
   const total=packs.length*(packs.length-1)/2;
   const n=Math.max(150,Math.min(900,Math.round(50000/Math.max(1,total))));
-  const wins={},turns={},screw={};
-  packs.forEach(p=>{wins[p.id]=0;turns[p.id]=0;screw[p.id]=0});
+  const wins={},turns={};
+  packs.forEach(p=>{wins[p.id]=0;turns[p.id]=0});
+  let done=0,last=performance.now();
   for(let i=0;i<packs.length;i++)for(let j=i+1;j<packs.length;j++){
     const a=packs[i],b=packs[j];
     const sim=anaSimPair(a,b,n);
-    const wa=anaBlend(sim.wr,st[a.id],st[b.id],0.2);
-    pairs[a.id+'|'+b.id]={wa,wb:100-wa,ci:sim.ci,n:sim.n};
+    const wa=anaBlend(sim.wr,st[a.id],st[b.id],0.4);
+    pairs[a.id+'|'+b.id]={wa,wb:100-wa};
     wins[a.id]+=wa;wins[b.id]+=100-wa;
     turns[a.id]+=sim.turns;turns[b.id]+=sim.turns;
-    screw[a.id]+=sim.screwA;screw[b.id]+=sim.screwB;
-    games[a.id]+=sim.n;games[b.id]+=sim.n;
+    /* ceder el hilo cada ~0,35 s: el progreso se ve y la pestaña no se congela */
+    if(++done%3===0&&performance.now()-last>350){
+      last=performance.now();
+      box.innerHTML=`<p class="mu sm"><span class="spin"></span> ${t('an.simulating')} ${done}/${total}</p>`;
+      await new Promise(r=>setTimeout(r,0));
+    }
   }
   const div=Math.max(1,packs.length-1);
   const rows=packs.map(p=>({
-    p,s:st[p.id],wr:wins[p.id]/div,games:games[p.id],
-    turns:turns[p.id]/div,screw:screw[p.id]/div
+    p,s:st[p.id],wr:wins[p.id]/div,turns:turns[p.id]/div
+  /* un solo orden manda: el winrate del round robin. Así el tier (por puesto),
+     la posición y el % no pueden contradecirse; la nota queda como dato aparte. */
   })).sort((x,y)=>y.wr-x.wr||y.s.score-x.s.score);
-  rows.forEach(r=>{r.tag=r.wr>=70?'an.broken':(r.wr<=35)?'an.weak':''});
-  state.ana={st,rows,pairs};
+  /* en un round robin la media es 50: destacar solo desviaciones claras */
+  rows.forEach(r=>{r.tag=r.wr>=65?'an.broken':(r.wr<=40)?'an.weak':''});
   const best=rows[0],worst=rows[rows.length-1];
-  const rank=rows.map((r,i)=>`<div class="anarow anaRowClick" data-pid="${esc(r.p.id)}" role="button" tabindex="0">
-      <div><b>${i+1}. ${esc(packName(r.p))}</b> <span class="badge">${r.s.grade}</span>${r.tag?` <span class="badge ${r.tag==='an.broken'?'gold':''}">${t(r.tag)}</span>`:''}<div class="mu xs">${t('an.style.'+r.s.style)} · ${t('an.ratio')} ${r.s.ratio.spells}/${r.s.ratio.lands} · ${t('an.avgShort')} ${r.s.avg.toFixed(1)} · ${t('an.removalN',{n:r.s.removal})} · ${t('an.diff')} ${t(anaDiffLabel(r.s.diff.score))} · ${t('an.turnsShort',{n:r.turns.toFixed(1)})}</div></div>
-      <div class="mu">${r.s.score}</div>
-      <div><b>${r.wr.toFixed(0)}%</b><div class="anabar"><i style="width:${r.wr}%"></i></div></div>
-    </div>`).join('');
-  const head=`<tr><th></th>${packs.map(p=>`<th title="${esc(packName(p))}">#${p.seq||'?'}</th>`).join('')}</tr>`;
-  const body=packs.map(a=>`<tr><th title="${esc(packName(a))}">#${a.seq||'?'}</th>${packs.map(b=>{
+  const rank=rows.map((r,i)=>{
+    const lg=anaTierLetter(i+1,rows.length);
+    return `<div class="anarow anaRowClick" data-pid="${esc(r.p.id)}" role="button" tabindex="0">
+      <div><span class="anatier" style="color:${anaCol(r.s.score)};background:${anaSoft(r.s.score,.16)};border:1px solid ${anaSoft(r.s.score,.45)}">${lg}</span> <b>${i+1}. ${esc(packName(r.p))}</b>${r.tag?` <span class="badge ${r.tag==='an.broken'?'gold':''}">${t(r.tag)}</span>`:''}<div class="mu xs">${r.s.captains&&r.s.captains[0]?`⚑ ${esc(r.s.captains[0].name)} · `:''}${t('an.style.'+r.s.style)} · ${t('an.ratio')} ${r.s.ratio.spells}/${r.s.ratio.lands} · ${t('an.avgShort')} ${r.s.avg.toFixed(1)} · ${t('an.rolesShort',{r:r.s.ramp,d:r.s.draw,a:r.s.removal})} · ${t('an.diff')} ${t(anaDiffLabel(r.s.diff.score))} · ${t('an.turnsShort',{n:r.turns.toFixed(1)})}</div></div>
+      <div style="color:${anaCol(r.s.score)};font-weight:800">${r.s.score}</div>
+      <div><b style="color:${anaWinCol(r.wr)}">${r.wr.toFixed(0)}%</b><div class="anabar"><i style="width:${r.wr}%;background:${anaWinCol(r.wr)}"></i></div></div>
+    </div>`;
+  }).join('');
+  /* la matriz lleva el nombre del sobre bajo su número: en móvil se lee sin
+     tener que buscar la fila del ranking */
+  const shortName=p=>{const n=packName(p);return n.length>24?n.slice(0,23)+'…':n};
+  const cellHead=p=>`<span class="mnum">#${p.seq||'?'}</span><span class="mname">${esc(shortName(p))}</span>`;
+  const head=`<thead><tr><th></th>${packs.map(p=>`<th title="${esc(packName(p))}">${cellHead(p)}</th>`).join('')}</tr></thead>`;
+  const body=`<tbody>${packs.map(a=>`<tr><th title="${esc(packName(a))}">${cellHead(a)}</th>${packs.map(b=>{
     if(a===b)return '<td class="anaself">—</td>';
     const pr=pairs[a.id+'|'+b.id]||pairs[b.id+'|'+a.id];
     if(!pr)return '<td>—</td>';
-    const v=pr && pairs[a.id+'|'+b.id]?pr.wa:pr.wb;
+    const v=pairs[a.id+'|'+b.id]?pr.wa:pr.wb;
     const cls=v>=55?'anawin':v<=45?'analose':'anatied';
-    return `<td class="${cls}">${v.toFixed(0)}</td>`;
-  }).join('')}</tr>`).join('');
+    return `<td class="${cls}" data-pid="${esc(b.id)}">${v.toFixed(0)}</td>`;
+  }).join('')}</tr>`).join('')}</tbody>`;
   box.innerHTML=`
     <div class="anasum">
-      <div><small>${t('an.champion')}</small><b>${esc(packName(best.p))} <span class="badge gold">${best.s.grade}</span></b><span class="mu xs">${best.wr.toFixed(0)}% ${t('an.winrateShort')} · ${t('an.quality')} ${best.s.score}</span></div>
-      <div><small>${t('an.weakest')}</small><b>${esc(packName(worst.p))} <span class="badge">${worst.s.grade}</span></b><span class="mu xs">${worst.wr.toFixed(0)}% ${t('an.winrateShort')} · ${t('an.quality')} ${worst.s.score}</span></div>
+      <div><small>${t('an.champion')}</small><b>${esc(packName(best.p))} <span class="badge gold" style="color:${anaWinCol(best.wr)};border-color:${anaSoft(best.wr,.5)}">${anaTierLetter(1,rows.length)} ${best.wr.toFixed(0)}%</span></b><span class="mu xs">${best.wr.toFixed(0)}% ${t('an.winrateShort')} · ${t('an.quality')} ${best.s.score}</span></div>
+      <div><small>${t('an.weakest')}</small><b>${esc(packName(worst.p))} <span class="badge" style="color:${anaWinCol(worst.wr)};border-color:${anaSoft(worst.wr,.5)}">${anaTierLetter(rows.length,rows.length)} ${worst.wr.toFixed(0)}%</span></b><span class="mu xs">${worst.wr.toFixed(0)}% ${t('an.winrateShort')} · ${t('an.quality')} ${worst.s.score}</span></div>
       <div><small>${t('an.pairs')}</small><b>${total}</b><span class="mu xs">${t('an.sims',{n:total*n})}</span></div>
     </div>
     <div class="analabel">${t('an.rank')} <span class="anacta">${t('an.rankHint')}</span></div>
     <div class="anarank">${rank}</div>
-    <div class="analabel">${t('an.matrix')}</div>
+    <div class="analabel">${t('an.matrix')} <span class="anacta">${t('an.matrixHint')}</span></div>
     <div class="anamatrix"><table>${head}${body}</table></div>
+    <div class="anacal">${anaCal().n?t('an.calLine',{n:anaCal().n,p:anaCal().packs,b:(anaCal().b*100).toFixed(1),r2:anaCal().r2.toFixed(2)}):t('an.calNone')}</div>
     <p class="mu xs" style="margin-top:8px">${t('an.method',{n:total*n,g:total})}</p>
     ${anaMethodHtml()}`;
   $$('.anaRowClick').forEach(el=>{
@@ -4268,14 +5050,22 @@ async function anaAll(){
     el.onclick=go;
     el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}};
   });
+  /* la matriz también abre el informe del sobre de esa columna */
+  $$('.anamatrix td[data-pid],.anamatrix th[data-pid]').forEach(el=>{
+    el.onclick=()=>{const p=packs.find(x=>String(x.id)===String(el.dataset.pid));if(p)anaPack(p)};
+  });
 }
 
 /* ---------- 10 · informe en texto para copiar ---------- */
-function anaCopyText(p,st,wr,ci,lines){
+function anaCopyText(p,st,wr,ci){
   const L=[];
+  const tier=anaTierOf(p);
   L.push('INFORME DE MAZO · '+packName(p));
-  L.push('Nota global: '+st.grade+' ('+st.score+'/100) · estilo '+t('an.style.'+st.style));
+  L.push('Nota global: '+st.score+'/100'+(tier?' · Tier '+tier.letter+' ('+tier.rank+' de '+tier.total+' en la biblioteca)':'')+' · estilo '+t('an.style.'+st.style));
+  L.push('Roles: rampa '+st.ramp+' · robo '+st.draw+' · respuestas '+st.removal+' (objetivo del mazo: '+ANA_ROLE_TARGET+' de cada)');
   L.push('Winrate estimado vs biblioteca: '+wr.toFixed(0)+'% (95% IC '+ci[0].toFixed(0)+'-'+ci[1].toFixed(0)+'%)');
+  const lib=anaLibraryStat(p,st);
+  if(lib.total>1)L.push(t('an.libRank',{r:lib.rank,tt:lib.total,p:lib.pct,m:lib.mean.toFixed(0)}));
   L.push('');
   L.push('BASE DE MANÁ');
   L.push('- Tierras: '+st.lands+' (objetivo Karsten: '+st.mana.target+')');
@@ -4291,15 +5081,38 @@ function anaCopyText(p,st,wr,ci,lines){
   L.push('CARTAS POR NOTA');
   st.graded.forEach(c=>L.push('- '+c.g.toFixed(1)+'  '+c.name+(c.tags.length?' ['+c.tags.map(k=>t(k)).join(', ')+']':'')));
   L.push('');
+  L.push('CAPITÁN SUGERIDO');
+  (st.captains||[]).forEach((c,i)=>{
+    L.push('- '+c.name+' ('+c.g.toFixed(1)+'/10) · coste '+c.tax[0]+', luego '+c.tax[1]+' y '+c.tax[2]+' con impuesto'+(i===0?'  ← recomendado':''));
+  });
+  if(!(st.captains||[]).length)L.push('—');
+  L.push('');
+  L.push('HISTORIAL DE NOTAS');
+  const hist=anaHistList(anaContentKey(p));
+  if(hist.length<2)L.push('- Primera medición: '+st.score+'/100');
+  else hist.slice().reverse().forEach((e,i,arr)=>{
+    const prev=arr[i+1],d=prev?e.score-prev.score:0;
+    L.push('- '+new Date(e.ts).toLocaleDateString()+' · '+e.score+(prev?' ('+(d>0?'+':'')+d+')':''));
+  });
+  L.push('');
+  L.push('RESULTADOS REALES');
+  const r=anaResults()[anaContentKey(p)];
+  L.push(r?'- '+r.w+'/'+r.g+' partidas ('+(100*r.w/r.g).toFixed(0)+'%)':'—');
+  const cal=anaCal();
+  L.push(cal.n?(t('an.calLine',{n:cal.n,p:cal.packs,b:(cal.b*100).toFixed(1),r2:cal.r2.toFixed(2)})):t('an.calNone'));
+  L.push('');
   L.push('PLAN DE AJUSTES');
   st.plan.forEach(x=>L.push('- '+t(x.k,x.v||{})));
   L.push('');
   L.push('MÉTODO');
-  L.push(t('an.m1'));L.push(t('an.m2'));L.push(t('an.m3'));L.push(t('an.m4'));
+  L.push(t('an.m1'));L.push(t('an.m2'));L.push(t('an.m3'));L.push(t('an.m4'));L.push(t('an.m5'));L.push(t('an.m6'));L.push(t('an.m7'));
+  L.push('');
+  L.push('TEORÍA JUMPSTART');
+  ['an.jt1','an.jt2','an.jt3','an.jt4','an.jt5','an.jt6'].forEach(k=>L.push('- '+t(k)));
   return L.join('\n');
 }
-function anaCopy(p,st,wr,ci,lines){
-  const txt=anaCopyText(p,st,wr,ci,lines);
+function anaCopy(p,st,wr,ci){
+  const txt=anaCopyText(p,st,wr,ci);
   const done=()=>toast(t('an.copied'));
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(txt).then(done,()=>anaCopyFallback(txt,done));
@@ -5662,6 +6475,49 @@ function combos(){
   return out;
 }
 function comboDeck(c){return combinePacks(c.a,c.b)}
+/* ---------- capitán elegible ----------
+   La app propone el mejor capitán, pero la elección es del jugador y se
+   recuerda por pareja de sobres. */
+const CAP_KEY='cj2_caps';
+function capStore(){const o=store.get(CAP_KEY,{});return o&&typeof o==='object'?o:{}}
+function comboKey(c){return String(c.a.id)+'|'+String(c.b.id)}
+function comboCaptain(c,deck){
+  const saved=capStore()[comboKey(c)];
+  return saved&&deck.cards.includes(saved)?saved:deck.captain;
+}
+function fillCaptains(){
+  const sel=$('#jCap'),info=$('#jCapInfo');
+  if(!sel)return;
+  const cs=combos(),c=cs[+($('#jMine').value||0)];
+  if(!c){sel.innerHTML='';if(info)info.textContent='';return}
+  const deck=comboDeck(c);
+  const cap=comboCaptain(c,deck);
+  const st=anaStats({cards:deck.cards});
+  const list=(st.captains||[]).slice();
+  if(cap&&!list.some(x=>x.name===cap)){
+    const cd=cardOfSafe(cap)||{};
+    list.push({name:cap,g:0,cmc:cd.cmc||0,tax:[]});
+  }
+  sel.innerHTML=list.map(x=>`<option value="${esc(x.name)}"${x.name===cap?' selected':''}>${esc(x.name)} · ${x.cmc} ${t('an.manaShort')} · ${x.g.toFixed(1)}/10</option>`).join('');
+  const cur=list.find(x=>x.name===cap);
+  if(info)info.textContent=cur&&cur.tax&&cur.tax.length?t('gp.captainTax',{t1:cur.tax[0],t2:cur.tax[1],t3:cur.tax[2]}):'';
+  /* roles del mazo que se va a jugar: 2 rampa, 2 robo y 2 respuestas */
+  const rr=$('#jRoles');
+  if(rr){
+    if(typeof anaRoleOf!=='function'){rr.innerHTML=''}
+    else{
+      const rc=anaRoleOf(deck.cards);
+      rr.innerHTML=anaRoleChips(rc,true)+`<span class="mu xs" style="margin-left:8px">${anaRoleVerdict(rc)}</span>`;
+    }
+  }
+}
+if($('#jMine'))$('#jMine').addEventListener('change',fillCaptains);
+if($('#jCap'))$('#jCap').addEventListener('change',e=>{
+  const cs=combos(),c=cs[+($('#jMine').value||0)];
+  if(!c)return;
+  const o=capStore();o[comboKey(c)]=e.target.value;store.set(CAP_KEY,o);
+  fillCaptains();
+});
 function fillGameSelects(){
   const cs=combos();
   const opts=cs.map((c,i)=>`<option value="${i}">${esc(packName(c.a))} + ${esc(packName(c.b))}</option>`).join('');
@@ -5669,6 +6525,8 @@ function fillGameSelects(){
   if(!cs.length){
     mine.innerHTML=`<option value="">${t('game.noCombos')}</option>`;
     theirs.innerHTML=mine.innerHTML;
+    if($('#jCap'))$('#jCap').innerHTML='';
+    if($('#jCapInfo'))$('#jCapInfo').textContent='';
     $('#jSetupStatus').textContent=t('mix.need');
     return;
   }
@@ -5677,6 +6535,7 @@ function fillGameSelects(){
   mine.value=String(cur);
   theirs.value=String(cs.length>1?(cur+1)%cs.length:cur);
   $('#jSetupStatus').textContent=t('game.combos',{n:cs.length});
+  fillCaptains();
 }
 $('#jStart').onclick=()=>{
   const cs=combos();
@@ -5684,6 +6543,8 @@ $('#jStart').onclick=()=>{
   const i=+$('#jMine').value||0, j=+$('#jTheir').value||0;
   if(i===j&&cs.length>1){toast(t('game.sameCombos'));return}
   const mine=comboDeck(cs[i]), opp=comboDeck(cs[j]||cs[0]);
+  const cap=comboCaptain(cs[i],mine);
+  if(cap&&mine.cards.includes(cap))mine.captain=cap;
   startGame(mine,opp);
   toast(t('game.started',{c:mine.captain?cardName(cardOf(mine.captain)):t('deck.none')}));
 };
