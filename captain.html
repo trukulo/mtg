@@ -191,12 +191,36 @@ nav button.on{color:var(--tx);background:var(--pn);box-shadow:inset 0 -2px var(-
 .anasrc>div{background:#ffffff05;border:1px solid #ffffff0d;border-radius:10px;padding:7px 9px;display:flex;flex-direction:column;gap:2px}
 .anasrc small{font:700 9px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--mu)}
 .anasrc b{font:800 16px Fraunces,serif;color:#f2e7cf}
-.anacardlist{max-height:300px;overflow:auto;border:1px solid var(--ln);border-radius:10px;padding:4px 8px}
-.anacl{display:grid;grid-template-columns:1fr 26px 96px;gap:8px;align-items:center;padding:5px 2px;border-bottom:1px solid #ffffff0a}
+.anacardlist{max-height:360px;overflow:auto;border:1px solid var(--ln);border-radius:10px;padding:2px 8px}
+.anacl{display:grid;grid-template-columns:31px minmax(0,1fr) 74px;gap:8px;align-items:center;padding:5px 2px;border-bottom:1px solid #ffffff0a}
 .anacl:last-child{border-bottom:0}
 .anacl b{font:700 12.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif}
+.anacthumb{width:31px;aspect-ratio:.716;object-fit:cover;border-radius:4px;border:1px solid #ffffff1f;background:#0b1118;display:block;cursor:zoom-in;transition:transform .16s,border-color .16s,box-shadow .16s}
+.anacthumb:hover{transform:scale(1.1);border-color:var(--au);box-shadow:0 6px 16px #000a}
+.anacthumb.off{background:linear-gradient(160deg,#26313d,#0b1118)}
+.anaclb{min-width:0;display:flex;flex-direction:column;gap:2px}
+.anaclnm{display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.25}
+.anaclnm .pt{font:800 9.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#dbe4ee;background:#ffffff0d;border:1px solid #ffffff14;border-radius:4px;padding:0 4px}
+.anaclnm .mana{display:inline-flex;gap:2px;flex-wrap:wrap}
+.anaclnm .mana .pip{width:14px;height:14px;font:700 8px/1 'Hanken Grotesk',system-ui,-apple-system,sans-serif;vertical-align:0}
+.anaclnm .mana .pip+.pip{margin-left:-1px}
+.anaclchips{display:flex;flex-wrap:wrap;gap:4px}
+.anaclchips span{font:700 9px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.04em;border-radius:999px;padding:1px 6px;background:#ffffff0a;border:1px solid #ffffff14;color:#c7d2de}
+.anaclchips .ramp{color:#9bf2b5;border-color:#9bf2b53d;background:#9bf2b50f}
+.anaclchips .draw{color:#8fd0ff;border-color:#8fd0ff3d;background:#8fd0ff0f}
+.anaclchips .ans{color:#ffbfa0;border-color:#ffbfa03d;background:#ffbfa00f}
+.anaclmeta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font:700 9.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:var(--mu);letter-spacing:.06em}
+.anaclmeta .rar{width:13px;height:13px;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font:800 8px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#0d1117;background:#9aa7b4}
+.anaclmeta .rar.u{background:#a8b9c8}.anaclmeta .rar.r{background:var(--au2)}.anaclmeta .rar.m{background:#f0763c}
+.anaclmeta .px{color:#f2e7cf;letter-spacing:0}
 .anagradebar{position:relative;height:15px;background:#ffffff10;border-radius:5px;overflow:hidden}
 .anagradebar i{display:block;height:100%;background:linear-gradient(90deg,#7a5a12,var(--au2))}
+@media(max-width:520px){
+  .anacl{grid-template-columns:29px minmax(0,1fr) 58px;gap:7px}
+  .anaclchips span{font-size:8.5px;padding:1px 5px}
+  .anaclnm b{font-size:12px}
+  .anaclmeta{gap:5px;font-size:9px}
+}
 .anagradebar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:800 9.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#0d1117}
 .anaplan{display:flex;flex-direction:column;gap:6px}
 .anaplan>div{background:#ffffff06;border-left:2px solid var(--au2);border-radius:0 8px 8px 0;padding:7px 10px;font:600 12px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#dbe4ee}
@@ -353,7 +377,7 @@ dialog .sel-search button:hover{border-color:var(--au)}
 .token .tokbrand{font:600 5.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.14em;color:#d6dee8;text-transform:uppercase}
 footer{border-top:1px solid var(--ln);margin-top:40px;padding:18px 22px;color:var(--mu);font-size:12.5px;display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between}
 .backprev{width:84px;aspect-ratio:.716;border-radius:6px;border:1px solid var(--ln);background:#0b1118 center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:var(--au);font-size:22px}
-#cardZoom{position:fixed;z-index:9600;width:500px;border-radius:14px;border:1px solid #ffffff2b;box-shadow:0 26px 60px #000c;pointer-events:none;display:none}
+#cardZoom{position:fixed;z-index:9600;width:500px;max-width:calc(100vw - 16px);border-radius:14px;border:1px solid #ffffff2b;box-shadow:0 26px 60px #000c;pointer-events:none;display:none}
 #cardZoom.on{display:block}
 .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:#1d2836;border:1px solid #e3b64b66;color:var(--tx);padding:10px 18px;border-radius:10px;z-index:60;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;font-size:14px;box-shadow:0 16px 40px #000a}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -2233,6 +2257,7 @@ Object.assign(I18N.fr,{'an.capBase':'Note de carte {g}','an.capCost':'Taxe {d}',
 /* ---------- tiers relativos, roles del mazo y escala de color ---------- */
 Object.assign(I18N.es,{
   'an.ramp':'Rampa','an.draw':'Robo','an.answers':'Respuestas',
+  'an.cmc':'Coste','an.price':'Precio de mercado',
   'an.rolesT':'Roles del mazo',
   'an.rolesShort':'R{r} · D{d} · A{a}',
   'an.roleHint':'La baraja de 40 pide 2 de rampa, 2 de robo y 2 de respuestas: el sobre es media baraja, así que 1 de cada ya es la mitad del mínimo y el otro sobre debe poner la otra mitad.',
@@ -2245,6 +2270,7 @@ Object.assign(I18N.es,{
 });
 Object.assign(I18N.en,{
   'an.ramp':'Ramp','an.draw':'Card draw','an.answers':'Answers',
+  'an.cmc':'Cost','an.price':'Market price',
   'an.rolesT':'Deck roles',
   'an.rolesShort':'R{r} · D{d} · A{a}',
   'an.roleHint':'A 40-card deck wants 2 ramp, 2 card draw and 2 answers: a pack is half a deck, so 1 of each is already half the minimum and the other pack must supply the rest.',
@@ -2257,6 +2283,7 @@ Object.assign(I18N.en,{
 });
 Object.assign(I18N.fr,{
   'an.ramp':'Ramp','an.draw':'Pioche','an.answers':'Réponses',
+  'an.cmc':'Coût','an.price':'Prix du marché',
   'an.rolesT':'Rôles du deck',
   'an.rolesShort':'R{r} · P{d} · R{a}',
   'an.roleHint':'Un deck de 40 veut 2 ramp, 2 pioches et 2 réponses : un booster est un demi-deck, donc 1 de chaque fait déjà la moitié du minimum et l’autre booster doit fournir le reste.',
@@ -2321,35 +2348,57 @@ const state={packs:[],cur:{id:null,name:'',cards:[]},deck:null,game:null,homeArt
 function toast(t,ms){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>e.classList.remove('on'),ms||3400)}
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* zoom de carta al pasar el ratón por cualquier nombre */
-function hideZoom(){const z=$('#cardZoom');if(z)z.classList.remove('on')}
-function showZoom(name,x,y){
-  const z=$('#cardZoom');if(!z)return;
-  const c=cardOf(name)||basicCard(name);
+const ZOOM_HIDE_MS=180;
+let _zT=null,_zEl=null;
+function hideZoom(){
+  clearTimeout(_zT);_zT=null;_zEl=null;
+  const z=$('#cardZoom');if(z)z.classList.remove('on');
+}
+function placeZoom(el){
+  const z=$('#cardZoom');if(!z||!el||!el.isConnected)return;
+  const r=el.getBoundingClientRect();
+  /* cabe en la ventana por alto y no se merienda la mesa */
+  const w=Math.round(Math.max(140,Math.min(520,innerWidth*0.42,(innerHeight-16)*0.716)));
+  const h=Math.round(w/0.716);
+  z.style.width=w+'px';
+  /* a la derecha de la carta si cabe; si no, a la izquierda; si no, centrado */
+  let left=r.right+16;
+  if(left+w>innerWidth-8)left=r.left-w-16;
+  if(left<8)left=r.left+r.width/2-w/2;
+  left=Math.max(8,Math.min(left,innerWidth-w-8));
+  /* centrado en la carta, sin salirse por arriba ni por abajo */
+  const top=Math.max(8,Math.min(innerHeight-h-8,r.top+r.height/2-h/2));
+  z.style.left=Math.round(left)+'px';z.style.top=Math.round(top)+'px';
+}
+function showZoom(el){
+  const z=$('#cardZoom');if(!z||!el)return;
+  const c=cardOf(el.dataset.nm)||basicCard(el.dataset.nm);
   const src=c?(cardImg(c)||c.img):'';
   if(!src){hideZoom();return}
+  clearTimeout(_zT);_zT=null;
   if(z.getAttribute('data-src')!==src){z.src=src;z.setAttribute('data-src',src)}
-  z.classList.add('on');
-  /* el doble de tamaño que antes, sin pasarse del alto de la ventana */
-  const w=Math.min(500,Math.round((innerHeight-16)*0.716)),h=Math.round(w/0.716);
-  z.style.width=w+'px';
-  let left=x+20;if(left+w>innerWidth-8)left=x-w-20;
-  left=Math.max(8,Math.min(left,innerWidth-w-8));
-  let top=y-h/2;top=Math.max(8,Math.min(innerHeight-h-8,top));
-  z.style.left=left+'px';z.style.top=top+'px';
+  if(el===_zEl&&z.classList.contains('on'))return;
+  _zEl=el;z.classList.add('on');placeZoom(el);
+}
+function scheduleHideZoom(){
+  clearTimeout(_zT);
+  _zT=setTimeout(()=>{_zT=null;_zEl=null;const z=$('#cardZoom');if(z)z.classList.remove('on')},ZOOM_HIDE_MS);
 }
 const nmTarget=e=>e.target&&typeof e.target.closest==='function'?e.target.closest('[data-nm]'):null;
 document.addEventListener('mouseover',e=>{
   const t=nmTarget(e);
-  if(!t){hideZoom();return}
-  showZoom(t.dataset.nm,e.clientX,e.clientY);
-});
-document.addEventListener('mousemove',e=>{
-  const z=$('#cardZoom');if(!z||!z.classList.contains('on'))return;
-  const t=nmTarget(e);
-  if(t)showZoom(t.dataset.nm,e.clientX,e.clientY);
+  if(t){showZoom(t);return}
+  if(_zEl)scheduleHideZoom();
 });
 document.addEventListener('mouseout',e=>{if(!e.relatedTarget)hideZoom()});
 document.addEventListener('click',()=>hideZoom(),true);
+/* si la carta se mueve (scroll, resize) el panel la sigue; si desaparece, se cierra */
+const _zoomFollow=()=>{
+  if(!_zEl)return;
+  if(_zEl.isConnected)placeZoom(_zEl);else hideZoom();
+};
+addEventListener('scroll',_zoomFollow,true);
+addEventListener('resize',_zoomFollow);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 const isBasicName=n=>BASIC_NAMES.has(n);
 const basicColor=n=>Object.keys(BASIC).find(k=>BASIC[k]===n)||null;
@@ -4022,7 +4071,11 @@ function anaStats(p){
 
   const graded=spells.map(c=>{
     const gr=anaCardGrade(c),creature=!!c.creature;
-    return {name:c.name,g:gr.g,tags:gr.tags,cmc:c.cmc||0,creature,ev:creature&&/flying|menace|trample|can't be blocked/i.test(anaText(c))};
+    return {name:c.name,g:gr.g,tags:gr.tags,cmc:c.cmc||0,creature,card:c,
+      ev:creature&&/flying|menace|trample|can't be blocked/i.test(anaText(c)),
+      mana:c.mana||'',pt:(c.pow!=null&&c.tou!=null)?c.pow+'/'+c.tou:'',
+      rarity:c.rarity||'common',set:c.set||'',price:c.price!=null?c.price:null,legend:!!c.legendary,
+      ramp:ANA_RX.ramp.test(o(c)),draw:!!anaDrawN(c),removal:ANA_RX.removal.test(o(c))};
   });
   graded.sort((a,b)=>b.g-a.g);
   const qMean=graded.length?graded.reduce((s,x)=>s+x.g,0)/graded.length:0;
@@ -4634,13 +4687,41 @@ function anaCurveTbl(st){
     <thead><tr><th>${t('an.cv.mv')}</th><th class="n">${t('an.cv.n')}</th><th class="n">${t('an.cv.onCurve')}</th></tr></thead>
     <tbody>${rows}</tbody></table></div>`;
 }
+/* una fila por carta: miniatura (con zoom al pasar el ratón), nombre, P/T, coste,
+   roles (rampa/robo/respuestas), habilidades, nota, rareza, edición y precio */
+const ANA_RAR={common:'c',uncommon:'u',rare:'r',mythic:'m',special:'r',bonus:'m'};
+function anaCardRow(c){
+  const card=c.card||(typeof cardOfSafe==='function'?cardOfSafe(c.name):null);
+  const im=card&&typeof cardImg==='function'?cardImg(card):'';
+  const tags=(c.tags||[]).map(k=>t(k));
+  const roles=[];
+  if(c.ramp)roles.push(`<span class="ramp">${t('an.ramp')}</span>`);
+  if(c.draw)roles.push(`<span class="draw">${t('an.draw')}</span>`);
+  if(c.removal)roles.push(`<span class="ans">${t('an.answers')}</span>`);
+  const rar=ANA_RAR[c.rarity]||'c';
+  const pct=Math.round(c.g/9.8*100);
+  const rl=String(c.rarity||'common').slice(0,1).toUpperCase();
+  const img=im?`<img class="anacthumb" src="${esc(im)}" alt="" loading="lazy" data-nm="${esc(c.name)}" title="${esc(c.name)}" onerror="this.classList.add('off');this.removeAttribute('src')">`
+    :`<span class="anacthumb off" data-nm="${esc(c.name)}" title="${esc(c.name)}"></span>`;
+  return `<div class="anacl">
+    ${img}
+    <div class="anaclb">
+      <div class="anaclnm"><b>${esc(c.name)}</b>${c.pt?`<span class="pt">${esc(c.pt)}</span>`:''}${c.mana?`<span class="mana">${manaHtml(c.mana)}</span>`:''}</div>
+      ${(roles.length||tags.length)?`<div class="anaclchips">${roles.join('')}${tags.map(x=>`<span>${x}</span>`).join('')}</div>`:''}
+      <div class="anaclmeta">
+        <span title="${esc(t('an.cmc'))}">${c.cmc}</span>
+        <span class="rar ${rar}" title="${esc(c.rarity||'')}">${rl}</span>
+        ${c.set?`<span>${esc(String(c.set).toUpperCase())}</span>`:''}
+        <span class="px" title="${esc(t('an.price'))}">${c.price!=null?'$'+c.price.toFixed(2):'—'}</span>
+        ${c.legend?`<span title="Legendary">★</span>`:''}
+      </div>
+    </div>
+    <div class="anagradebar"><i style="width:${pct}%;background:${anaCol(Math.round(c.g*10))}"></i><span style="color:${pct>=55?'#0d1117':'#e8eef6'}">${c.g.toFixed(1)}</span></div>
+  </div>`;
+}
 function anaCardsHtml(st){
   if(!st.graded.length)return `<span class="mu xs">${t('an.mechNone')}</span>`;
-  return `<div class="anacardlist">${st.graded.map(c=>`<div class="anacl">
-    <div><b>${esc(c.name)}</b><div class="mu xs">${c.tags.map(k=>t(k)).join(' · ')||t('an.tag.plain')}</div></div>
-    <div class="mu">${c.cmc}</div>
-    <div class="anagradebar"><i style="width:${Math.round(c.g/9.8*100)}%"></i><span>${c.g.toFixed(1)}</span></div>
-  </div>`).join('')}</div>`;
+  return `<div class="anacardlist">${st.graded.map(anaCardRow).join('')}</div>`;
 }
 function anaPlanHtml(st){
   return `<div class="anaplan">${st.plan.map(p=>`<div>${t(p.k,p.v||{})}</div>`).join('')}</div>`;

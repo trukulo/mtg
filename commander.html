@@ -3106,35 +3106,57 @@ const state={packs:[],cur:{id:null,name:'',cards:[]},deck:null,game:null,homeArt
 function toast(t,ms){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>e.classList.remove('on'),ms||3400)}
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* zoom de carta al pasar el ratón por cualquier nombre */
-function hideZoom(){const z=$('#cardZoom');if(z)z.classList.remove('on')}
-function showZoom(name,x,y){
-  const z=$('#cardZoom');if(!z)return;
-  const c=cardOf(name)||basicCard(name);
+const ZOOM_HIDE_MS=180;
+let _zT=null,_zEl=null;
+function hideZoom(){
+  clearTimeout(_zT);_zT=null;_zEl=null;
+  const z=$('#cardZoom');if(z)z.classList.remove('on');
+}
+function placeZoom(el){
+  const z=$('#cardZoom');if(!z||!el||!el.isConnected)return;
+  const r=el.getBoundingClientRect();
+  /* cabe en la ventana por alto y no se merienda la mesa */
+  const w=Math.round(Math.max(140,Math.min(520,innerWidth*0.42,(innerHeight-16)*0.716)));
+  const h=Math.round(w/0.716);
+  z.style.width=w+'px';
+  /* a la derecha de la carta si cabe; si no, a la izquierda; si no, centrado */
+  let left=r.right+16;
+  if(left+w>innerWidth-8)left=r.left-w-16;
+  if(left<8)left=r.left+r.width/2-w/2;
+  left=Math.max(8,Math.min(left,innerWidth-w-8));
+  /* centrado en la carta, sin salirse por arriba ni por abajo */
+  const top=Math.max(8,Math.min(innerHeight-h-8,r.top+r.height/2-h/2));
+  z.style.left=Math.round(left)+'px';z.style.top=Math.round(top)+'px';
+}
+function showZoom(el){
+  const z=$('#cardZoom');if(!z||!el)return;
+  const c=cardOf(el.dataset.nm)||basicCard(el.dataset.nm);
   const src=c?(cardImg(c)||c.img):'';
   if(!src){hideZoom();return}
+  clearTimeout(_zT);_zT=null;
   if(z.getAttribute('data-src')!==src){z.src=src;z.setAttribute('data-src',src)}
-  z.classList.add('on');
-  /* el doble de tamaño que antes, sin pasarse del alto de la ventana */
-  const w=Math.max(160,Math.min(500,innerWidth-16,Math.round((innerHeight-16)*0.716))),h=Math.round(w/0.716);
-  z.style.width=w+'px';
-  let left=x+20;if(left+w>innerWidth-8)left=x-w-20;
-  left=Math.max(8,Math.min(left,innerWidth-w-8));
-  let top=y-h/2;top=Math.max(8,Math.min(innerHeight-h-8,top));
-  z.style.left=left+'px';z.style.top=top+'px';
+  if(el===_zEl&&z.classList.contains('on'))return;
+  _zEl=el;z.classList.add('on');placeZoom(el);
+}
+function scheduleHideZoom(){
+  clearTimeout(_zT);
+  _zT=setTimeout(()=>{_zT=null;_zEl=null;const z=$('#cardZoom');if(z)z.classList.remove('on')},ZOOM_HIDE_MS);
 }
 const nmTarget=e=>e.target&&typeof e.target.closest==='function'?e.target.closest('[data-nm]'):null;
 document.addEventListener('mouseover',e=>{
   const t=nmTarget(e);
-  if(!t){hideZoom();return}
-  showZoom(t.dataset.nm,e.clientX,e.clientY);
-});
-document.addEventListener('mousemove',e=>{
-  const z=$('#cardZoom');if(!z||!z.classList.contains('on'))return;
-  const t=nmTarget(e);
-  if(t)showZoom(t.dataset.nm,e.clientX,e.clientY);
+  if(t){showZoom(t);return}
+  if(_zEl)scheduleHideZoom();
 });
 document.addEventListener('mouseout',e=>{if(!e.relatedTarget)hideZoom()});
 document.addEventListener('click',()=>hideZoom(),true);
+/* si la carta se mueve (scroll, resize) el panel la sigue; si desaparece, se cierra */
+const _zoomFollow=()=>{
+  if(!_zEl)return;
+  if(_zEl.isConnected)placeZoom(_zEl);else hideZoom();
+};
+addEventListener('scroll',_zoomFollow,true);
+addEventListener('resize',_zoomFollow);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 const isBasicName=n=>BASIC_NAMES.has(n);
 const basicColor=n=>Object.keys(BASIC).find(k=>BASIC[k]===n)||null;
@@ -6415,33 +6437,18 @@ function applySpell(P,card,srcName,quiet){
     if(total){logLine(t('game.tokens',{c:srcName,n:total,t:names.join(' / ')}),who);did=true}
   }else if(/from your graveyard to (the battlefield|your hand)/.test(o)){
     /* reanimar: «return target creature card from your graveyard to the battlefield/hand» */
+    const many=/up to (two|three|\d+)/.exec(o);
+    const limit=/return all|each [a-z ]{0,20}card/.test(o)?99
+      :(many?({two:2,three:3}[many[1]]||parseInt(many[1],10)||1):1);
     const toHand=/to your hand/.test(o);
-    const tm=o.match(/\b(creature|artifact|enchantment|land|permanent) cards? from your graveyard/)
-      ||o.match(/\bplaneswalker cards? from your graveyard/);
-    const many=o.match(/up to (two|three|\d+)/);
-    const all=/return all|each [a-z ]{0,20}card/ .test(o);
-    const want=all?99:(many?({two:2,three:3}[many[1]]||+many[1]||1):1);
-    const okType=c=>!tm||tm[1]==='permanent'||new RegExp('\\b'+tm[1],'i').test(c.type||'');
-    const picks=self.gy.map((nm,k)=>({nm,k,c:cardOfSafe(nm)}))
-      .filter(e=>e.c&&okType(e.c))
-      .sort((a,b)=>((b.c.cmc||0)+(b.c.pow||0))-((a.c.cmc||0)+(a.c.pow||0)))
-      .slice(0,want);
-    picks.forEach(e=>{
-      const at=self.gy.indexOf(e.nm);if(at<0)return;
-      self.gy.splice(at,1);
-      if(toHand){
-        self.hand.push(e.nm);
-        logLine(t('game.gyBackHand',{c:cardName(e.c)}),who);
-      }else{
-        const perm=instantiate(e.nm,false,self.deck);
-        perm.summoning=!hasKw(perm,'haste');
-        perm.tapped=/\btapped\b/.test(o);
-        self.bf.push(perm);
-        logLine(t('game.gyBack',{c:cardName(e.c)}),who);
-        applyTrigger(self,perm,'etb');
-      }
-      did=true;
-    });
+    const type=(/\b(creature|artifact|enchantment|land|permanent|planeswalker) cards? from your graveyard/.exec(o)||[])[1];
+    const ok=c=>!type||type==='permanent'||String(c.type||'').toLowerCase().includes(type);
+    self.gy.slice()
+      .map(nm=>({nm,c:cardOfSafe(nm)}))
+      .filter(e=>e.c&&ok(e.c))
+      .sort((a,b)=>(b.c.cmc||0)-(a.c.cmc||0))
+      .slice(0,limit)
+      .forEach(e=>{if(gyReturn(self,e.c,e.nm,toHand,/\btapped\b/.test(o)))did=true});
   }else if(/exile target (creature|permanent)/.test(o)){
     const tg=bestTargets(P,'foe')[0];
     if(tg){
@@ -7243,24 +7250,30 @@ function gyReturnAbility(card){
   if(!m)return null;
   return {cost:abilityCost(m[1]),toHand:/your hand/i.test(m[2]),tapped:/\btapped\b/i.test(m[0])};
 }
-function gyActivateReturn(P,name){
-  const card=cardOfSafe(name),ab=gyReturnAbility(card);
-  if(!card||!ab||!P)return false;
-  if(!canPay(P,ab.cost,0)){toast(t('game.noMana'));return false}
-  if(!payMana(P,ab.cost,0)){toast(t('game.noMana2'));return false}
+/* saca una carta del cementerio hacia la mano o el campo; devuelve true si salió */
+function gyReturn(P,card,name,toHand,tapped){
+  if(!P||!card)return false;
   const at=P.gy.indexOf(name);if(at<0)return false;
   P.gy.splice(at,1);
-  if(ab.toHand){
+  if(toHand){
     P.hand.push(name);
     logLine(t('game.gyBackHand',{c:cardName(card)}),P===G.you?'you':'ai');
-  }else{
-    const perm=instantiate(name,false,P.deck);
-    perm.summoning=!hasKw(perm,'haste');
-    perm.tapped=ab.tapped;
-    P.bf.push(perm);
-    logLine(t('game.gyBack',{c:cardName(card)}),P===G.you?'you':'ai');
-    applyTrigger(P,perm,'etb');
+    return true;
   }
+  const perm=instantiate(name,false,P.deck);
+  perm.summoning=!hasKw(perm,'haste');
+  perm.tapped=!!tapped;
+  P.bf.push(perm);
+  logLine(t('game.gyBack',{c:cardName(card)}),P===G.you?'you':'ai');
+  applyTrigger(P,perm,'etb');
+  return true;
+}
+function gyActivateReturn(P,name){
+  const card=cardOfSafe(name),ab=gyReturnAbility(card);
+  if(!card||!ab||!P||P.gy.indexOf(name)<0)return false;
+  if(!canPay(P,ab.cost,0)){toast(t('game.noMana'));return false}
+  if(!payMana(P,ab.cost,0)){toast(t('game.noMana2'));return false}
+  if(!gyReturn(P,card,name,ab.toHand,ab.tapped))return false;
   if(typeof renderBoard==='function')renderBoard();
   if(typeof renderPhase==='function')renderPhase();
   return true;
@@ -7372,8 +7385,8 @@ function manaSummary(P){
   const cnt={};let ready=0;
   P.bf.forEach(x=>{
     const m=manaOf(x);if(!m.length)return;
-    if(!x.tapped)ready++;
-    if(x.tapped)return;
+    if(x.tapped||(isCreature(x)&&x.summoning))return;
+    ready++;
     m.forEach(k=>{if(CH[k])cnt[k]=(cnt[k]||0)+1});
   });
   const dots='WUBRG'.split('').filter(k=>cnt[k])
@@ -10704,55 +10717,13 @@ cmdBoot();
 })();
 </script>
 <style id="v3-mat">
-/* ===== v3 · playmat con cartas físicas ===== */
-.jmain{position:relative;padding:16px;border:0;border-radius:22px;
- background:
-  radial-gradient(90% 60% at 50% 50%,#2c6a6322,transparent 70%),
-  repeating-linear-gradient(45deg,#ffffff06 0 1px,transparent 1px 3px),
-  repeating-linear-gradient(-45deg,#00000018 0 1px,transparent 1px 3px),
-  linear-gradient(180deg,#15393a,#0e2a2c 50%,#15393a);
- box-shadow:0 0 0 3px #0a1c1e,0 0 0 4px #c58a4b66,inset 0 0 0 7px #0e2a2c,inset 0 0 0 8px #c58a4b44,inset 0 30px 80px #0007,0 18px 50px #000a}
-.jmain .jbody{grid-template-columns:152px minmax(0,1fr)!important;gap:14px}
-.jmain .jzone{border:1.5px solid #c58a4b55;border-radius:10px;background:#00000022;position:relative}
-.jmain .jzone::before{content:attr(data-lb);position:absolute;top:-8px;left:12px;padding:0 6px;font:600 10px 'Hanken Grotesk',sans-serif;letter-spacing:.08em;color:#d7a566;background:#10302f;border-radius:4px;z-index:1}
-.jmain .jzone.jlands,.jmain .jzone.jhand{border-style:dashed}
-.jmain .jmid{border-top:1px solid #c58a4b55;border-bottom:1px solid #c58a4b55;background:linear-gradient(90deg,transparent,#c58a4b14,transparent);margin:6px 0}
-.pstack{display:grid;grid-template-columns:repeat(2,62px);gap:22px 14px;justify-content:center;align-content:center}
-.pstack .plabel{grid-column:1/-1;order:-1;color:#d7a566}
-.pstack.ai .pile.lib{order:4}.pstack.ai .pile.gy{order:3}.pstack.ai .pile.ex{order:2}.pstack.ai .pile.cmd{order:1}
-.pmini.pile{position:relative;width:62px;aspect-ratio:.716;cursor:pointer;border-radius:5%/3.6%;border:1.5px dashed #c58a4b66;background:#0000002e;padding:0;color:inherit;display:block}
-.pile .plb{position:absolute;left:50%;bottom:-17px;transform:translateX(-50%);font:600 9px 'Hanken Grotesk',sans-serif;letter-spacing:.06em;color:#d7a566;white-space:nowrap;font-style:normal}
 .pile .cnt{position:absolute;right:-7px;top:-8px;z-index:5;min-width:20px;padding:1px 5px;border-radius:999px;background:#0b1118;border:1px solid #c58a4b;font:800 11px 'Hanken Grotesk',sans-serif;color:var(--au2);text-align:center}
 .pmini.pile.has{border-color:transparent;background:none}
-.pile .pf{position:absolute;inset:0;border-radius:5%/3.6%}
-.pile .pf.lib{background:var(--back) center/cover,#1d2b46;box-shadow:var(--edge),0 6px 10px #000a;transition:box-shadow .25s}
-.pile .pf img,.pile .cardf{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:5%/3.6%;box-shadow:0 1px 0 #000,0 4px 8px #0009;transform:translate(var(--dx,0),var(--dy,0)) rotate(var(--r,0deg))}
-.pile.ex img{filter:saturate(.8) hue-rotate(8deg);box-shadow:0 0 0 1px #a855f755,0 4px 8px #0009}
 .pile:hover{transform:translateY(-2px)}
 .pile:focus-visible{outline:2px solid var(--au);outline-offset:3px}
-.v3fly{position:fixed;z-index:60;pointer-events:none;border-radius:5%/3.6%;background:var(--back) center/cover,#1d2b46;box-shadow:0 8px 18px #000b}
-.jmain .bcard,.jmain .hcard,#jPileView .bcard{border:0;border-radius:5%/3.6%;box-shadow:0 1px 0 #000,0 6px 10px #0009,inset 0 0 0 1px #0006}
-.jmain .bcard img,.jmain .hcard img,#jPileView .bcard img{border-radius:inherit;aspect-ratio:63/88}
-.jmain .bcard.tapped{box-shadow:-4px 4px 9px #000a}
-.jmain .hcard span{display:none}.jmain .hcard:hover span{display:block;position:absolute;bottom:0;left:0;right:0;background:#000c;color:#fff}
+.jmain .bcard.tapped{box-shadow:-4px 4px 9px #000a}.jmain .hcard:hover span{display:block;position:absolute;bottom:0;left:0;right:0;background:#000c;color:#fff}
 @media(max-width:640px){.jmain .jbody{grid-template-columns:118px minmax(0,1fr)!important;gap:8px}.pstack{grid-template-columns:repeat(2,48px);gap:20px 10px}.pile{width:48px}}
 @media(prefers-reduced-motion:reduce){.v3fly{display:none}}
-/* ===== v3 · auditoría y plantillas ===== */
-.v3au{margin:10px 0;padding:12px;border:1px solid var(--ln);border-radius:12px;background:#0b1118}
-.v3chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.v3chip{font:700 11.5px 'Hanken Grotesk',sans-serif;padding:3px 9px;border-radius:999px;border:1px solid #ffffff1a;color:var(--mu)}
-.v3chip.ok{color:#9be3b0;border-color:#5bbd7a55}.v3chip.bad{color:#ffb09b;border-color:#e0613f88;background:#e0613f14}
-.v3cv{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end;height:92px}
-.v3cv div{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
-.v3cv i{display:block;width:100%;border-radius:4px 4px 0 0;background:var(--au);min-height:2px;position:relative}
-.v3cv i.hi{background:var(--rd)}.v3cv i.lo{background:#6db2ee}
-.v3cv b{position:absolute;top:0;font:700 11px 'Hanken Grotesk',sans-serif;color:var(--tx)}
-.v3cv u{position:absolute;left:0;right:0;border-top:2px dashed #ffffff88;text-decoration:none}
-.v3cl{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:4px;text-align:center;font:600 11px 'Hanken Grotesk',sans-serif;color:var(--mu)}
-.v3sub{font-size:12px;color:var(--mu);margin-top:8px}
-.v3tp{margin-top:6px;padding:8px 10px;border:1px solid var(--ln);border-radius:10px;background:#0b1118;font-size:12px;color:var(--mu)}
-.v3tp .v3cv{height:34px;gap:4px;margin-top:6px}.v3tp .v3cv i{background:#c58a4b}
-.v3tp .v3cv u{display:none}
 </style>
 <script id="v3-engine">
 /* ===== v3: motor de mazos (singleton, 100 cartas, curva) + playmat ===== */
@@ -11002,32 +10973,6 @@ paintAudit();
 </script>
 
 <style id="commander-upgrade-style">
-/* Playmat físico: tapete de fieltro, zonas marcadas y pilas con cartas visibles */
-#jTable .jmain{
-  background:
-    radial-gradient(ellipse at 50% 48%,#1b6249 0,#124b39 48%,#0b3028 100%);
-  border:1px solid #c9aa6555;
-  box-shadow:inset 0 0 0 5px #071c17, inset 0 0 0 6px #d5b66a55,
-             inset 0 0 70px #03140f99,0 18px 48px #0009;
-}
-#jTable .jmain:before{
-  background:repeating-linear-gradient(35deg,#ffffff04 0 1px,#0000 1px 8px),
-    radial-gradient(ellipse at 50% 50%,#ffffff08,#0000 68%);
-}
-#jTable .jplay{background:none;gap:7px}
-#jTable .jzone{
-  border:1px solid #d7c18b55;border-style:solid;
-  background:linear-gradient(145deg,#ffffff0c,#001a1266);
-  box-shadow:inset 0 0 0 1px #ffffff08,inset 0 0 22px #00140e66;
-  border-radius:9px;min-height:112px;
-}
-#jTable .jzone.jlands{min-height:82px;background:#092c2266;border-color:#d7c18b38}
-#jTable .jzone.jhand{background:#082a2166;border-color:#d7c18b55}
-#jTable .jinfo{min-height:38px}
-#jTable .jbody{grid-template-columns:78px minmax(0,1fr)}
-#jTable .jpiles{width:78px;gap:12px}
-#jTable .pstack{gap:5px}
-#jTable .plabel{font-size:8px;color:#e5d4a7;letter-spacing:.13em}
 #jTable .pmini{
   width:72px;min-height:94px;padding:5px 4px 19px;display:flex;
   align-items:center;justify-content:center;position:relative;overflow:hidden;
@@ -11035,10 +10980,6 @@ paintAudit();
   background:linear-gradient(145deg,#183c32,#071a16);
   box-shadow:0 5px 12px #0008,inset 0 0 0 1px #ffffff0c;
   cursor:pointer;font-size:9px;
-}
-#jTable .pmini .pile-art{
-  width:52px;height:73px;display:block;object-fit:cover;border-radius:4px;
-  border:1px solid #e8d8ad66;box-shadow:0 3px 8px #000a;
 }
 #jTable .pmini .pile-back{
   width:52px;height:73px;border-radius:4px;border:1px solid #d5b66a;
@@ -11057,10 +10998,6 @@ paintAudit();
   color:#e7d7ae;text-shadow:0 1px 3px #000;font:700 7px/1 system-ui;
   letter-spacing:.08em;text-transform:uppercase;pointer-events:none;
 }
-#jTable .pmini.gy{border-color:#c5b4a088}
-#jTable .pmini.ex{border-color:#b79bdc99}
-#jTable .pmini.cmd{border-color:#e8c574aa}
-#jTable .jzone .bcard,#jTable .jzone .hcard{box-shadow:0 7px 14px #000b,0 0 0 1px #e8d7a333}
 @media(max-width:760px){
   #jTable .jbody{grid-template-columns:60px minmax(0,1fr)}
   #jTable .jpiles{width:60px}
@@ -11322,59 +11259,18 @@ body.playing #jNext{margin-left:auto;flex:0 0 auto;padding:7px 18px}
 
 
 <style id="playmat-v13-arena">
-/* ===== v13 · estilo Arena: una sola mesa inclinada, sin cajas, con luz, sombra y pilas ===== */
-body.playing .jgrid>.jmain{perspective:1250px;perspective-origin:50% 92%;
-  background:radial-gradient(75% 55% at 50% 38%,#3b2742 0,#231831 48%,#120d19 78%,#0a070f 100%);
-  box-shadow:0 0 0 2px #05030a,0 0 0 3px #8b5a9a44,inset 0 0 110px #000a,0 22px 60px #000c}
-body.playing .jmain:after{display:none}
-body.playing .jmain:before{background:radial-gradient(60% 38% at 50% 6%,#ffffff12,#0000 70%),radial-gradient(55% 30% at 50% 100%,#6fb4ff1c,#0000 70%)}
-/* el plano de juego se inclina: el fondo se aleja, tu borde queda a escala real */
-body.playing .jbody{transform:rotateX(17deg) scale(1.04);transform-origin:50% 100%;transform-style:preserve-3d}
-
-/* sin cajas: las cartas descansan directamente sobre la mesa */
-body.playing .jplayer-ai,body.playing .jplayer-you{background:none}
 body.playing .jplayer-cards>.jzone,
 body.playing .jplayer-cards>.jzone:not(.jlands):not(.jhand),
 body.playing .jplayer-cards>.jzone.jlands{border:0;background:none;box-shadow:none}
-body.playing .jplayer-cards>.jzone::before{display:none}
-body.playing .jplayer-heading{display:none}
-body.playing .jplayer-piles{--pw:clamp(46px,calc(var(--bh)*.42),78px);gap:18px 12px}
-
-/* costura central: brasa como en Arena */
-body.playing .jbody>.jmid{border:0;background:none;position:relative}
-body.playing .jbody>.jmid:before{content:'';position:absolute;left:3%;right:3%;top:50%;height:3px;margin-top:-1px;border-radius:3px;
-  background:linear-gradient(90deg,#0000,#ff6a3d 18%,#ffb27a 50%,#ff6a3d 82%,#0000);
-  box-shadow:0 0 14px 3px #ff4a2a99,0 0 46px 12px #d6301f55;pointer-events:none}
-body.playing .jbody>.jmid>*{position:relative;z-index:1}
-body.playing .jmid .jphase .ph{background:#0c0814d9;border:1px solid #ffffff24}
 body.playing #jCoach{text-shadow:0 1px 6px #000}
-
-/* avatares con la vida: tú azul, rival rojo */
-body.playing .jplayer-utility .jinfo .jdice{width:60px;height:60px;min-width:60px;font-size:24px;border:3px solid #6aa8e8;
-  background:radial-gradient(circle at 35% 28%,#fff,#bcd7f5 38%,#4f7fb8 82%);color:#0b1a30;
-  box-shadow:0 0 0 3px #0a0f18,0 0 22px #6aa8e877,0 10px 18px #000c}
-body.playing .jplayer-ai .jinfo .jdice{border-color:#e8634a;background:radial-gradient(circle at 35% 28%,#fff0ea,#f2b3a4 38%,#b8432e 82%);color:#2b0903;
-  box-shadow:0 0 0 3px #0a0f18,0 0 22px #e8634a77,0 10px 18px #000c}
-body.playing .jplayer-utility .jinfo{flex-wrap:wrap}
-
-/* cartas con grosor y sombra de contacto */
-body.playing .jmain .bcard,body.playing .jmain .hcard{border-radius:5%/3.6%;
-  box-shadow:0 1px 0 #000,1px 2px 0 #0b0b0b,2px 4px 0 #0b0b0b,0 14px 18px #000b,0 26px 38px #0009}
 body.playing .jmain .bcard.tapped{box-shadow:0 1px 0 #000,-6px 6px 0 #0b0b0b,-12px 10px 18px #000b,-22px 16px 34px #0009}
 body.playing .jmain .bcard:hover{box-shadow:0 0 0 2px #e3b64b,0 0 26px #e3b64b88,0 26px 38px #000d}
 body.playing .jmain .bcard.sel{box-shadow:0 0 0 2px #f0d79a,0 0 28px #e8c574aa,0 28px 38px #000d}
 body.playing .jmain .hcard:not(.off){box-shadow:0 0 0 2px #5fd0ffaa,0 0 22px #3fb6ff88,0 16px 24px #000b}
 body.playing .jmain .hcard.off{box-shadow:0 1px 0 #000,0 12px 18px #000b}
-
-/* pilas de permanentes iguales: tierras y fichas */
-body.playing .jplayer-cards .jzone{--cw:var(--bw)}
-body.playing .jplayer-cards .jzone.jlands{--cw:var(--lw)}
-body.playing .jplayer-cards .jzone .bcard.sm{margin-left:calc(var(--cw)*-1 + 10px)}
 body.playing .jplayer-cards .jzone .bcard.tapped.s1,body.playing .jplayer-cards .jzone .bcard.tapped.sm{margin-right:0}
 body.playing .jplayer-cards .jzone .bcard.tapped.sl{margin-right:calc(var(--cw)*.22)}
 body.playing .jplayer-cards .jzone .bcard.s1:not(.sel),body.playing .jplayer-cards .jzone .bcard.sm:not(.sl):not(.sel){filter:brightness(.8)}
-body.playing .jplayer-cards .jzone .bcard .stkn{position:absolute;right:4px;top:4px;z-index:6;min-width:22px;padding:1px 6px;border-radius:999px;
-  background:#0b0710;border:1.5px solid #e3b64b;font:800 11px 'Hanken Grotesk',sans-serif;color:#f3d489;text-align:center;box-shadow:0 3px 8px #000b}
 
 @media(max-width:760px){body.playing .jbody{transform:none}}
 </style>
@@ -11410,12 +11306,6 @@ body.playing .jplayer-cards .jzone .bcard .stkn{position:absolute;right:4px;top:
 /* ===== UX v2 · mesa con fases a la izquierda, vida visible y comandante compacto ===== */
 /* la mesa ya no secuestra el scroll: si no cabe, la página se desplaza */
 body.playing{overflow-x:hidden!important;overflow-y:auto!important}
-body.playing main,body.playing main.playing,body.playing main.wide{padding:6px!important;margin:0!important;min-height:0!important;max-width:none!important;transition:none!important}
-body.playing #jTable{height:auto!important;min-height:calc(100dvh - 12px)}
-body.playing .jgrid{min-height:calc(100dvh - 24px)}
-
-/* dos columnas: rail izquierdo con fases y herramientas | mesa */
-#jTable .jgrid{grid-template-columns:212px minmax(0,1fr)!important;gap:10px!important;align-items:stretch!important}
 #jTable .jrail-left{display:flex!important;flex-direction:column;gap:8px;min-width:0;padding:9px;
   border:1px solid #bda87566;border-radius:14px;background:linear-gradient(160deg,#18251e,#0a120d);
   box-shadow:0 12px 32px #0008;overflow-y:auto!important;overflow-x:hidden!important;min-height:0}
@@ -12553,7 +12443,7 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
       if (!m) return;
       const cost = m[1].trim(), eff = m[2].trim();
       if (/^(whenever|when|at the beginning|if |enchant|equip|ward|flash|cycling|kicker|buyback|madness|foretell|disturb|chapter|level up|cumulative upkeep|echo|unearth|bestow|suspend|vanishing|fading|crew|saddle|reconfigure|prototype|casualty|bargain|gift|offspring|impending)/i.test(cost)) return;
-      if (/sacrifice\s+(a|an|another)/i.test(cost)) return;
+      if (/sacrifice\s+(a|an|another)\b/i.test(cost)) return;
       if (/discard|exile|remove .*counter|return .* to|tap an untapped|mill/i.test(cost)) return;
       if (!/\{T\}|\{[0-9WUBRG]+\}/i.test(cost) && !/pay \d+ life/i.test(cost)) return;
       if (/^add \{/i.test(eff) || !SUPPORTED.test(eff)) return;
@@ -12665,7 +12555,7 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
     if (grantBase(x, k)) return true;
     if (!x) return false;
     return [G.you, G.ai].some(Q => Q && Q.bf.some(src => src && src.card && src.attachTo === x.id &&
-      /(has|gains?)/.test(low(src.card.oracle)) &&
+      /\b(has|gains?)\b/.test(low(src.card.oracle)) &&
       low(src.card.oracle).includes(k)));
   };
 
@@ -13021,13 +12911,23 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
   function castResolved(P, idx, card, texts, x) {
     card = card || cardOfSafe(P.hand[idx]);
     if (!card) return false;
-    const extra = x || 0, cost = costOf(card);
+    const extra = (x || 0) * xTimes(card), cost = costOf(card);
     if (!canPay(P, cost, extra)) { if (P === G.you) toast(t(extra ? 'adv.cantPay' : 'game.noMana')); return false; }
     if (!payMana(P, cost, extra)) { if (P === G.you) toast(t('game.noMana2')); return false; }
     P.hand.splice(idx, 1);
     logLine(t('game.castN', { p: P.name, c: cardName(card), cost: costText(card, extra) }), P === G.you ? 'you' : 'ai');
     const perm = isPermanentCard(card) ? instantiate(card.name, false, P.deck) : null;
-    if (perm) { perm.summoning = !hasKw(perm, 'haste'); P.bf.push(perm); }
+    if (perm) {
+      perm.summoning = !hasKw(perm, 'haste'); P.bf.push(perm);
+      /* contadores de entrada, incluidos los de X («enters with X +1/+1 counters») */
+      const txt = (texts || []).join(' ') || String(card.oracle || '');
+      const cm = txt.match(/enters with (a|an|one|two|three|four|\d+|X) \+1\/\+1 counters?/i);
+      if (cm) {
+        const n = cm[1].toUpperCase() === 'X' ? (x || 0)
+          : ({ a: 1, an: 1, one: 1, two: 2, three: 3, four: 4 }[low(cm[1])] || parseInt(cm[1], 10) || 0);
+        if (n > 0) { perm.a += n; perm.b += n; }
+      }
+    }
     (texts || []).forEach(tx => applySpell(P, Object.assign({}, card, { oracle: tx }), cardName(card)));
     if (perm) applyTrigger(P, perm, 'etb'); else P.gy.push(card.name);
     checkDeaths();
@@ -13058,11 +12958,13 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
 
   /* ---------- costes X ---------- */
   const hasX = card => /\{X\}/i.test(String((card && card.mana) || ''));
+  /* «{X}{X}» cuesta X dos veces */
+  const xTimes = card => (String((card && card.mana) || '').match(/\{X\}/gi) || []).length || 1;
 
   function maxX(P, card) {
     const cost = costOf(card);
     for (let n = MAX_X; n >= 0; n--) {
-      if (canPay(P, cost, n)) return n;
+      if (canPay(P, cost, n * xTimes(card))) return n;
     }
     return 0;
   }
@@ -13078,7 +12980,7 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
     const mx = maxX(P, card);
     if (mx <= 0) { castX(P, idx, 0, card); return; }
     const opts = [];
-    for (let n = 0; n <= mx; n++) opts.push({ label: String(n), tip: '{' + n + '}' });
+    for (let n = 0; n <= mx; n++) opts.push({ label: String(n), tip: '{' + (n * xTimes(card)) + '}' });
     picker(t('adv.xValue') + ' · ' + cardName(card), opts, n => { castX(P, idx, n, card); });
   }
 
@@ -13414,6 +13316,196 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
   };
 })();
 
+</script>
+<style id="arena-v15-final">/* ===== Arena · capa final del tablero (un unico bloque, por temas) =====
+   Todo lo de aqui gana a las capas anteriores; solo lleva !important lo disputado.
+   Si algo no se ve como Arena, este es el sitio donde se toca. */
+
+/* ---- Mesa: tablero, rejilla y columnas ---- */
+body.playing #jTable .jmain:before{inset:8px!important;border:1px solid #ffffff0a!important;border-radius:13px!important;opacity:1!important;background:repeating-linear-gradient(115deg,#ffffff04 0 1px,#0000 1px 8px), radial-gradient(72% 52% at 50% 50%,#ffffff07,#0000 72%)!important}
+body.playing #jTable #jCoach{max-width:760px!important;margin:0 auto!important;background:linear-gradient(180deg,#10161caa,#0b1015cc)!important;border:1px solid #ffffff14!important;color:#cfd8e2!important}
+body.playing #jTable .jmid:before{content:''!important;position:absolute!important;left:3%!important;right:3%!important;top:50%!important;height:2px!important;background:linear-gradient(90deg,#0000,#e8c5742e 18%,#e8c57466 50%,#e8c5742e 82%,#0000)!important;border-radius:2px!important;pointer-events:none!important}
+body.playing #jTable .jmid:after{content:''!important;position:absolute!important;left:50%!important;top:50%!important;width:7px!important;height:7px!important;transform:translate(-50%,-50%) rotate(45deg)!important;border:1px solid #e8c57477!important;background:#0a0d10!important;pointer-events:none!important}
+body.playing #jTable .jmid>*{position:relative!important;z-index:1!important}
+body.playing #jTable{height:calc(100vh - 12px)!important;overflow:hidden!important}
+body.playing #jTable .jmain{background:radial-gradient(120% 80% at 50% -10%,#39414b40 0%,#0000 62%), radial-gradient(95% 75% at 50% 52%,#2f363e 0%,#1d2329 52%,#0a0d10 100%)!important;border:1px solid #3b434c!important;border-radius:18px!important;box-shadow:inset 0 0 0 1px #ffffff0f,inset 0 26px 70px #0009,inset 0 -34px 90px #000a,0 20px 50px #0009!important;padding:8px 10px 10px!important;height:100%!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+body.playing #jTable .jbody{flex:1 1 auto!important;display:flex!important;flex-direction:column!important;min-height:0!important;gap:0!important}
+body.playing #jTable .jplayer-zone{display:grid!important;align-items:center!important;gap:8px!important;grid-template-columns:84px minmax(0,1fr) 178px!important;flex:1 1 auto!important;min-height:0!important}
+body.playing #jTable .jplayer-cards{grid-column:2!important;grid-row:1!important;min-width:0!important;display:flex!important;flex-direction:column!important;justify-content:center!important;min-height:0!important}
+body.playing #jTable .jmid{border:0!important;border-radius:0!important;width:100%!important;justify-content:center!important;position:relative!important;background:linear-gradient(90deg,#0000,#070a0dcc 18%,#070a0dcc 82%,#0000)!important;border-top:1px solid #ffffff0f!important;border-bottom:1px solid #ffffff0f!important;padding:6px 0!important;margin:0!important;min-height:34px!important;flex:0 0 auto!important}
+body.playing #jTable .jgrid{height:100%!important;align-items:stretch!important;grid-template-columns:156px minmax(0,1fr)!important;gap:10px!important}
+
+/* ---- Filas: orden Arena, vida y montones ---- */
+body.playing #jTable .jplayer-utility{display:contents!important}
+body.playing #jTable .jplayer-heading{display:none!important}
+body.playing #jTable .jdice{min-width:62px!important;height:62px!important;font:800 25px Fraunces,serif!important;border-radius:18px!important;color:#241a06!important;border:1px solid #8a6a2a!important;background:linear-gradient(160deg,#f9ecc9,#dcb96c 55%,#ad8840)!important;box-shadow:0 10px 22px #000a,inset 0 2px 0 #fff9,inset 0 -10px 18px #0002!important}
+body.playing #jTable .jplayer-ai #jAiHand{order:1!important}
+body.playing #jTable .jplayer-ai #jAiBf{order:2!important}
+body.playing #jTable .jplayer-ai #jAiLand{order:3!important}
+body.playing #jTable .jplayer-you #jYouBf{order:1!important}
+body.playing #jTable .jplayer-you #jYouLand{order:2!important}
+body.playing #jTable .jplayer-you #jYouHand{order:3!important}
+body.playing #jTable .jplayer-ai{align-content:start!important}
+body.playing #jTable .jplayer-you{align-content:end!important}
+body.playing #jTable .jinfo{grid-column:1!important;grid-row:1!important;justify-content:center!important;min-height:0!important;flex-direction:column!important;gap:3px!important;align-items:center!important}
+body.playing #jTable .jinfo .jmeta{font-size:9px!important;line-height:1.25!important;text-align:center!important;color:#a9b4bf!important;max-width:82px!important}
+body.playing #jTable .jlifectl{display:flex!important;flex-direction:column!important;align-items:center!important;gap:1px!important}
+body.playing #jTable .jlifebtn{width:30px!important;height:18px!important;padding:0!important;border-radius:6px!important;font:700 11px/18px 'Hanken Grotesk',sans-serif!important;color:#cfd6dd!important;background:#141a20!important;border:1px solid #363f49!important;cursor:pointer!important;opacity:0!important;transition:opacity .16s!important}
+body.playing #jTable .jlifectl:hover .jlifebtn,body.playing #jTable .jlifebtn:focus-visible{opacity:1!important}
+body.playing #jTable .jplayer-piles .pile-unit{width:42px!important;gap:2px!important;align-items:center!important}
+body.playing #jTable .jplayer-piles .pile-caption{font-size:6.5px!important;letter-spacing:.06em!important;color:#8794a1!important;white-space:nowrap!important}
+body.playing #jTable .pmini{color:#e8dcc0!important;position:relative!important;width:42px!important;height:59px!important;min-height:59px!important;padding:0!important;overflow:hidden!important;border-radius:5px!important;border:1px solid #4c5661!important;background:linear-gradient(150deg,#1b232b,#0b1015)!important;box-shadow:0 6px 12px #0008,inset 0 1px 0 #ffffff12!important}
+body.playing #jTable .pmini:hover{border-color:#e8cf91!important;box-shadow:0 10px 18px #000b,0 0 0 1px #e8cf9177!important}
+body.playing #jTable .pmini .pile-art,body.playing #jTable .pmini .pile-back{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border:0!important;border-radius:0!important;background-size:cover!important;background-position:center!important;object-fit:cover!important}
+body.playing #jTable .pmini .pile-name{display:none!important}
+body.playing #jTable .pmini .cnt{font-size:10px!important;position:absolute!important;right:1px!important;bottom:1px!important;z-index:2!important;min-width:17px!important;padding:0 3px!important;border-radius:9px!important;background:#080d12e8!important;color:#f3dda9!important;text-align:center!important;font:700 9.5px/16px 'Hanken Grotesk',system-ui,sans-serif!important;border:1px solid #ffffff24!important}
+body.playing #jTable .jplayer-piles{grid-column:3!important;grid-row:1!important;flex-wrap:nowrap!important;justify-content:flex-end!important;padding:0!important;gap:6px!important}
+
+/* ---- Mano ---- */
+body.playing #jTable #jAiHand{height:56px!important;min-height:56px!important;max-height:56px!important;padding:2px 0!important}
+body.playing #jTable #jAiHand .bcard{width:34px!important;height:48px!important;box-shadow:0 6px 12px #0009!important}
+body.playing #jTable .jzone.jhand{background:transparent!important;border:0!important;box-shadow:none!important;min-height:0!important;align-items:flex-end!important;padding:12px 0 0!important;overflow:visible!important;flex:0 0 166px!important;height:166px!important}
+body.playing #jTable .jzone.jhand .hcard span{font-size:9px!important;padding:3px 4px!important}
+body.playing #jTable .jzone.jhand .hcard{border:0!important;border-radius:12px!important;box-shadow:0 16px 30px #000c,0 2px 6px #0008!important;width:clamp(88px,7.6vw,122px)!important;margin:0 -12px!important;transform:rotate(var(--rot,0deg)) translateY(var(--lift,0px))!important}
+body.playing #jTable .jzone.jhand .hcard:hover{z-index:40!important;box-shadow:0 28px 46px #000f,0 0 0 2px #f0d99e!important;transform:perspective(900px) rotateX(0deg) rotateY(0deg) rotate(0deg) translateY(-34px) scale(1.18)!important}
+
+/* ---- Zonas y cartas ---- */
+body.playing #jTable .jzone:before{display:none!important}
+body.playing #jTable .jzone.jlands{background:transparent!important;border:0!important;padding:4px 2px!important}
+body.playing #jTable .jzone{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;min-height:0!important;gap:9px!important;justify-content:center!important;align-content:center!important;padding:2px!important;flex:0 0 auto!important}
+body.playing #jTable .jzone .bcard .nm{display:none!important}
+body.playing #jTable .jzone.jlands .bcard{width:clamp(66px,5.8vw,90px)!important}
+body.playing #jTable img,body.playing #jTable .bcard,body.playing #jTable .hcard{content-visibility:visible!important;will-change:auto!important}
+body.playing #jTable .bcard img,body.playing #jTable .hcard img{display:block!important}
+body.playing #jTable .jzone .bcard{border:0!important;border-radius:11px!important;box-shadow:0 16px 28px #000c,0 2px 6px #0008!important;width:clamp(80px,7.2vw,112px)!important;transform:none!important}
+body.playing #jTable .jzone .bcard.tapped{margin:0 12px!important;transform:rotate(90deg) scale(.84)!important}
+body.playing #jTable .jzone .bcard.sel{transform:translateY(-12px)!important}
+body.playing #jTable .jzone .bcard:hover{z-index:15!important;box-shadow:0 24px 38px #000e,0 0 0 2px #e8cf91,0 0 26px #e8cf9155!important;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-8px) scale(1.05)!important}
+
+/* ---- Rail lateral y comandante ---- */
+body.playing #jTable .jrail .jcmdbox{background:linear-gradient(160deg,#1d252c,#0d1318)!important;border-color:#2e3742!important}
+body.playing #jTable .jlogbox{background:#070b0e!important;border-color:#232a32!important}
+body.playing #jTable .jrail{background:linear-gradient(180deg,#151b21,#0a0e12)!important;border:1px solid #2d343d!important;border-radius:14px!important;gap:7px!important;height:100%!important;max-height:100%!important;width:156px!important;padding:8px!important}
+body.playing #jTable .jrail .btn{font-size:10.5px!important;padding:6px 4px!important}
+body.playing #jTable .cmczdmg{grid-template-columns:1fr!important;gap:2px!important;padding:5px 6px!important;min-width:0!important}
+body.playing #jTable .cmczdmg .lab{grid-column:1!important;font-size:8.5px!important;letter-spacing:.02em!important;line-height:1.2!important;white-space:normal!important}
+body.playing #jTable .cmczdmg .r{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:4px!important;font-size:9.5px!important;line-height:1.1!important;min-width:0!important;white-space:nowrap!important}
+body.playing #jTable .cmczdmg .r b{min-width:20px!important;text-align:center!important}
+body.playing #jTable .cmczdmg .r button{flex:0 0 auto!important;width:18px!important;height:18px!important;padding:0!important;font-size:11px!important;border-radius:5px!important}
+body.playing #jTable .cmczdmg .cmczreset{grid-column:1!important;white-space:normal!important;font-size:9px!important;line-height:1.15!important;padding:3px 4px!important}
+body.playing #jTable .cmcztax{flex-wrap:nowrap!important;justify-content:center!important;gap:2px!important;font-size:9.5px!important;white-space:nowrap!important}
+body.playing #jTable .jcmdbox,body.playing #jTable #jCmd{min-width:0!important}
+body.playing #jTable #jCmd b,body.playing #jTable #jCmd .mu{overflow-wrap:anywhere!important}
+
+/* ---- Ventana estrecha (<=1080px): el rail pasa a tira superior ----
+   La pagina vuelve a desplazarse y la mesa baja a su propia fila: el rail y la
+   mano dejan de quedar cortados por el overflow:hidden de las capas viejas. */
+@media(max-width:1080px){
+  body.playing{overflow-x:hidden!important;overflow-y:auto!important}
+  body.playing #jTable{height:auto!important;min-height:0!important;overflow:visible!important}
+  body.playing #jTable .jgrid{grid-template-columns:minmax(0,1fr)!important;height:auto!important;gap:8px!important;align-items:start!important}
+  body.playing #jTable .jrail{
+    grid-column:1!important;grid-row:1!important;justify-self:stretch!important;
+    width:auto!important;height:auto!important;max-height:none!important;min-height:0!important;
+    display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:flex-start!important;
+    gap:8px!important;padding:8px!important;overflow:visible!important}
+  body.playing #jTable .jmain{
+    grid-column:1!important;grid-row:2!important;
+    height:auto!important;min-height:calc(100dvh - 220px)!important;overflow:visible!important}
+  body.playing #jTable .jtools{display:flex!important;flex-wrap:wrap!important;gap:5px!important;flex:0 0 auto!important}
+  body.playing #jTable .jtools .btn,body.playing #jTable .jtools .badge{flex:0 0 auto!important;min-width:64px!important;font-size:10.5px!important;padding:6px 8px!important}
+  body.playing #jTable .jtools #jDiffBadge{min-width:0!important;text-align:center!important}
+  body.playing #jTable .jcmdbox{flex:1 1 320px!important;min-width:0!important;max-width:560px!important;padding:7px 8px!important}
+  body.playing #jTable #jCmd>div:first-child{flex-wrap:wrap!important;gap:6px!important}
+  body.playing #jTable .cmczdmg{grid-template-columns:1fr 1fr!important}
+  body.playing #jTable .jlogbox{flex:1 1 260px!important;min-width:0!important;min-height:76px!important;max-height:76px!important}
+  body.playing #jTable .jrail-left>b.sm{display:none!important}
+  body.playing #jTable .jrail-sec{flex:1 1 100%!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:center!important;gap:6px!important;border-bottom:0!important;padding-bottom:0!important;min-width:0!important}
+  body.playing #jTable .jrail-h{width:100%!important;margin:0!important}
+  body.playing #jTable .jrail-phases{flex:1 1 100%!important;min-width:0!important}
+  body.playing #jTable .jphase{flex-direction:row!important;flex-wrap:wrap!important;gap:5px!important}
+  body.playing #jTable .jphase .ph{width:auto!important;padding:5px 9px!important;font-size:10.5px!important}
+  body.playing #jTable .jphase .jturn{margin:0!important;padding:4px 8px!important}
+  body.playing #jTable .jrail-act{flex-direction:row!important;align-items:center!important;gap:6px!important;flex:0 1 auto!important}
+  body.playing #jTable .jrail-act #jNext{width:auto!important;min-height:32px!important;padding:6px 14px!important;margin:0!important;font-size:11.5px!important}
+  body.playing #jTable .jrail-note{display:none!important}
+  body.playing #jTable .jbody{height:auto!important;min-height:0!important}
+  body.playing #jTable .jplayer-zone{flex:0 0 auto!important}
+}
+</style>
+<script id="arena-paint-js">
+/* la carta recién insertada a veces no se pinta hasta que algo la invalida */
+(function () {
+  'use strict';
+  var pending = false;
+  window.__arenaNudge = function () {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(function () {
+      pending = false;
+      var main = document.querySelector('#jTable .jmain');
+      if (!main) return;
+      main.style.transform = 'translateZ(0)';
+      requestAnimationFrame(function () { main.style.transform = ''; });
+    });
+  };
+})();
+</script>
+<style id="arena-v16-feedback">
+/* ===== ARENA v16 · daño marcado y prioridad ===== */
+body.playing #jTable .bcard.damaged .pt{
+  color:#ffd9cf!important;background:#4a1414!important;border-color:#ff8f7a88!important;
+  box-shadow:0 0 12px #f5555544!important;
+}
+body.playing #jTable .dmgmark{
+  position:absolute!important;right:3px!important;bottom:23px!important;z-index:4!important;
+  min-width:16px!important;padding:0 4px!important;border-radius:8px!important;text-align:center!important;
+  font:800 10px/15px 'Hanken Grotesk',system-ui,sans-serif!important;
+  color:#ffe3da!important;background:#7d1d1de6!important;border:1px solid #ff9b8a77!important;
+  box-shadow:0 2px 6px #000a!important;pointer-events:none!important;
+}
+/* prioridad: aro dorado suave cuando puedes actuar */
+body.playing #jTable.priority .jmain{
+  box-shadow:inset 0 0 0 1px #ffffff10,inset 0 26px 70px #0009,inset 0 -34px 90px #000a,0 0 0 2px #e8c5742e,0 0 34px #e8c57426!important;
+}
+body.playing #jTable.priority .jmid:before{
+  background:linear-gradient(90deg,#0000,#e8c57440 18%,#e8c5748c 50%,#e8c57440 82%,#0000)!important;
+}
+body.playing #jTable.priority #jNext{
+  box-shadow:0 8px 22px #000a,0 0 22px #e8c57466!important;
+}
+</style>
+<script id="arena-v16-js">
+(function(){
+  'use strict';
+  /* daño marcado en la criatura, como en Arena */
+  if (typeof applyPerm === 'function') {
+    const base = applyPerm;
+    applyPerm = function (el, x, fresh) {
+      const r = base(el, x, fresh);
+      if (fresh && window.__arenaNudge) window.__arenaNudge();
+      const dmg = Math.max(0, +(x && x.dmg) || 0);
+      let badge = el.querySelector('.dmgmark');
+      if (!dmg) { if (badge) badge.remove(); el.classList.remove('damaged'); return r; }
+      el.classList.add('damaged');
+      if (!badge) { badge = document.createElement('span'); badge.className = 'dmgmark'; el.appendChild(badge); }
+      badge.textContent = '\u2212' + dmg;
+      badge.title = dmg + ' de daño marcado';
+      return r;
+    };
+  }
+  /* indicador de prioridad */
+  if (typeof renderPhase === 'function') {
+    const base = renderPhase;
+    renderPhase = function () {
+      const r = base();
+      const live = !!(typeof G !== 'undefined' && G && G.you && !G.over && G.turn === 'you');
+      const table = document.querySelector('#jTable');
+      if (table) table.classList.toggle('priority', live);
+      return r;
+    };
+  }
+})();
 </script>
 </body>
 </html>
