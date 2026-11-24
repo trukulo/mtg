@@ -379,7 +379,7 @@ dialog .sel-search button:hover{border-color:var(--au)}
 .token .tokbrand{font:600 5.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.14em;color:#d6dee8;text-transform:uppercase}
 footer{border-top:1px solid var(--ln);margin-top:40px;padding:18px 22px;color:var(--mu);font-size:12.5px;display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between}
 .backprev{width:84px;aspect-ratio:.716;border-radius:6px;border:1px solid var(--ln);background:#0b1118 center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:var(--au);font-size:22px}
-#cardZoom{position:fixed;z-index:9600;width:500px;border-radius:14px;border:1px solid #ffffff2b;box-shadow:0 26px 60px #000c;pointer-events:none;display:none}
+#cardZoom{position:fixed;z-index:9997;width:500px;max-width:calc(100vw - 16px);border-radius:14px;border:1px solid #ffffff2b;box-shadow:0 26px 60px #000c;pointer-events:none;display:none}
 #cardZoom.on{display:block}
 .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:#1d2836;border:1px solid #e3b64b66;color:var(--tx);padding:10px 18px;border-radius:10px;z-index:60;opacity:0;pointer-events:none;transition:.25s;max-width:90vw;font-size:14px;box-shadow:0 16px 40px #000a}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -497,6 +497,7 @@ main.wide{max-width:1560px}
 #jPileView.on{display:flex;animation:fade .2s ease}
 #jPileView .pvh{width:100%;font:700 13px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.06em;color:var(--au2);border-bottom:1px solid #e3b64b44;padding-bottom:8px;cursor:pointer}
 #jPileView .bcard{width:84px}
+#jPileView .bcard.act{cursor:pointer;outline:2px solid #e3b64b73;outline-offset:2px}
 #jPileView .jempty{margin:20px auto}
 .pmini{cursor:pointer}
 .pmini:hover{border-color:var(--au);box-shadow:0 0 18px #e3b64b3d}
@@ -1414,7 +1415,7 @@ const I18N={
     'game.phase.main1':'Principal 1','game.phase.combat':'Combate','game.phase.main2':'Principal 2','game.phase.end':'Fin',
     'game.next':'Siguiente fase','game.auto':'Piloto: {s}','game.on':'SÍ','game.off':'NO',
     'game.yourFieldEmpty':'Tu campo de batalla','game.aiFieldEmpty':'Campo de la IA',
-    'game.gyYou':'Tu cementerio','game.gyAi':'Cementerio rival','game.exYou':'Tu exilio','game.exAi':'Exilio rival','game.pileClose':'clic para cerrar','game.emptyPile':'No hay cartas aquí',
+    'game.gyYou':'Tu cementerio','game.gyAi':'Cementerio rival','game.exYou':'Tu exilio','game.exAi':'Exilio rival','game.pileClose':'clic para cerrar','game.emptyPile':'No hay cartas aquí','game.gyBack':'{c} vuelve al campo de batalla desde el cementerio.','game.gyBackHand':'{c} vuelve a la mano desde el cementerio.','game.gyAct':'clic para devolverlo al campo','game.gyHint':'clic en las cartas marcadas para devolverlas',
     'game.youWin':'Has ganado','game.youLose':'Has perdido','game.winP':'La IA se quedó sin vidas.','game.loseP':'Te quedaste sin vidas.',
     'game.deckOut':'{s} no puede robar: pierde la partida.','game.start':'Partida iniciada. Tú llevas {a} y la IA {b}.',
     'game.captainToCmd':'{c} vuelve a la zona de mando.','game.playCaptain':'Lanzas a {c} desde la zona de mando ({n}).',
@@ -1518,7 +1519,7 @@ const I18N={
     'game.phase.main1':'Main 1','game.phase.combat':'Combat','game.phase.main2':'Main 2','game.phase.end':'End',
     'game.next':'Next phase','game.auto':'Autopilot: {s}','game.on':'ON','game.off':'OFF',
     'game.yourFieldEmpty':'Your battlefield','game.aiFieldEmpty':'AI battlefield',
-    'game.gyYou':'Your graveyard','game.gyAi':'Opponent graveyard','game.exYou':'Your exile','game.exAi':'Opponent exile','game.pileClose':'click to close','game.emptyPile':'No cards here',
+    'game.gyYou':'Your graveyard','game.gyAi':'Opponent graveyard','game.exYou':'Your exile','game.exAi':'Opponent exile','game.pileClose':'click to close','game.emptyPile':'No cards here','game.gyBack':'{c} returns from the graveyard to the battlefield.','game.gyBackHand':'{c} returns from the graveyard to your hand.','game.gyAct':'click to return it to the battlefield','game.gyHint':'click the outlined cards to return them',
     'game.youWin':'You win','game.youLose':'You lose','game.winP':'The AI ran out of life.','game.loseP':'You ran out of life.',
     'game.deckOut':'{s} cannot draw: loses the game.','game.start':'Game on. You play {a}, the AI plays {b}.',
     'game.captainToCmd':'{c} returns to the command zone.','game.playCaptain':'You cast {c} from the command zone ({n}).',
@@ -1622,7 +1623,7 @@ const I18N={
     'game.phase.main1':'Principale 1','game.phase.combat':'Combat','game.phase.main2':'Principale 2','game.phase.end':'Fin',
     'game.next':'Phase suivante','game.auto':'Pilote : {s}','game.on':'OUI','game.off':'NON',
     'game.yourFieldEmpty':'Votre champ de bataille','game.aiFieldEmpty':'Champ de l’IA',
-    'game.gyYou':'Votre cimetière','game.gyAi':'Cimetière adverse','game.exYou':'Votre exil','game.exAi':'Exil adverse','game.pileClose':'cliquez pour fermer','game.emptyPile':'Aucune carte ici',
+    'game.gyYou':'Votre cimetière','game.gyAi':'Cimetière adverse','game.exYou':'Votre exil','game.exAi':'Exil adverse','game.pileClose':'cliquez pour fermer','game.emptyPile':'Aucune carte ici','game.gyBack':'{c} revient du cimetière sur le champ de bataille.','game.gyBackHand':'{c} revient du cimetière dans votre main.','game.gyAct':'cliquez pour le renvoyer sur le champ de bataille','game.gyHint':'cliquez les cartes encadrées pour les renvoyer',
     'game.youWin':'Vous gagnez','game.youLose':'Vous perdez','game.winP':'L’IA n’a plus de points de vie.','game.loseP':'Vous n’avez plus de points de vie.',
     'game.deckOut':'{s} ne peut pas piocher : perd la partie.','game.start':'Partie lancée. Vous jouez {a}, l’IA joue {b}.',
     'game.captainToCmd':'{c} retourne en zone de commandement.','game.playCaptain':'Vous lancez {c} depuis la zone de commandement ({n}).',
@@ -3114,7 +3115,7 @@ function showZoom(name,x,y){
   if(z.getAttribute('data-src')!==src){z.src=src;z.setAttribute('data-src',src)}
   z.classList.add('on');
   /* el doble de tamaño que antes, sin pasarse del alto de la ventana */
-  const w=Math.min(500,Math.round((innerHeight-16)*0.716)),h=Math.round(w/0.716);
+  const w=Math.max(160,Math.min(500,innerWidth-16,Math.round((innerHeight-16)*0.716))),h=Math.round(w/0.716);
   z.style.width=w+'px';
   let left=x+20;if(left+w>innerWidth-8)left=x-w-20;
   left=Math.max(8,Math.min(left,innerWidth-w-8));
@@ -3197,7 +3198,8 @@ function normCard(c){
     legendary:/Legendary/i.test(type),
     land:/Land/i.test(type), creature:/Creature/i.test(type),
     basic:/Basic/i.test(type)||BASIC_NAMES.has(c.name),
-    set:c.set||'', price:c.prices&&c.prices.usd?parseFloat(c.prices.usd):null
+    set:c.set||'', price:c.prices&&c.prices.usd?parseFloat(c.prices.usd):null,
+    faces: faces.map(f => ({name: f.name || c.name, type: f.type_line || '', oracle: f.oracle_text || '', mana: f.mana_cost || '', pow: f.power != null ? parseInt(f.power, 10) : null, tou: f.toughness != null ? parseInt(f.toughness, 10) : null, loyalty: f.loyalty != null ? parseInt(f.loyalty, 10) : null, img: ((f.image_uris||{}).normal || (f.image_uris||{}).large || '')}))
   };
   if(c.name.includes(' // '))CARD[c.name.split(' // ')[0]]=card;
   CARD[card.name]=card;
@@ -3342,16 +3344,22 @@ async function autocomplete(q){
 }
 /* básicas: se resuelven una vez para tener arte */
 const BASIC_CACHE={};
+/* impresiones de referencia: nunca la última reimpresión, que puede ser un
+   set crossover (Star Trek, Marvel…) y acaba siendo el arte de todas las tierras */
+const BASIC_PRINT_SETS=['m21','fdn','ori','m20','m19'];
 async function ensureBasics(){
-  for(const k of 'WUBRG'){
+  await Promise.all([...'WUBRG'].map(async k=>{
     const n=BASIC[k];
-    if(BASIC_CACHE[k])continue;
-    try{
-      const c=normCard(await api(API+'/cards/named?exact='+encodeURIComponent(n)));
-      BASIC_CACHE[k]={...c,basic:true,land:true,colors:[],ci:[k],prod:[k],type:'Basic Land — '+n};
-      await sleep(60);
-    }catch(e){BASIC_CACHE[k]={name:n,type:'Basic Land',basic:true,land:true,colors:[],ci:[k],prod:[k],img:'',sm:'',cmc:0,mana:'',oracle:'',pow:null,tou:null,rarity:'common',kw:[],legendary:false,set:''}}
-  }
+    if(BASIC_CACHE[k])return;
+    let c=null;
+    for(const set of BASIC_PRINT_SETS){
+      try{c=normCard(await api(API+'/cards/named?exact='+encodeURIComponent(n)+'&set='+set));break}catch(e){}
+      await sleep(40);
+    }
+    if(c)BASIC_CACHE[k]={...c,basic:true,land:true,colors:[],ci:[k],prod:[k],type:'Basic Land — '+n};
+    else BASIC_CACHE[k]={name:n,type:'Basic Land',basic:true,land:true,colors:[],ci:[k],prod:[k],img:'',sm:'',cmc:0,mana:'',oracle:'',pow:null,tou:null,rarity:'common',kw:[],legendary:false,set:''};
+    await sleep(60);
+  }));
 }
 function basicCard(name){
   const col=basicColor(name);
@@ -3360,7 +3368,12 @@ function basicCard(name){
 }
 /* Básica con el arte del set del mazo: sin esto Scryfall devolvía la última
    reimpresión (sets crossover) aunque el mazo fuera de ORI/M19/M20/M21/FDN. */
-function deckCard(name,deck){return basicArtCard(name,deck,false)||cardOfSafe(name)}
+function deckArtCard(name,deck){
+  const im=deck&&deck.cardArt&&deck.cardArt[name];
+  if(!im)return null;
+  return Object.assign({},cardOfSafe(name),{img:im,sm:im,artLocked:true});
+}
+function deckCard(name,deck){return basicArtCard(name,deck,false)||deckArtCard(name,deck)||cardOfSafe(name)}
 function basicArtCard(name,deck,rotate){
   if(!deck||!isBasicName(name))return null;
   const arr=deck.basicArt&&deck.basicArt[name];
@@ -3493,6 +3506,85 @@ async function ensureBasicArt(packs){
     p.basicArtLang=L;
   }
   savePacks();
+}
+const DEFAULT_BASIC_SET='m21';
+/* códigos de sets crossover que no deben acabar como arte automático de básicas */
+const UB_BASIC_SETS=new Set(['trk','trc','ttrk','ttrc','atrk','atrc','mdd','msc','spm','fin','who','ltr','ltc','pip','40k','w40k','tmnt','tla','acr']);
+function isCrossoverSet(set){
+  const c=String(set||'').toLowerCase();
+  if(!c)return false;
+  if(UB_BASIC_SETS.has(c))return true;
+  const info=((typeof SETS!=='undefined'&&SETS)||[]).find(x=>String(x.code||'').toLowerCase()===c);
+  return !!info&&UBRE.test(info.name||'');
+}
+function basicArtIsCrossover(deck,names){
+  /* si el mazo fija sets a mano, su arte manda aunque sea crossover */
+  if(String(deck.sets||'').trim())return false;
+  const pr=deck.basicPrints||{};
+  return names.some(n=>isCrossoverSet((pr[n]||{}).set));
+}
+/* un mazo sin arte de básicas usa el de un set básico: los mazos generados con
+   «cualquier set» no guardaban basicArt y heredaban la última reimpresión */
+async function ensureDeckBasics(deck){
+  if(!deck||!Array.isArray(deck.cards))return;
+  const names=[...new Set(deck.cards.filter(isBasicName))];
+  if(!names.length)return;
+  if(names.some(n=>((deck.basicArt||{})[n]||[]).length)&&!basicArtIsCrossover(deck,names))return;
+  try{
+    const art=await fetchBasicArt(DEFAULT_BASIC_SET,cLang());
+    const got={},prints={};
+    names.forEach(n=>{
+      const arr=art[n]||[];
+      if(!arr.length)return;
+      got[n]=arr.slice(0,6);
+      prints[n]={set:DEFAULT_BASIC_SET,img:arr[0]};
+    });
+    if(!Object.keys(got).length)return;
+    deck.basicArt=Object.assign({},deck.basicArt||{},got);
+    deck.basicPrints=Object.assign({},deck.basicPrints||{},prints);
+    deck.basicArtLang=cLang();
+  }catch(e){}
+}
+/* tierras no básicas: si su impresión es un set crossover (Star Trek, Marvel…)
+   se busca la impresión no crossover más reciente para el arte del tablero */
+const _nonUbArt={};
+async function nonUbPrintImg(name){
+  if(Object.prototype.hasOwnProperty.call(_nonUbArt,name))return _nonUbArt[name];
+  let out='';
+  try{
+    /* la impresión original: arte clásico, nunca un crossover ni un Secret Lair */
+    const q='!"'+String(name).replace(/"/g,'')+'" -is:digital';
+    const d=await api(API+'/cards/search?unique=prints&order=released&dir=asc&q='+encodeURIComponent(q));
+    const skip=new Set(['sld','plst','slz','slx','mb1','phpr','prm']);
+    const info=set=>((typeof SETS!=='undefined'&&SETS)||[]).find(x=>String(x.code||'').toLowerCase()===set);
+    const ok=c=>{
+      const set=String(c.set||'').toLowerCase();
+      if(isCrossoverSet(set)||skip.has(set))return false;
+      const st=info(set);
+      if(st&&/^(box|promo|memorabilia|token|minigame|vanguard|treasure_chest|funny|alchemy)$/.test(String(st.set_type||'')))return false;
+      return !!((c.image_uris||{}).normal);
+    };
+    const hit=(d.data||[]).find(ok);
+    if(hit)out=hit.image_uris.normal;
+  }catch(e){}
+  _nonUbArt[name]=out;
+  await sleep(60);
+  return out;
+}
+async function ensureDeckLands(deck){
+  if(!deck||!Array.isArray(deck.cards))return;
+  const names=[...new Set(deck.cards)].filter(n=>{
+    if(isBasicName(n))return false;
+    const c=cardOfSafe(n);
+    return c&&c.land&&isCrossoverSet(c.set);
+  });
+  if(!names.length)return;
+  deck.cardArt=deck.cardArt||{};
+  await Promise.all(names.map(async n=>{
+    if(deck.cardArt[n])return;
+    const im=await nonUbPrintImg(n);
+    if(im)deck.cardArt[n]=im;
+  }));
 }
 /* arte de una básica: variante vi (rota entre las artes del set) */
 function basicArtImg(p,name,vi){
@@ -5969,7 +6061,7 @@ let gid=0;
 /* ---------- cartas de la partida ---------- */
 function cardOfSafe(n){return cardOf(n)||basicCard(n)}
 function instantiate(name,token,deck){
-  const c=basicArtCard(name,deck,true)||cardOfSafe(name);
+  const c=basicArtCard(name,deck,true)||deckArtCard(name,deck)||cardOfSafe(name);
   const kw=(c.kw||[]).map(k=>String(k).toLowerCase());
   const o=(c.oracle||'').toLowerCase();
   /* Scryfall ya trae las palabras clave reales de la carta. Solo si faltan se
@@ -6321,6 +6413,35 @@ function applySpell(P,card,srcName,quiet){
       total+=n;names.push(tokenLabel(sp.name));
     });
     if(total){logLine(t('game.tokens',{c:srcName,n:total,t:names.join(' / ')}),who);did=true}
+  }else if(/from your graveyard to (the battlefield|your hand)/.test(o)){
+    /* reanimar: «return target creature card from your graveyard to the battlefield/hand» */
+    const toHand=/to your hand/.test(o);
+    const tm=o.match(/\b(creature|artifact|enchantment|land|permanent) cards? from your graveyard/)
+      ||o.match(/\bplaneswalker cards? from your graveyard/);
+    const many=o.match(/up to (two|three|\d+)/);
+    const all=/return all|each [a-z ]{0,20}card/ .test(o);
+    const want=all?99:(many?({two:2,three:3}[many[1]]||+many[1]||1):1);
+    const okType=c=>!tm||tm[1]==='permanent'||new RegExp('\\b'+tm[1],'i').test(c.type||'');
+    const picks=self.gy.map((nm,k)=>({nm,k,c:cardOfSafe(nm)}))
+      .filter(e=>e.c&&okType(e.c))
+      .sort((a,b)=>((b.c.cmc||0)+(b.c.pow||0))-((a.c.cmc||0)+(a.c.pow||0)))
+      .slice(0,want);
+    picks.forEach(e=>{
+      const at=self.gy.indexOf(e.nm);if(at<0)return;
+      self.gy.splice(at,1);
+      if(toHand){
+        self.hand.push(e.nm);
+        logLine(t('game.gyBackHand',{c:cardName(e.c)}),who);
+      }else{
+        const perm=instantiate(e.nm,false,self.deck);
+        perm.summoning=!hasKw(perm,'haste');
+        perm.tapped=/\btapped\b/.test(o);
+        self.bf.push(perm);
+        logLine(t('game.gyBack',{c:cardName(e.c)}),who);
+        applyTrigger(self,perm,'etb');
+      }
+      did=true;
+    });
   }else if(/exile target (creature|permanent)/.test(o)){
     const tg=bestTargets(P,'foe')[0];
     if(tg){
@@ -6887,6 +7008,8 @@ async function playerMulligan(){
 }
 async function startGame(myDeck,oppDeck){
   await ensureBasics();
+  await ensureDeckBasics(myDeck);await ensureDeckBasics(oppDeck);
+  await ensureDeckLands(myDeck);await ensureDeckLands(oppDeck);
   G.you=mkPlayer(t('log.you'),myDeck);
   G.ai=mkPlayer(t('gp.ai'),oppDeck);
   G.turn='you';G.turnNo=1;G.phase='main1';G.log=[];G.over=false;G.busy=false;G.auto=false;G.selected.clear();
@@ -7102,19 +7225,68 @@ function tiltCard(el,e){
   el.style.setProperty('--my',((py+.5)*100).toFixed(1)+'%');
 }
 function resetTilt(el){['--rx','--ry','--mx','--my'].forEach(v=>el.style.removeProperty(v))}
+/* coste de una habilidad activada escrita como «{1}{B}: …» */
+function abilityCost(raw){
+  const out={generic:0,colors:{}};
+  String(raw||'').replace(/\{([^}]+)\}/g,(m,k)=>{
+    if(/^\d+$/.test(k))out.generic+=+k;
+    else if('WUBRG'.includes(k))out.colors[k]=(out.colors[k]||0)+1;
+    else if(k!=='X'&&k!=='S')out.generic+=1;
+    return m;
+  });
+  return out;
+}
+/* «{1}{B}: Return Reassembling Skeleton from your graveyard to the battlefield tapped.» */
+function gyReturnAbility(card){
+  const o=String((card&&card.oracle)||'');
+  const m=o.match(/((?:\{[^}]+\})+)\s*:\s*return [^.]{0,90}?from your graveyard to (the battlefield|your hand)[^.]*/i);
+  if(!m)return null;
+  return {cost:abilityCost(m[1]),toHand:/your hand/i.test(m[2]),tapped:/\btapped\b/i.test(m[0])};
+}
+function gyActivateReturn(P,name){
+  const card=cardOfSafe(name),ab=gyReturnAbility(card);
+  if(!card||!ab||!P)return false;
+  if(!canPay(P,ab.cost,0)){toast(t('game.noMana'));return false}
+  if(!payMana(P,ab.cost,0)){toast(t('game.noMana2'));return false}
+  const at=P.gy.indexOf(name);if(at<0)return false;
+  P.gy.splice(at,1);
+  if(ab.toHand){
+    P.hand.push(name);
+    logLine(t('game.gyBackHand',{c:cardName(card)}),P===G.you?'you':'ai');
+  }else{
+    const perm=instantiate(name,false,P.deck);
+    perm.summoning=!hasKw(perm,'haste');
+    perm.tapped=ab.tapped;
+    P.bf.push(perm);
+    logLine(t('game.gyBack',{c:cardName(card)}),P===G.you?'you':'ai');
+    applyTrigger(P,perm,'etb');
+  }
+  if(typeof renderBoard==='function')renderBoard();
+  if(typeof renderPhase==='function')renderPhase();
+  return true;
+}
 /* vista de un montón: cementerio, exilio o zona de mando */
-function showPile(title,names){
+function showPile(title,names,owner){
   const v=$('#jPileView');if(!v)return;
   const list=names||[];
+  const me=owner==='you'?G.you:null;
+  const anyBack=!!me&&list.some(n=>gyReturnAbility(cardOfSafe(n)));
   const h=document.createElement('div');h.className='pvh';
-  h.textContent=title+' ('+list.length+') · '+t('game.pileClose');
+  h.textContent=title+' ('+list.length+') · '+(anyBack?t('game.gyHint')+' · ':'')+t('game.pileClose');
   v.replaceChildren(h);
   if(!list.length){const e=document.createElement('span');e.className='jempty';e.textContent=t('game.emptyPile');v.append(e)}
   list.forEach(n=>{
     const c=cardOfSafe(n);
     const d=document.createElement('div');d.className='bcard';d.title=c?cardName(c):n;
+    if(c)d.dataset.nm=c.name||n;
     const im=c?cardImg(c):'';
     d.innerHTML=im?`<img src="${esc(im)}" alt="" loading="lazy">`:`<div style="aspect-ratio:.716;display:flex;align-items:center;justify-content:center;background:#152130">✦</div>`;
+    const ab=me?gyReturnAbility(c):null;
+    if(ab){
+      d.classList.add('act');
+      d.title=(c?cardName(c):n)+' · '+t('game.gyAct');
+      d.onclick=()=>{if(gyActivateReturn(me,n))showPile(title,names,owner)};
+    }
     v.append(d);
   });
   v.classList.add('on');
@@ -7154,8 +7326,8 @@ function renderPiles(){
   set('#jMyLib',G.you.lib.length);set('#jMyGy',G.you.gy.length);set('#jMyEx',(G.you.exile||[]).length);set('#jMyCmd',G.you.cmd?1:0);
   set('#jAiLib',G.ai.lib.length);set('#jAiGy',G.ai.gy.length);set('#jAiEx',(G.ai.exile||[]).length);set('#jAiCmd',G.ai.cmd?1:0);
   const on=(id,fn)=>{const el=$(id);if(el)el.onclick=fn};
-  on('#jMyGy',()=>showPile(t('game.gyYou'),G.you.gy));
-  on('#jAiGy',()=>showPile(t('game.gyAi'),G.ai.gy));
+  on('#jMyGy',()=>showPile(t('game.gyYou'),G.you.gy,'you'));
+  on('#jAiGy',()=>showPile(t('game.gyAi'),G.ai.gy,'ai'));
   on('#jMyEx',()=>showPile(t('game.exYou'),G.you.exile||[]));
   on('#jAiEx',()=>showPile(t('game.exAi'),G.ai.exile||[]));
   on('#jMyCmd',()=>showPile(t('gp.cmdZone'),G.you.cmd?[G.you.cmd.name]:[]));
@@ -10811,7 +10983,7 @@ renderPiles=function(){
  if(prevLib&&G.you.lib.length<prevLib&&prevLib-G.you.lib.length<4)fly();
  prevLib=G.you.lib.length;
  const on=(id,fn)=>{const el=$(id);if(el){el.onclick=fn;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn()}}}};
- on('#jMyGy',()=>showPile(t('game.gyYou'),G.you.gy));on('#jAiGy',()=>showPile(t('game.gyAi'),G.ai.gy));
+ on('#jMyGy',()=>showPile(t('game.gyYou'),G.you.gy,'you'));on('#jAiGy',()=>showPile(t('game.gyAi'),G.ai.gy,'ai'));
  on('#jMyEx',()=>showPile(t('game.exYou'),G.you.exile||[]));on('#jAiEx',()=>showPile(t('game.exAi'),G.ai.exile||[]));
  on('#jMyCmd',()=>showPile(t('gp.cmdZone'),G.you.cmd?[G.you.cmd.name]:[]));on('#jAiCmd',()=>showPile(t('gp.cmdZone'),G.ai.cmd?[G.ai.cmd.name]:[]));
  on('#jMyLib',()=>toast(v('lib')+': '+G.you.lib.length));on('#jAiLib',()=>toast(v('lib')+': '+G.ai.lib.length));
@@ -11767,8 +11939,8 @@ body.playing .jplayer-utility .jinfo .jlifectl{order:2;flex-wrap:nowrap}
       themeId,source:'virtual',seq,format:fmt,template:tplId,sets:setQ?String(opts.sets||'').toUpperCase():''
     });
     deck.commander=cc.name;
-    if(setQ&&all.some(isBasicName)){
-      const ba=await cmdDeckBasicArt(opts.sets);
+    if(all.some(isBasicName)&&!Object.keys(deck.basicArt||{}).length){
+      const ba=await cmdDeckBasicArt(setQ?opts.sets:DEFAULT_BASIC_SET);
       if(Object.keys(ba.art).length){
         deck.basicArt=ba.art;deck.basicPrints=ba.prints;deck.basicArtLang=cLang();
       }
@@ -12648,16 +12820,6 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
     }
     if (castIt && isAura(card)) {
       attachAura(P, perm, card, false);
-      const host = P.bf.find(x => x.id === perm.attachTo);
-      if (host && host.card) {
-        const ao = low(perm.card.oracle);
-        const granted = ['flying','trample','haste','vigilance','lifelink','deathtouch','menace','first strike','double strike','reach','defender','hexproof','indestructible','ward','prowess']
-          .filter(k => ao.includes('has ' + k) || ao.includes('gains ' + k) || ao.includes('gain ' + k));
-        if (granted.length) {
-          host.card = Object.assign({}, host.card, { kw: [...new Set([...(host.card.kw || []), ...granted])] });
-          perm._granted = granted;
-        }
-      }
       renderBoard();
     }
     if (!card.land) oppTriggers(P, 'cast', card);
@@ -12703,18 +12865,7 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
         renderBoard();
       };
     });
-    $$('#jAiBf .bcard').forEach(el => {
-      el.onclick = () => {
-        const p = G.ai.bf.find(x => x.id === +el.dataset.perm);
-        if (!p || !p.card) return;
-        if (G.phase === 'combat' && G.turn === 'you' && /planeswalker/i.test(String(p.card.type || ''))) {
-          G.pwTarget = G.pwTarget === p.id ? null : p.id;
-          renderBoard();
-          return;
-        }
-        if (p.card.img) showCardPreview(p.card);
-      };
-    });
+    /* el clic en permanentes rivales lo completa la capa 2 (planeswalkers y preview) */
   };
 
   const rcBase = renderCommand;
@@ -12742,6 +12893,524 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
     box.querySelectorAll('[data-abx]').forEach(b => { b.onclick = () => { G.permSel = null; renderBoard(); }; });
     box.querySelectorAll('[data-loy]').forEach(b => { b.onclick = () => { useLoyalty(G.you, perm, pws[+b.dataset.loy], false); renderBoard(); renderPhase(); }; });
     box.querySelectorAll('[data-ab]').forEach(b => { b.onclick = () => { useAbility(G.you, perm, abs[+b.dataset.ab], false); renderBoard(); renderPhase(); }; });
+  };
+})();
+
+</script>
+<script id="adv-rules-2">
+/* ============================================================
+   Reglas avanzadas 2 · modales, X, ward, daño a planeswalkers,
+   DFC, costes de descarte/exilio y combate multiobjetivo.
+   Capa autocontenida: envuelve funciones del motor.
+   ============================================================ */
+(() => {
+  if (typeof G === 'undefined' || typeof applySpell !== 'function') return;
+
+  Object.assign(I18N.es, {
+    'adv.chooseMode': 'Elige un modo',
+    'adv.xValue': 'Valor de X',
+    'adv.transform': 'Transformar',
+    'adv.transformed': '{c} se transforma.',
+    'adv.wardPaid': 'Se paga {n} por la salvaguarda de {t}.',
+    'adv.wardSkip': 'Sin maná para la salvaguarda de {t}; se elige otro objetivo.',
+    'adv.pwSpell': '{c} hace {n} de daño a {t} (lealtad {l}).',
+    'adv.pwSpellTarget': 'Planeswalker marcado: el próximo daño de hechizo irá ahí.',
+    'adv.pwSpellOff': 'Objetivo de hechizos borrado.',
+    'adv.attackPw': 'Los atacantes seleccionados atacan a {t}.',
+    'adv.attackPlayer': 'Los atacantes seleccionados vuelven a atacar al jugador.',
+    'adv.attackFirst': 'Selecciona atacantes antes de marcar un planeswalker.',
+    'adv.abilExtra': 'Otras habilidades',
+    'adv.cantPay': 'No hay maná suficiente.'
+  });
+  Object.assign(I18N.en, {
+    'adv.chooseMode': 'Choose a mode',
+    'adv.xValue': 'Value of X',
+    'adv.transform': 'Transform',
+    'adv.transformed': '{c} transforms.',
+    'adv.wardPaid': 'Ward cost {n} paid for {t}.',
+    'adv.wardSkip': 'No mana for {t}\'s ward; choosing another target.',
+    'adv.pwSpell': '{c} deals {n} damage to {t} (loyalty {l}).',
+    'adv.pwSpellTarget': 'Planeswalker marked: the next spell damage goes there.',
+    'adv.pwSpellOff': 'Spell target cleared.',
+    'adv.attackPw': 'The selected attackers attack {t}.',
+    'adv.attackPlayer': 'The selected attackers attack the player again.',
+    'adv.attackFirst': 'Select attackers before marking a planeswalker.',
+    'adv.abilExtra': 'Other abilities',
+    'adv.cantPay': 'Not enough mana.'
+  });
+  Object.assign(I18N.fr, {
+    'adv.chooseMode': 'Choisissez un mode',
+    'adv.xValue': 'Valeur de X',
+    'adv.transform': 'Transformer',
+    'adv.transformed': '{c} se transforme.',
+    'adv.wardPaid': 'Coût de sauvegarde {n} payé pour {t}.',
+    'adv.wardSkip': 'Pas de mana pour la sauvegarde de {t} ; autre cible choisie.',
+    'adv.pwSpell': '{c} inflige {n} blessures à {t} (loyauté {l}).',
+    'adv.pwSpellTarget': 'Planeswalker marqué : les prochains dégâts de sort iront là.',
+    'adv.pwSpellOff': 'Cible de sort effacée.',
+    'adv.attackPw': 'Les attaquants choisis attaquent {t}.',
+    'adv.attackPlayer': 'Les attaquants choisis attaquent de nouveau le joueur.',
+    'adv.attackFirst': 'Choisissez des attaquants avant de marquer un planeswalker.',
+    'adv.abilExtra': 'Autres capacités',
+    'adv.cantPay': 'Mana insuffisant.'
+  });
+
+  const low = s => String(s || '').toLowerCase();
+  const isPW = c => /planeswalker/i.test(String((c && c.type) || ''));
+  const SUPPORTED = /deals? \d+ damage|destroy|exile|draw|gain \d+ life|lose \d+ life|gets \+(\d+|x)|gets -|put .*counter|create .*token|discard|mill|surveil|scry|tap target|untap target|fight|return .*hand|add \{/i;
+  const MAX_X = 20;
+
+  /* ---------- estilos de los paneles nuevos ---------- */
+  try {
+    const st = document.createElement('style');
+    st.id = 'adv2-css';
+    st.textContent = `
+      #advPick{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#04070bb8;backdrop-filter:blur(2px)}
+      #advPick .advcard{position:relative;max-width:min(560px,92vw);max-height:82vh;overflow:auto;background:#0d1420;border:1px solid #8fd3ff55;border-radius:12px;padding:14px 16px 16px;box-shadow:0 18px 50px #000c}
+      #advPick .advhd{font:800 11px 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#8fd3ff;margin:0 24px 10px 0}
+      #advPick .advopts{display:flex;flex-direction:column;gap:6px}
+      #advPick .advopts button{text-align:left;border:1px solid #8fd3ff44;background:#101c2b;color:#d8ecff;border-radius:6px;padding:8px 10px;font:600 12px/1.35 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}
+      #advPick .advopts button:hover:not(:disabled){background:#16304a;border-color:#8fd3ff}
+      #advPick .advopts button:disabled{opacity:.4;cursor:not-allowed}
+      #advPick .advx{position:absolute;top:8px;right:8px;border:1px solid #ffffff22;background:#101a26;color:#cfe3f5;border-radius:5px;width:22px;height:22px;line-height:1;cursor:pointer}
+      .bcard.atkpw{outline:2px solid #ffcf6b;outline-offset:2px;box-shadow:0 0 0 3px #ffcf6b33}
+    `;
+    document.head.appendChild(st);
+  } catch (e) {}
+
+  /* ---------- selector flotante ---------- */
+  function picker(title, opts, cb) {
+    const old = document.getElementById('advPick');
+    if (old) old.remove();
+    const box = document.createElement('div');
+    box.id = 'advPick';
+    box.innerHTML = `<div class="advcard"><div class="advhd">${esc(title)}</div><div class="advopts">${
+      opts.map((o, i) => `<button data-i="${i}"${o.dis ? ' disabled' : ''}${o.tip ? ` title="${esc(o.tip)}"` : ''}>${esc(o.label)}</button>`).join('')
+    }</div><button class="advx" data-close="1" aria-label="×">×</button></div>`;
+    document.body.appendChild(box);
+    box.querySelectorAll('[data-i]').forEach(b => { b.onclick = () => { const i = +b.dataset.i; box.remove(); cb(i); }; });
+    const cl = box.querySelector('[data-close]');
+    if (cl) cl.onclick = () => box.remove();
+  }
+
+  /* ---------- modales ---------- */
+  function modalOf(card) {
+    if (!card || card.land) return null;
+    const o = String(card.oracle || '');
+    if (!/choose (one|two|one or both|up to one)/i.test(o)) return null;
+    const modes = o.split(/[•·]/).slice(1).map(s => s.trim()).filter(Boolean);
+    if (modes.length < 2) return null;
+    const need = /choose two|one or both/i.test(o) ? Math.min(2, modes.length) : 1;
+    return { modes, need };
+  }
+
+  function modeScore(m) {
+    const o = low(m);
+    let s = 0;
+    if (/\bdestroy\b|\bexile\b/.test(o)) s += 6;
+    if (/deals? \d+ damage/.test(o)) s += 5;
+    if (/draw (a|two|three|\d+)/.test(o)) s += 4;
+    if (/gain \d+ life/.test(o)) s += 3;
+    if (/gets \+/.test(o)) s += 3;
+    if (/create .*token/.test(o)) s += 2;
+    if (/discard/.test(o)) s -= 2;
+    return s;
+  }
+
+  /* pago y resolución comunes a los lanzamientos con modo o con X */
+  function castResolved(P, idx, card, texts, x) {
+    card = card || cardOfSafe(P.hand[idx]);
+    if (!card) return false;
+    const extra = x || 0, cost = costOf(card);
+    if (!canPay(P, cost, extra)) { if (P === G.you) toast(t(extra ? 'adv.cantPay' : 'game.noMana')); return false; }
+    if (!payMana(P, cost, extra)) { if (P === G.you) toast(t('game.noMana2')); return false; }
+    P.hand.splice(idx, 1);
+    logLine(t('game.castN', { p: P.name, c: cardName(card), cost: costText(card, extra) }), P === G.you ? 'you' : 'ai');
+    const perm = isPermanentCard(card) ? instantiate(card.name, false, P.deck) : null;
+    if (perm) { perm.summoning = !hasKw(perm, 'haste'); P.bf.push(perm); }
+    (texts || []).forEach(tx => applySpell(P, Object.assign({}, card, { oracle: tx }), cardName(card)));
+    if (perm) applyTrigger(P, perm, 'etb'); else P.gy.push(card.name);
+    checkDeaths();
+    renderBoard(); checkLife(); renderPhase();
+    return true;
+  }
+
+  function castModal(P, idx, texts, card) {
+    return castResolved(P, idx, card, texts, 0);
+  }
+
+  function openModal(P, idx, card, modal) {
+    const texts = [];
+    const step = () => {
+      if (texts.length >= modal.need) { castModal(P, idx, texts, card); return; }
+      const opts = modal.modes.map((m, i) => ({
+        label: m,
+        dis: texts.includes(m),
+        tip: m
+      }));
+      picker(t('adv.chooseMode') + ' · ' + cardName(card), opts, i => {
+        texts.push(modal.modes[i]);
+        step();
+      });
+    };
+    step();
+  }
+
+  /* ---------- costes X ---------- */
+  const hasX = card => /\{X\}/i.test(String((card && card.mana) || ''));
+
+  function maxX(P, card) {
+    const cost = costOf(card);
+    for (let n = MAX_X; n >= 0; n--) {
+      if (canPay(P, cost, n)) return n;
+    }
+    return 0;
+  }
+
+  function castX(P, idx, x, card) {
+    card = card || cardOfSafe(P.hand[idx]);
+    if (!card) return false;
+    const oracle = String(card.oracle || '').replace(/\bX\b/g, String(x));
+    return castResolved(P, idx, card, [oracle], x);
+  }
+
+  function openX(P, idx, card) {
+    const mx = maxX(P, card);
+    if (mx <= 0) { castX(P, idx, 0, card); return; }
+    const opts = [];
+    for (let n = 0; n <= mx; n++) opts.push({ label: String(n), tip: '{' + n + '}' });
+    picker(t('adv.xValue') + ' · ' + cardName(card), opts, n => { castX(P, idx, n, card); });
+  }
+
+  /* ---------- salvaguarda (ward) ---------- */
+  function wardCost(x) {
+    if (!x || !hasKw(x, 'ward')) return 0;
+    const o = low(x.card && x.card.oracle);
+    const m = o.match(/ward\s*(?:\{(\d+)\}|—?\s*pay \{(\d+)\})/);
+    if (m) return +(m[1] || m[2] || 0);
+    return 2;
+  }
+
+  const wardSkip = new Set();
+
+  function payWard(P, x) {
+    const n = wardCost(x);
+    if (!n) return true;
+    const pay = { generic: n, colors: {} };
+    const tapped = payMana(P, pay, 0);
+    if (!tapped) return false;
+    logLine(t('adv.wardPaid', { n, t: cardName(x.card) }), P === G.you ? 'you' : 'ai');
+    return true;
+  }
+
+  /* objetivos: la salvaguarda ya no vuelve a una criatura intocable */
+  const bestBase = bestTargets;
+  bestTargets = function (P, role) {
+    if (role === 'self') return bestBase(P, role);
+    const foe = P === G.you ? G.ai : G.you;
+    const theirs = foe.bf.filter(x => isCreature(x) && !hasKw(x, 'hexproof') && !wardSkip.has(x.id));
+    const killable = theirs.filter(x => !hasKw(x, 'indestructible'));
+    return (killable.length ? killable : theirs).sort((a, b) => pwOf(b) * thOf(b) - pwOf(a) * thOf(a));
+  };
+
+  /* ---------- transformar (DFC) ---------- */
+  function canTransform(perm) {
+    return !!(perm && perm.card && perm.card.faces && perm.card.faces.length > 1);
+  }
+
+  function transformPerm(P, perm) {
+    if (!canTransform(perm)) return false;
+    const c = perm.card, faces = c.faces;
+    const nx = perm.face === 1 ? 0 : 1;
+    const f = faces[nx] || faces[0];
+    perm.face = nx;
+    perm.card = Object.assign({}, c, {
+      name: f.name || c.name,
+      type: f.type || c.type,
+      oracle: f.oracle || '',
+      mana: f.mana || '',
+      pow: f.pow != null ? f.pow : c.pow,
+      tou: f.tou != null ? f.tou : c.tou,
+      creature: /creature/i.test(f.type || c.type || ''),
+      land: /land/i.test(f.type || ''),
+      img: f.img || c.img,
+      sm: f.img || c.sm,
+      loyalty: f.loyalty != null ? f.loyalty : c.loyalty,
+      kw: []
+    });
+    perm.pow = perm.card.pow || 0;
+    perm.tou = perm.card.tou || 0;
+    if (perm.card.loyalty != null) perm.loyalty = perm.card.loyalty;
+    logLine(t('adv.transformed', { c: cardName(perm.card) }), P === G.you ? 'you' : 'ai');
+    renderBoard();
+    return true;
+  }
+
+  /* ---------- hechizos: daño a planeswalker, ward, transformar ---------- */
+  function pwTargetFor(P, o) {
+    if (!/any target|target creature or planeswalker|target planeswalker|target permanent/.test(o)) return null;
+    const foe = P === G.you ? G.ai : G.you;
+    const pws = (foe.bf || []).filter(x => x && isPW(x.card) && (x.loyalty || 0) > 0);
+    if (!pws.length) return null;
+    if (P === G.you) return pws.find(x => x.id === G.pwTarget) || null;
+    const dmg = String(o).match(/deals? (\d+) damage/);
+    if (!dmg) return null;
+    const best = pws.slice().sort((a, b) => (a.loyalty || 0) - (b.loyalty || 0))[0];
+    if (+dmg[1] >= (best.loyalty || 0) || Math.random() < 0.45) return best;
+    return null;
+  }
+
+  const applyBase = applySpell;
+  let wardDepth = 0;
+  applySpell = function (P, card, srcName, quiet) {
+    const o = low(card && card.oracle);
+
+    /* daño de hechizo dirigido a un planeswalker marcado */
+    if (!quiet && P && P.bf) {
+      const pw = pwTargetFor(P, o);
+      const m = o.match(/deals? (\d+) damage to (?:any target|target creature or planeswalker|target planeswalker|target permanent)/);
+      if (pw && m && !/damage to each|and \d+ damage/.test(o)) {
+        const n = +m[1];
+        payWard(P, pw);
+        pw.loyalty = (pw.loyalty || 0) - n;
+        logLine(t('adv.pwSpell', { c: srcName || cardName(card), n, t: cardName(pw.card), l: pw.loyalty }), P === G.you ? 'you' : 'ai');
+        checkDeaths();
+        const rest = String(card.oracle || '').replace(/deals? \d+ damage to [^.\n]*/i, '').replace(/^\s*[.,;]\s*/, '').trim();
+        if (rest) applyBase(P, Object.assign({}, card, { oracle: rest }), srcName, quiet);
+        return true;
+      }
+    }
+
+    /* ward: pagar o buscar otro objetivo */
+    if (!quiet && P && wardDepth < 4 && /target creature|target permanent|destroy target|exile target|deals? \d+ damage to (?:target|any)|tap target|gets -/.test(o) && !/destroy all|damage to each|each creature/.test(o)) {
+      const tg = bestTargets(P, 'foe')[0];
+      const w = tg ? wardCost(tg) : 0;
+      if (tg && w && !payWard(P, tg)) {
+        wardSkip.add(tg.id);
+        wardDepth++;
+        try {
+          logLine(t('adv.wardSkip', { t: cardName(tg.card) }), P === G.you ? 'you' : 'ai');
+          return applySpell(P, card, srcName, quiet);
+        } finally {
+          wardDepth--;
+          wardSkip.delete(tg.id);
+        }
+      }
+    }
+
+    const r = applyBase(P, card, srcName, quiet);
+
+    /* efectos que transforman el propio permanente */
+    if (/transform (it|this creature|this permanent|this land)|transforms into/.test(o)) {
+      const pm = (P.bf || []).find(x => x && x.card && x.card.name === (card && card.name) && canTransform(x));
+      if (pm) transformPerm(P, pm);
+    }
+    return r;
+  };
+
+  /* ---------- habilidades con coste de descarte o exilio ---------- */
+  function extraAbs(card) {
+    const out = [];
+    String((card && card.oracle) || '').split('\n').forEach(line => {
+      const s = line.trim();
+      if (!s || /^\[/.test(s)) return;
+      const m = s.match(/^([^:]{1,110}):\s*(.+)$/);
+      if (!m) return;
+      const cost = m[1].trim(), eff = m[2].trim();
+      if (/^(whenever|when|at the beginning|if |enchant|equip|ward|flash|cycling|kicker|buyback|madness|foretell|disturb|chapter|level up|cumulative upkeep|echo|unearth|bestow|suspend|vanishing|fading|crew|saddle|reconfigure|prototype|casualty|bargain|gift|offspring|impending)/i.test(cost)) return;
+      const dm = cost.match(/discard (a|one|two|three|four|\d+) cards?/i);
+      const em = cost.match(/exile (a|one|two|three|four|\d+) cards? from your graveyard/i);
+      if (!dm && !em) return;
+      if (!SUPPORTED.test(eff)) return;
+      const num = x => /^\d+$/.test(x) ? +x : ({ a: 1, one: 1, two: 2, three: 3, four: 4 }[low(x)] || 1);
+      const syms = cost.match(/\{[^}]+\}/g) || [];
+      const mana = syms.filter(x => !/^\{[TQXS]\}$/i.test(x)).join('');
+      out.push({
+        cost, eff, mana, tap: /\{T\}/i.test(cost),
+        life: +((cost.match(/pay (\d+) life/i) || [])[1] || 0),
+        discard: dm ? num(dm[1]) : 0,
+        exileGy: em ? num(em[1]) : 0
+      });
+    });
+    return out.slice(0, 4);
+  }
+
+  function canUseExtra(P, perm, a) {
+    if (!P || !perm || !perm.card || !a) return false;
+    if (perm._abTurn === G.turnNo) return false;
+    if (a.tap && (perm.tapped || (isCreature(perm) && perm.summoning))) return false;
+    if (a.life && P.life <= a.life) return false;
+    if (a.discard && (P.hand || []).length < a.discard) return false;
+    if (a.exileGy && (P.gy || []).length < a.exileGy) return false;
+    if (a.mana && !canPay(P, costOf({ mana: a.mana }), 0)) return false;
+    return true;
+  }
+
+  function useExtra(P, perm, a) {
+    if (!canUseExtra(P, perm, a)) return false;
+    const wasT = perm.tapped;
+    if (a.tap) perm.tapped = true;
+    if (a.mana && !payMana(P, costOf({ mana: a.mana }), 0)) {
+      if (a.tap) perm.tapped = wasT;
+      return false;
+    }
+    if (a.life) P.life -= a.life;
+    for (let i = 0; i < (a.discard || 0); i++) discardOne(P);
+    for (let i = 0; i < (a.exileGy || 0); i++) {
+      const nm = P.gy.pop();
+      if (nm) P.exile.push(nm);
+    }
+    perm._abTurn = G.turnNo;
+    logLine(t('game.abilityUse', { c: cardName(perm.card), a: a.cost }), P === G.you ? 'you' : 'ai');
+    applySpell(P, Object.assign({}, perm.card, { oracle: a.eff }), cardName(perm.card), true);
+    checkDeaths();
+    renderBoard();
+    return true;
+  }
+
+  /* ---------- combate con varios planeswalkers ---------- */
+  const rcBase = resolveCombat;
+  resolveCombat = function (atkP, defP, attackers, blocks) {
+    const list = (attackers || []).slice();
+    const groups = new Map();
+    list.forEach(a => {
+      const id = a && a._atkPw;
+      const key = (id && (defP.bf || []).some(x => x.id === id)) ? id : 0;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(a);
+    });
+    if (groups.size <= 1) {
+      const key = [...groups.keys()][0] || 0;
+      if (key) G.pwTarget = key;
+      const r = rcBase(atkP, defP, list, blocks);
+      list.forEach(a => { a._atkPw = null; });
+      return r;
+    }
+    let r;
+    groups.forEach((grp, key) => {
+      if (G.over) return;
+      /* si el planeswalker ya murió, ese ataque no redirige el daño al jugador */
+      if (key && !(defP.bf || []).some(x => x.id === key)) {
+        grp.forEach(a => { if (!hasKw(a, 'vigilance')) a.tapped = true; });
+        return;
+      }
+      G.pwTarget = key || null;
+      r = rcBase(atkP, defP, grp, blocks);
+    });
+    list.forEach(a => { a._atkPw = null; });
+    return r;
+  };
+
+  const beginBase = beginCombat;
+  beginCombat = function () {
+    G.you.bf.forEach(a => { a._atkPw = null; });
+    return beginBase.apply(this, arguments);
+  };
+
+  /* ---------- una sola vía de lanzamiento desde la mano ---------- */
+  const playBase = playFromHand;
+
+  /* decide modo/X y delega el lanzamiento normal en la capa anterior */
+  function castFromHand(P, idx, base) {
+    const card = cardOfSafe(P.hand[idx]);
+    if (!card || card.land) return base(P, idx, false);
+    const modal = modalOf(card);
+    if (modal) {
+      if (P === G.you) { openModal(P, idx, card, modal); return true; }
+      if (modal.need === 1) {
+        const best = modal.modes.slice().sort((a, b) => modeScore(b) - modeScore(a))[0];
+        return castModal(P, idx, [best], card);
+      }
+    }
+    if (hasX(card)) {
+      if (P === G.you) { openX(P, idx, card); return true; }
+      const x = maxX(P, card);
+      if (x > 0) return castX(P, idx, x, card);
+    }
+    return base(P, idx, false);
+  }
+
+  playFromHand = function (P, idx, asCommander) {
+    /* el rival elige solo; el jugador elige en el selector flotante */
+    if (P === G.ai && !asCommander && idx >= 0) return castFromHand(P, idx, playBase);
+    return playBase(P, idx, asCommander);
+  };
+
+  /* ---------- interfaz: mano, planeswalkers y panel extra ---------- */
+  const bindBase = bindBoardEvents;
+  bindBoardEvents = function () {
+    bindBase();
+
+    /* el clic solo comprueba el momento; lanzar y elegir modo/X lo hace castFromHand */
+    $$('#jYouHand .hcard').forEach(el => {
+      el.onclick = () => {
+        if (G.over || G.turn !== 'you') return;
+        if (G.phase === 'combat') { toast(t('game.cantCastCombat')); return; }
+        if (castFromHand(G.you, +el.dataset.hand, playBase)) { renderBoard(); renderPhase(); }
+      };
+    });
+
+    $$('#jAiBf .bcard').forEach(el => {
+      el.onclick = () => {
+        const p = G.ai.bf.find(x => x.id === +el.dataset.perm);
+        if (!p || !p.card) return;
+        if (isPW(p.card)) {
+          if (G.phase === 'combat' && G.turn === 'you') {
+            const ids = [...G.selected];
+            if (!ids.length) { toast(t('adv.attackFirst')); return; }
+            const allOn = ids.every(id => {
+              const a = G.you.bf.find(x => x.id === id);
+              return a && a._atkPw === p.id;
+            });
+            ids.forEach(id => {
+              const a = G.you.bf.find(x => x.id === id);
+              if (a) a._atkPw = allOn ? null : p.id;
+            });
+            G.pwTarget = allOn ? null : p.id;
+            toast(allOn ? t('adv.attackPlayer') : t('adv.attackPw', { t: cardName(p.card) }));
+            renderBoard();
+            return;
+          }
+          if (G.turn === 'you' && !G.over && (G.phase === 'main1' || G.phase === 'main2')) {
+            G.pwTarget = G.pwTarget === p.id ? null : p.id;
+            toast(G.pwTarget ? t('adv.pwSpellTarget') : t('adv.pwSpellOff'));
+            renderBoard();
+            return;
+          }
+        }
+        if (p.card.img) showCardPreview(p.card);
+      };
+    });
+
+    $$('#jYouBf .bcard').forEach(el => { el.classList.toggle('atkpw', !!(G.you && G.you.bf.some(a => a.id === +el.dataset.perm && a._atkPw))); });
+  };
+
+  const rcCmdBase = renderCommand;
+  renderCommand = function () {
+    rcCmdBase();
+    const box = $('#jCmd');
+    if (!box || !G.you) return;
+    const perm = G.you.bf.find(x => x.id === G.permSel);
+    if (!perm || !perm.card) return;
+    const abs = extraAbs(perm.card);
+    const dfc = canTransform(perm);
+    if (!abs.length && !dfc) return;
+    const canAct = G.turn === 'you' && !G.over && (G.phase === 'main1' || G.phase === 'main2');
+    let h = `<div class="abilbox"><div class="abilhd"><b>${esc(cardName(perm.card))}</b><span class="mu xs">${t('adv.abilExtra')}</span></div><div class="abilrow">`;
+    if (dfc) {
+      h += `<button class="abilbtn" data-trf="1"${canAct ? '' : ' disabled'} title="${esc(t('adv.transform'))}">${esc(t('adv.transform'))}</button>`;
+    }
+    abs.forEach((a, i) => {
+      const dis = !canAct || !canUseExtra(G.you, perm, a);
+      h += `<button class="abilbtn" data-xab="${i}" ${dis ? 'disabled' : ''} title="${esc(a.eff)}">${esc(a.cost)}</button>`;
+    });
+    h += '</div></div>';
+    box.insertAdjacentHTML('beforeend', h);
+    const trf = box.querySelector('[data-trf]');
+    if (trf) trf.onclick = () => { transformPerm(G.you, perm); renderPhase(); };
+    box.querySelectorAll('[data-xab]').forEach(b => {
+      b.onclick = () => { useExtra(G.you, perm, abs[+b.dataset.xab]); renderPhase(); };
+    });
   };
 })();
 
