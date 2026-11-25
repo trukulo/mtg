@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="es">
+<!-- versión 2026-11-25 21:55 · los cuatro tableros van al día a la vez -->
 <title>Captain Jumpstart · Two packs, one captain</title>
 <meta name="description" content="Captain Jumpstart: two 20-card packs, a 40-card singleton deck and a captain in the command zone. Build, analyse and play.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -767,7 +768,7 @@ body.playing .jside{height:100%}
           <p class="mu xs" style="margin-top:8px" data-i18n="v.themeP2">El tema solo perfuma el sobre: 4 cartas del tema y el resto del mismo color, para que no sean doce criaturas idénticas.</p>
         </div>
       </div>
-      <div class="row" style="margin-top:14px"><label for="vSource" style="margin:0" data-i18n="v.src">Cartas</label><select id="vSource" style="max-width:250px"><option value="all" data-i18n="v.srcAll">Cualquier carta</option><option value="noUB" data-i18n="v.srcNoUb">Cualquier carta sin UB</option><option value="core" data-i18n="v.srcCore">Solo sets básicos</option></select></div>
+      <div class="row" style="margin-top:14px"><label for="vSource" style="margin:0" data-i18n="v.src">Cartas</label><select id="vSource" style="min-width:290px;max-width:340px;flex:0 0 auto"><option value="all" data-i18n="v.srcAll">Cualquier carta</option><option value="noUB" data-i18n="v.srcNoUb">Sin Universes Beyond</option><option value="core" data-i18n="v.srcCore">Solo sets básicos</option><option value="set:fdn" data-i18n="v.srcFdn">Solo Foundations (FDN)</option></select></div>
       <p class="mu xs" style="margin-top:10px" data-i18n="v.balance">De cada color se generan 5 sobres candidatos y se queda el más cercano a la media: así no salen sobres rotos.</p>
       <div class="row" style="margin-top:10px"><label for="vSet" style="margin:0" data-i18n="v.set">Set exacto</label><select id="vSet" style="max-width:340px"><option value="" data-i18n="v.setAny">Cualquier set</option></select><span class="mu xs" id="vSetNote" data-i18n="v.setNote">Elige un set suelto: se usará solo ese.</span></div>
       <div class="row" style="margin-top:18px"><label for="vCount" style="margin:0" data-i18n="v.count">Sobres</label><select id="vCount" style="max-width:110px"><option selected>5</option><option>10</option><option>15</option><option>20</option><option>25</option><option>30</option></select><button class="btn" id="vGo" data-i18n="v.go">Generar</button><span class="mu sm" id="vStatus"></span></div>
@@ -1770,6 +1771,9 @@ I18N.es['cl.fr']='Cartas: FR';I18N.en['cl.fr']='Cards: FR';I18N.fr['cl.fr']='Car
 
 /* fuente de cartas del generador virtual */
 I18N.es['v.src']='Cartas';I18N.en['v.src']='Cards';I18N.fr['v.src']='Cartes';
+I18N.es['v.srcFdn']='Solo Foundations (FDN)';I18N.en['v.srcFdn']='Foundations only (FDN)';I18N.fr['v.srcFdn']='Fondations uniquement (FDN)';
+I18N.es['fdn.ok']='{n} mazos de Foundations construidos ({c} cartas cada uno).';I18N.en['fdn.ok']='{n} Foundations decks built ({c} cards each).';I18N.fr['fdn.ok']='{n} decks Foundations construits ({c} cartes chacun).';
+I18N.es['src.fdn']='Foundations (FDN)';I18N.en['src.fdn']='Foundations (FDN)';I18N.fr['src.fdn']='Foundations (FDN)';
 I18N.es['v.srcAll']='Cualquier carta';I18N.en['v.srcAll']='Any card';I18N.fr['v.srcAll']='Toutes les cartes';
 I18N.es['v.srcNoUb']='Sin Universes Beyond';I18N.en['v.srcNoUb']='No Universes Beyond';I18N.fr['v.srcNoUb']='Sans Universes Beyond';
 I18N.es['v.srcCore']='Solo sets básicos';I18N.en['v.srcCore']='Core sets only';I18N.fr['v.srcCore']='Sets de base uniquement';
@@ -1931,7 +1935,6 @@ I18N.en['of.deckProgress']='Loading official pack {i}/{n} · {p}';
 I18N.fr['of.deckProgress']='Chargement du booster officiel {i}/{n} · {p}';
 I18N.es['of.done']='{n} sobres oficiales de {s}';I18N.en['of.done']='{n} official packs from {s}';I18N.fr['of.done']='{n} boosters officiels de {s}';
 I18N.es['home.rules']='Reglas del formato';I18N.en['home.rules']='Format rules';I18N.fr['home.rules']='Règles du format';
-I18N.es['v.srcNoUb']='Cualquier carta sin UB';I18N.en['v.srcNoUb']='Any card without UB';I18N.fr['v.srcNoUb']='N’importe quelle carte hors UB';
 I18N.es['v.set']='Set exacto';I18N.en['v.set']='Exact set';I18N.fr['v.set']='Set précis';
 I18N.es['v.setAny']='Cualquier set';I18N.en['v.setAny']='Any set';I18N.fr['v.setAny']='N’importe quel set';
 I18N.es['v.setNote']='Elige un set suelto: se usará solo ese.';I18N.en['v.setNote']='Pick a single set: only that one is used.';I18N.fr['v.setNote']='Choisis un seul set : seul celui-ci sera utilisé.';
@@ -2336,6 +2339,10 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelect
 const API='https://api.scryfall.com';
 const CN={W:'Blanco',U:'Azul',B:'Negro',R:'Rojo',G:'Verde'};
 const BASIC={W:'Plains',U:'Island',B:'Swamp',R:'Mountain',G:'Forest'};
+/* Captain Jumpstart: el mazo son dos sobres de 20 = 40 cartas */
+const PACK_SIZE=20;
+const CMD_TOTAL=PACK_SIZE*2;
+
 const BASIC_NAMES=new Set(['Plains','Island','Swamp','Mountain','Forest','Wastes','Snow-Covered Plains','Snow-Covered Island','Snow-Covered Swamp','Snow-Covered Mountain','Snow-Covered Forest']);
 const CH={W:'#f0e5b4',U:'#6db2ee',B:'#a690c4',R:'#ee7e5e',G:'#6fcb7c',C:'#b9c4cf'};
 const store={
@@ -2408,7 +2415,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const pip=c=>c?(c==='C'?'<span class="pip pC">C</span>':`<span class="pip p${c}">${c}</span>`):'';
 const CNL=k=>t('color.'+k);
 const num=(n,d)=>{const s=Number(n||0).toFixed(d==null?0:d);return LANG==='en'?s:s.replace('.',',')};
-const srcLabel=s=>t('src.'+(s==='oficial'?'oficial':s==='importado'?'importado':s==='virtual'?'virtual':'manual'));
+const srcLabel=s=>t('src.'+(s==='oficial'?'oficial':s==='importado'?'importado':s==='virtual'?'virtual':s==='fdn'?'fdn':'manual'));
 const themeLabel=th=>th?(th.id?t('theme.'+th.id):(th.n||'')):'';
 function packName(p){
   if(!p)return '';
@@ -2514,8 +2521,13 @@ async function resolveNames(names){
   }
   return names.filter(n=>!cardOf(n));
 }
+/* un set entero no cabe en una página: se piden hasta 12 (2.100 cartas) */
+const RULES_SET_PAGES=12;
 async function searchCards(q,pages){
-  const out=[];let url=API+'/cards/search?unique=cards&order=edhrec&q='+encodeURIComponent(q);
+  const out=[];
+  const setScoped=/\bset:[a-z0-9]+/i.test(q);
+  if(setScoped)pages=Math.max(pages||2,RULES_SET_PAGES);
+  let url=API+'/cards/search?unique=cards&order=edhrec&q='+encodeURIComponent(q);
   for(let p=0;p<(pages||2)&&url;p++){
     let d;
     try{d=await api(url)}catch(e){break}
@@ -5215,7 +5227,19 @@ const G={you:null,ai:null,turn:'you',turnNo:1,phase:'main1',log:[],busy:false,ov
 let gid=0;
 
 /* ---------- cartas de la partida ---------- */
-function cardOfSafe(n){return cardOf(n)||basicCard(n)}
+function cardOfSafe(n){
+  const c=cardOf(n);if(c)return c;
+  /* una basica por nombre sigue siendo basica aunque no este en la cache */
+  if(isBasicName(n))return basicCard(n);
+  return stubCard(n);
+}
+/* Carta todavia sin resolver: NO es una tierra basica. Antes se devolvia
+   una basica (copias ilimitadas, contaba como tierra y en la curva). */
+function stubCard(n){
+  return {name:n,type:'',stub:true,basic:false,land:false,colors:[],ci:[],prod:[],
+    img:'',sm:'',cmc:0,mana:'',oracle:'',pow:null,tou:null,rarity:'common',kw:[],
+    legendary:false,set:''};
+}
 function instantiate(name,token){
   const c=cardOfSafe(name);
   const kw=(c.kw||[]).map(k=>String(k).toLowerCase());
@@ -6865,7 +6889,8 @@ async function printProxies(){
   ).join('');
   const bu=backUrl(PRINT.back);
   const backCss=bu?`.back{background-image:url('${bu}');background-size:cover;background-position:center}`:'';
-  const html=`<!DOCTYPE html><html lang="${LANG}"><head><meta charset="utf-8"><title>${t('print.proxies')} · Captain Jumpstart</title><style>
+  const html=`<!DOCTYPE html><html lang="${LANG}"><head>
+<meta name="app-version" content="2026-11-25 21:55">
     @page{size:${size};margin:6mm}
     *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#fff}
@@ -7094,6 +7119,1776 @@ function renderPrintInfo(){
 bootApp();
 renderPrintInfo();
 
+</script>
+
+
+<style id="mull-arena-css">
+/* ===== MULLIGAN ESTILO ARENA (capa de presentación) ===== */
+#jMullOver.mull-arena{
+  padding:0;
+  background:radial-gradient(ellipse 130% 95% at 50% 42%,#16202a 0%,#0a1015 46%,#04070a 100%);
+}
+#jMullOver.mull-arena::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 72% 62% at 50% 46%,#0000 38%,#000000a8 100%);
+}
+#jMullOver.mull-arena .mull-dialog{
+  max-width:none;max-height:none;width:100%;height:100%;
+  border:0;border-radius:0;background:none;box-shadow:none;padding:0;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+#jMullOver.mull-arena .mull-dialog h2{
+  margin:0;text-align:center;color:#f4efe3;
+  font:800 clamp(24px,3.2vw,42px)/1.05 'Fraunces',Georgia,serif;
+  letter-spacing:-.01em;text-shadow:0 2px 22px #000c;
+}
+#jMullOver.mull-arena #jMullP{
+  margin:9px 0 0;max-width:min(720px,86vw);text-align:center;
+  color:#a6b3c1;font-size:clamp(12.5px,1.1vw,14.5px);line-height:1.5;
+}
+#jMullOver.mull-arena .mullfan{
+  display:flex;justify-content:center;align-items:flex-start;flex-wrap:nowrap;gap:0;
+  margin:clamp(14px,3.4vh,34px) 0 0;padding:0 10px;perspective:1400px;
+}
+#jMullOver.mull-arena .mullfan .mcard{
+  width:min(calc((100vw - 96px)/7),21vh,176px);flex:0 0 auto;margin:0 -8px;
+  border-radius:12px;border:1px solid #ffffff2e;background:#0b1118;
+  box-shadow:0 26px 44px #000c,0 3px 8px #0009;
+  transform:rotate(var(--rot,0deg)) translateY(var(--ty,0px));
+  transform-origin:50% 130%;
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .2s,filter .2s;
+}
+#jMullOver.mull-arena .mullfan .mcard img{border-radius:11px 11px 0 0}
+#jMullOver.mull-arena .mullfan .mcard span{
+  font:600 9px/1.3 'Hanken Grotesk',system-ui,sans-serif;padding:3px 5px;
+  background:#0a1016cc;color:#c2cedb
+}
+#jMullOver.mull-arena .mullfan .mcard:hover{
+  transform:rotate(0deg) translateY(-18px) scale(1.05);
+  box-shadow:0 36px 60px #000e,0 0 0 1px #e8c57466;z-index:200!important;
+}
+#jMullOver.mull-arena .mullfan.choose .mcard:hover{transform:rotate(0deg) translateY(-14px) scale(1.03)}
+#jMullOver.mull-arena .mullfan .mcard.sel{
+  outline:2px solid #ff6f5e;outline-offset:1px;filter:brightness(.82) saturate(.9);
+  box-shadow:0 18px 30px #000c,0 0 26px #ff5a3a55;
+}
+#jMullOver.mull-arena .mull-dialog > .row{
+  position:absolute;left:0;right:0;bottom:clamp(16px,3.2vh,34px);
+  margin:0;padding:0 16px;justify-content:center;gap:14px;z-index:6
+}
+#jMullOver.mull-arena .mull-dialog > .row .btn{
+  min-width:clamp(148px,16vw,214px);padding:14px 22px;border-radius:12px;
+  font:800 14px/1 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.01em
+}
+#jMullOver.mull-arena #jMullKeep{
+  background:linear-gradient(180deg,#f2dfa8,#d3ac56);color:#1d1408;border:0;
+  box-shadow:0 3px 0 #8a6d33,0 12px 28px #000a
+}
+#jMullOver.mull-arena #jMullDo{background:#1a2531;border:1px solid #ffffff2b;color:#e6eef7}
+#jMullOver.mull-arena #jMullDo:hover{background:#22303e;border-color:#ffffff44}
+#jMullOver.mull-arena #jMullHint{
+  position:absolute;left:0;right:0;bottom:clamp(72px,9.5vh,98px);
+  margin-inline:auto;padding:0 24px;max-width:min(760px,92vw);
+  text-align:center;color:#798694;font-size:11.5px;line-height:1.45
+}
+
+/* cabecera */
+#jMullOver.mull-arena .ma-top{
+  position:absolute;left:0;right:0;top:0;z-index:7;pointer-events:none;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  padding:clamp(14px,2vw,24px) clamp(16px,2.4vw,30px)
+}
+#jMullOver.mull-arena .ma-who{display:flex;flex-direction:column;gap:3px}
+#jMullOver.mull-arena .ma-who b{
+  font:700 17px/1.1 'Hanken Grotesk',system-ui,sans-serif;color:#eef4f9
+}
+#jMullOver.mull-arena .ma-who span{
+  font:600 11px/1 'Hanken Grotesk',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8b9cad
+}
+#jMullOver.mull-arena .ma-actions{pointer-events:auto}
+#jMullOver.mull-arena .ma-peek{
+  font:700 12.5px/1.15 'Hanken Grotesk',sans-serif;color:#e8eef5;
+  background:#141c25d9;border:1px solid #ffffff26;border-radius:999px;
+  padding:10px 16px;max-width:190px;cursor:pointer;transition:.15s;text-align:center
+}
+#jMullOver.mull-arena .ma-peek:hover{background:#1d2833;border-color:#e8c57499;color:#fff}
+
+/* «ver campo de batalla»: la mano desaparece y deja ver la mesa */
+#jMullOver.mull-arena.peek{background:transparent;pointer-events:none}
+#jMullOver.mull-arena.peek::before{opacity:0}
+#jMullOver.mull-arena.peek .mullfan,
+#jMullOver.mull-arena.peek h2,
+#jMullOver.mull-arena.peek #jMullP,
+#jMullOver.mull-arena.peek #jMullHint{opacity:0;transition:opacity .18s;pointer-events:none}
+#jMullOver.mull-arena.peek .ma-top,
+#jMullOver.mull-arena.peek .mull-dialog > .row{pointer-events:auto}
+
+@media (max-width:640px){
+  #jMullOver.mull-arena .mullfan{flex-wrap:wrap;gap:7px;perspective:none}
+  #jMullOver.mull-arena .mullfan .mcard{width:28vw;margin:0;transform:none}
+  #jMullOver.mull-arena .mullfan .mcard:hover{transform:translateY(-8px) scale(1.03)}
+}
+
+/* arco por posición: garantía para la mano de 7 aunque el JS no llegue */
+#jMullOver.mull-arena .mullfan .mcard:nth-child(1){--rot:-15deg;--ty:28px}
+#jMullOver.mull-arena .mullfan .mcard:nth-child(2){--rot:-10deg;--ty:12px}
+#jMullOver.mull-arena .mullfan .mcard:nth-child(3){--rot:-5deg;--ty:3px}
+#jMullOver.mull-arena .mullfan .mcard:nth-child(4){--rot:0deg;--ty:0px}
+#jMullOver.mull-arena .mullfan .mcard:nth-child(5){--rot:5deg;--ty:3px}
+#jMullOver.mull-arena .mullfan .mcard:nth-child(6){--rot:10deg;--ty:12px}
+#jMullOver.mull-arena .mullfan .mcard:nth-child(7){--rot:15deg;--ty:28px}
+</style>
+<script id="mull-arena">
+/* ================= MULLIGAN AL ESTILO ARENA =================
+   Solo cambia la presentación: los ids (#jMullOver, #jMullFan, #jMullDo,
+   #jMullKeep) y toda la lógica (mullRender, mullOpen, manejadores) siguen
+   igual. La capa:
+   - convierte el diálogo en una pantalla completa con viñeta,
+   - coloca la mano en arco (rotación y altura por carta),
+   - pone cabecera con el jugador y «Ver campo de batalla»,
+   - cambia los textos de la cabecera a los de Arena.
+------------------------------------------------------------------ */
+(function () {
+  'use strict';
+  var over = document.getElementById('jMullOver');
+  if (!over || typeof mullRender !== 'function') return;
+
+  var $ = function (s) { return document.querySelector(s); };
+  var TXT = {
+    es: {
+      first: 'Tú juegas primero', second: 'Tu oponente juega primero',
+      wait: 'Tu oponente está eligiendo entre conservar 7 cartas o hacer mulligan.',
+      peek: 'Ver campo de batalla', back: 'Volver a la mano',
+      you: 'Tú', opp: 'Rival'
+    },
+    en: {
+      first: 'You go first', second: 'Your opponent goes first',
+      wait: 'Your opponent is choosing between keeping 7 cards or taking a mulligan.',
+      peek: 'View battlefield', back: 'Back to hand',
+      you: 'You', opp: 'Opponent'
+    },
+    fr: {
+      first: 'Vous commencez', second: 'Votre adversaire commence',
+      wait: 'Votre adversaire choisit entre garder 7 cartes ou faire un mulligan.',
+      peek: 'Voir le champ de bataille', back: 'Revenir à la main',
+      you: 'Vous', opp: 'Adversaire'
+    }
+  };
+  function tx(k) { var d = TXT[typeof LANG !== 'undefined' ? LANG : 'es'] || TXT.es; return d[k] || TXT.es[k] || k; }
+
+  /* ---------- una sola vez: cabecera y botón ---------- */
+  over.classList.add('mull-arena');
+  var dlg = over.querySelector('.mull-dialog');
+  if (dlg && !over.querySelector('.ma-top')) {
+    var top = document.createElement('div');
+    top.className = 'ma-top';
+    top.innerHTML =
+      '<div class="ma-who"><b id="maName"></b><span id="maSub"></span></div>' +
+      '<div class="ma-actions"><button type="button" class="ma-peek" id="maPeek"></button></div>';
+    dlg.insertBefore(top, dlg.firstChild);
+  }
+
+  var peekBtn = document.getElementById('maPeek');
+  var peeking = false;
+  function setPeek(on) {
+    peeking = !!on;
+    over.classList.toggle('peek', peeking);
+    if (peekBtn) peekBtn.textContent = peeking ? tx('back') : tx('peek');
+  }
+  if (peekBtn) peekBtn.onclick = function (e) { e.preventDefault(); e.stopPropagation(); setPeek(!peeking); };
+
+  /* ---------- cabecera ---------- */
+  function head() {
+    var tEl = document.getElementById('jMullT');
+    var pEl = document.getElementById('jMullP');
+    var fan = document.getElementById('jMullFan');
+    var choosing = !!(fan && fan.classList.contains('choose'));
+    if (!choosing && tEl) {
+      var title = (typeof G !== 'undefined' && G && G.turn === 'ai') ? tx('second') : tx('first');
+      if (tEl.textContent !== title) tEl.textContent = title;
+    }
+    if (!choosing && pEl && pEl.textContent !== tx('wait')) pEl.textContent = tx('wait');
+
+    var nameEl = document.getElementById('maName'), subEl = document.getElementById('maSub');
+    try {
+      var P = (typeof G !== 'undefined' && G) ? G.you : null;
+      if (nameEl) nameEl.textContent = (P && P.name) ? P.name : tx('you');
+      if (subEl) {
+        var label = '';
+        if (P && P.cmd && P.cmd.name) label = cardName(cardOfSafe(P.cmd.name));
+        else if (P && P.deck && P.deck.name) label = P.deck.name;
+        subEl.textContent = label || '';
+      }
+    } catch (e) { }
+    if (peekBtn) peekBtn.textContent = peeking ? tx('back') : tx('peek');
+  }
+
+  /* ---------- arco de la mano ---------- */
+  function arc() {
+    var fan = document.getElementById('jMullFan');
+    if (!fan) return;
+    var cards = fan.querySelectorAll('.mcard');
+    var n = cards.length;
+    if (!n) return;
+    var mid = (n - 1) / 2;
+    for (var i = 0; i < n; i++) {
+      var d = mid ? (i - mid) / mid : 0;       /* -1 … 1 */
+      var rot = Math.round(d * 15 * 10) / 10;  /* ±15° */
+      var ty = Math.round(Math.abs(d) * Math.abs(d) * 28);
+      cards[i].style.setProperty('--rot', rot + 'deg');
+      cards[i].style.setProperty('--ty', ty + 'px');
+      cards[i].style.zIndex = String(100 - Math.abs(Math.round(d * 10)));
+    }
+  }
+
+  /* ---------- engancharse al render del mulligan ---------- */
+  var base = mullRender;
+  function refresh() {
+    over.classList.add('mull-arena');
+    head();
+    arc();
+  }
+  mullRender = function () {
+    var r = base.apply(this, arguments);
+    refresh();
+    return r;
+  };
+
+  /* el fan se repinta dentro de mullRender, pero también al elegir cartas */
+  var fanEl = document.getElementById('jMullFan');
+  if (fanEl && window.MutationObserver) {
+    new MutationObserver(function () { requestAnimationFrame(refresh); })
+      .observe(fanEl, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+  }
+  var tEl = document.getElementById('jMullT');
+  if (tEl && window.MutationObserver) {
+    new MutationObserver(function () { requestAnimationFrame(head); })
+      .observe(tEl, { childList: true, characterData: true, subtree: true });
+  }
+
+  /* si el overlay se abre por otra vía, decorarlo igualmente */
+  if (window.MutationObserver) {
+    new MutationObserver(function () {
+      if (over.classList.contains('on')) requestAnimationFrame(refresh);
+    }).observe(over, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  refresh();
+})();
+</script>
+<style id="arena-mat-css">
+/* ============================================================
+   MESA ESTILO ARENA (capa arena-mat)
+   Solo aspecto: tapete ilustrado a sangre, cartas con arte
+   protagonista, barra de nombre arriba y burbuja de F/R, vida
+   en gema redonda con retrato y píldora de turno abajo a la derecha.
+   ============================================================ */
+
+/* ---------- 1. tapete ilustrado ---------- */
+body.arena-mat-on{
+  background:#1b1108 url('img/mesa-madera.jpg') center center / cover no-repeat fixed!important;
+}
+body.arena-mat-on #jugar,
+body.arena-mat-on #jTable,
+body.arena-mat-on .jgrid,
+body.arena-mat-on .jmain,
+body.arena-mat-on .jbody,
+body.arena-mat-on .jplayer-zone,
+body.arena-mat-on .jplayer-cards,
+body.arena-mat-on .jplayer-utility,
+body.arena-mat-on .jzone,
+body.arena-mat-on .jmid{
+  background:transparent!important;border-color:transparent!important;box-shadow:none!important;
+}
+body.arena-mat-on #jTable{border:0!important;border-radius:0!important;padding:7px 9px!important}
+body.arena-mat-on #jTable::before,
+body.arena-mat-on #jTable::after{display:none!important}
+
+/* los raíles, cristal ahumado para que se vea la mesa por debajo */
+body.arena-mat-on .jrail{
+  background:linear-gradient(180deg,#0b1620d6,#06101aeb)!important;
+  border:1px solid #ffffff24!important;border-radius:16px!important;
+  box-shadow:0 18px 44px #000a!important;
+  -webkit-backdrop-filter:blur(9px) saturate(1.06);backdrop-filter:blur(9px) saturate(1.06);
+}
+
+/* el panel del tablero: otra capa le pinta un degradado con #jTable, hay que ganarle */
+body.arena-mat-on #jTable .jmain{
+  background:transparent!important;border-color:transparent!important;box-shadow:none!important;
+}
+body.arena-mat-on #jTable .jzone,
+body.arena-mat-on #jTable .jplayer-cards,
+body.arena-mat-on #jTable .jplayer-zone,
+body.arena-mat-on #jTable .jbody,
+body.arena-mat-on #jTable .jgrid{
+  background:transparent!important;box-shadow:none!important;border-color:transparent!important;
+}
+
+/* ---------- 2. cartas del tablero ---------- */
+/* la mano del rival se resume en «N en mano»: libera sitio y evita cartas cortadas arriba */
+body.arena-mat-on #jTable #jAiHand{display:none!important}
+body.arena-mat-on #jTable .jbody{padding-top:4px!important}
+
+body.arena-mat-on #jTable .jzone .bcard{
+  border:0!important;border-radius:7px!important;background-color:#08111a!important;
+  aspect-ratio:745/1040!important;
+  box-shadow:0 12px 22px #000b,0 2px 6px #0008,inset 0 0 0 1px #ffffff1f!important;
+}
+body.arena-mat-on #jTable .jzone .bcard>img{
+  width:100%!important;height:100%!important;object-fit:cover!important;
+  border-radius:7px!important;display:block!important;
+  /* recorta el marco y deja solo la ilustración, como en Arena */
+  transform:scale(2.7);transform-origin:50% 12%;
+}
+/* barra de nombre arriba, sobre el arte */
+body.arena-mat-on #jTable .jzone .bcard .nm{
+  display:block!important;position:absolute!important;
+  left:0!important;right:0!important;top:0!important;bottom:auto!important;
+  margin:0!important;padding:2px 4px 8px!important;
+  background:linear-gradient(180deg,#04080cf2,#04080ca8 58%,#04080c00)!important;
+  color:#f2f7fb!important;font:700 9px/1.25 'Hanken Grotesk',system-ui,-apple-system,sans-serif!important;
+  letter-spacing:0!important;text-align:left!important;text-transform:none!important;
+  text-shadow:0 1px 2px #000!important;border-radius:7px 7px 0 0!important;
+}
+/* burbuja de fuerza/resistencia abajo a la derecha */
+body.arena-mat-on #jTable .jzone .bcard .pt{
+  position:absolute!important;right:3px!important;bottom:3px!important;left:auto!important;top:auto!important;
+  background:#0a141df2!important;color:#fff!important;
+  border:1px solid #ffffff42!important;border-radius:999px!important;
+  padding:0 5px!important;font:800 9.5px/1.6 'Hanken Grotesk',system-ui,sans-serif!important;
+  box-shadow:0 2px 7px #000b!important;text-shadow:none!important;
+}
+body.arena-mat-on #jTable .jzone .bcard .pt.dmg{
+  background:#3a0f12f2!important;color:#ffd7d7!important;border-color:#ff7b7b66!important;
+}
+/* claves como glifos pequeños abajo a la izquierda */
+/* claves (Vuela, Arrolla…): etiquetas legibles sobre la carta, encima de la burbuja de F/R */
+body.arena-mat-on #jTable .jzone .bcard .kws{
+  position:absolute!important;left:3px!important;right:3px!important;
+  bottom:22px!important;top:auto!important;z-index:4;
+  display:flex!important;flex-wrap:wrap!important;gap:2px!important;
+  align-content:flex-end!important;max-height:50px;overflow:hidden;pointer-events:none;
+}
+body.arena-mat-on #jTable .jzone .bcard .kw{
+  font:700 8px/1.4 'Hanken Grotesk',system-ui,sans-serif!important;
+  background:#07150ef2!important;border:1px solid #d8bd7866!important;border-radius:4px!important;
+  padding:1px 4px!important;color:#f6e6bb!important;letter-spacing:.01em!important;
+  text-transform:none!important;max-width:none!important;overflow:visible!important;
+  white-space:nowrap;box-shadow:0 1px 3px #0009!important;
+}
+body.arena-mat-on #jTable .jzone .bcard .kw.more{color:#d6c9a0!important;opacity:.9}
+/* tierras: mismo tratamiento, sin caja de F/R */
+body.arena-mat-on #jTable .jzone .bcard.land .nm{background:linear-gradient(180deg,#020a0ae6,#020a0a99 55%,#020a0a00)!important}
+
+/* mientras baja la imagen, la carta se ve como un dorso, no como un hueco negro */
+body.arena-mat-on #jTable .jzone .bcard:not([style*="background"]){background:linear-gradient(160deg,#233240,#0b141d)!important}
+body.arena-mat-on #jTable .jzone .bcard>img{background:linear-gradient(160deg,#233240,#0b141d)}
+body.arena-mat-on #jTable .jzone.jhand .hcard{background:linear-gradient(160deg,#233240,#0b141d)!important}
+
+/* ---------- 3. vida en gema y retrato ---------- */
+body.arena-mat-on #jTable .jplayer-utility .jinfo .jdice{
+  width:54px!important;height:54px!important;min-width:54px!important;border-radius:50%!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;padding:0!important;
+  font:800 21px/1 Fraunces,serif!important;color:#f6eeda!important;
+  background:radial-gradient(circle at 38% 28%,#20313f,#070e15 72%)!important;
+  border:2px solid #c9a55fcc!important;
+  box-shadow:0 0 0 4px #0009,0 12px 26px #000c,inset 0 0 16px #000!important;
+  text-shadow:0 1px 3px #000!important;
+}
+body.arena-mat-on #jTable .jplayer-ai .jdice{border-color:#7fa8c9d9!important}
+body.arena-mat-on #jTable .jplayer-you .jdice{border-color:#c9a55fcc!important}
+
+body.arena-mat-on .am-id{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;margin:1px 0 3px;
+}
+body.arena-mat-on .am-id img{
+  width:54px;height:54px;border-radius:50%;object-fit:cover;object-position:50% 14%;
+  border:2px solid #ffffff33;background:#0a121a;
+  box-shadow:0 10px 20px #000b,inset 0 0 0 1px #0006;
+}
+body.arena-mat-on .jplayer-you .am-id img{border-color:#c9a55f66}
+body.arena-mat-on .am-id b{
+  font:700 8.5px/1 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;
+  color:#cfdcea99;max-width:78px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* ---------- 4. píldora de turno ---------- */
+#jTurnPill{
+  position:fixed;right:16px;bottom:16px;z-index:70;
+  display:none;align-items:center;gap:9px;
+  padding:8px 15px 8px 12px;border-radius:999px;
+  background:#0a141ceb;border:1px solid #ffffff26;color:#dfe9f3;
+  font:600 12px/1.2 'Hanken Grotesk',system-ui,sans-serif;
+  box-shadow:0 12px 28px #000b;
+}
+body.arena-mat-on #jTurnPill{display:flex}
+#jTurnPill .dot{
+  width:15px;height:15px;border-radius:50%;flex:0 0 auto;
+  border:2px solid #7fb2d9;box-shadow:0 0 10px #4a9fd955;
+}
+body.arena-mat-on.you-turn #jTurnPill .dot,
+#jTurnPill.mine .dot{border-color:#e3c27a;box-shadow:0 0 12px #e3c27a66}
+
+/* ---------- 5. detalles ---------- */
+body.arena-mat-on .jempty{
+  color:#ffffff59!important;font:600 10px/1.4 'Hanken Grotesk',system-ui,sans-serif!important;
+  letter-spacing:.18em!important;text-transform:uppercase!important;
+}
+body.arena-mat-on .jstatus{color:#f0dba8cc!important;text-shadow:0 1px 3px #000a!important}
+
+/* el consejo del entrenador, píldora discreta en vez de barra ancha */
+body.arena-mat-on #jTable #jCoach.on{
+  background:#0a141cd9!important;border:1px solid #e8c57433!important;border-radius:999px!important;
+  box-shadow:0 12px 28px #000a!important;max-width:min(620px,84%)!important;
+  padding:6px 16px!important;color:#e9dfc6!important;
+}
+</style>
+<script id="arena-mat">
+/* ============================================================
+   Capa arena-mat: retratos de jugador y píldora de turno.
+   No toca lógica de juego; solo añade dos adornos al tablero.
+   ============================================================ */
+(function(){
+  var table=document.getElementById('jTable');
+  if(!table)return;
+  function $(s,r){return (r||document).querySelector(s);}
+  function g(){try{return G;}catch(e){return null;}}
+
+  /* arte del comandante/capitán del mazo, recortado en círculo */
+  function artOf(P){
+    try{
+      var d=P&&(P.deck||P.pack);if(!d)return'';
+      var names=[d.captain,d.cmdr,d.commander,d.capitan,d.comandante].filter(Boolean);
+      for(var i=0;i<names.length;i++){
+        var c=(typeof cardOfSafe==='function')?cardOfSafe(names[i]):null;
+        if(c&&typeof cardImg==='function'){var u=cardImg(c);if(u)return u;}
+      }
+    }catch(e){}
+    return'';
+  }
+
+  function buildId(zoneSel,who){
+    var zone=$(zoneSel);
+    if(!zone)return;
+    var box=$('.jplayer-utility',zone);
+    if(!box)return;
+    var P=g()?g()[who]:null;
+    var art=artOf(P),nm=(P&&P.name)||'';
+    var id=box.querySelector('.am-id');
+    if(!id){
+      if(!art&&!nm)return;
+      id=document.createElement('div');
+      id.className='am-id';
+      var info=$('.jinfo',box);
+      if(info)box.insertBefore(id,info);else box.appendChild(id);
+    }
+    if(art&&!id.querySelector('img')){
+      var im=document.createElement('img');im.alt='';im.src=art;im.addEventListener('error',function(){im.remove();});
+      id.insertBefore(im,id.firstChild);
+    }
+    if(nm&&!id.querySelector('b')){
+      var b=document.createElement('b');b.textContent=nm;id.appendChild(b);
+    }
+  }
+
+  var pill=document.createElement('div');
+  pill.id='jTurnPill';
+  pill.innerHTML='<span class="dot"></span><span id="jTurnPillTx"></span>';
+  document.body.appendChild(pill);
+
+  /* la capa solo se enciende cuando el tablero está a la vista (no en «Mis mazos») */
+  function syncVis(){
+    var on=document.body.classList.contains('playing')&&table.offsetHeight>0;
+    document.body.classList.toggle('arena-mat-on',on);
+  }
+
+  function syncTurn(){
+    var src=$('#jTurn'),el=$('#jTurnPillTx');
+    if(!src||!el)return;
+    var t=(src.textContent||'').trim();
+    if(el.textContent!==t)el.textContent=t;
+    var mine=/^(TU TURNO|TU TURNO|YOUR TURN|TON TOUR)/i.test(t)||/tu turno/i.test(t);
+    pill.classList.toggle('mine',mine);
+  }
+
+  /* el tablero se repinta a menudo: se refresca barato y sin bucles */
+  var t=null;
+  function refresh(){
+    syncVis();
+    if(!document.body.classList.contains('arena-mat-on'))return;
+    buildId('.jplayer-ai','ai');
+    buildId('.jplayer-you','you');
+    syncTurn();
+  }
+  function soon(){if(t)return;t=setTimeout(function(){t=null;refresh();},120);}
+  try{
+    new MutationObserver(soon).observe(table,{childList:true,subtree:true});
+    new MutationObserver(soon).observe(document.body,{attributes:true,attributeFilter:['class','style']});
+  }catch(e){}
+  document.addEventListener('click',function(){setTimeout(refresh,220);},true);
+  window.addEventListener('hashchange',function(){setTimeout(refresh,60);setTimeout(refresh,400);});
+  if(document.readyState!=='loading')refresh();else document.addEventListener('DOMContentLoaded',refresh);
+  setTimeout(refresh,900);
+  /* red de seguridad: entrar y salir del tablero por hash no siempre dispara mutaciones */
+  setInterval(refresh,900);
+})();
+</script>
+<style id="rules-core-css">
+/* ===== rules-core · piezas de interfaz de las reglas ampliadas ===== */
+#rulesPick{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#04070bb8;backdrop-filter:blur(2px)}
+#rulesPick .rpk{position:relative;max-width:min(560px,92vw);max-height:84vh;overflow:auto;background:#0d1420;border:1px solid #e8c57455;border-radius:12px;padding:14px 16px 16px;box-shadow:0 18px 50px #000c}
+#rulesPick .rpk-hd{font:800 11px 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#e8c574;margin:0 24px 4px 0}
+#rulesPick .rpk-sub{font:400 12px/1.45 'Hanken Grotesk',system-ui,sans-serif;color:#93a3b3;margin:0 24px 10px 0}
+#rulesPick .rpk-opts{display:flex;flex-direction:column;gap:6px}
+#rulesPick .rpk-opts button{text-align:left;border:1px solid #e8c57444;background:#141c26;color:#f0e6d2;border-radius:6px;padding:8px 10px;font:600 12.5px/1.35 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}
+#rulesPick .rpk-opts button:hover:not(:disabled){background:#26201a;border-color:#e8c574}
+#rulesPick .rpk-opts button:disabled{opacity:.4;cursor:not-allowed}
+#rulesPick .rpk-x{position:absolute;top:8px;right:8px;border:1px solid #ffffff22;background:#101a26;color:#cfe3f5;border-radius:5px;width:22px;height:22px;line-height:1;cursor:pointer}
+/* insignia de habilidad con sacrificio en tus permanentes */
+.rules-act{position:absolute;left:3px;bottom:3px;z-index:6;min-width:17px;height:17px;padding:0 4px;
+  display:flex;align-items:center;justify-content:center;gap:2px;
+  border:1px solid #e8c57499;border-radius:999px;background:#1a1206ee;color:#f3dca2;
+  font:800 9px/1 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.02em;cursor:pointer;
+  box-shadow:0 2px 6px #000a}
+.rules-act:hover{background:#e8c574;color:#211706;border-color:#f6e7bb}
+</style>
+<script id="rules-core">
+/* ============================================================
+   rules-core · reglas de carta que faltaban
+   ------------------------------------------------------------
+   Capa autocontenida (no depende de otras capas) que envuelve
+   funciones del motor para añadir:
+
+     1. sacrificio: efectos («sacrifice a creature», edictos,
+        «each player sacrifices»), costes adicionales al lanzar
+        y habilidades activadas con coste de sacrificio.
+     2. scry y surveil de verdad: se miran las N de arriba y el
+        jugador elige qué queda arriba y qué va al fondo (o al
+        cementerio); la IA usa una heurística de tierras.
+     3. destreza (prowess): +1/+1 a cada criatura con destreza al
+        lanzar un hechizo que no sea criatura, hasta el final del
+        turno.
+     4. «enters tapped» al crear el permanente.
+
+   Lo que NO cubre todavía: destello (el motor juega por turnos),
+   protección contra un color, y el coste de sacrificio en hechizos
+   con modo o con X (esos se lanzan por otra vía).
+
+   Todo se puede desactivar borrando este bloque. Cada versión deja
+   copia del HTML en tmp/versions/.
+   ============================================================ */
+(() => {
+  if (typeof G === 'undefined' || typeof applySpell !== 'function') return;
+
+  const VERSION = 'rules-core 3';
+  const low = s => String(s == null ? '' : s).toLowerCase();
+  const T = (k, v) => { try { return typeof t === 'function' ? t(k, v) : k; } catch (e) { return k; } };
+  const log = (txt, who) => { try { logLine(txt, who); } catch (e) {} };
+  const who = P => (P && P === G.you ? 'you' : 'ai');
+  const cardNameOf = c => { try { return cardName(c); } catch (e) { return (c && c.name) || ''; } };
+
+  /* ---------- textos ---------- */
+  try {
+    if (typeof I18N === 'object' && I18N && I18N.es) {
+      Object.assign(I18N.es, {
+        'r.sacrifice': '{c} se sacrifica.',
+        'r.sacPick': 'Sacrificar',
+        'r.sacPickSub': 'Elige qué sacrificar para {c}.',
+        'r.sacNo': 'No hay nada que sacrificar para {c}.',
+        'r.sacUnless': '{c}: se sacrifica {t}.',
+        'r.scryHd': 'Scry {n}',
+        'r.scrySub': 'Elige qué queda arriba, en orden.',
+        'r.surveilHd': 'Vigilar {n}',
+        'r.surveilSub': 'Lo que no quede arriba va al cementerio.',
+        'r.scryTop': 'Dejar arriba',
+        'r.scryBottom': 'Al fondo',
+        'r.scryBin': 'Al cementerio',
+        'r.scryDone': 'Scry {n}: {k} arriba, {b} al fondo.',
+        'r.surveilDone': 'Vigilancia {n}: {k} arriba, {b} al cementerio.',
+        'r.prowess': 'Destreza: {c} +1/+1.',
+        'r.proAbil': 'Habilidades con sacrificio',
+        'r.needMana': 'No hay maná para {c}.',
+        'r.needSac': 'Falta una criatura que sacrificar para {c}.',
+        'r.cost': 'Coste: {c}',
+        'r.counters': '{n} contador(es) +1/+1 a {t}.',
+        'r.exile': '{c} exilia {t}.',
+        'r.costLess': '{c} cuesta {n} menos.',
+        'r.actUse': '{c}: {a}.'
+      });
+      Object.assign(I18N.en, {
+        'r.sacrifice': '{c} is sacrificed.',
+        'r.sacPick': 'Sacrifice',
+        'r.sacPickSub': 'Choose what to sacrifice for {c}.',
+        'r.sacNo': 'Nothing to sacrifice for {c}.',
+        'r.sacUnless': '{c}: {t} is sacrificed.',
+        'r.scryHd': 'Scry {n}',
+        'r.scrySub': 'Choose what stays on top, in order.',
+        'r.surveilHd': 'Surveil {n}',
+        'r.surveilSub': 'What does not stay on top goes to the graveyard.',
+        'r.scryTop': 'Keep on top',
+        'r.scryBottom': 'Put on bottom',
+        'r.scryBin': 'Put in graveyard',
+        'r.scryDone': 'Scry {n}: {k} on top, {b} on bottom.',
+        'r.surveilDone': 'Surveil {n}: {k} on top, {b} binned.',
+        'r.prowess': 'Prowess: {c} +1/+1.',
+        'r.proAbil': 'Sacrifice abilities',
+        'r.needMana': 'Not enough mana for {c}.',
+        'r.needSac': 'No creature to sacrifice for {c}.',
+        'r.cost': 'Cost: {c}',
+        'r.counters': '{n} +1/+1 counter(s) on {t}.',
+        'r.exile': '{c} exiles {t}.',
+        'r.costLess': '{c} costs {n} less.',
+        'r.actUse': '{c}: {a}.'
+      });
+      Object.assign(I18N.fr, {
+        'r.sacrifice': '{c} est sacrifié.',
+        'r.sacPick': 'Sacrifier',
+        'r.sacPickSub': 'Choisissez quoi sacrifier pour {c}.',
+        'r.sacNo': 'Rien à sacrifier pour {c}.',
+        'r.sacUnless': '{c} : {t} est sacrifié.',
+        'r.scryHd': 'Scry {n}',
+        'r.scrySub': 'Choisissez ce qui reste au-dessus, dans l’ordre.',
+        'r.surveilHd': 'Surveillance {n}',
+        'r.surveilSub': 'Ce qui ne reste pas au-dessus va au cimetière.',
+        'r.scryTop': 'Garder au-dessus',
+        'r.scryBottom': 'Mettre en dessous',
+        'r.scryBin': 'Au cimetière',
+        'r.scryDone': 'Scry {n} : {k} au-dessus, {b} en dessous.',
+        'r.surveilDone': 'Surveillance {n} : {k} au-dessus, {b} au cimetière.',
+        'r.prowess': 'Prouesse : {c} +1/+1.',
+        'r.proAbil': 'Capacités avec sacrifice',
+        'r.needMana': 'Mana insuffisant pour {c}.',
+        'r.needSac': 'Aucune créature à sacrifier pour {c}.',
+        'r.cost': 'Coût : {c}',
+        'r.counters': '{n} marqueur(s) +1/+1 sur {t}.',
+        'r.exile': '{c} exile {t}.',
+        'r.costLess': '{c} coûte {n} de moins.',
+        'r.actUse': '{c} : {a}.'
+      });
+    }
+  } catch (e) {}
+
+  /* ---------- ayudas sobre el motor ---------- */
+  const isCrea = x => { try { return typeof isCreature === 'function' ? isCreature(x) : !!(x && x.card && x.card.creature); } catch (e) { return false; } };
+  const isLnd = x => { try { return typeof isLand === 'function' ? isLand(x) : !!(x && x.card && x.card.land); } catch (e) { return false; } };
+  const kOf = (x, k) => { try { return typeof hasKw === 'function' ? !!hasKw(x, k) : false; } catch (e) { return false; } };
+  const pOf = x => { try { return typeof pwOf === 'function' ? pwOf(x) : (x.pow || 0) + (x.a || 0); } catch (e) { return (x.pow || 0) + (x.a || 0); } };
+  const tOf = x => { try { return typeof thOf === 'function' ? thOf(x) : (x.tou || 0) + (x.b || 0); } catch (e) { return (x.tou || 0) + (x.b || 0); } };
+  const typeOf = x => low(x && x.card && x.card.type);
+  const others = P => (P && P !== G.you ? G.you : G.ai);
+
+  /* ---------- selector flotante propio ---------- */
+  function picker(title, sub, opts, cb) {
+    const old = document.getElementById('rulesPick');
+    if (old) old.remove();
+    const box = document.createElement('div');
+    box.id = 'rulesPick';
+    box.innerHTML = `<div class="rpk"><div class="rpk-hd">${esc(title)}</div>${sub ? `<div class="rpk-sub">${esc(sub)}</div>` : ''}<div class="rpk-opts">${
+      opts.map((o, i) => `<button data-i="${i}"${o.dis ? ' disabled' : ''}${o.tip ? ` title="${esc(o.tip)}"` : ''}>${esc(o.label)}</button>`).join('')
+    }</div><button class="rpk-x" data-close="1" aria-label="×">×</button></div>`;
+    document.body.appendChild(box);
+    box.querySelectorAll('[data-i]').forEach(b => { b.onclick = () => { const i = +b.dataset.i; box.remove(); cb(i); }; });
+    const cl = box.querySelector('[data-close]');
+    if (cl) cl.onclick = () => box.remove();
+    return box;
+  }
+
+  /* ============================================================
+     1 · SACRIFICIO
+     ============================================================ */
+  const valOf = x => {
+    if (!x || !x.card) return 0;
+    return (x.token ? -100 : 0) + (x.card.cmc || 0) * 0.6 + pOf(x) + tOf(x) - (x.dmg || 0) * 0.3;
+  };
+
+  /* saca el permanente del campo como sacrificio (no es «destruir»:
+     indestructible no lo salva) y dispara sus «when … dies» */
+  function sacrifice(P, perm) {
+    if (!perm || !P || (P.bf || []).indexOf(perm) < 0) return false;
+    P.bf = P.bf.filter(y => y !== perm);
+    P.bf.forEach(y => { if (y.equipTo === perm.id) y.equipTo = null; });
+    if (!perm.token) P.gy.push(perm.name);
+    log(T('r.sacrifice', { c: cardNameOf(perm.card) }), who(P));
+    if (P.cmd && perm.card && P.cmd.card && perm.card.name === P.cmd.card.name && perm.name === P.cmd.name) {
+      G.log.push({ t: T('game.capBack'), c: 'sys' });
+    }
+    try { if (!G.over && typeof diesTrigger === 'function') diesTrigger(P, perm); } catch (e) {}
+    return true;
+  }
+
+  function poolFor(P, spec) {
+    const bf = (P && P.bf) || [];
+    if (spec === 'land') return bf.filter(isLnd);
+    if (spec === 'artifact') return bf.filter(x => /artifact/.test(typeOf(x)));
+    if (spec === 'enchantment') return bf.filter(x => /enchantment/.test(typeOf(x)));
+    if (spec === 'permanent') return bf.filter(x => !isLnd(x) || true);
+    const cre = bf.filter(isCrea);
+    if (spec === 'creature or planeswalker') return bf.filter(x => isCrea(x) || /planeswalker/.test(typeOf(x)));
+    return cre;
+  }
+
+  /* elige qué sacrificar: tokens primero y luego lo más barato/débil */
+  function pickVictim(P, spec) {
+    const pool = poolFor(P, spec).slice().sort((a, b) => valOf(a) - valOf(b));
+    return pool[0] || null;
+  }
+
+  /* «sacrifice a creature» sin objetivo: lo elige quien lo sufre.
+     Si hay una criatura peor que el resto se va sola; si el jugador
+     humano tiene varias, se le ofrece elegir en un selector. */
+  function sacrificeFor(P, spec, srcName, allowChoice) {
+    const pool = poolFor(P, spec);
+    if (!pool.length) { log(T('r.sacNo', { c: srcName }), who(P)); return null; }
+    const victim = pickVictim(P, spec);
+    if (allowChoice && P === G.you && pool.length > 1) {
+      picker(T('r.sacPick'), T('r.sacPickSub', { c: srcName }),
+        pool.map(x => ({ label: `${cardNameOf(x.card)} · ${pOf(x)}/${tOf(x)}`, tip: cardNameOf(x.card) })),
+        i => {
+          const target = pool[i] || victim;
+          if (target && sacrifice(P, target)) { try { checkDeaths(); renderBoard(); } catch (e) {} }
+        });
+      return victim;
+    }
+    sacrifice(P, victim);
+    return victim;
+  }
+
+  /* lee la cláusula de sacrificio de un texto y la ejecuta.
+     Devuelve el texto sin esa cláusula (para que el motor resuelva el resto). */
+  /* una línea de coste lleva «:»; sin dos puntos es un efecto que se resuelve */
+  const COST_LINE = /^as an additional cost|^you may sacrifice|rather than pay|^sacrifice (?:this [a-z]+|a|an|another|two|three|\d+)[^:.]{0,40}:/i;
+
+  function handleSacrifice(P, card, srcName, oracle, quiet) {
+    const o = low(oracle);
+    if (!/sacrific/.test(o)) return oracle;
+    const F = P === G.you ? G.ai : G.you;
+    let text = oracle;
+
+    const run = (spec, target, allowChoice) => {
+      if (target === 'all') {
+        [P, F].forEach(Q => sacrificeFor(Q, spec, srcName, !quiet));
+      } else if (target === 'foe') {
+        sacrificeFor(F, spec, srcName, !quiet);
+      } else if (target === 'opponents') {
+        sacrificeFor(F, spec, srcName, !quiet);
+      } else {
+        sacrificeFor(P, spec, srcName, !quiet || false);
+      }
+    };
+
+    /* «each player sacrifices …» */
+    let m = o.match(/each player sacrifices? (a|an|one|two|three|\d+) ([a-z ]{3,24})/);
+    if (m) {
+      run(m[2].replace(/^(creature|permanent)\b.*/, m[2].trim()).split(' ')[0], 'all');
+      return stripClause(oracle, /each player sacrifices?[^.]*\.?/i);
+    }
+    /* «each opponent sacrifices» */
+    if (/each opponent sacrifices?/.test(o)) {
+      const sp = (o.match(/each opponent sacrifices? (?:a|an|one|two)?\s*([a-z]+)/) || [])[1] || 'creature';
+      run(sp, 'opponents');
+      return stripClause(oracle, /each opponent sacrifices?[^.]*\.?/i);
+    }
+    /* «target player sacrifices» / «that player sacrifices» / «its controller sacrifices» */
+    if (/(target|that|its controller|defending) player sacrifices?/.test(o)) {
+      const sp = (o.match(/(?:target|that|its controller|defending) player sacrifices? (?:a|an|one|two)?\s*([a-z]+)/) || [])[1] || 'creature';
+      run(sp, 'foe');
+      return stripClause(oracle, /(?:target|that|its controller|defending) player sacrifices?[^.]*\.?/i);
+    }
+    /* «sacrifice this creature» / «sacrifice it» (efecto, no coste) */
+    if (/sacrifice (this creature|this permanent|this artifact|this enchantment|it)\b/.test(o) && !COST_LINE.test(o)) {
+      const found = (P.bf || []).filter(x => x.card && card && low(x.card.name) === low(card.name))[0]
+        || (P.bf || []).filter(x => x.card && card && x.card.name === card.name)[0];
+      if (found) sacrifice(P, found);
+      else log(T('r.sacNo', { c: srcName }), who(P));
+      return stripClause(oracle, /sacrifice (this creature|this permanent|this artifact|this enchantment|it)[^.]*\.?/i);
+    }
+    /* «sacrifice a creature / another creature / a land» como efecto.
+       Si es opcional («you may sacrifice») o alternativo («unless»), no se fuerza. */
+    const optional = /you may sacrifice|unless .{0,40}sacrific|may have you sacrifice/i.test(o);
+    m = o.match(/sacrifice (?:a|an|another|one|two|three|\d+) ([a-z]+(?: or [a-z]+)?)/);
+    if (m && !optional && !COST_LINE.test(o)) {
+      run(m[1].replace(/\s+or\s+planeswalker/, '').trim(), 'self', true);
+      return stripClause(oracle, /sacrifice (?:a|an|another|one|two|three|\d+) [a-z ]{3,26}[^.]*\.?/i);
+    }
+    return oracle;
+  }
+
+  function stripClause(text, rx) {
+    return String(text || '').replace(rx, ' ').replace(/\s{2,}/g, ' ').trim();
+  }
+
+  /* ============================================================
+     2 · SCRY / SURVEIL
+     ============================================================ */
+  function topN(P, n) {
+    const out = [];
+    for (let i = 0; i < n && (P.lib || []).length; i++) out.push(P.lib.shift());
+    return out;
+  }
+
+  function autoKeep(P, name, surveil) {
+    const c = (typeof cardOfSafe === 'function' ? cardOfSafe(name) : null) || {};
+    if (c.land) {
+      const lands = ((P.bf || []).filter(isLnd)).length;
+      return lands < 5;
+    }
+    if (surveil) return (c.cmc || 0) <= 6;
+    return (c.cmc || 0) <= 4 || Math.random() < 0.5;
+  }
+
+  function applyScry(P, kind, n, srcName, quiet) {
+    n = Math.max(0, Math.min(12, n | 0));
+    const cards = topN(P, n);
+    if (!cards.length) return 0;
+    const surveil = kind === 'surveil';
+    const finish = (keep, rest) => {
+      if (keep.length) P.lib.unshift.apply(P.lib, keep);
+      if (surveil) P.gy.push.apply(P.gy, rest);
+      else P.lib.push.apply(P.lib, rest);
+      log(surveil ? T('r.surveilDone', { n: cards.length, k: keep.length, b: rest.length })
+                  : T('r.scryDone', { n: cards.length, k: keep.length, b: rest.length }), who(P));
+      try { renderBoard(); } catch (e) {}
+    };
+    if (P === G.you && !quiet) {
+      const keep = [], rest = [];
+      const step = i => {
+        if (i >= cards.length) { finish(keep, rest); return; }
+        const c = (typeof cardOfSafe === 'function' ? cardOfSafe(cards[i]) : null) || { name: cards[i] };
+        const label = cardNameOf(c) + (c.type ? ' · ' + String(c.type).split('—')[0].trim() : '');
+        picker(T(surveil ? 'r.surveilHd' : 'r.scryHd', { n: cards.length }), T(surveil ? 'r.surveilSub' : 'r.scrySub'),
+          [{ label: `${T('r.scryTop')} — ${label}` }, { label: `${T(surveil ? 'r.scryBin' : 'r.scryBottom')} — ${label}` }],
+          i2 => { (i2 === 0 ? keep : rest).push(cards[i]); step(i + 1); });
+      };
+      step(0);
+      return cards.length;
+    }
+    const keep = [], rest = [];
+    cards.forEach(nm => (autoKeep(P, nm, surveil) ? keep : rest).push(nm));
+    finish(keep, rest);
+    return cards.length;
+  }
+
+  /* ============================================================
+     3 · DESTREZA (PROWESS)
+     ============================================================ */
+  function prowessPump(P) {
+    if (!P || !P.bf) return 0;
+    let n = 0;
+    P.bf.forEach(x => {
+      if (!isCrea(x) || !kOf(x, 'prowess')) return;
+      x.a = (x.a || 0) + 1; x.b = (x.b || 0) + 1;
+      x._prow = (x._prow || 0) + 1; n++;
+      log(T('r.prowess', { c: cardNameOf(x.card) }), who(P));
+    });
+    return n;
+  }
+  function prowessClear(P) {
+    if (!P || !P.bf) return;
+    P.bf.forEach(x => {
+      if (!x._prow) return;
+      x.a -= x._prow; x.b -= x._prow; x._prow = 0;
+    });
+  }
+
+  /* ============================================================
+     4 · «enters tapped» y protección
+     ============================================================ */
+  const ENTERS_TAPPED = /enters (?:the battlefield )?tapped(?! unless)/i;
+
+  /* ============================================================
+     ENVOLTORIOS DEL MOTOR
+     ============================================================ */
+  const aplBase = applySpell;
+  applySpell = function (P, card, srcName, quiet) {
+    if (!P || !card) return aplBase.apply(this, arguments);
+    let oracle = String(card.oracle || '');
+    if (!oracle) return aplBase.apply(this, arguments);
+    let changed = false;
+    try {
+      if (/sacrific/i.test(oracle)) {
+        const rest = handleSacrifice(P, card, srcName || cardNameOf(card), oracle, !!quiet);
+        if (rest !== oracle) { oracle = rest; changed = true; }
+        if (!oracle.trim()) return true;
+      }
+      const after = handleCounters(P, oracle, srcName || cardNameOf(card));
+      if (after !== oracle) { oracle = after; changed = true; }
+      const afterEx = handleExile(P, oracle, srcName || cardNameOf(card));
+      if (afterEx !== oracle) { oracle = afterEx; changed = true; }
+      if (!oracle.trim()) return true;
+      const m = oracle.match(/\b(scry|surveil)\s+(\d+)\b/i);
+      if (m) {
+        applyScry(P, low(m[1]), +m[2], srcName || cardNameOf(card), !!quiet);
+        oracle = stripClause(oracle, /\b(scry|surveil)\s+\d+\b\.?/i);
+        changed = true;
+        if (!oracle.trim()) return true;
+      }
+    } catch (e) { changed = false; }
+
+    /* destreza: si la capa de sets (cm-ux-v2) ya la aplica al lanzar, no se
+       repite aquí; solo se usa en los tableros que no la tienen. */
+    try {
+      const hasCast = !!(window.__setRules && typeof window.__setRules.castTriggers === 'function');
+      if (!hasCast && !quiet && !card.creature && !card.land && card.mana !== undefined && card.mana !== '') prowessPump(P);
+    } catch (e) {}
+
+    return aplBase.call(this, P, changed ? Object.assign({}, card, { oracle: oracle }) : card, srcName, quiet);
+  };
+
+  /* «enters tapped» al crear cualquier permanente */
+  const instBase = (typeof instantiate === 'function') ? instantiate : null;
+  if (instBase) {
+    instantiate = function (name, token, deck) {
+      const perm = instBase.apply(this, arguments);
+      try {
+        if (perm && perm.card && !token && ENTERS_TAPPED.test(String(perm.card.oracle || ''))) perm.tapped = true;
+      } catch (e) {}
+      return perm;
+    };
+  }
+
+  /* fin de turno: se cae la destreza */
+  if (typeof untapAll === 'function') {
+    const untapBase = untapAll;
+    untapAll = function (P) {
+      try { prowessClear(P); } catch (e) {}
+      return untapBase.apply(this, arguments);
+    };
+  }
+
+  /* ============================================================
+     5 · HABILIDADES ACTIVADAS CON SACRIFICIO
+     ============================================================ */
+  function sacAbilities(card) {
+    const out = [];
+    String((card && card.oracle) || '').split('\n').forEach(line => {
+      const s = line.trim();
+      if (!s || /^\[/.test(s)) return;
+      const m = s.match(/^([^:]{1,130}):\s*(.+)$/);
+      if (!m) return;
+      const cost = m[1].trim(), eff = m[2].trim();
+      if (!/sacrifice/i.test(cost)) return;
+      if (/^(when|whenever|at |if |enchant|equip|ward|flash)/i.test(cost)) return;
+      if (/^as an additional cost|rather than pay/i.test(cost)) return;
+      const syms = cost.match(/\{[^}]+\}/g) || [];
+      const mana = syms.filter(x => !/^\{[TQXS]\}$/i.test(x)).join('');
+      const selfSac = /sacrifice (this|it)\b/i.test(cost);
+      const other = cost.match(/sacrifice (a|an|another|one|two|three|\d+) ([a-z]+)/i);
+      out.push({
+        cost, eff, mana, tap: /\{T\}/i.test(cost),
+        life: +((cost.match(/pay (\d+) life/i) || [])[1] || 0),
+        sac: selfSac ? 'self' : (other ? 'other' : 'none'),
+        sacWhat: other ? low(other[2]) : ''
+      });
+    });
+    return out.slice(0, 5);
+  }
+
+  /* habilidades activadas con coste de maná, giro o vidas (sin sacrificio:
+     esas las lee sacAbilities y las de descarte/exilio la capa adv-rules-2) */
+  function generalAbilities(card) {
+    const out = [];
+    String((card && card.oracle) || '').split('\n').forEach(line => {
+      const s = line.trim();
+      if (!s || /^\[/.test(s)) return;
+      const m = s.match(/^([^:]{1,120}):\s*(.+)$/);
+      if (!m) return;
+      const cost = m[1].trim(), eff = m[2].trim();
+      if (/^(when|whenever|at |if |enchant|equip|ward|flash|cycling|kicker|buyback|madness|foretell|disturb|chapter|level up|cumulative upkeep|echo|unearth|bestow|suspend|vanishing|fading|crew|saddle|reconfigure|prototype|casualty|bargain|gift|offspring|impending)/i.test(cost)) return;
+      if (/sacrifice|discard|exile .*from your graveyard|return .*from your graveyard/i.test(cost)) return;
+      if (!/\{|pay \d+ life/i.test(cost)) return;
+      if (/add \{/i.test(eff)) return;                       /* fuentes de maná: las usa el motor */
+      if (!/draw|gain \d+ life|lose \d+ life|damage|destroy|exile|tap |untap|gets [+-]|counter|token|mill|scry|surveil|discard|put .*onto the battlefield|return .*hand/i.test(eff)) return;
+      const syms = cost.match(/\{[^}]+\}/g) || [];
+      const mana = syms.filter(x => !/^\{[TQXS]\}$/i.test(x)).join('');
+      out.push({
+        cost, eff, mana, tap: /\{T\}/i.test(cost),
+        life: +((cost.match(/pay (\d+) life/i) || [])[1] || 0), sac: 'none'
+      });
+    });
+    return out.slice(0, 5);
+  }
+  const allAbilities = card => sacAbilities(card).concat(generalAbilities(card));
+
+  function canUse(P, perm, a) {
+    if (!P || !perm || !a) return false;
+    if (!a.tap && !a.mana && !a.life && perm._rulesTurn === G.turnNo) return false;
+    if (a.tap && (perm.tapped || (isCrea(perm) && perm.summoning))) return false;
+    if (a.life && P.life <= a.life) return false;
+    if (a.mana && typeof canPay === 'function' && !canPay(P, costOf({ mana: a.mana }), 0)) return false;
+    if (a.sac === 'other' && poolFor(P, a.sacWhat || 'creature').filter(x => x !== perm).length === 0) return false;
+    return true;
+  }
+
+  function use(P, perm, a) {
+    if (!canUse(P, perm, a)) {
+      if (P === G.you && typeof toast === 'function') toast(T('r.needMana', { c: cardNameOf(perm.card) }));
+      return false;
+    }
+    const wasTapped = perm.tapped;
+    if (a.mana && typeof payMana === 'function' && !payMana(P, costOf({ mana: a.mana }), 0)) {
+      if (P === G.you && typeof toast === 'function') toast(T('r.needMana', { c: cardNameOf(perm.card) }));
+      return false;
+    }
+    if (a.tap) perm.tapped = true;
+    if (a.life) P.life -= a.life;
+    perm._rulesTurn = G.turnNo;
+    log(T('r.actUse', { c: cardNameOf(perm.card), a: a.cost }), who(P));
+    if (a.sac === 'self') {
+      sacrifice(P, perm);
+    } else if (a.sac === 'other') {
+      const victim = poolFor(P, a.sacWhat || 'creature').filter(x => x !== perm).sort((x, y) => valOf(x) - valOf(y))[0];
+      if (victim) sacrifice(P, victim);
+    }
+    if (!a.sac || a.sac === 'none') perm.tapped = a.tap ? true : wasTapped;
+    try { applySpell(P, Object.assign({}, perm.card, { oracle: a.eff }), cardNameOf(perm.card), true); } catch (e) {}
+    try { checkDeaths(); renderBoard(); } catch (e) {}
+    return true;
+  }
+
+  /* insignia en las cartas propias que tienen habilidades de sacrificio */
+  function paintBadges() {
+    if (!G || !G.you) return;
+    const inGame = document.body.classList.contains('arena-mat-on') || document.getElementById('jYouBf');
+    if (!inGame) return;
+    document.querySelectorAll('#jYouBf .bcard[data-perm]').forEach(el => {
+      const perm = (G.you.bf || []).find(x => x.id === +el.dataset.perm);
+      const has = perm && allAbilities(perm.card).some(a => canUse(G.you, perm, a));
+      const badge = el.querySelector('.rules-act');
+      if (!has) { if (badge) badge.remove(); return; }
+      if (badge) return;
+      const b = document.createElement('button');
+      b.className = 'rules-act';
+      b.type = 'button';
+      b.textContent = '◈';
+      b.title = T('r.proAbil');
+      b.onclick = ev => {
+        ev.preventDefault(); ev.stopPropagation();
+        const abs = allAbilities(perm.card);
+        picker(T('r.proAbil') + ' · ' + cardNameOf(perm.card), T('r.cost', { c: abs.map(a => a.cost).join(' / ') }),
+          abs.map(a => ({ label: `${a.cost} — ${a.eff}`, dis: !canUse(G.you, perm, a), tip: a.eff })),
+          i => use(G.you, perm, abs[i]));
+      };
+      el.appendChild(b);
+    });
+  }
+
+  const rbBase = (typeof renderBoard === 'function') ? renderBoard : null;
+  if (rbBase) {
+    renderBoard = function () {
+      const r = rbBase.apply(this, arguments);
+      try { paintBadges(); } catch (e) {}
+      return r;
+    };
+  }
+
+
+  /* ============================================================
+     6 · COMBATE: no se puede bloquear
+     ============================================================ */
+  const kwOf = x => (((x && x.card && x.card.kw) || []).map(k => low(k)));
+  const colsOf = x => ((x && x.card && x.card.colors) || []).map(c => String(c).toUpperCase());
+
+  function unblockable(x) {
+    if (!x || !x.card) return false;
+    const o = low(x.card.oracle);
+    if (kwOf(x).includes('unblockable')) return true;
+    return /can'?t be blocked|cannot be blocked|can not be blocked|\bunblockable\b/.test(o);
+  }
+  function evasionOf(x) {
+    const o = low((x && x.card && x.card.oracle) || '');
+    if (/\bfear\b/.test(o)) return 'fear';
+    if (/\bintimidate\b/.test(o)) return 'intimidate';
+    return '';
+  }
+  function canItBlock(a, b) {
+    if (!a || !b || !a.card || !b.card) return true;
+    if (unblockable(a)) return false;
+    if (/can'?t block\b/.test(low(b.card.oracle))) return false;
+    const ev = evasionOf(a);
+    const bArt = /artifact/.test(low(b.card.type));
+    if (ev === 'fear') return bArt || colsOf(b).includes('B');
+    if (ev === 'intimidate') return bArt || colsOf(a).some(c => colsOf(b).includes(c));
+    return true;
+  }
+
+  if (typeof aiBlocks === 'function') {
+    const blocksBaseFn = aiBlocks;
+    aiBlocks = function (attackers, defP, atkP) {
+      const res = blocksBaseFn.apply(this, arguments) || {};
+      try {
+        Object.keys(res).forEach(id => {
+          const a = (atkP && atkP.bf || []).find(x => x.id === +id);
+          const b = (defP && defP.bf || []).find(x => x.id === res[id]);
+          if (a && b && !canItBlock(a, b)) delete res[id];
+        });
+      } catch (e) {}
+      return res;
+    };
+  }
+
+  if (typeof startBlocks === 'function') {
+    const startBlocksFn = startBlocks;
+    startBlocks = function (attackers) {
+      startBlocksFn.apply(this, arguments);
+      try {
+        const map = new Map((attackers || []).map(a => [a.id, a]));
+        document.querySelectorAll('#jBlockList select').forEach(sel => {
+          const a = map.get(+sel.dataset.blk);
+          if (!a) return;
+          [...sel.options].forEach(o => {
+            if (!o.value) return;
+            const b = (G.you.bf || []).find(x => x.id === +o.value);
+            if (b && !canItBlock(a, b)) o.remove();
+          });
+          if (sel.options.length <= 1) sel.disabled = true;
+        });
+      } catch (e) {}
+    };
+  }
+
+  /* ============================================================
+     7 · CONTADORES Y EXILIO GENÉRICOS
+     ============================================================ */
+  const numOf = s => /^\d+$/.test(String(s)) ? +s : (NUMW[s] || 1);
+  const NUMW = { a: 1, an: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6 };
+
+  function handleCounters(P, oracle, srcName) {
+    const o = low(oracle);
+    if (!/counter/.test(o) || !/[+-]\d\/[+-]\d/.test(o)) return oracle;
+    const F = others(P);
+    const put = (x, n) => {
+      if (!x) return;
+      if (n >= 0) { x.a = (x.a || 0) + n; x.b = (x.b || 0) + n; }
+      else { x.a = (x.a || 0) + n; x.b = (x.b || 0) + n; }
+    };
+    /* +1/+1 a cada criatura propia */
+    let m = o.match(/put (?:a|one|two|three|four|five|\d+|x) \+1\/\+1 counters? on each (?:other )?creature you control/);
+    if (m) {
+      const n = numOf(m[1] === 'x' ? 1 : m[1]);
+      (P.bf || []).filter(isCrea).forEach(x => put(x, n));
+      log(T('r.counters', { n, t: 'todas tus criaturas' }), who(P));
+      return stripClause(oracle, /put (?:a|one|two|three|four|five|\d+|x) \+1\/\+1 counters? on each (?:other )?creature you control[^.]*\.?/i);
+    }
+    /* -1/-1 a cada criatura (todas) */
+    m = o.match(/put (?:a|one|two|three|\d+) -1\/-1 counters? on each creature/);
+    if (m) {
+      const n = numOf(m[1]);
+      [...(P.bf || []), ...(F.bf || [])].filter(isCrea).forEach(x => put(x, -n));
+      try { checkDeaths(); } catch (e) {}
+      return stripClause(oracle, /put (?:a|one|two|three|\d+) -1\/-1 counters? on each creature[^.]*\.?/i);
+    }
+    /* -1/-1 a un objetivo */
+    m = o.match(/put (?:a|one|two|three|\d+) -1\/-1 counters? on (?:target|up to one target) creature/);
+    if (m) {
+      const n = numOf(m[1]);
+      const tg = bestTargets(P, 'foe')[0];
+      if (tg) put(tg, -n);
+      try { checkDeaths(); } catch (e) {}
+      return stripClause(oracle, /put (?:a|one|two|three|\d+) -1\/-1 counters? on (?:target|up to one target) creature[^.]*\.?/i);
+    }
+    /* «reparte N contadores» entre tus criaturas */
+    m = o.match(/distribute (?:two|three|four|\d+) \+1\/\+1 counters?/);
+    if (m) {
+      let left = numOf(m[1]);
+      (P.bf || []).filter(isCrea).sort((a, b) => pOf(b) - pOf(a)).forEach(x => {
+        if (left <= 0) return;
+        put(x, 1); left--;
+      });
+      return stripClause(oracle, /distribute (?:two|three|four|\d+) \+1\/\+1 counters?[^.]*\.?/i);
+    }
+    return oracle;
+  }
+
+  /* exilio de tipos que el motor no contemplaba (artefacto, encantamiento, tierra) */
+  function handleExile(P, oracle, srcName) {
+    const o = low(oracle);
+    if (!/exile target (artifact|enchantment|land|nonland permanent|creature or planeswalker)/.test(o)) return oracle;
+    const F = others(P);
+    const want = (o.match(/exile target (artifact|enchantment|land|nonland permanent|creature or planeswalker)/) || [])[1] || 'permanent';
+    const pool = (F.bf || []).filter(x => (want === 'permanent' || want === 'nonland permanent')
+      ? (want === 'permanent' || !isLnd(x)) : typeOf(x).includes(want.split(' ')[0]));
+    const tg = pool.sort((a, b) => (valOf(a) - valOf(b)))[0] || (F.bf || []).filter(isCrea)[0];
+    if (!tg) return stripClause(oracle, /exile target[^.]*\.?/i);
+    F.bf = F.bf.filter(x => x !== tg);
+    F.bf.forEach(y => { if (y.equipTo === tg.id) y.equipTo = null; });
+    if (!tg.token) F.exile.push(tg.name);
+    log(T('r.exile', { c: srcName, t: cardNameOf(tg.card) }), who(P));
+    return stripClause(oracle, /exile target[^.]*\.?/i);
+  }
+
+  /* ============================================================
+     8 · COSTE MENOS Y FICHAS CON HABILIDAD
+     ============================================================ */
+  const costBase = costOf;
+  costOf = function (card) {
+    const c = costBase.apply(this, arguments);
+    try {
+      const o = low(card && card.oracle);
+      const m = o.match(/costs? \{(\d+)\} less/);
+      if (m && c.generic > 0) {
+        const P = (G && G.turn === 'you' ? G.you : G.ai);
+        const cond = o.match(/if you control (?:a|an|at least one) ([a-z]+)/);
+        let ok = true;
+        if (cond && P && P.bf) ok = P.bf.some(x => !isLnd(x) && typeOf(x).includes(cond[1]));
+        if (ok) c.generic = Math.max(0, c.generic - (+m[1] || 1));
+      }
+    } catch (e) {}
+    return c;
+  };
+
+  function upgradeToken(perm, spec) {
+    if (!perm || !perm.card) return;
+    const nm = low((spec && spec.name) || perm.card.tok || perm.card.name);
+    if (/treasure/.test(nm)) {
+      perm.card.oracle = 'Add {W}{U}{B}{R}{G}: one mana of any color.';
+      perm.card.prod = ['W', 'U', 'B', 'R', 'G'];
+      perm.card.ci = ['W', 'U', 'B', 'R', 'G'];
+    } else if (/clue/.test(nm)) {
+      perm.card.oracle = '{2}, Sacrifice this artifact: Draw a card.';
+    } else if (/food/.test(nm)) {
+      perm.card.oracle = '{2}, Sacrifice this artifact: You gain 3 life.';
+    }
+  }
+  if (typeof spawnToken === 'function') {
+    const spawnBase2 = spawnToken;
+    spawnToken = function (P, spec) {
+      const perm = spawnBase2.apply(this, arguments);
+      try { upgradeToken(perm, spec); } catch (e) {}
+      return perm;
+    };
+  }
+
+  /* ============================================================
+     9 · COSTE ADICIONAL: «As an additional cost… sacrifice»
+     ============================================================ */
+  if (typeof playFromHand === 'function') {
+    const playBase = playFromHand;
+    playFromHand = function (P, idx, asCommander) {
+      try {
+        if (P && !asCommander && idx >= 0) {
+          const card = typeof cardOfSafe === 'function' ? cardOfSafe(P.hand[idx]) : null;
+          const o = low(card && card.oracle);
+          const add = o.match(/as an additional cost to (?:cast|activate)[^.]*?sacrifice ([a-z ]{3,24})/);
+          const modalLike = /\{x\}/i.test(String((card && card.mana) || '')) || /choose (one|two|one or both|up to one)/i.test(o);
+          if (add && !modalLike) {
+            const what = add[1].trim().split(' ')[0];
+            const victim = pickVictim(P, what === 'a' ? 'creature' : what);
+            if (!victim) {
+              if (P === G.you && typeof toast === 'function') toast(T('r.needSac', { c: cardNameOf(card) }));
+              return false;
+            }
+            sacrifice(P, victim);
+          }
+        }
+      } catch (e) {}
+      return playBase.apply(this, arguments);
+    };
+  }
+
+  /* ---------- API para el banco de pruebas ---------- */
+  window.RULES = {
+    version: VERSION,
+    sacrifice, sacrificeFor, pickVictim, poolFor,
+    applyScry, sacAbilities, generalAbilities, allAbilities, canUse, use, prowessPump, prowessClear, handleSacrifice,
+    unblockable, canItBlock, handleCounters, handleExile, upgradeToken
+  };
+})();
+</script>
+<script id="fdn-deck">
+/* ---------- Cimientos (FDN): mazos completos ---------- */
+(function(){
+  const FDN_CMD = false;          /* el formato usa zona de mando */
+  const FDN_TOTAL = (typeof CMD_TOTAL==='number')?CMD_TOTAL:40;
+  const FDN_NAME = 'Foundations';
+  /* baraja una copia: el mazo mira el set entero, no solo el top de la lista */
+  const fdnShuffle=a=>{const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b};
+  let _pool=null;
+  async function fdnPool(){
+    if(_pool)return _pool;
+    const list=await searchCards('game:paper set:fdn',2);
+    if(!list||!list.length)throw new Error('Scryfall no devolvió cartas de Foundations');
+    _pool=list;
+    return _pool;
+  }
+  /* pareja de colores con más cartas del set (mira también las mono) */
+  function fdnPair(pool,need){
+    /* pareja bicolor elegida al azar entre las que tienen cartas de sobra para el mazo:
+       así dos mazos seguidos no salen calcados, y siempre se puede tirar de todo el set */
+    const cnt={W:0,U:0,B:0,R:0,G:0};
+    pool.forEach(c=>{if(c.land)return;(c.ci||[]).forEach(k=>{if(cnt[k]!=null)cnt[k]++})});
+    const cols=Object.keys(cnt).filter(k=>cnt[k]>0);
+    const viables=[];
+    for(let i=0;i<cols.length;i++)for(let j=i;j<cols.length;j++){
+      const pair=[cols[i],cols[j]];
+      const n=pool.filter(c=>!c.land&&(c.ci||[]).every(x=>pair.indexOf(x)>=0)).length;
+      if(n>=Math.max(20,need||0))viables.push(i===j?[cols[i]]:pair);
+    }
+    if(viables.length)return viables[Math.floor(Math.random()*viables.length)];
+    const order=cols.sort((a,b)=>cnt[b]-cnt[a]);
+    return order.length?order.slice(0,2):['G'];
+  }
+  function fdnAssemble(pool,pair,libTarget,landsN){
+    const inId=c=>{const ci=c.ci||[];return ci.every(x=>pair.indexOf(x)>=0)};
+    const used=new Set();
+    const nonland=fdnShuffle(pool.filter(c=>!c.land&&inId(c)&&!used.has(c.name)));
+    const creatures=fdnShuffle(nonland.filter(c=>c.creature));
+    const others=fdnShuffle(nonland.filter(c=>!c.creature));
+    const spellsTarget=Math.max(10,libTarget-landsN);
+    const spells=[];
+    const push=c=>{if(spells.length>=spellsTarget||used.has(c.name))return;used.add(c.name);spells.push(c.name)};
+    /* ~55% criaturas, luego el resto por orden de popularidad, y si falta relleno */
+    creatures.slice(0,Math.round(spellsTarget*0.55)).forEach(push);
+    others.forEach(push);
+    creatures.forEach(push);
+    const lands=[];
+    const nonBasic=fdnShuffle(pool.filter(c=>c.land&&!c.basic&&inId(c)&&!used.has(c.name)));
+    const nbTarget=Math.max(0,landsN-8);
+    nonBasic.slice(0,nbTarget).forEach(c=>{used.add(c.name);lands.push(c.name)});
+    const pips={W:0,U:0,B:0,R:0,G:0};
+    spells.forEach(n=>{const c=cardOf(n);if(c)String(c.mana||'').replace(/\{([WUBRG])\}/g,(m,k)=>{pips[k]++;return m})});
+    const order=pair.slice().sort((a,b)=>pips[b]-pips[a]);
+    let i=0;
+    while(lands.length<landsN){const col=order[i%order.length]||'G';lands.push(BASIC[col]||BASIC.G);i++}
+    return lands.concat(spells.slice(0,spellsTarget));
+  }
+  async function fdnBuild(){
+    const pool=await fdnPool();
+    const withCmd=FDN_CMD;
+    const landsN = FDN_TOTAL>=100?38 : (FDN_TOTAL>=60?24:17);
+    const need=Math.max(20,(withCmd?FDN_TOTAL-1:FDN_TOTAL)-landsN);
+    const pair=fdnPair(pool,need);
+    const inId=c=>{const ci=c.ci||[];return ci.every(x=>pair.indexOf(x)>=0)};
+    let cmdr='';
+    let libTarget=FDN_TOTAL;
+    if(withCmd){
+      /* entre los 12 leyenda con más texto de la identidad, uno al azar: el mazo cambia */
+      const leg=pool.filter(c=>c.creature&&c.legendary&&inId(c))
+        .sort((a,b)=>((b.oracle||'').length-(a.oracle||'').length)).slice(0,12);
+      if(leg.length){cmdr=leg[Math.floor(Math.random()*leg.length)].name;libTarget=FDN_TOTAL-1}
+    }
+    /* el comandante va APARTE de la biblioteca, como en el resto de mazos */
+    const cards=fdnAssemble(pool,pair,libTarget,landsN);
+    return {cmdr,cards,pair};
+  }
+  async function genFDN(){
+    const btn=document.getElementById('vGo'), st=document.getElementById('vStatus');
+    const sel=document.getElementById('vCount');
+    const n=Math.max(1,Math.min(10,parseInt((sel&&sel.value)||'1',10)||1));
+    if(btn)btn.disabled=true;
+    try{
+      const made=[];
+      for(let i=0;i<n;i++){
+        if(st)st.innerHTML='<span class="spin"></span> '+FDN_NAME+' '+(i+1)+'/'+n+'…';
+        const d=await fdnBuild();
+        if(typeof cmdNormDeck==='function'){
+          const seq=nextSeq();
+          const deck=cmdNormDeck({
+            id:Date.now()+''+i,name:FDN_NAME+' '+d.pair.join('')+' · #'+seq,
+            cards:d.cards,commander:d.cmdr,
+            format:(typeof cmdFormat==='function'?cmdFormat():'edh'),
+            source:'fdn',sets:'FDN',seq:seq,setCode:'FDN',identity:d.pair,color:d.pair[0]||''
+          });
+          state.packs.push(deck);made.push(deck);
+        }else{
+          /* captain: su mazo son dos sobres de 20 */
+          for(let k=0;k<2;k++){
+            const seq=nextSeq();
+            const pack={id:Date.now()+''+i+''+k,name:FDN_NAME+' '+d.pair.join('')+' · #'+seq,
+              cards:d.cards.slice(k*20,k*20+20),prints:{},theme:'',color:d.pair[0]||'',seq:seq,source:'fdn'};
+            state.packs.push(pack);made.push(pack);
+          }
+        }
+        savePacks();
+      }
+      renderPacks();
+      setTab('packs');
+      if(st)st.textContent=t('fdn.ok',{n:n,c:FDN_TOTAL});
+      toast(t('fdn.ok',{n:n,c:FDN_TOTAL}));
+      return made;
+    }catch(e){
+      console.error(e);
+      if(st)st.textContent='';
+      toast(t('v.error',{e:e.message||e}));
+    }finally{
+      if(btn)btn.disabled=false;
+    }
+  }
+  /* el botón ya apunta a genVirtual: basta con envolverlo, sin reengancharlo */
+  const _genVirtual=genVirtual;
+  genVirtual=async function(){
+    const s=document.getElementById('vSource');
+    if(s&&s.value==='set:fdn')return genFDN();
+    return _genVirtual.apply(this,arguments);
+  };
+  /* el botón guarda una referencia directa a genVirtual: se reengancha al envoltorio */
+  const go=document.getElementById('vGo');
+  if(go)go.onclick=genVirtual;
+  window.fdnBuild=fdnBuild;
+})();
+</script>
+<style id="home-fit">
+/* ===== landing sin scroll a 1920x1080 (capa home-fit) ===== */
+@media (min-width:1400px){
+  main:has(>#inicio.on){padding-bottom:10px!important}
+  #inicio{min-height:calc(100svh - 196px)!important}
+  #inicio .hero{padding:8px 0 2px!important}
+  #inicio h1{font-size:40px!important;line-height:1!important;margin:2px 0 4px!important}
+  #inicio .lede{font-size:15.5px!important;line-height:1.35!important;margin:4px 0 8px!important}
+  #inicio .grid.g4{gap:10px!important;margin-top:10px!important}
+  #inicio .feature{padding:10px 12px!important}
+  #inicio .feature b{font-size:14px!important}
+  #inicio .feature p{font-size:12.5px!important;line-height:1.35!important}
+  #inicio .panel{padding:10px 12px!important}
+}
+</style>
+<style id="undo-layer-css">
+/* ===== Deshacer · reanudar · replay (capa undo-layer) ===== */
+#undoBar{position:fixed;left:14px;bottom:14px;z-index:80;display:none;align-items:center;gap:6px;
+  padding:6px 8px;border-radius:12px;background:#0b131be6;border:1px solid #d6c18a40;
+  box-shadow:0 10px 24px #000a;color:#e9e0c9;
+  font:600 12px/1.2 'Hanken Grotesk',system-ui,-apple-system,sans-serif;backdrop-filter:blur(6px)}
+body.playing #undoBar.on{display:flex}
+#undoBar button{width:30px;height:28px;padding:0;border-radius:8px;cursor:pointer;
+  background:#16222d;border:1px solid #ffffff1f;color:#f0e4c4;font:700 14px/1 system-ui;
+  display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+#undoBar button:hover:not(:disabled){background:#20303d;border-color:#e8cf9155}
+#undoBar button:disabled{opacity:.35;cursor:default}
+#undoStep{max-width:min(46vw,420px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  color:#b9c6d2;font-weight:600}
+#undoStep b{color:#f2d99a;font-weight:800}
+#undoResume{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:81;
+  display:none;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;
+  background:#0b131bf2;border:1px solid #d6c18a55;box-shadow:0 14px 30px #000c;color:#e9e0c9;
+  font:600 13px/1.3 'Hanken Grotesk',system-ui,-apple-system,sans-serif}
+#undoResume.on{display:flex}
+#undoResume .ut{max-width:min(60vw,520px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#undoResume .ut b{color:#f2d99a}
+#undoResume button{padding:6px 12px;border-radius:9px;cursor:pointer;font:700 12px/1 inherit;
+  background:#1c2a36;border:1px solid #ffffff24;color:#f0e4c4}
+#undoResume button.pri{background:#2c4460;border-color:#8fb6dd66}
+</style>
+<script id="undo-layer">
+/* ================= DESHACER · REANUDAR · REPLAY =================
+   Cómo funciona:
+   - Cada repintado del tablero (el motor repinta después de cada acción) guarda
+     una foto del estado completo. Esas fotos forman la línea de tiempo.
+   - Deshacer retrocede a la foto anterior en la que era tu turno (las de la IA se
+     saltan), así el botón siempre te devuelve a una decisión tuya.
+   - Cada foto lleva como etiqueta la última línea del registro: los botones sirven
+     además como replay paso a paso de lo que ha pasado.
+   - La partida viva se guarda en localStorage (una sola copia, sin historial) y al
+     recargar se ofrece continuarla; empezar una partida nueva borra la guardada.
+   No toca el motor ni los ids: si esta capa falla, la partida sigue igual.
+------------------------------------------------------------------ */
+(function () {
+  'use strict';
+  if (typeof G === 'undefined' || !G) return;
+
+  var KEY = 'tcg_game_v1';
+  var MAX = 40;
+  var hist = [], pos = -1, applying = false, saveT = null, barEl = null;
+  var flashT = null, flashing = false;
+
+  function el(id) { return document.getElementById(id); }
+
+  /* ---------- copia segura (sin Sets, sin funciones, sin ciclos) ---------- */
+  function clone(v, stack) {
+    if (v === null || typeof v !== 'object') return v;
+    if (v instanceof Set) return Array.from(v);
+    stack = stack || [];
+    if (stack.indexOf(v) >= 0) return null;
+    stack.push(v);
+    var out = Array.isArray(v) ? [] : {};
+    for (var k in v) {
+      if (!Object.prototype.hasOwnProperty.call(v, k)) continue;
+      var x = v[k];
+      if (typeof x === 'function') continue;
+      out[k] = clone(x, stack);
+    }
+    stack.pop();
+    return out;
+  }
+
+  function ser() {
+    if (!G || !G.you) return null;
+    try {
+      return JSON.stringify(clone({
+        turn: G.turn, turnNo: G.turnNo, phase: G.phase, over: !!G.over, diff: G.diff,
+        you: G.you, ai: G.ai, pending: G.pending || null, log: (G.log || []).slice(-80)
+      }));
+    } catch (e) { return null; }
+  }
+
+  function lastLog() {
+    var l = (G && G.log && G.log[G.log.length - 1]) || null;
+    return l ? String(l.t || '').replace(/<[^>]*>/g, '') : '';
+  }
+
+  function deckName() {
+    try { return (G.you && G.you.deck && G.you.deck.name) || ''; } catch (e) { return ''; }
+  }
+
+  /* ---------- línea de tiempo ---------- */
+  function push() {
+    if (applying || !G || !G.you || G.over) return false;
+    var s = ser();
+    if (!s) return false;
+    var ref = (pos === hist.length - 1) ? hist[hist.length - 1] : hist[pos];
+    if (ref && ref.s === s) return false;                          /* nada nuevo */
+    /* la foto anterior se queda con la línea de registro que provocó el cambio */
+    if (pos >= 0 && hist[pos] && !hist[pos].label) hist[pos].label = lastLog();
+    if (pos < hist.length - 1) hist = hist.slice(0, pos + 1);        /* jugada nueva */
+    hist.push({ s: s, label: lastLog(), at: Date.now(), turn: G.turn });
+    if (hist.length > MAX) hist.shift();
+    pos = hist.length - 1;
+    renderBar();
+    return true;
+  }
+
+  function persist() {
+    clearTimeout(saveT);
+    saveT = setTimeout(function () {
+      try {
+        if (!G || !G.you) return;
+        if (G.over) { localStorage.removeItem(KEY); return; }
+        var s = ser();
+        if (!s) return;
+        localStorage.setItem(KEY, JSON.stringify({
+          s: s, label: lastLog(), at: Date.now(), turnNo: G.turnNo, deck: deckName()
+        }));
+      } catch (e) { /* sin espacio: se juega igual */ }
+    }, 400);
+  }
+
+  /* ---------- aplicar una foto ---------- */
+  function applyAt(i) {
+    var h = hist[i];
+    if (!h) return false;
+    var st;
+    try { st = JSON.parse(h.s); } catch (e) { return false; }
+    applying = true;
+    try {
+      G.turn = st.turn; G.turnNo = st.turnNo; G.phase = st.phase; G.over = !!st.over;
+      G.diff = st.diff; G.you = st.you; G.ai = st.ai; G.pending = st.pending || null;
+      G.log = st.log || [];
+      G.selected = new Set();
+      G._seenBf = new Set();
+      G.busy = false;
+      pos = i;
+      if (typeof renderBoard === 'function') renderBoard();
+      if (typeof renderLog === 'function') renderLog();
+      if (typeof renderPhase === 'function') renderPhase();
+      if (typeof renderCommand === 'function') renderCommand();
+      if (typeof hideZoom === 'function') hideZoom();
+    } finally { applying = false; }
+    persist();
+    renderBar();
+    return true;
+  }
+
+  function prevMine(i) {
+    while (i >= 0) {
+      if (hist[i] && hist[i].turn === 'you') return i;
+      i--;
+    }
+    return -1;
+  }
+
+  function undo() {
+    if (!G || !G.you) return;
+    if (G.busy || G.turn !== 'you') { flashBar('Espera a que termine la IA'); return; }
+    var i = prevMine(pos - 1);
+    if (i < 0) { flashBar('No hay más atrás'); return; }
+    applyAt(i);
+  }
+
+  function redo() {
+    if (!G || pos >= hist.length - 1) return;
+    if (G.busy || G.turn !== 'you') { flashBar('Espera a que termine la IA'); return; }
+    applyAt(pos + 1);
+  }
+
+  /* ---------- barra ---------- */
+  function ensureBar() {
+    if (barEl) return barEl;
+    barEl = document.createElement('div');
+    barEl.id = 'undoBar';
+    barEl.innerHTML =
+      '<button type="button" id="undoDo" title="Deshacer (Ctrl+Z)">&#8630;</button>' +
+      '<button type="button" id="undoRedo" title="Rehacer (Ctrl+Y)">&#8631;</button>' +
+      '<span id="undoStep"></span>';
+    document.body.appendChild(barEl);
+    el('undoDo').onclick = function (e) { e.preventDefault(); undo(); };
+    el('undoRedo').onclick = function (e) { e.preventDefault(); redo(); };
+    return barEl;
+  }
+
+  function flashBar(msg) {
+    var sp = el('undoStep');
+    if (!sp) return;
+    flashing = true;
+    sp.innerHTML = '<b>' + msg + '</b>';
+    clearTimeout(flashT);
+    flashT = setTimeout(function () { flashing = false; renderBar(); }, 1600);
+  }
+
+  function renderBar() {
+    var bar = ensureBar();
+    var on = !!(G && G.you) && document.body.classList.contains('playing');
+    bar.classList.toggle('on', on);
+    if (!on) return;
+    var b1 = el('undoDo'), b2 = el('undoRedo'), sp = el('undoStep');
+    var aiTurnNow = !!(G && G.you && (G.turn !== 'you' || G.busy));
+    if (b1) {
+      b1.disabled = aiTurnNow || prevMine(pos - 1) < 0;
+      b1.title = aiTurnNow ? 'Puedes deshacer cuando termine la IA' : 'Deshacer (Ctrl+Z)';
+    }
+    if (b2) b2.disabled = aiTurnNow || pos >= hist.length - 1;
+    if (sp && !flashing) {
+      /* lo último del registro: lo que acaba de pasar en la mesa */
+      var label = lastLog() || (hist[pos] && hist[pos].label) || '';
+      sp.innerHTML = '<b>' + (pos + 1) + '/' + hist.length + '</b>' +
+        (label ? ' · ' + String(label).replace(/[<>&]/g, '') : '');
+      sp.title = label;
+    }
+  }
+
+  /* ---------- reanudar al recargar ---------- */
+  function showGame() {
+    if (typeof go === 'function') { try { go('jugar'); } catch (e) { } }
+    var j = el('jugar'), t = el('jTable'), s = el('jSetup'), m = document.querySelector('main');
+    if (j) j.classList.add('playing');
+    if (m) m.classList.add('wide', 'playing');
+    if (t) t.style.display = 'block';
+    if (s) s.style.display = 'none';
+    document.body.classList.add('playing');
+    if (t) document.body.classList.add('arena-mat-on');
+  }
+
+  function resume(saved) {
+    var st;
+    try { st = JSON.parse(saved.s); } catch (e) { return false; }
+    hist = []; pos = -1;
+    applying = true;
+    try {
+      G.you = st.you; G.ai = st.ai; G.turn = st.turn; G.turnNo = st.turnNo;
+      G.phase = st.phase; G.over = !!st.over; G.diff = st.diff; G.pending = st.pending || null;
+      G.log = st.log || [];
+      G.selected = new Set(); G._seenBf = new Set(); G.busy = false;
+    } finally { applying = false; }
+    showGame();
+    applying = true;
+    try {
+      if (typeof renderLog === 'function') renderLog();
+      if (typeof renderPhase === 'function') renderPhase();
+      if (typeof renderCommand === 'function') renderCommand();
+      if (typeof renderBoard === 'function') renderBoard();
+    } finally { applying = false; }
+    hist.push({ s: saved.s, label: saved.label || '', at: Date.now(), turn: st.turn });
+    pos = 0;
+    renderBar();
+    if (!G.over && G.turn === 'ai' && typeof aiTurn === 'function') {
+      setTimeout(function () { try { aiTurn(); } catch (e) { } }, 700);
+    }
+    return true;
+  }
+
+  function offerResume() {
+    var raw;
+    try { raw = localStorage.getItem(KEY); } catch (e) { return; }
+    if (!raw) return;
+    var saved;
+    try { saved = JSON.parse(raw); } catch (e) { localStorage.removeItem(KEY); return; }
+    if (!saved || !saved.s) { localStorage.removeItem(KEY); return; }
+    if (el('undoResume')) return;
+    var box = document.createElement('div');
+    box.id = 'undoResume';
+    box.className = 'on';
+    var when = '';
+    try {
+      when = new Date(saved.at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch (e) { }
+    box.innerHTML = '<span class="ut">Partida guardada' +
+      (saved.deck ? ' · <b>' + String(saved.deck).replace(/[<>&]/g, '') + '</b>' : '') +
+      (saved.turnNo ? ' · turno <b>' + saved.turnNo + '</b>' : '') +
+      (when ? ' · ' + when : '') +
+      '</span><button type="button" class="pri" id="undoCont">Continuar</button>' +
+      '<button type="button" id="undoDiscard">Descartar</button>';
+    document.body.appendChild(box);
+    el('undoCont').onclick = function () {
+      box.remove();
+      if (!resume(saved)) localStorage.removeItem(KEY);
+    };
+    el('undoDiscard').onclick = function () {
+      box.remove();
+      try { localStorage.removeItem(KEY); } catch (e) { }
+    };
+  }
+
+  /* ---------- engancharse ---------- */
+  /* partida nueva: historial y guardado empiezan de cero */
+  if (typeof startGame === 'function') {
+    var sg = startGame;
+    startGame = function () {
+      hist = []; pos = -1; applying = false;
+      try { localStorage.removeItem(KEY); } catch (e) { }
+      try { renderBar(); } catch (e) { }
+      return sg.apply(this, arguments);
+    };
+  }
+
+  /* cada repintado: foto nueva (si cambió algo) y partida guardada al día */
+  if (typeof renderBoard === 'function') {
+    var rb = renderBoard;
+    renderBoard = function () {
+      var r = rb.apply(this, arguments);
+      if (!applying) {
+        try { push(); } catch (e) { }
+        try { persist(); } catch (e) { }
+      }
+      try { renderBar(); } catch (e) { }
+      return r;
+    };
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (!G || !G.you) return;
+    var tag = (e.target && e.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable)) return;
+    var k = (e.key || '').toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && k === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
+    else if ((e.ctrlKey || e.metaKey) && (k === 'y' || (k === 'z' && e.shiftKey))) {
+      e.preventDefault(); redo();
+    }
+  });
+
+  /* refresco suave de la barra (el turno de la IA cambia sin repintar) */
+  setInterval(function () {
+    try { if (!flashing && G && G.you && document.body.classList.contains('playing')) renderBar(); } catch (e) { }
+  }, 700);
+
+  window.__undo = {
+    undo: undo, redo: redo, push: push,
+    hist: function () { return hist.length; },
+    pos: function () { return pos; },
+    dump: function () {
+      return hist.map(function (h, i) {
+        try {
+          var st = JSON.parse(h.s);
+          return {
+            i: i, turn: st.turn, turnNo: st.turnNo, over: !!st.over,
+            mano: (st.you.hand || []).length,
+            tierras: (st.you.bf || []).filter(function (x) { return x.card && x.card.land; }).length,
+            vida: st.you.life, label: h.label
+          };
+        } catch (e) { return { i: i, error: String(e) }; }
+      });
+    }
+  };
+
+  if (document.readyState !== 'loading') setTimeout(function () { try { offerResume(); } catch (e) { } }, 300);
+  else document.addEventListener('DOMContentLoaded', function () { try { offerResume(); } catch (e) { } });
+})();
 </script>
 </body>
 </html>

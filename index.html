@@ -20,9 +20,13 @@ body{
   font:400 16px/1.6 "Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
   background:radial-gradient(ellipse 120% 80% at 50% -10%,#16222e 0%,#0a1016 45%,#04070a 100%) fixed;
 }
-.wrap{max-width:1180px;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(18px,4vw,32px) 64px}
+.wrap{
+  max-width:1720px;margin:0 auto;
+  display:flex;flex-direction:column;min-height:100svh;
+  padding:clamp(20px,2.4vw,34px) clamp(18px,4vw,48px) clamp(14px,1.8vw,24px)
+}
 
-.langsw{display:flex;justify-content:flex-end;gap:6px;margin:0 0 18px}
+.langsw{display:flex;justify-content:flex-end;gap:6px;margin:0 0 10px}
 .langsw button{
   font:700 11px/1 "Hanken Grotesk",sans-serif;letter-spacing:.12em;
   padding:7px 11px;border-radius:999px;border:1px solid #ffffff1f;background:#ffffff08;
@@ -36,22 +40,54 @@ body{
 
 .eyebrow{
   font:600 11px/1 "Hanken Grotesk",sans-serif;letter-spacing:.34em;text-transform:uppercase;
-  color:var(--gold2);margin:0 0 14px
+  color:var(--gold2);margin:0 0 10px
 }
 h1{
-  margin:0;font:850 clamp(30px,5.4vw,54px)/1.06 "Fraunces",Georgia,serif;
+  margin:0;font:850 clamp(28px,3.1vw,44px)/1.06 "Fraunces",Georgia,serif;
   letter-spacing:-.01em;color:#f7f2e3
 }
 h1 em{font-style:normal;color:var(--gold)}
-.lede{margin:16px 0 0;max-width:62ch;color:var(--muted);font-size:clamp(15px,1.6vw,17px)}
-.rule{height:1px;margin:clamp(24px,4vw,40px) 0 0;background:linear-gradient(90deg,var(--gold) 0%,#e8c57444 22%,transparent 60%)}
+.lede{margin:12px 0 0;max-width:min(96ch,100%);color:var(--muted);font-size:clamp(14px,1.05vw,16.5px)}
+.rule{height:1px;margin:clamp(16px,2vw,26px) 0 0;background:linear-gradient(90deg,var(--gold) 0%,#e8c57444 22%,transparent 60%)}
 
 .grid{
-  display:grid;gap:clamp(16px,2.4vw,26px);margin-top:clamp(26px,4vw,40px);
-  grid-template-columns:repeat(auto-fit,minmax(290px,1fr))
+  display:grid;gap:clamp(14px,1.1vw,20px);margin-top:clamp(16px,2vw,26px);
+  flex:1;min-height:0;align-content:stretch;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr))
+}
+@media (min-width:1240px){.grid{grid-template-columns:repeat(4,1fr)}}
+
+/* pantallas anchas pero bajas: apretar el encabezado para que no haya scroll */
+@media (min-width:1240px) and (max-height:920px){
+  .wrap{padding-top:clamp(12px,1.4vw,20px);padding-bottom:clamp(10px,1.2vw,16px)}
+  .langsw{margin-bottom:6px}
+  .eyebrow{margin-bottom:6px}
+  h1{font-size:clamp(26px,2.4vw,38px)}
+  .lede{margin-top:8px}
+  .rule{margin-top:10px}
+  .grid{margin-top:10px}
+  .desc{line-height:1.45}
+  .facts li{padding:5px 9px;font-size:11px}
+  footer{padding-top:10px}
+}
+
+/* muy bajas (720p): el encabezado mínimo y la entradilla fuera, para que las cuatro quepan */
+@media (min-width:1240px) and (max-height:830px){
+  .wrap{padding-top:8px;padding-bottom:8px}
+  .langsw{margin-bottom:4px}
+  .eyebrow{margin-bottom:4px}
+  h1{font-size:clamp(21px,1.8vw,28px)}
+  .lede{display:none}
+  .rule{margin-top:8px}
+  .grid{margin-top:8px}
+  .body{padding:14px 16px 16px;gap:9px}
+  .desc{font-size:12.5px;line-height:1.4}
+  .facts li{padding:4px 8px}
+  .go .cta{padding:9px 16px}
+  footer{padding-top:8px;margin-top:8px}
 }
 .fmt{
-  display:flex;flex-direction:column;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;position:relative;overflow:hidden;height:100%;
   border:1px solid #ffffff1a;border-radius:14px;background:linear-gradient(170deg,var(--panel2),#070b0f 70%);
   color:inherit;text-decoration:none;
   box-shadow:0 18px 40px #000a,inset 0 1px 0 #ffffff0d;
@@ -62,6 +98,7 @@ h1 em{font-style:normal;color:var(--gold)}
   box-shadow:0 26px 60px #000c,0 0 34px #e8c57433,inset 0 1px 0 #ffffff14
 }
 .shot{position:relative;aspect-ratio:16/9;overflow:hidden;background:#0a1117}
+@media (min-width:1240px){.shot{flex:1 1 auto;max-height:305px}}
 .shot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease,filter .3s}
 .fmt:hover .shot img{transform:scale(1.045);filter:brightness(1.06)}
 .shot::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#070b0f00 45%,#070b0f 100%)}
@@ -71,10 +108,10 @@ h1 em{font-style:normal;color:var(--gold)}
   color:#1d1408;background:linear-gradient(180deg,#f6e7bb,#d8b45f);
   padding:7px 10px;border-radius:999px;box-shadow:0 3px 10px #000a
 }
-.body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:12px;flex:1}
-.fmt h2{margin:0;font:600 clamp(19px,2.2vw,23px)/1.2 "Fraunces",Georgia,serif;color:#f7f2e3}
+.body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:11px;flex:1}
+.fmt h2{margin:0;font:600 clamp(19px,1.35vw,24px)/1.2 "Fraunces",Georgia,serif;color:#f7f2e3}
 .tag{margin:0;color:var(--gold);font:600 12px/1.3 "Hanken Grotesk",sans-serif;letter-spacing:.1em;text-transform:uppercase}
-.desc{margin:0;color:#b6c1cc;font-size:14.5px;line-height:1.6}
+.desc{margin:0;color:#b6c1cc;font-size:clamp(13.5px,.9vw,15.5px);line-height:1.6}
 .facts{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 0;padding:0;list-style:none}
 .facts li{
   font:600 11.5px/1 "Hanken Grotesk",sans-serif;color:#cfdae5;
@@ -89,7 +126,7 @@ h1 em{font-style:normal;color:var(--gold)}
 .fmt:hover .go .cta{transform:translateY(-1px)}
 
 footer{
-  margin-top:clamp(32px,5vw,56px);padding-top:18px;border-top:1px solid #ffffff12;
+  margin-top:clamp(14px,1.8vw,26px);padding-top:14px;border-top:1px solid #ffffff12;
   display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:space-between;align-items:center;
   color:#7f8b97;font-size:13px
 }
@@ -106,7 +143,7 @@ footer a:hover{color:var(--gold);border-bottom-color:var(--gold)}
       <button type="button" data-lang="es" aria-pressed="true">ES</button><button type="button" data-lang="en" aria-pressed="false">EN</button><button type="button" data-lang="fr" aria-pressed="false">FR</button>
     </div>
     <p class="eyebrow" data-i18n="eyebrow">Magic TCG · mesa de juego</p>
-    <h1 data-i18n-html="h1">Tres formas de jugar<br>con <em>un comandante</em>.</h1>
+    <h1 data-i18n-html="h1">Cuatro formas de jugar<br>a <em>Magic</em>.</h1>
     <p class="lede" data-i18n="lede">
       Tres variantes completas que corren en el navegador: elige formato, arma el mazo y juega
       contra la IA con reglas de verdad — zonas, fases, combate, pila y mulligan.
@@ -115,6 +152,29 @@ footer a:hover{color:var(--gold);border-bottom-color:var(--gold)}
   </header>
 
   <main class="grid">
+
+    <a class="fmt" href="standard.html">
+      <div class="shot">
+        <span class="badge" data-i18n="std.badge">El clásico</span>
+        <img src="img/standard.jpg" width="1392" height="752"
+             data-i18n-alt="std.alt"
+             alt="Dos filas de cartas enfrentadas sobre una mesa de madera, con sus tierras y dos dados marcando veinte">
+      </div>
+      <div class="body">
+        <p class="tag" data-i18n="std.tag">Sesenta cartas, veinte vidas</p>
+        <h2>Standard</h2>
+        <p class="desc" data-i18n="std.desc">
+          El formato de siempre y sin comandante: sesenta cartas en la biblioteca, veinte vidas y
+          las reglas oficiales. Eliges mazo, barajas y a jugar — sin zona de mando de por medio.
+        </p>
+        <ul class="facts">
+          <li data-i18n="std.f60">60 cartas</li>
+          <li data-i18n="std.flife20">20 vidas</li>
+          <li data-i18n="std.fnocmd">Sin comandante</li>
+        </ul>
+        <p class="go"><span class="cta" data-i18n="std.cta">Jugar Standard →</span></p>
+      </div>
+    </a>
 
     <a class="fmt" href="brawl.html">
       <div class="shot">
@@ -198,10 +258,17 @@ footer a:hover{color:var(--gold);border-bottom-color:var(--gold)}
 /* ---------- idiomas de la portada: ES / EN / FR ---------- */
 const I18N = {
   es: {
-    'doc.title':'Magic TCG · Tres formatos, un comandante',
+    'doc.title':'Magic TCG · Commander, Brawl, Captain y Standard',
     'eyebrow':'Magic TCG · mesa de juego',
-    'h1':'Tres formas de jugar<br>con <em>un comandante</em>.',
-    'lede':'Tres variantes completas que corren en el navegador: elige formato, arma el mazo y juega contra la IA con reglas de verdad — zonas, fases, combate, pila y mulligan.',
+    'h1':'Cuatro formas de jugar<br>a <em>Magic</em>.',
+    'lede':'Cuatro variantes completas que corren en el navegador: elige formato, arma el mazo y juega contra la IA con reglas de verdad — zonas, fases, combate, pila y mulligan.',
+
+    'std.badge':'El clásico',
+    'std.tag':'Sesenta cartas, veinte vidas',
+    'std.desc':'El formato de siempre y sin comandante: sesenta cartas en la biblioteca, veinte vidas y las reglas oficiales. Eliges mazo, barajas y a jugar, sin zona de mando de por medio.',
+    'std.cta':'Jugar Standard →',
+    'std.alt':'Dos filas de cartas enfrentadas sobre una mesa de madera, con sus tierras y dos dados marcando veinte',
+    'std.f60':'60 cartas','std.flife20':'20 vidas','std.fnocmd':'Sin comandante',
 
     'brawl.badge':'1 vs 1',
     'brawl.tag':'Sesenta cartas, un comandante',
@@ -229,10 +296,17 @@ const I18N = {
     'foot.workshop':'Taller de mazos'
   },
   en: {
-    'doc.title':'Magic TCG · Three formats, one commander',
+    'doc.title':'Magic TCG · Commander, Brawl, Captain and Standard',
     'eyebrow':'Magic TCG · gaming table',
-    'h1':'Three ways to play<br>with <em>one commander</em>.',
-    'lede':'Three complete variants that run in the browser: pick a format, build the deck and play the AI with real rules — zones, phases, combat, the stack and mulligan.',
+    'h1':'Four ways to play<br><em>Magic</em>.',
+    'lede':'Four complete variants that run in the browser: pick a format, build the deck and play the AI with real rules — zones, phases, combat, the stack and mulligan.',
+
+    'std.badge':'The classic',
+    'std.tag':'Sixty cards, twenty life',
+    'std.desc':'The original format, no commander involved: sixty cards in the library, twenty life and the official rules. Pick a deck, shuffle and play, with no command zone in the way.',
+    'std.cta':'Play Standard →',
+    'std.alt':'Two facing rows of cards on a wooden table with their lands and two dice showing twenty',
+    'std.f60':'60 cards','std.flife20':'20 life','std.fnocmd':'No commander',
 
     'brawl.badge':'1 vs 1',
     'brawl.tag':'Sixty cards, one commander',
@@ -264,6 +338,13 @@ const I18N = {
     'eyebrow':'Magic TCG · table de jeu',
     'h1':'Trois façons de jouer<br>avec <em>un commandant</em>.',
     'lede':'Trois variantes complètes qui tournent dans le navigateur : choisissez un format, montez le deck et jouez contre l’IA avec de vraies règles — zones, phases, combat, pile et mulligan.',
+
+    'std.badge':'Le classique',
+    'std.tag':'Soixante cartes, vingt points de vie',
+    'std.desc':'Le format d’origine, sans commandant : soixante cartes en bibliothèque, vingt points de vie et les règles officielles. Choisissez un deck, mélangez et jouez, sans zone de commandement.',
+    'std.cta':'Jouer Standard →',
+    'std.alt':'Deux rangées de cartes face à face sur une table en bois, avec leurs terrains et deux dés marquant vingt',
+    'std.f60':'60 cartes','std.flife20':'20 points de vie','std.fnocmd':'Sans commandant',
 
     'brawl.badge':'1 contre 1',
     'brawl.tag':'Soixante cartes, un commandant',
