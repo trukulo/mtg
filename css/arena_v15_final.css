@@ -1,0 +1,115 @@
+/* ===== Arena · capa final del tablero (un unico bloque, por temas) =====
+   Todo lo de aqui gana a las capas anteriores; solo lleva !important lo disputado.
+   Si algo no se ve como Arena, este es el sitio donde se toca. */
+
+/* ---- Mesa: tablero, rejilla y columnas ---- */
+body.playing #jTable .jmain:before{inset:8px!important;border:1px solid #ffffff0a!important;border-radius:13px!important;opacity:1!important;background:repeating-linear-gradient(115deg,#ffffff04 0 1px,#0000 1px 8px), radial-gradient(72% 52% at 50% 50%,#ffffff07,#0000 72%)!important}
+body.playing #jTable #jCoach{max-width:760px!important;margin:0 auto!important;background:linear-gradient(180deg,#10161caa,#0b1015cc)!important;border:1px solid #ffffff14!important;color:#cfd8e2!important}
+body.playing #jTable .jmid:before{content:''!important;position:absolute!important;left:3%!important;right:3%!important;top:50%!important;height:2px!important;background:linear-gradient(90deg,#0000,#e8c5742e 18%,#e8c57466 50%,#e8c5742e 82%,#0000)!important;border-radius:2px!important;pointer-events:none!important}
+body.playing #jTable .jmid:after{content:''!important;position:absolute!important;left:50%!important;top:50%!important;width:7px!important;height:7px!important;transform:translate(-50%,-50%) rotate(45deg)!important;border:1px solid #e8c57477!important;background:#0a0d10!important;pointer-events:none!important}
+body.playing #jTable .jmid>*{position:relative!important;z-index:1!important}
+body.playing #jTable{height:calc(100vh - 12px)!important;overflow:hidden!important}
+body.playing #jTable .jmain{background:radial-gradient(120% 80% at 50% -10%,#39414b40 0%,#0000 62%), radial-gradient(95% 75% at 50% 52%,#2f363e 0%,#1d2329 52%,#0a0d10 100%)!important;border:1px solid #3b434c!important;border-radius:18px!important;box-shadow:inset 0 0 0 1px #ffffff0f,inset 0 26px 70px #0009,inset 0 -34px 90px #000a,0 20px 50px #0009!important;padding:8px 10px 10px!important;height:100%!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+body.playing #jTable .jbody{flex:1 1 auto!important;display:flex!important;flex-direction:column!important;min-height:0!important;gap:0!important}
+body.playing #jTable .jplayer-zone{display:grid!important;align-items:center!important;gap:8px!important;grid-template-columns:84px minmax(0,1fr) 178px!important;flex:1 1 auto!important;min-height:0!important}
+body.playing #jTable .jplayer-cards{grid-column:2!important;grid-row:1!important;min-width:0!important;display:flex!important;flex-direction:column!important;justify-content:center!important;min-height:0!important}
+body.playing #jTable .jmid{border:0!important;border-radius:0!important;width:100%!important;justify-content:center!important;position:relative!important;background:linear-gradient(90deg,#0000,#070a0dcc 18%,#070a0dcc 82%,#0000)!important;border-top:1px solid #ffffff0f!important;border-bottom:1px solid #ffffff0f!important;padding:6px 0!important;margin:0!important;min-height:34px!important;flex:0 0 auto!important}
+body.playing #jTable .jgrid{height:100%!important;align-items:stretch!important;grid-template-columns:156px minmax(0,1fr)!important;gap:10px!important}
+
+/* ---- Filas: orden Arena, vida y montones ---- */
+body.playing #jTable .jplayer-utility{display:contents!important}
+body.playing #jTable .jplayer-heading{display:none!important}
+body.playing #jTable .jdice{min-width:62px!important;height:62px!important;font:800 25px Fraunces,serif!important;border-radius:18px!important;color:#241a06!important;border:1px solid #8a6a2a!important;background:linear-gradient(160deg,#f9ecc9,#dcb96c 55%,#ad8840)!important;box-shadow:0 10px 22px #000a,inset 0 2px 0 #fff9,inset 0 -10px 18px #0002!important}
+body.playing #jTable .jplayer-ai #jAiHand{order:1!important}
+body.playing #jTable .jplayer-ai #jAiBf{order:2!important}
+body.playing #jTable .jplayer-ai #jAiLand{order:3!important}
+body.playing #jTable .jplayer-you #jYouBf{order:1!important}
+body.playing #jTable .jplayer-you #jYouLand{order:2!important}
+body.playing #jTable .jplayer-you #jYouHand{order:3!important}
+body.playing #jTable .jplayer-ai{align-content:start!important}
+body.playing #jTable .jplayer-you{align-content:end!important}
+body.playing #jTable .jinfo{grid-column:1!important;grid-row:1!important;justify-content:center!important;min-height:0!important;flex-direction:column!important;gap:3px!important;align-items:center!important}
+body.playing #jTable .jinfo .jmeta{font-size:9px!important;line-height:1.25!important;text-align:center!important;color:#a9b4bf!important;max-width:82px!important}
+body.playing #jTable .jlifectl{display:flex!important;flex-direction:column!important;align-items:center!important;gap:1px!important}
+body.playing #jTable .jlifebtn{width:30px!important;height:18px!important;padding:0!important;border-radius:6px!important;font:700 11px/18px 'Hanken Grotesk',sans-serif!important;color:#cfd6dd!important;background:#141a20!important;border:1px solid #363f49!important;cursor:pointer!important;opacity:0!important;transition:opacity .16s!important}
+body.playing #jTable .jlifectl:hover .jlifebtn,body.playing #jTable .jlifebtn:focus-visible{opacity:1!important}
+body.playing #jTable .jplayer-piles .pile-unit{width:42px!important;gap:2px!important;align-items:center!important}
+body.playing #jTable .jplayer-piles .pile-caption{font-size:6.5px!important;letter-spacing:.06em!important;color:#8794a1!important;white-space:nowrap!important}
+body.playing #jTable .pmini{color:#e8dcc0!important;position:relative!important;width:clamp(48px,3.7vw,68px)!important;height:auto!important;min-height:0!important;aspect-ratio:745/1040!important;padding:0!important;overflow:hidden!important;border-radius:5px!important;border:1px solid #4c5661!important;background:linear-gradient(150deg,#1b232b,#0b1015)!important;box-shadow:0 6px 12px #0008,inset 0 1px 0 #ffffff12!important}
+body.playing #jTable .pmini:hover{border-color:#e8cf91!important;box-shadow:0 10px 18px #000b,0 0 0 1px #e8cf9177!important}
+body.playing #jTable .pmini .pile-art,body.playing #jTable .pmini .pile-back{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border:0!important;border-radius:0!important;background-size:cover!important;background-position:center!important;object-fit:cover!important}
+body.playing #jTable .pmini .pile-name{display:none!important}
+body.playing #jTable .pmini .cnt{font-size:10.5px!important;position:absolute!important;right:2px!important;bottom:2px!important;z-index:2!important;min-width:18px!important;padding:0 3px!important;border-radius:9px!important;background:#080d12e8!important;color:#f3dda9!important;text-align:center!important;font:700 10px/16px 'Hanken Grotesk',system-ui,sans-serif!important;border:1px solid #ffffff24!important}
+body.playing #jTable .jplayer-piles{grid-column:3!important;grid-row:1!important;flex-wrap:nowrap!important;justify-content:flex-end!important;padding:0!important;gap:6px!important}
+
+/* ---- Mano ---- */
+body.playing #jTable #jAiHand{height:56px!important;min-height:56px!important;max-height:56px!important;padding:2px 0!important}
+body.playing #jTable #jAiHand .bcard{width:34px!important;height:48px!important;box-shadow:0 6px 12px #0009!important}
+body.playing #jTable .jzone.jhand{background:transparent!important;border:0!important;box-shadow:none!important;min-height:0!important;align-items:flex-end!important;padding:12px 0 0!important;overflow:visible!important;flex:0 0 166px!important;height:166px!important}
+body.playing #jTable .jzone.jhand .hcard span{font-size:9px!important;padding:3px 4px!important}
+body.playing #jTable .jzone.jhand .hcard{border:0!important;border-radius:12px!important;box-shadow:0 16px 30px #000c,0 2px 6px #0008!important;width:clamp(88px,7.6vw,122px)!important;margin:0 -12px!important;transform:rotate(var(--rot,0deg)) translateY(var(--lift,0px))!important}
+body.playing #jTable .jzone.jhand .hcard:hover{z-index:40!important;box-shadow:0 28px 46px #000f,0 0 0 2px #f0d99e!important;transform:perspective(900px) rotateX(0deg) rotateY(0deg) rotate(0deg) translateY(-34px) scale(1.18)!important}
+
+/* ---- Zonas y cartas ---- */
+body.playing #jTable .jzone:before{display:none!important}
+body.playing #jTable .jzone.jlands{background:transparent!important;border:0!important;padding:4px 2px!important}
+body.playing #jTable .jzone{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;min-height:0!important;gap:9px!important;justify-content:center!important;align-content:center!important;padding:2px!important;flex:0 0 auto!important}
+body.playing #jTable .jzone .bcard .nm{display:none!important}
+body.playing #jTable .jzone.jlands .bcard{width:clamp(66px,5.8vw,90px)!important}
+body.playing #jTable img,body.playing #jTable .bcard,body.playing #jTable .hcard{content-visibility:visible!important;will-change:auto!important}
+body.playing #jTable .bcard img,body.playing #jTable .hcard img{display:block!important}
+body.playing #jTable .jzone .bcard{border:0!important;border-radius:11px!important;box-shadow:0 16px 28px #000c,0 2px 6px #0008!important;width:clamp(80px,7.2vw,112px)!important;transform:none!important}
+body.playing #jTable .jzone .bcard.tapped{margin:0 12px!important;transform:rotate(90deg) scale(.84)!important}
+body.playing #jTable .jzone .bcard.sel{transform:translateY(-12px)!important}
+body.playing #jTable .jzone .bcard:hover{z-index:15!important;box-shadow:0 24px 38px #000e,0 0 0 2px #e8cf91,0 0 26px #e8cf9155!important;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-8px) scale(1.05)!important}
+
+/* ---- Rail lateral y comandante ---- */
+body.playing #jTable .jrail .jcmdbox{background:linear-gradient(160deg,#1d252c,#0d1318)!important;border-color:#2e3742!important}
+body.playing #jTable .jlogbox{background:#070b0e!important;border-color:#232a32!important}
+body.playing #jTable .jrail{background:linear-gradient(180deg,#151b21,#0a0e12)!important;border:1px solid #2d343d!important;border-radius:14px!important;gap:7px!important;height:100%!important;max-height:100%!important;width:156px!important;padding:8px!important}
+body.playing #jTable .jrail .btn{font-size:10.5px!important;padding:6px 4px!important}
+body.playing #jTable .cmczdmg{grid-template-columns:1fr!important;gap:2px!important;padding:5px 6px!important;min-width:0!important}
+body.playing #jTable .cmczdmg .lab{grid-column:1!important;font-size:8.5px!important;letter-spacing:.02em!important;line-height:1.2!important;white-space:normal!important}
+body.playing #jTable .cmczdmg .r{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:4px!important;font-size:9.5px!important;line-height:1.1!important;min-width:0!important;white-space:nowrap!important}
+body.playing #jTable .cmczdmg .r b{min-width:20px!important;text-align:center!important}
+body.playing #jTable .cmczdmg .r button{flex:0 0 auto!important;width:18px!important;height:18px!important;padding:0!important;font-size:11px!important;border-radius:5px!important}
+body.playing #jTable .cmczdmg .cmczreset{grid-column:1!important;white-space:normal!important;font-size:9px!important;line-height:1.15!important;padding:3px 4px!important}
+body.playing #jTable .cmcztax{flex-wrap:nowrap!important;justify-content:center!important;gap:2px!important;font-size:9.5px!important;white-space:nowrap!important}
+body.playing #jTable .jcmdbox,body.playing #jTable #jCmd{min-width:0!important}
+body.playing #jTable #jCmd b,body.playing #jTable #jCmd .mu{overflow-wrap:anywhere!important}
+
+/* ---- Ventana estrecha (<=1080px): el rail pasa a tira superior ----
+   La pagina vuelve a desplazarse y la mesa baja a su propia fila: el rail y la
+   mano dejan de quedar cortados por el overflow:hidden de las capas viejas. */
+@media(max-width:1080px){
+  body.playing{overflow-x:hidden!important;overflow-y:auto!important}
+  body.playing #jTable{height:auto!important;min-height:0!important;overflow:visible!important}
+  body.playing #jTable .jgrid{grid-template-columns:minmax(0,1fr)!important;height:auto!important;gap:8px!important;align-items:start!important}
+  body.playing #jTable .jrail{
+    grid-column:1!important;grid-row:1!important;justify-self:stretch!important;
+    width:auto!important;height:auto!important;max-height:none!important;min-height:0!important;
+    display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:flex-start!important;
+    gap:8px!important;padding:8px!important;overflow:visible!important}
+  body.playing #jTable .jmain{
+    grid-column:1!important;grid-row:2!important;
+    height:auto!important;min-height:calc(100dvh - 220px)!important;overflow:visible!important}
+  body.playing #jTable .jtools{display:flex!important;flex-wrap:wrap!important;gap:5px!important;flex:0 0 auto!important}
+  body.playing #jTable .jtools .btn,body.playing #jTable .jtools .badge{flex:0 0 auto!important;min-width:64px!important;font-size:10.5px!important;padding:6px 8px!important}
+  body.playing #jTable .jtools #jDiffBadge{min-width:0!important;text-align:center!important}
+  body.playing #jTable .jcmdbox{flex:1 1 320px!important;min-width:0!important;max-width:560px!important;padding:7px 8px!important}
+  body.playing #jTable #jCmd>div:first-child{flex-wrap:wrap!important;gap:6px!important}
+  body.playing #jTable .cmczdmg{grid-template-columns:1fr 1fr!important}
+  body.playing #jTable .jlogbox{flex:1 1 260px!important;min-width:0!important;min-height:76px!important;max-height:76px!important}
+  body.playing #jTable .jrail-left>b.sm{display:none!important}
+  body.playing #jTable .jrail-sec{flex:1 1 100%!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:center!important;gap:6px!important;border-bottom:0!important;padding-bottom:0!important;min-width:0!important}
+  body.playing #jTable .jrail-h{width:100%!important;margin:0!important}
+  body.playing #jTable .jrail-phases{flex:1 1 100%!important;min-width:0!important}
+  body.playing #jTable .jphase{flex-direction:row!important;flex-wrap:wrap!important;gap:5px!important}
+  body.playing #jTable .jphase .ph{width:auto!important;padding:5px 9px!important;font-size:10.5px!important}
+  body.playing #jTable .jphase .jturn{margin:0!important;padding:4px 8px!important}
+  body.playing #jTable .jrail-act{flex-direction:row!important;align-items:center!important;gap:6px!important;flex:0 1 auto!important}
+  body.playing #jTable .jrail-act #jNext{width:auto!important;min-height:32px!important;padding:6px 14px!important;margin:0!important;font-size:11.5px!important}
+  body.playing #jTable .jrail-note{display:none!important}
+  body.playing #jTable .jbody{height:auto!important;min-height:0!important}
+  body.playing #jTable .jplayer-zone{flex:0 0 auto!important}
+}

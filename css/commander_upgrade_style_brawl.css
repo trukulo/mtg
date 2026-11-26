@@ -1,0 +1,66 @@
+/* Playmat físico: tapete de fieltro, zonas marcadas y pilas con cartas visibles */
+#jTable .jmain{
+  background:
+    radial-gradient(ellipse at 50% 48%,#1b6249 0,#124b39 48%,#0b3028 100%);
+  border:1px solid #c9aa6555;
+  box-shadow:inset 0 0 0 5px #071c17, inset 0 0 0 6px #d5b66a55,
+             inset 0 0 70px #03140f99,0 18px 48px #0009;
+}
+#jTable .jmain:before{
+  background:repeating-linear-gradient(35deg,#ffffff04 0 1px,#0000 1px 8px),
+    radial-gradient(ellipse at 50% 50%,#ffffff08,#0000 68%);
+}
+#jTable .jplay{background:none;gap:7px}
+#jTable .jzone{
+  border:1px solid #d7c18b55;border-style:solid;
+  background:linear-gradient(145deg,#ffffff0c,#001a1266);
+  box-shadow:inset 0 0 0 1px #ffffff08,inset 0 0 22px #00140e66;
+  border-radius:9px;min-height:112px;
+}
+#jTable .jzone.jlands{min-height:82px;background:#092c2266;border-color:#d7c18b38}
+#jTable .jzone.jhand{background:#082a2166;border-color:#d7c18b55}
+#jTable .jinfo{min-height:38px}
+#jTable .jbody{grid-template-columns:78px minmax(0,1fr)}
+#jTable .jpiles{width:78px;gap:12px}
+#jTable .pstack{gap:5px}
+#jTable .plabel{font-size:8px;color:#e5d4a7;letter-spacing:.13em}
+#jTable .pmini{
+  width:72px;min-height:94px;padding:5px 4px 19px;display:flex;
+  align-items:center;justify-content:center;position:relative;overflow:hidden;
+  border:1px solid #d8c18b66;border-radius:7px;
+  background:linear-gradient(145deg,#183c32,#071a16);
+  box-shadow:0 5px 12px #0008,inset 0 0 0 1px #ffffff0c;
+  cursor:pointer;font-size:9px;
+}
+#jTable .pmini .pile-art{
+  width:52px;height:73px;display:block;object-fit:cover;border-radius:4px;
+  border:1px solid #e8d8ad66;box-shadow:0 3px 8px #000a;
+}
+#jTable .pmini .pile-back{
+  width:52px;height:73px;border-radius:4px;border:1px solid #d5b66a;
+  background:radial-gradient(circle at 50% 42%,#315d70,#102c38 58%,#07151d);
+  box-shadow:inset 0 0 0 3px #07151d,inset 0 0 0 4px #d5b66a66,0 3px 8px #000a;
+  display:flex;align-items:center;justify-content:center;color:#e6ca81;font:800 24px Georgia,serif;
+}
+#jTable .pmini .cnt{
+  position:absolute;right:3px;bottom:3px;z-index:3;
+  min-width:20px;text-align:center;padding:2px 5px;border-radius:999px;
+  color:#17150e;background:#e8cf91;border:1px solid #fff0c7;
+  font:800 10px/1.2 system-ui;box-shadow:0 2px 5px #0008;
+}
+#jTable .pmini .pile-name{
+  position:absolute;left:2px;right:2px;bottom:22px;text-align:center;
+  color:#e7d7ae;text-shadow:0 1px 3px #000;font:700 7px/1 system-ui;
+  letter-spacing:.08em;text-transform:uppercase;pointer-events:none;
+}
+#jTable .pmini.gy{border-color:#c5b4a088}
+#jTable .pmini.ex{border-color:#b79bdc99}
+#jTable .pmini.cmd{border-color:#e8c574aa}
+#jTable .jzone .bcard,#jTable .jzone .hcard{box-shadow:0 7px 14px #000b,0 0 0 1px #e8d7a333}
+@media(max-width:760px){
+  #jTable .jbody{grid-template-columns:60px minmax(0,1fr)}
+  #jTable .jpiles{width:60px}
+  #jTable .pmini{width:56px;min-height:78px}
+  #jTable .pmini .pile-art,#jTable .pmini .pile-back{width:40px;height:56px}
+  #jTable .pmini .pile-name{font-size:6px}
+}

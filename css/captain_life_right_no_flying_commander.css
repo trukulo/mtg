@@ -1,0 +1,11 @@
+/* Vida del jugador a la derecha, como la de la IA. */
+#jugar.playing .jinfo.me{
+  bottom:5px!important;right:8px!important;left:auto!important;
+  justify-content:flex-end!important;
+}
+/* Las cartas de capitán del tapete sobraban: las zonas de mando laterales
+   (#jAiCmdPanel / #jYouCmdPanel) ya muestran y lanzan al capitán. */
+#jugar.playing #jAiCommander,
+#jugar.playing #jYouCommander{display:none!important}
+/* La banda de tierras reservaba 68px a cada lado para esa carta: se cierra. */
+#jugar.playing .jzone.jlands{padding-left:10px!important;padding-right:10px!important}

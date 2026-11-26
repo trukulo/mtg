@@ -1,0 +1,17 @@
+/* ===== rules-core · piezas de interfaz de las reglas ampliadas ===== */
+#rulesPick{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#04070bb8;backdrop-filter:blur(2px)}
+#rulesPick .rpk{position:relative;max-width:min(560px,92vw);max-height:84vh;overflow:auto;background:#0d1420;border:1px solid #e8c57455;border-radius:12px;padding:14px 16px 16px;box-shadow:0 18px 50px #000c}
+#rulesPick .rpk-hd{font:800 11px 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#e8c574;margin:0 24px 4px 0}
+#rulesPick .rpk-sub{font:400 12px/1.45 'Hanken Grotesk',system-ui,sans-serif;color:#93a3b3;margin:0 24px 10px 0}
+#rulesPick .rpk-opts{display:flex;flex-direction:column;gap:6px}
+#rulesPick .rpk-opts button{text-align:left;border:1px solid #e8c57444;background:#141c26;color:#f0e6d2;border-radius:6px;padding:8px 10px;font:600 12.5px/1.35 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}
+#rulesPick .rpk-opts button:hover:not(:disabled){background:#26201a;border-color:#e8c574}
+#rulesPick .rpk-opts button:disabled{opacity:.4;cursor:not-allowed}
+#rulesPick .rpk-x{position:absolute;top:8px;right:8px;border:1px solid #ffffff22;background:#101a26;color:#cfe3f5;border-radius:5px;width:22px;height:22px;line-height:1;cursor:pointer}
+/* insignia de habilidad con sacrificio en tus permanentes */
+.rules-act{position:absolute;left:3px;bottom:3px;z-index:6;min-width:17px;height:17px;padding:0 4px;
+  display:flex;align-items:center;justify-content:center;gap:2px;
+  border:1px solid #e8c57499;border-radius:999px;background:#1a1206ee;color:#f3dca2;
+  font:800 9px/1 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.02em;cursor:pointer;
+  box-shadow:0 2px 6px #000a}
+.rules-act:hover{background:#e8c574;color:#211706;border-color:#f6e7bb}

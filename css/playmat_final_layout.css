@@ -1,0 +1,92 @@
+/* Distribución equilibrada: zonas independientes, cartas legibles y centro despejado. */
+#jugar.playing .jgrid{grid-template-columns:minmax(0,1fr) 286px;gap:16px;align-items:stretch}
+#jugar.playing .jmain{padding:16px;overflow:visible;min-width:0}
+#jugar.playing .jbody{grid-template-columns:64px minmax(0,1fr);gap:14px}
+#jugar.playing .jplay{display:flex;flex-direction:column;gap:7px;min-width:0}
+#jugar.playing .jphase{margin:0 0 5px;padding:2px 4px 9px}
+#jugar.playing .jinfo{min-height:38px;padding:0 8px}
+#jugar.playing .jinfo .jdice{width:44px;height:44px;min-width:44px;font-size:18px}
+#jugar.playing .jzone{
+  position:relative;display:flex;flex-flow:row wrap;align-items:center;align-content:center;
+  justify-content:center;gap:8px;min-width:0;min-height:142px;padding:12px 14px;
+  overflow:visible;border-radius:13px;
+}
+#jugar.playing .jzone .bcard{
+  position:relative;display:block;flex:0 0 68px;width:68px!important;min-width:68px;max-width:68px;
+  height:auto!important;aspect-ratio:0.716;overflow:hidden;margin:0!important;
+}
+#jugar.playing .jzone .bcard>img{
+  display:block;width:100%!important;height:100%!important;aspect-ratio:0.716;
+  object-fit:contain!important;object-position:center;background:#080d13;
+}
+#jugar.playing .jzone .bcard .nm{font-size:8px;line-height:1.1}
+#jugar.playing .jzone.jlands{
+  position:relative;display:flex;flex-flow:row wrap;align-items:center;align-content:center;
+  justify-content:center;gap:7px;min-height:78px;padding:8px 68px;
+  background:linear-gradient(90deg,#0000,#00000048 12%,#00000048 88%,#0000);
+  border-color:#d6bc7940;
+}
+#jugar.playing .jzone.jlands .bcard{
+  flex:0 0 48px;width:48px!important;min-width:48px;max-width:48px;
+  height:auto!important;aspect-ratio:.716;margin:0!important;
+}
+/* El comandante vive dentro de la banda de tierras, en un espacio reservado lateral. */
+#jugar.playing .jzone.jlands>.jcmdslot{
+  display:flex!important;position:absolute!important;top:50%!important;right:12px!important;left:auto!important;
+  transform:translateY(-50%)!important;z-index:8;align-items:center;justify-content:center;
+  width:42px!important;min-width:42px!important;height:59px!important;min-height:59px!important;
+  margin:0!important;padding:2px!important;border:1px solid #d6bc79a0;border-radius:5px;
+  background:#07110c;box-shadow:0 3px 10px #000b;overflow:visible;
+}
+#jugar.playing .jzone.jlands>.jcmdslot .cmdcard{display:flex;width:100%;height:100%;align-items:center;justify-content:center;gap:0}
+#jugar.playing .jzone.jlands>.jcmdslot .cmdcard img{
+  display:block;width:100%!important;height:100%!important;max-height:none!important;
+  aspect-ratio:.716;object-fit:contain!important;border:0;border-radius:3px;cursor:zoom-in;
+}
+#jugar.playing .jzone.jlands>.jcmdslot .cmdname,
+#jugar.playing .jzone.jlands>.jcmdslot .cmdempty{display:none!important}
+#jugar.playing .jzone.jhand{
+  min-height:112px;max-height:none;padding:10px 12px 5px;overflow:visible;
+  align-items:flex-end;justify-content:center;gap:2px;
+}
+#jugar.playing .jzone.jhand .hcard{
+  position:relative;flex:0 0 68px;width:68px!important;min-width:68px;max-width:68px;
+  height:auto!important;aspect-ratio:.716;margin:0 -5px!important;overflow:hidden;
+}
+#jugar.playing .jzone.jhand .hcard>img{
+  display:block;width:100%!important;height:100%!important;aspect-ratio:.716;object-fit:contain!important;
+}
+#jugar.playing .jmid{min-height:44px;margin:2px 0;padding:7px 10px;gap:8px}
+#jugar.playing .jcmdslot .cmdcard img:hover{filter:brightness(1.08)}
+#jugar.playing .jcmdslot .cmdcard img{cursor:zoom-in}
+#jugar.playing .jside{padding:14px}
+@media(max-width:1100px){
+ #jugar.playing .jgrid{grid-template-columns:minmax(0,1fr) 250px;gap:12px}
+ #jugar.playing .jzone{min-height:128px;gap:6px;padding:10px}
+ #jugar.playing .jzone .bcard,#jugar.playing .jzone.jhand .hcard{flex-basis:60px;width:60px!important;min-width:60px;max-width:60px}
+ #jugar.playing .jzone.jlands .bcard{flex-basis:43px;width:43px!important;min-width:43px;max-width:43px}
+ #jugar.playing .jzone.jlands{min-height:70px;padding-left:8px;padding-right:62px}
+ #jugar.playing .jzone.jlands>.jcmdslot{width:38px!important;min-width:38px!important;height:53px!important;min-height:53px!important}
+ #jugar.playing .jzone.jhand{min-height:102px}
+}
+@media(max-width:820px){
+ #jugar.playing .jgrid{grid-template-columns:1fr}
+ #jugar.playing .jmain{padding:10px}
+ #jugar.playing .jbody{grid-template-columns:42px minmax(0,1fr);gap:8px}
+ #jugar.playing .jzone{min-height:112px;padding:8px;gap:5px}
+ #jugar.playing .jzone .bcard,#jugar.playing .jzone.jhand .hcard{flex-basis:54px;width:54px!important;min-width:54px;max-width:54px}
+ #jugar.playing .jzone.jlands .bcard{flex-basis:38px;width:38px!important;min-width:38px;max-width:38px}
+ #jugar.playing .jzone.jlands{min-height:64px;padding:7px 54px 7px 7px}
+ #jugar.playing .jzone.jlands>.jcmdslot{right:8px!important;width:34px!important;min-width:34px!important;height:48px!important;min-height:48px!important}
+ #jugar.playing .jzone.jhand{min-height:92px;padding:7px 5px 3px}
+ #jugar.playing .jmid{min-height:38px}
+}
+@media(max-width:520px){
+ #jugar.playing .jbody{grid-template-columns:34px minmax(0,1fr);gap:5px}
+ #jugar.playing .jzone{min-height:96px;padding:6px;gap:4px}
+ #jugar.playing .jzone .bcard,#jugar.playing .jzone.jhand .hcard{flex-basis:46px;width:46px!important;min-width:46px;max-width:46px}
+ #jugar.playing .jzone.jlands .bcard{flex-basis:32px;width:32px!important;min-width:32px;max-width:32px}
+ #jugar.playing .jzone.jlands{min-height:56px;padding-right:46px}
+ #jugar.playing .jzone.jlands>.jcmdslot{width:29px!important;min-width:29px!important;height:41px!important;min-height:41px!important}
+ #jugar.playing .jzone.jhand{min-height:82px}
+}

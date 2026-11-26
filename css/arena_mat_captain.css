@@ -1,0 +1,165 @@
+/* ============================================================
+   MESA ESTILO ARENA (capa arena-mat)
+   Solo aspecto: tapete ilustrado a sangre, cartas con arte
+   protagonista, barra de nombre arriba y burbuja de F/R, vida
+   en gema redonda con retrato y píldora de turno abajo a la derecha.
+   ============================================================ */
+
+/* ---------- 1. tapete ilustrado ---------- */
+body.arena-mat-on{
+  background:#1b1108 url('../img/mesa-madera.jpg') center center / cover no-repeat fixed!important;
+}
+body.arena-mat-on #jugar,
+body.arena-mat-on #jTable,
+body.arena-mat-on .jgrid,
+body.arena-mat-on .jmain,
+body.arena-mat-on .jbody,
+body.arena-mat-on .jplayer-zone,
+body.arena-mat-on .jplayer-cards,
+body.arena-mat-on .jplayer-utility,
+body.arena-mat-on .jzone,
+body.arena-mat-on .jmid{
+  background:transparent!important;border-color:transparent!important;box-shadow:none!important;
+}
+body.arena-mat-on #jTable{border:0!important;border-radius:0!important;padding:7px 9px!important}
+body.arena-mat-on #jTable::before,
+body.arena-mat-on #jTable::after{display:none!important}
+
+/* los raíles, cristal ahumado para que se vea la mesa por debajo */
+body.arena-mat-on .jrail{
+  background:linear-gradient(180deg,#0b1620d6,#06101aeb)!important;
+  border:1px solid #ffffff24!important;border-radius:16px!important;
+  box-shadow:0 18px 44px #000a!important;
+  -webkit-backdrop-filter:blur(9px) saturate(1.06);backdrop-filter:blur(9px) saturate(1.06);
+}
+
+/* el panel del tablero: otra capa le pinta un degradado con #jTable, hay que ganarle */
+body.arena-mat-on #jTable .jmain{
+  background:transparent!important;border-color:transparent!important;box-shadow:none!important;
+}
+body.arena-mat-on #jTable .jzone,
+body.arena-mat-on #jTable .jplayer-cards,
+body.arena-mat-on #jTable .jplayer-zone,
+body.arena-mat-on #jTable .jbody,
+body.arena-mat-on #jTable .jgrid{
+  background:transparent!important;box-shadow:none!important;border-color:transparent!important;
+}
+
+/* ---------- 2. cartas del tablero ---------- */
+/* la mano del rival se resume en «N en mano»: libera sitio y evita cartas cortadas arriba */
+/* La mano de la CPU no se oculta: se muestra en abanico inverso. */
+body.arena-mat-on #jTable .jbody{padding-top:4px!important}
+
+body.arena-mat-on #jTable .jzone .bcard{
+  border:0!important;border-radius:7px!important;background-color:#08111a!important;
+  aspect-ratio:745/1040!important;
+  box-shadow:0 12px 22px #000b,0 2px 6px #0008,inset 0 0 0 1px #ffffff1f!important;
+}
+body.arena-mat-on #jTable .jzone .bcard>img{
+  width:100%!important;height:100%!important;object-fit:cover!important;
+  border-radius:7px!important;display:block!important;
+  /* recorta el marco y deja solo la ilustración, como en Arena */
+  transform:scale(2.7);transform-origin:50% 12%;
+}
+/* barra de nombre arriba, sobre el arte */
+body.arena-mat-on #jTable .jzone .bcard .nm{
+  display:block!important;position:absolute!important;
+  left:0!important;right:0!important;top:0!important;bottom:auto!important;
+  margin:0!important;padding:2px 4px 8px!important;
+  background:linear-gradient(180deg,#04080cf2,#04080ca8 58%,#04080c00)!important;
+  color:#f2f7fb!important;font:700 9px/1.25 'Hanken Grotesk',system-ui,-apple-system,sans-serif!important;
+  letter-spacing:0!important;text-align:left!important;text-transform:none!important;
+  text-shadow:0 1px 2px #000!important;border-radius:7px 7px 0 0!important;
+}
+/* burbuja de fuerza/resistencia abajo a la derecha */
+body.arena-mat-on #jTable .jzone .bcard .pt{
+  position:absolute!important;right:3px!important;bottom:3px!important;left:auto!important;top:auto!important;
+  background:#0a141df2!important;color:#fff!important;
+  border:1px solid #ffffff42!important;border-radius:999px!important;
+  padding:0 5px!important;font:800 9.5px/1.6 'Hanken Grotesk',system-ui,sans-serif!important;
+  box-shadow:0 2px 7px #000b!important;text-shadow:none!important;
+}
+body.arena-mat-on #jTable .jzone .bcard .pt.dmg{
+  background:#3a0f12f2!important;color:#ffd7d7!important;border-color:#ff7b7b66!important;
+}
+/* claves como glifos pequeños abajo a la izquierda */
+/* claves (Vuela, Arrolla…): etiquetas legibles sobre la carta, encima de la burbuja de F/R */
+body.arena-mat-on #jTable .jzone .bcard .kws{
+  position:absolute!important;left:3px!important;right:3px!important;
+  bottom:22px!important;top:auto!important;z-index:4;
+  display:flex!important;flex-wrap:wrap!important;gap:2px!important;
+  align-content:flex-end!important;max-height:50px;overflow:hidden;pointer-events:none;
+}
+body.arena-mat-on #jTable .jzone .bcard .kw{
+  font:700 8px/1.4 'Hanken Grotesk',system-ui,sans-serif!important;
+  background:#07150ef2!important;border:1px solid #d8bd7866!important;border-radius:4px!important;
+  padding:1px 4px!important;color:#f6e6bb!important;letter-spacing:.01em!important;
+  text-transform:none!important;max-width:none!important;overflow:visible!important;
+  white-space:nowrap;box-shadow:0 1px 3px #0009!important;
+}
+body.arena-mat-on #jTable .jzone .bcard .kw.more{color:#d6c9a0!important;opacity:.9}
+/* tierras: mismo tratamiento, sin caja de F/R */
+body.arena-mat-on #jTable .jzone .bcard.land .nm{background:linear-gradient(180deg,#020a0ae6,#020a0a99 55%,#020a0a00)!important}
+
+/* mientras baja la imagen, la carta se ve como un dorso, no como un hueco negro */
+body.arena-mat-on #jTable .jzone .bcard:not([style*="background"]){background:linear-gradient(160deg,#233240,#0b141d)!important}
+body.arena-mat-on #jTable .jzone .bcard>img{background:linear-gradient(160deg,#233240,#0b141d)}
+body.arena-mat-on #jTable .jzone.jhand .hcard{background:linear-gradient(160deg,#233240,#0b141d)!important}
+
+/* ---------- 3. vida en gema y retrato ---------- */
+body.arena-mat-on #jTable .jplayer-utility .jinfo .jdice{
+  width:54px!important;height:54px!important;min-width:54px!important;border-radius:50%!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;padding:0!important;
+  font:800 21px/1 Fraunces,serif!important;color:#f6eeda!important;
+  background:radial-gradient(circle at 38% 28%,#20313f,#070e15 72%)!important;
+  border:2px solid #c9a55fcc!important;
+  box-shadow:0 0 0 4px #0009,0 12px 26px #000c,inset 0 0 16px #000!important;
+  text-shadow:0 1px 3px #000!important;
+}
+body.arena-mat-on #jTable .jplayer-ai .jdice{border-color:#7fa8c9d9!important}
+body.arena-mat-on #jTable .jplayer-you .jdice{border-color:#c9a55fcc!important}
+
+body.arena-mat-on .am-id{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;margin:1px 0 3px;
+}
+body.arena-mat-on .am-id img{
+  width:54px;height:54px;border-radius:50%;object-fit:cover;object-position:50% 14%;
+  border:2px solid #ffffff33;background:#0a121a;
+  box-shadow:0 10px 20px #000b,inset 0 0 0 1px #0006;
+}
+body.arena-mat-on .jplayer-you .am-id img{border-color:#c9a55f66}
+body.arena-mat-on .am-id b{
+  font:700 8.5px/1 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;
+  color:#cfdcea99;max-width:78px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* ---------- 4. píldora de turno ---------- */
+#jTurnPill{
+  position:fixed;right:16px;bottom:16px;z-index:70;
+  display:none;align-items:center;gap:9px;
+  padding:8px 15px 8px 12px;border-radius:999px;
+  background:#0a141ceb;border:1px solid #ffffff26;color:#dfe9f3;
+  font:600 12px/1.2 'Hanken Grotesk',system-ui,sans-serif;
+  box-shadow:0 12px 28px #000b;
+}
+body.arena-mat-on #jTurnPill{display:flex}
+#jTurnPill .dot{
+  width:15px;height:15px;border-radius:50%;flex:0 0 auto;
+  border:2px solid #7fb2d9;box-shadow:0 0 10px #4a9fd955;
+}
+body.arena-mat-on.you-turn #jTurnPill .dot,
+#jTurnPill.mine .dot{border-color:#e3c27a;box-shadow:0 0 12px #e3c27a66}
+
+/* ---------- 5. detalles ---------- */
+body.arena-mat-on .jempty{
+  color:#ffffff59!important;font:600 10px/1.4 'Hanken Grotesk',system-ui,sans-serif!important;
+  letter-spacing:.18em!important;text-transform:uppercase!important;
+}
+body.arena-mat-on .jstatus{color:#f0dba8cc!important;text-shadow:0 1px 3px #000a!important}
+
+/* el consejo del entrenador, píldora discreta en vez de barra ancha */
+body.arena-mat-on #jTable #jCoach.on{
+  background:#0a141cd9!important;border:1px solid #e8c57433!important;border-radius:999px!important;
+  box-shadow:0 12px 28px #000a!important;max-width:min(620px,84%)!important;
+  padding:6px 16px!important;color:#e9dfc6!important;
+}

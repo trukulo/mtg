@@ -1,0 +1,97 @@
+/* ===== Playmat v12 · una mitad por jugador, espejadas, como un tapete de Commander 1v1 =====
+   Cada mitad: columna de zonas (vida, mando, biblioteca, cementerio, exilio) + campo.
+   IA: mano arriba, tierras, criaturas hacia el centro. Tú: criaturas, tierras, mano abajo. */
+body.playing{overflow:hidden;background:#06090e}
+body.playing>header,body.playing #jSetup,body.playing #jugar>.row:first-child{display:none!important}
+body.playing main,body.playing main.wide,body.playing main.playing{width:100%!important;max-width:none!important;margin:0!important;padding:6px!important;min-height:100dvh}
+body.playing #jugar{margin:0!important;padding:0!important}
+body.playing #jTable{height:calc(100dvh - 12px)!important;min-height:0}
+body.playing .jgrid{display:grid!important;grid-template-columns:200px minmax(0,1fr)!important;gap:8px!important;height:100%;margin:0!important;align-items:stretch!important}
+
+/* barra lateral: herramientas, comandante, registro */
+body.playing .jgrid>.jrail-left{grid-column:1;display:flex;flex-direction:column;gap:8px;padding:8px!important;min-height:0;overflow:hidden}
+body.playing .jtools{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+body.playing .jtools .btn{min-width:0;padding:6px 4px;font-size:11px;white-space:normal}
+body.playing .jtools #jDiffBadge{grid-column:1/-1;text-align:center}
+body.playing .jlogbox{flex:1;min-height:60px;max-height:none;overflow:auto}
+
+/* el tapete */
+body.playing .jgrid>.jmain{
+  grid-column:2;height:100%;min-height:0;padding:8px!important;display:flex;flex-direction:column;border-radius:20px;border:0;
+  --bh:clamp(92px,calc((100dvh - 330px)*.27),190px);--bw:calc(var(--bh)*.716);
+  --lh:calc(var(--bh)*.66);--lw:calc(var(--lh)*.716);
+  --hh:clamp(110px,17dvh,170px);--hw:calc(var(--hh)*.716);
+  --pw:clamp(46px,calc(var(--bh)*.46),84px);--gold:#c9a45c;
+  background:radial-gradient(120% 90% at 50% 50%,#183540 0,#0f2430 58%,#0a1822 100%);
+  box-shadow:0 0 0 2px #05090d,0 0 0 3px #c9a45c55,inset 0 0 70px #0008,0 20px 50px #000a}
+body.playing .jgrid>.jmain.dense{--bh:clamp(76px,calc((100dvh - 330px)*.21),150px)}
+body.playing .jmain:after{content:'';position:absolute;inset:5px;border:1.5px dashed #c9a45c4d;border-radius:16px;pointer-events:none;z-index:0}
+
+body.playing .jbody{flex:1;min-height:0;display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:minmax(0,332fr) 46px minmax(0,478fr)!important;gap:0!important;height:auto!important}
+body.playing .jbody>.jplayer-zone{display:grid;grid-template-columns:calc(var(--pw)*2 + 36px) minmax(0,1fr);gap:10px;padding:6px 8px;min-width:0;min-height:0;border:0;border-radius:0;overflow:visible}
+body.playing .jplayer-ai{background:linear-gradient(180deg,#5b8fc41f,#0000 85%)}
+body.playing .jplayer-you{background:linear-gradient(0deg,#e3b64b1c,#0000 85%)}
+
+/* columna de zonas */
+body.playing .jplayer-utility{display:flex;flex-direction:column;gap:10px;align-items:stretch;min-width:0}
+body.playing .jplayer-heading{font:700 12px/1 'Hanken Grotesk',sans-serif;color:#b9cbe0;padding:0 2px;border:0;text-align:left;letter-spacing:.03em}
+body.playing .jplayer-you .jplayer-heading{color:#f0dba8}
+body.playing .jplayer-utility .jinfo{display:flex;flex-direction:row;align-items:center;gap:8px;min-height:0;padding:0}
+body.playing .jplayer-utility .jinfo .jdice{order:0;width:52px;height:52px;min-width:52px;font-size:20px}
+body.playing .jplayer-utility .jinfo .jmeta{order:1;font-size:10.5px;line-height:1.25;text-align:left;min-width:0}
+body.playing .jplayer-piles{display:grid;grid-template-columns:repeat(2,var(--pw));gap:20px 12px;justify-content:center;width:auto}
+body.playing .pile-unit{display:block;min-width:0}
+body.playing .pile-caption{display:none}
+body.playing .jplayer-piles .pmini{width:var(--pw);min-height:0;padding:0!important}
+body.playing .pile .plb{bottom:-16px;font-size:10px;color:#d9bf86}
+/* espejo: tú = mando, biblioteca / cementerio, exilio · IA = exilio, cementerio / biblioteca, mando */
+body.playing .jplayer-you .pile-unit:nth-child(4){order:1}.jplayer-you .pile-unit:nth-child(1){order:2}
+body.playing .jplayer-you .pile-unit:nth-child(1){order:2}body.playing .jplayer-you .pile-unit:nth-child(2){order:3}body.playing .jplayer-you .pile-unit:nth-child(3){order:4}
+body.playing .jplayer-ai .pile-unit:nth-child(3){order:1}body.playing .jplayer-ai .pile-unit:nth-child(2){order:2}body.playing .jplayer-ai .pile-unit:nth-child(1){order:3}body.playing .jplayer-ai .pile-unit:nth-child(4){order:4}
+body.playing .jplayer-ai .jplayer-piles{margin-top:4px}
+
+/* campo de cada jugador */
+body.playing .jplayer-cards{display:grid;gap:6px;min-width:0;min-height:0}
+body.playing .jplayer-ai .jplayer-cards{grid-template-rows:auto auto minmax(0,1fr)}
+body.playing .jplayer-you .jplayer-cards{grid-template-rows:minmax(0,1fr) auto auto}
+body.playing .jplayer-cards>.jzone{position:relative;display:flex;min-width:0;min-height:0;max-height:none;height:auto;padding:6px 8px;gap:6px;align-items:center;justify-content:center;border-radius:12px;overflow:hidden}
+body.playing .jplayer-cards>.jzone::before{top:3px;left:8px;font-size:9.5px;background:none;padding:0;color:#d9bf8666;pointer-events:none;z-index:0}
+body.playing .jplayer-cards>.jzone:not(.jlands):not(.jhand){border:1px solid #ffffff12;background:radial-gradient(90% 80% at 50% 50%,#ffffff08,#0000 75%);flex-wrap:wrap;align-content:center;min-height:calc(var(--bh) + 16px);overflow-y:auto;scrollbar-width:none}
+body.playing .jplayer-cards>.jzone.jlands{height:calc(var(--lh) + 16px);border:1.5px dashed #c9a45c44;background:#0000002e;flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+body.playing .jplayer-cards .jzone .bcard{width:var(--bw)!important;flex:0 0 auto}
+body.playing .jplayer-cards .jlands .bcard{width:var(--lw)!important}
+body.playing .jplayer-cards .jzone .bcard.tapped{margin:0 calc(var(--bw)*.22)}
+body.playing .jplayer-cards .jlands .bcard.tapped{margin:0 calc(var(--lw)*.22)}
+body.playing .jzone .jempty{color:#8fa3b866;font-size:13px}
+
+/* manos: la tuya grande y en abanico; la de la IA asoma por arriba */
+body.playing .jplayer-cards>.jzone.jhand{container-type:inline-size;overflow:visible;border:0;background:none;z-index:5}
+body.playing #jYouHand{height:calc(var(--hh) + 6px);align-items:flex-end;padding:0 8px}
+body.playing #jYouHand .hcard{width:var(--hw)!important;flex:0 0 auto;margin-inline:min(calc(var(--hw)*-.1),calc((100cqw - var(--n,7)*var(--hw))/(2*var(--n,7))))}
+body.playing #jYouHand .hcard:hover{transform:perspective(900px) rotateX(0deg) rotateY(0deg) rotate(0deg) translateY(calc(var(--hh)*-.22));z-index:30}
+body.playing #jAiHand{height:40px;align-items:flex-start;padding:0 8px;overflow:hidden}
+body.playing #jAiHand .bcard{width:calc(var(--bw)*.5)!important;aspect-ratio:63/88;height:auto;margin:-18px calc(var(--bw)*-.04) 0}
+body.playing #jAiHand::before,body.playing #jYouHand::before{display:none}
+
+/* franja central: fases, consejo y botón de turno */
+body.playing .jbody>.jmid{display:flex;align-items:center;gap:14px;padding:0 16px;margin:0;min-height:0;max-height:none;overflow:visible;border-block:1.5px solid #c9a45c55;border-radius:0;background:linear-gradient(90deg,#0000,#c9a45c18 18%,#c9a45c18 82%,#0000)}
+body.playing .jmid .jphase{display:flex;align-items:center;gap:4px;margin:0;flex:0 0 auto}
+body.playing .jmid .jphase .ph{padding:4px 10px;font-size:11px}
+body.playing .jmid .jturn{margin-left:8px;font:700 12px 'Hanken Grotesk',sans-serif;color:#f0d79a}
+body.playing #jStatus{display:none}
+body.playing #jCoach{display:block!important;flex:1;min-width:0;max-height:none;max-width:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;font:500 12.5px 'Hanken Grotesk',sans-serif;color:#aebdcc}
+body.playing #jNext{margin-left:auto;flex:0 0 auto;padding:7px 18px}
+
+@media(max-width:760px){
+  body.playing{overflow:auto}
+  body.playing #jTable{height:auto!important}
+  body.playing .jgrid{grid-template-columns:1fr!important;height:auto}
+  body.playing .jgrid>.jrail-left{grid-column:1;grid-row:2;max-height:260px}
+  body.playing .jgrid>.jmain{grid-column:1;grid-row:1;height:auto;--bh:clamp(80px,22vw,118px);--hh:clamp(100px,30vw,140px);--pw:42px}
+  body.playing .jbody{grid-template-rows:auto 64px auto!important}
+  body.playing .jbody>.jplayer-zone{grid-template-columns:1fr}
+  body.playing .jplayer-utility{flex-direction:row;flex-wrap:wrap;align-items:center}
+  body.playing .jplayer-piles{grid-template-columns:repeat(4,var(--pw));gap:4px 8px;margin:0 0 14px auto}
+  body.playing .jbody>.jmid{flex-wrap:wrap;padding:4px 10px;gap:6px}
+  body.playing #jCoach{display:none!important}
+}

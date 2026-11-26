@@ -1,0 +1,163 @@
+/* Commander playmat: jerarquía espacial, superficie de mesa y lectura de zonas */
+#jugar.playing main{max-width:1780px}
+#jugar.playing .jgrid{grid-template-columns:minmax(0,1fr) 286px;gap:14px;align-items:stretch}
+#jugar.playing .jmain{
+  padding:16px; border-radius:20px; border:1px solid #a98a5145;
+  background:
+    radial-gradient(ellipse at 50% 48%,#294638 0%,#1c382e 48%,#14291f 100%);
+  box-shadow:inset 0 0 0 5px #0a1510, inset 0 0 0 6px #b99a5a38,
+    inset 0 0 80px #050b08a8,0 18px 50px #0009;
+}
+#jugar.playing .jmain:before{
+  inset:9px;border:1px solid #d6bc7950;border-radius:13px;
+  background:
+   linear-gradient(90deg,transparent 49.85%,#d6bc7918 50%,transparent 50.15%),
+   radial-gradient(ellipse at center,#d6bc7909,transparent 62%),
+   repeating-linear-gradient(135deg,#ffffff04 0 1px,transparent 1px 12px);
+}
+#jugar.playing .jphase{padding:0 4px 10px;border-bottom:1px solid #d6bc792b}
+#jugar.playing .jphase .ph{background:#09150f9c;border-color:#d6bc7930;color:#c1c9bc}
+#jugar.playing .jphase .ph.on{background:linear-gradient(#f6df9e,#c59b4c);color:#241b0b}
+#jugar.playing .jbody{grid-template-columns:64px minmax(0,1fr);gap:12px}
+#jugar.playing .jpiles{justify-content:space-around;gap:18px;padding:10px 0}
+#jugar.playing .pstack{padding:8px 5px;border:1px solid #d6bc7924;border-radius:12px;background:#08140f80}
+#jugar.playing .plabel{color:#d8c28f;opacity:1;font-size:9px}
+#jugar.playing .pmini{background:#09150f;border-color:#d6bc7933;color:#d9dfd3;min-height:31px}
+#jugar.playing .jplay{gap:7px;padding:3px 0}
+#jugar.playing .jinfo{min-height:48px;padding:2px 8px}
+#jugar.playing .jinfo.ai{justify-content:flex-start}
+#jugar.playing .jinfo.me{justify-content:flex-end}
+#jugar.playing .jmeta{color:#d2d9cd;font-size:11px}
+#jugar.playing .jzone{
+ min-height:132px;padding:12px;gap:9px;justify-content:center;align-content:center;
+ background:linear-gradient(145deg,#07140f66,#0a1b1366);
+ border:1px solid #c4ad7040;border-radius:13px;
+ box-shadow:inset 0 1px #ffffff0c,inset 0 -18px 34px #0002;
+}
+#jugar.playing .jzone:before{
+ content:attr(aria-label);position:absolute;top:6px;left:10px;
+ color:#d4c28f;font:700 9px 'Hanken Grotesk',sans-serif;
+ letter-spacing:.13em;text-transform:uppercase;opacity:.7;pointer-events:none
+}
+#jugar.playing .jzone.jhand{min-height:150px;padding:14px 14px 5px;overflow:visible}
+#jugar.playing .jzone.jlands{min-height:86px;background:#09170f66;border-color:#d6bc792b}
+#jugar.playing .jzone .bcard{width:clamp(56px,5.1vw,78px)}
+#jugar.playing .jzone.jlands .bcard{width:clamp(43px,3.8vw,58px)}
+#jugar.playing .jzone.jhand .hcard{width:clamp(54px,4.5vw,70px);margin:0 -7px}
+#jugar.playing .jzone .bcard img,#jugar.playing .jzone .hcard img{
+ width:100%;height:auto;aspect-ratio:0.716;object-fit:contain;background:#080d13
+}
+#jugar.playing .jmid{min-height:36px;margin:1px 0;padding:5px 0;border-top:1px solid #d6bc791f;border-bottom:1px solid #d6bc791f}
+#jugar.playing .jstatus{color:#f0d99d}
+#jugar.playing .jdice{width:54px;height:54px;min-width:54px;font-size:21px}
+#jugar.playing .jside{
+ border:1px solid #a98a5145;border-radius:18px;padding:13px;
+ background:linear-gradient(180deg,#18231f,#0c1512);
+ box-shadow:inset 0 0 0 1px #ffffff08,0 12px 34px #0006;
+}
+#jugar.playing .jcmdbox{background:#101d17;border-color:#d6bc7950;padding:11px}
+#jugar.playing .jlogbox{background:#080f0d;border-color:#d6bc7928;max-height:min(430px,48vh)}
+#jugar.playing .jblockpanel{border-color:#a98a5145;background:#101d17}
+#cardZoom{
+ width:clamp(112px,20vw,230px);height:auto;max-height:calc(100vh - 16px);
+ aspect-ratio:.716;object-fit:contain!important;object-position:center;
+ padding:3px;background:#080d13;border:1px solid #d6bc79a6;border-radius:10px;
+ box-shadow:0 14px 34px #000d,0 0 0 3px #09140f;
+}
+@media(max-width:1100px){
+ #jugar.playing .jgrid{grid-template-columns:minmax(0,1fr) 250px}
+ #jugar.playing .jbody{grid-template-columns:52px minmax(0,1fr)}
+ #jugar.playing .jzone{min-height:112px}
+ #jugar.playing .jzone.jhand{min-height:124px}
+}
+@media(max-width:820px){
+ #jugar.playing .jgrid{grid-template-columns:1fr}
+ #jugar.playing .jbody{grid-template-columns:42px minmax(0,1fr);gap:7px}
+ #jugar.playing .jmain{padding:10px}
+ #jugar.playing .jzone{min-height:90px;padding:7px;gap:5px}
+ #jugar.playing .jzone.jhand{min-height:106px;padding:8px 5px 3px}
+ #jugar.playing .jzone .bcard{width:clamp(38px,8vw,58px)}
+ #jugar.playing .jzone.jlands .bcard{width:clamp(32px,6vw,46px)}
+ #jugar.playing .jzone.jhand .hcard{width:clamp(38px,7.5vw,56px);margin:0 -5px}
+ #jugar.playing .jdice{width:44px;height:44px;min-width:44px;font-size:18px}
+}
+@media(max-width:520px){
+ #jugar.playing .jbody{grid-template-columns:34px minmax(0,1fr);gap:5px}
+ #jugar.playing .pstack{padding:5px 2px}
+ #jugar.playing .pmini{font-size:9px;min-height:27px}
+ #jugar.playing .jphase .ph{font-size:8px;padding:4px 6px}
+ #jugar.playing .jzone.jhand .hcard{margin:0 -7px}
+ #jugar.playing .jzone{min-height:78px}
+ #jugar.playing .jzone.jhand{min-height:94px}
+}
+
+/* Ajustes solicitados: mesa sin cabecera redundante y zonas de mando visibles */
+#jugar.playing > .row:first-child{display:none!important}
+#jugar.playing .jcmdslot{display:flex;align-items:center;gap:10px;min-height:94px;padding:6px 10px;border:1px solid #d6bc7940;border-radius:12px;background:linear-gradient(90deg,#08140f99,#12271c99);}
+#jugar.playing .jcmdslot.ai{justify-content:flex-start}
+#jugar.playing .jcmdslot.me{justify-content:flex-end}
+#jugar.playing .jcmdslot .cmdcard{display:flex;align-items:center;gap:9px;min-width:0;color:#e8dfc8;font:600 10px 'Hanken Grotesk',sans-serif}
+#jugar.playing .jcmdslot .cmdcard img{display:block;width:57px;height:auto;aspect-ratio:0.716;object-fit:contain;background:#080d13;border:1px solid #d6bc7980;border-radius:5px;box-shadow:0 4px 12px #0008}
+#jugar.playing .jcmdslot .cmdname{max-width:190px;line-height:1.25}
+#jugar.playing .jcmdslot .cmdempty{font-size:10px;color:#c9c1a4;opacity:.55;letter-spacing:.12em;text-transform:uppercase}
+/* Las cartas de mesa y mano deben conservar el marco completo de la carta, no recortar al arte */
+#jugar.playing .jzone .bcard{height:auto!important;aspect-ratio:0.716;overflow:visible}
+#jugar.playing .jzone .bcard>img,#jugar.playing .jzone .hcard>img{display:block;width:100%!important;height:100%!important;aspect-ratio:0.716;object-fit:contain!important;object-position:center;background:#080d13;border-radius:5px}
+#jugar.playing .jzone .bcard .nm{max-width:100%;}
+@media(max-width:820px){#jugar.playing .jcmdslot{min-height:76px;padding:5px 7px}#jugar.playing .jcmdslot .cmdcard img{width:48px}}
+
+/* Escala compacta de cartas: carta completa visible y más permanentes por zona */
+#jugar.playing .jzone{min-height:94px;padding:9px 8px;gap:6px;overflow:visible}
+#jugar.playing .jzone.jhand{min-height:112px;padding:10px 10px 4px}
+#jugar.playing .jzone .bcard{width:48px!important;height:auto!important;aspect-ratio:.716;flex:0 0 auto}
+#jugar.playing .jzone.jlands .bcard{width:40px!important}
+#jugar.playing .jzone.jhand .hcard{width:48px!important;height:auto!important;aspect-ratio:.716;margin:0 -5px;flex:0 0 auto}
+#jugar.playing .jzone .bcard>img,#jugar.playing .jzone .hcard>img{width:100%!important;height:100%!important;aspect-ratio:.716;object-fit:contain!important;object-position:center;display:block}
+#jugar.playing .jzone .bcard .nm{font-size:8px}
+#jugar.playing .jcmdslot .cmdcard img{cursor:zoom-in}
+#jugar.playing .jcmdslot .cmdcard img:hover{filter:brightness(1.06)}
+@media(max-width:820px){
+ #jugar.playing .jzone{min-height:78px;padding:7px 5px;gap:4px}
+ #jugar.playing .jzone.jhand{min-height:94px;padding:7px 5px 3px}
+ #jugar.playing .jzone .bcard{width:40px!important}
+ #jugar.playing .jzone.jlands .bcard{width:34px!important}
+ #jugar.playing .jzone.jhand .hcard{width:40px!important;margin:0 -5px}
+}
+@media(max-width:520px){
+ #jugar.playing .jzone .bcard{width:36px!important}
+ #jugar.playing .jzone.jlands .bcard{width:31px!important}
+ #jugar.playing .jzone.jhand .hcard{width:37px!important;margin:0 -6px}
+}
+
+/* Reorganización de la mesa: tierras y comandante comparten una única banda compacta. */
+#jugar.playing .jzone.jlands{
+  display:flex;flex-flow:row wrap;align-items:center;justify-content:flex-start;align-content:center;
+  min-height:76px;padding:8px 10px 7px 10px;gap:6px;
+  background:linear-gradient(145deg,#07130eaa,#09170fbb 68%,#050d0aee);
+  border-color:#d6bc7940;box-shadow:inset 0 0 0 1px #ffffff08,inset 0 0 24px #0008;
+}
+#jugar.playing .jzone.jlands:before{top:4px;left:9px;font-size:8px;opacity:.62}
+#jugar.playing .jzone.jlands .bcard{margin-top:8px}
+#jugar.playing .jcmdslot{
+  display:flex!important;flex:0 0 auto;align-items:center;justify-content:center!important;
+  width:auto;min-width:0;min-height:0;height:56px;margin:7px 0 0 auto;padding:3px 5px;
+  border:1px solid #d6bc7960;border-radius:8px;
+  background:linear-gradient(145deg,#050d0a,#101e16);box-shadow:inset 0 0 12px #0009,0 2px 7px #0005;
+}
+#jugar.playing .jcmdslot .cmdcard{gap:0;min-width:0;height:100%}
+#jugar.playing .jcmdslot .cmdcard img{
+  width:34px;height:48px;max-height:48px;aspect-ratio:.716;object-fit:contain;
+  border-radius:3px;border:1px solid #d6bc7980;box-shadow:0 2px 5px #0009;
+}
+#jugar.playing .jcmdslot .cmdname{display:none}
+#jugar.playing .jcmdslot .cmdempty{font-size:7px;letter-spacing:.04em;writing-mode:vertical-rl;max-height:46px}
+@media(max-width:820px){
+ #jugar.playing .jzone.jlands{min-height:64px;padding:7px 6px;gap:4px}
+ #jugar.playing .jcmdslot{height:48px;margin-top:7px;padding:2px 3px}
+ #jugar.playing .jcmdslot .cmdcard img{width:28px;height:40px;max-height:40px}
+}
+@media(max-width:520px){
+ #jugar.playing .jzone.jlands{min-height:58px}
+ #jugar.playing .jcmdslot{height:43px}
+ #jugar.playing .jcmdslot .cmdcard img{width:25px;height:36px;max-height:36px}
+}

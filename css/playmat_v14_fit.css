@@ -1,0 +1,45 @@
+/* ===== v14 · mesa plana, sin hueco arriba y cartas a escala del espacio real ===== */
+@media(min-width:761px){
+  /* la inclinación 3D dejaba ~150 px muertos arriba y encogía las cartas del rival */
+  body.playing .jgrid>.jmain{
+    perspective:none!important;
+    --bh:180px;
+    --lh:calc(var(--bh)*.45);
+    --hh:calc(var(--bh)*.8);
+    --pw:clamp(44px,calc(var(--bh)*.42),78px);
+  }
+  /* la mesa ocupa justo la ventana: antes crecía con las cartas y se salía por abajo */
+  body.playing #jTable{height:calc(100dvh - 12px)!important;min-height:0!important}
+  body.playing .jmain .jbody{
+    transform:none!important;
+    height:100%!important;min-height:0!important;
+    grid-template-rows:minmax(0,calc(var(--bh)*1.45 + 84px)) 40px minmax(0,1fr)!important;
+    gap:0!important;
+  }
+  /* el campo ocupa toda la franja: nada de aire arriba ni abajo */
+  body.playing .jplayer-cards>.jzone:not(.jlands):not(.jhand){
+    min-height:calc(var(--bh) + 14px)!important;
+    height:100%!important;
+    gap:6px!important;
+    align-content:center!important;
+  }
+  body.playing .jplayer-cards>.jzone.jlands{
+    height:calc(var(--lh) + 16px)!important;
+    min-height:calc(var(--lh) + 16px)!important;
+    max-height:calc(var(--lh) + 16px)!important;
+  }
+  /* una franja de tierras vacía no reserva una fila entera: ese hueco va al campo */
+  body.playing .jplayer-cards>.jzone.jlands:empty{
+    height:22px!important;min-height:22px!important;max-height:22px!important;
+    border:0!important;background:none!important;box-shadow:none!important;
+  }
+  /* campo sin permanentes: se ve la mesa, no una caja vacía */
+  body.playing .jplayer-cards>.jzone:not(.jlands):not(.jhand):has(.jempty){
+    border-color:transparent!important;background:none!important;box-shadow:none!important;
+  }
+  body.playing #jYouHand{height:calc(var(--hh) + 8px)!important;min-height:calc(var(--hh) + 8px)!important}
+  body.playing #jAiHand{height:30px!important;min-height:30px!important;max-height:30px!important}
+  body.playing #jAiHand .bcard{width:calc(var(--bw)*.55)!important;margin:-2px calc(var(--bw)*-.03) 0!important}
+  body.playing .jbody>.jmid{height:40px;max-height:40px}
+  body.playing .jplayer-ai .jplayer-utility{overflow:hidden}
+}

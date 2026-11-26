@@ -1,0 +1,14 @@
+.bcard.pwtarget{outline:2px solid #c9a4ff;outline-offset:2px;box-shadow:0 0 0 3px #c9a4ff33}
+.bcard.psel{outline:2px solid #8fd3ff;outline-offset:2px;box-shadow:0 0 0 3px #8fd3ff33}
+.bcard .loy{position:absolute;right:3px;bottom:3px;z-index:4;background:#121a2ee6;border:1px solid #8fd3ff77;color:#d8ecff;border-radius:4px;padding:0 5px;font:800 10px/1.25 'Hanken Grotesk',system-ui,-apple-system,sans-serif}
+#jTable .jzone .bcard .loy{right:4px;bottom:4px;padding:3px 7px;font-size:11px;box-shadow:0 1px 4px #0009}
+.abilbox{margin-top:9px;padding-top:8px;border-top:1px solid #ffffff1c}
+.abilhd{display:flex;align-items:center;gap:7px;font-size:12px;margin-bottom:6px}
+.abilhd b{font-family:Fraunces,serif;font-size:14px;font-weight:600}
+.abilrow{display:flex;flex-wrap:wrap;gap:5px}
+.abilbtn{border:1px solid #8fd3ff55;background:#0d1a28;color:#d8ecff;border-radius:5px;padding:4px 7px;font:800 10.5px 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.abilbtn:hover:not(:disabled){background:#16304a;border-color:#8fd3ff}
+.abilbtn:disabled{opacity:.42;cursor:not-allowed}
+.abilbtn.loyb{background:#1a1430;border-color:#c9a4ff66;color:#eadcff}
+.abilx{margin-left:auto;border:0;background:transparent;color:#8fa3b5;font-size:15px;cursor:pointer;line-height:1}
+@media(max-width:600px){.abilbtn{font-size:10px;padding:3px 5px}}

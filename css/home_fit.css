@@ -1,0 +1,13 @@
+/* ===== landing sin scroll a 1920x1080 (capa home-fit) ===== */
+@media (min-width:1400px){
+  main:has(>#inicio.on){padding-bottom:10px!important}
+  #inicio{min-height:calc(100svh - 196px)!important}
+  #inicio .hero{padding:8px 0 2px!important}
+  #inicio h1{font-size:40px!important;line-height:1!important;margin:2px 0 4px!important}
+  #inicio .lede{font-size:15.5px!important;line-height:1.35!important;margin:4px 0 8px!important}
+  #inicio .grid.g4{gap:10px!important;margin-top:10px!important}
+  #inicio .feature{padding:10px 12px!important}
+  #inicio .feature b{font-size:14px!important}
+  #inicio .feature p{font-size:12.5px!important;line-height:1.35!important}
+  #inicio .panel{padding:10px 12px!important}
+}

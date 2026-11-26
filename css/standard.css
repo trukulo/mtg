@@ -1,0 +1,20 @@
+/* ===== Standard: sin comandante ===== */
+#jMyCmd,#jAiCmd,#jCmdDmg,#jCmd{display:none!important}
+/* la capa board-mix mete el chip en la banda inferior: aquí se apaga con más peso */
+html body.arena-mat-on #jTable .jcmdbox,
+html body.playing #jTable .jcmdbox,
+html body.arena-mat-on #jTable #jCmd,
+html body.arena-mat-on #jTable #jMyCmd{display:none!important}
+/* las pilas de comandante no cuentan: la fila queda con biblioteca, cementerio y exilio */
+
+/* ===== Standard: sin comandante en ninguna parte ===== */
+#packTabs [data-tab="off"],#packTabs [data-tab="kit"]{display:none!important}
+.panel:has(#homeBrackets){display:none!important}
+.cmrow .field:has(#edCmd),.cmrow .field:has(#edFormat),.cmrow .field:has(#edBracket){display:none!important}
+#edCmdInfo{display:none!important}
+
+/* ===== Standard: nada de comandante en la mesa ===== */
+.jcmdbox,#jCmd,#jMyCmd,#jAiCmd,#jCmdDmg{display:none!important}
+.pile-unit:has(#jMyCmd),.pile-unit:has(#jAiCmd){display:none!important}
+
+#jugar .jcmdbox,#jugar .pmini.cmd{display:none!important}

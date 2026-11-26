@@ -1,0 +1,11 @@
+/* ===== Standard: el comandante no existe en este formato ===== */
+#jTable .jcmdbox,#jTable #jCmd,#jTable #jCmdDmg,
+#jMyCmd,#jAiCmd{display:none!important}
+.pile-unit:has(#jMyCmd),.pile-unit:has(#jAiCmd){display:none!important}
+.field:has(#edBracket),.field:has(#vBracket),.field:has(#oBracket),
+.field:has(#kBracket),.field:has(#fBracket),
+.cmrow .field:has(#edCmd),.cmrow .field:has(#edFormat){display:none!important}
+#edCmdInfo,#packTabs [data-tab="off"],#packTabs [data-tab="kit"]{display:none!important}
+.panel:has(#homeBrackets){display:none!important}
+.row:has(#jCap){display:none!important}
+.cmcmdrow{display:none!important}

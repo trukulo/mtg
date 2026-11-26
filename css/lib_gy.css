@@ -1,0 +1,44 @@
+/* ===== ventanas de búsqueda: biblioteca, cementerio y auras (capa lib-gy) ===== */
+#lgPick{position:fixed;inset:0;z-index:9700;display:none;align-items:center;justify-content:center;
+  background:#04070bb8;backdrop-filter:blur(2px)}
+#lgPick.on{display:flex}
+#lgPick .lgbox{width:min(880px,94vw);max-height:86vh;display:flex;flex-direction:column;
+  background:#0b131bf2;border:1px solid #d6c18a55;border-radius:14px;box-shadow:0 22px 60px #000c;
+  color:#e9e0c9;font:600 12px/1.25 'Hanken Grotesk',system-ui,-apple-system,sans-serif}
+#lgPick .lghd{display:flex;align-items:baseline;gap:10px;padding:12px 16px 8px;border-bottom:1px solid #ffffff14}
+#lgPick .lghd b{font:700 15px Fraunces,Georgia,serif;color:#f2d99a}
+#lgPick .lghd .lgsub{color:#a9b7c4;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#lgPick .lghd .lgx{margin-left:auto;border:0;background:none;color:#8fa3b5;font-size:18px;cursor:pointer;line-height:1}
+#lgPick .lggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;
+  padding:12px 16px;overflow:auto}
+#lgPick .lgc{display:flex;flex-direction:column;gap:4px;padding:7px;cursor:pointer;text-align:left;
+  position:relative;background:#121d28;border:1px solid #ffffff1f;border-radius:10px;color:#e9e0c9}
+#lgPick .lgc:hover{border-color:#e8cf9188;background:#182634}
+#lgPick .lgc img{width:100%;height:auto;border-radius:6px;display:block}
+#lgPick .lgc .lgno{display:flex;align-items:center;justify-content:center;min-height:80px;
+  border-radius:6px;background:#0a121b;color:#7d8b98;font-size:10px;text-align:center;padding:4px}
+#lgPick .lgc b{font-size:11.5px;line-height:1.2;color:#f0e4c4}
+#lgPick .lgc span{font-size:9.5px;color:#9fb0bd}
+/* selección múltiple */
+#lgPick.multi .lgc::after{content:'';position:absolute;inset:0;border-radius:10px;pointer-events:none;
+  box-shadow:inset 0 0 0 2px transparent;transition:box-shadow .12s}
+#lgPick.multi .lgc.sel{border-color:#f2d99a;background:#1d2c1f}
+#lgPick.multi .lgc.sel::after{box-shadow:inset 0 0 0 2px #f2d99acc}
+#lgPick.multi .lgc.sel::before{content:attr(data-order);position:absolute;top:-7px;left:-7px;z-index:2;
+  min-width:20px;height:20px;padding:0 5px;border-radius:11px;background:#f2d99a;color:#1a1408;
+  font:800 11px/20px 'Hanken Grotesk',sans-serif;text-align:center;box-shadow:0 2px 8px #000a}
+#lgPick .lgft{display:flex;align-items:center;gap:10px;padding:8px 16px 12px;border-top:1px solid #ffffff14;color:#a9b7c4}
+#lgPick .lgft .lghint{flex:1}
+#lgPick .lgft .lgcount{color:#f0e4c4;font-weight:700}
+#lgPick .lgft button{padding:6px 12px;border-radius:9px;cursor:pointer;font:700 11.5px/1 inherit;
+  background:#1c2a36;border:1px solid #ffffff24;color:#f0e4c4}
+#lgPick .lgft button:hover{border-color:#e8cf9166}
+/* modo «la IA elige»: se ve la elección marcada y no se puede tocar nada */
+#lgPick.ai .lggrid .lgc,#lgPick.ai .lgft button,#lgPick.ai .lghd .lgx{pointer-events:none}
+#lgPick.ai .lgft .lghint{color:#f2d99a;font-weight:700;flex:1}
+#lgPick.ai .lgft button{opacity:.45}
+#lgPick.ai .lgbox{border-color:#f2d99a88}
+#lgPick .lgft button.lgai{background:#22303f;border-color:#9fb6cc55;color:#dbe7f2}
+#lgPick .lgft button.lgai:hover{border-color:#e8cf9188;color:#fff}
+#lgPick .lgft button.lgok{background:#3a5a3c;border-color:#8fc48f66;color:#eaf6e6}
+#lgPick .lgft button.lgok:disabled{opacity:.4;cursor:not-allowed}

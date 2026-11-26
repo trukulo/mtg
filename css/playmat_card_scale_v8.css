@@ -1,0 +1,97 @@
+/* Cartas ampliadas: siempre escalar la imagen completa, nunca recortar el arte. */
+#jugar.playing .jplay{gap:3px!important}
+#jugar.playing #jAiBf,
+#jugar.playing #jYouBf{
+  min-height:132px!important;
+  padding:5px 6px!important;
+  gap:4px!important;
+  row-gap:3px!important;
+}
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{
+  flex:0 0 76px!important;
+  width:76px!important;
+  height:auto!important;
+  aspect-ratio:0.716!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard>img{
+  display:block!important;
+  width:100%!important;height:100%!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+#jugar.playing .jzone .bcard{
+  background-repeat:no-repeat!important;
+  background-position:center!important;
+  background-size:contain!important;
+}
+#jugar.playing #jAiHand,
+#jugar.playing #jYouHand{
+  min-height:94px!important;height:94px!important;
+  padding:5px 8px 3px!important;
+  gap:4px!important;
+}
+#jugar.playing #jAiHand .bcard{
+  flex:0 0 66px!important;width:66px!important;
+  height:92px!important;min-width:66px!important;
+  aspect-ratio:0.716!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+  background-size:contain!important;
+}
+#jugar.playing #jYouHand .hcard{
+  flex:0 0 66px!important;width:66px!important;
+  height:92px!important;min-width:66px!important;
+  margin:0!important;
+}
+#jugar.playing #jYouHand .hcard img{
+  display:block!important;width:100%!important;height:100%!important;
+  object-fit:contain!important;object-position:center!important;
+}
+#jugar.playing .jzone.jlands{
+  min-height:68px!important;
+  padding-top:3px!important;padding-bottom:3px!important;
+  gap:4px!important;
+}
+#jugar.playing .jzone.jlands .bcard{
+  flex:0 0 54px!important;width:54px!important;
+  height:auto!important;aspect-ratio:0.716!important;
+  background-size:contain!important;
+}
+#jugar.playing .jzone.jlands .bcard>img{
+  display:block!important;width:100%!important;height:100%!important;
+  object-fit:contain!important;object-position:center!important;
+}
+#jugar.playing .jcmdslot{
+  width:46px!important;min-width:46px!important;
+  height:64px!important;min-height:64px!important;
+}
+#jugar.playing .jcmdslot .cmdcard img{
+  width:100%!important;height:100%!important;
+  object-fit:contain!important;object-position:center!important;
+}
+#jugar.playing .jmid{
+  min-height:24px!important;
+  padding:1px 0!important;margin:0!important;
+}
+@media(max-width:1100px){
+  #jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:68px!important;width:68px!important}
+  #jugar.playing #jAiHand .bcard{flex-basis:58px!important;width:58px!important;height:81px!important;min-width:58px!important}
+  #jugar.playing #jYouHand .hcard{flex-basis:58px!important;width:58px!important;height:81px!important;min-width:58px!important}
+}
+@media(max-width:820px){
+  #jugar.playing #jAiBf,#jugar.playing #jYouBf{min-height:112px!important;padding:4px!important;gap:3px!important}
+  #jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:56px!important;width:56px!important}
+  #jugar.playing #jAiHand,#jugar.playing #jYouHand{min-height:82px!important;height:82px!important}
+  #jugar.playing #jAiHand .bcard{flex-basis:48px!important;width:48px!important;height:67px!important;min-width:48px!important}
+  #jugar.playing #jYouHand .hcard{flex-basis:48px!important;width:48px!important;height:67px!important;min-width:48px!important}
+  #jugar.playing .jzone.jlands .bcard{flex-basis:42px!important;width:42px!important}
+}
+@media(max-width:520px){
+  #jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:46px!important;width:46px!important}
+  #jugar.playing #jAiHand .bcard{flex-basis:38px!important;width:38px!important;height:53px!important;min-width:38px!important}
+  #jugar.playing #jYouHand .hcard{flex-basis:38px!important;width:38px!important;height:53px!important;min-width:38px!important}
+  #jugar.playing .jzone.jlands .bcard{flex-basis:34px!important;width:34px!important}
+  #jugar.playing .jcmdslot{width:32px!important;min-width:32px!important;height:45px!important;min-height:45px!important}
+}

@@ -1,0 +1,24 @@
+/* ===== Deshacer · reanudar · replay (capa undo-layer) ===== */
+#undoBar{position:fixed;left:14px;bottom:14px;z-index:80;display:none;align-items:center;gap:6px;
+  padding:6px 8px;border-radius:12px;background:#0b131be6;border:1px solid #d6c18a40;
+  box-shadow:0 10px 24px #000a;color:#e9e0c9;
+  font:600 12px/1.2 'Hanken Grotesk',system-ui,-apple-system,sans-serif;backdrop-filter:blur(6px)}
+body.playing #undoBar.on{display:flex}
+#undoBar button{width:30px;height:28px;padding:0;border-radius:8px;cursor:pointer;
+  background:#16222d;border:1px solid #ffffff1f;color:#f0e4c4;font:700 14px/1 system-ui;
+  display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+#undoBar button:hover:not(:disabled){background:#20303d;border-color:#e8cf9155}
+#undoBar button:disabled{opacity:.35;cursor:default}
+#undoStep{max-width:min(46vw,420px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  color:#b9c6d2;font-weight:600}
+#undoStep b{color:#f2d99a;font-weight:800}
+#undoResume{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:81;
+  display:none;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;
+  background:#0b131bf2;border:1px solid #d6c18a55;box-shadow:0 14px 30px #000c;color:#e9e0c9;
+  font:600 13px/1.3 'Hanken Grotesk',system-ui,-apple-system,sans-serif}
+#undoResume.on{display:flex}
+#undoResume .ut{max-width:min(60vw,520px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#undoResume .ut b{color:#f2d99a}
+#undoResume button{padding:6px 12px;border-radius:9px;cursor:pointer;font:700 12px/1 inherit;
+  background:#1c2a36;border:1px solid #ffffff24;color:#f0e4c4}
+#undoResume button.pri{background:#2c4460;border-color:#8fb6dd66}

@@ -1,0 +1,98 @@
+/* ---------- Commander: brackets, comandante y comprobaciones ---------- */
+.cmbr{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font:800 10.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.06em;text-transform:uppercase;border:1px solid #ffffff22;background:#ffffff0a;color:#cfdae6;white-space:nowrap}
+.cmbr b{font-size:11px}
+.cmbr.b1{border-color:#7f8fa345;background:#7f8fa312;color:#c3cede}
+.cmbr.b2{border-color:#5bbd7a55;background:#5bbd7a12;color:#a6e5bb}
+.cmbr.b3{border-color:#6db2ee55;background:#6db2ee12;color:#a8d4f8}
+.cmbr.b4{border-color:#e3b64b66;background:#e3b64b14;color:var(--au2)}
+.cmbr.b5{border-color:#e0613f66;background:#e0613f14;color:#ffb39b}
+.cmcmdrow{display:flex;align-items:center;gap:6px;min-width:0;font:700 11.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#dbe4ee}
+.cmcmdrow .ql{color:var(--au2);font-size:12px}
+.cmcmdrow b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+.cmcmdrow[data-nm],.art[data-nm]{cursor:zoom-in}
+.cmdeckmeta{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.brgrid{display:grid;gap:8px;margin-top:10px}
+.brrow{display:grid;grid-template-columns:26px 92px minmax(0,1fr);gap:10px;align-items:center;background:#ffffff05;border:1px solid #ffffff0d;border-left:3px solid #ffffff1a;border-radius:8px;padding:7px 10px}
+.brrow .bnum{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font:800 12px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;background:#ffffff0f;color:#dbe4ee}
+.brrow b{font:700 13px 'Hanken Grotesk',system-ui,-apple-system,sans-serif}
+.brrow span.d{color:var(--mu);font:500 12px/1.4 'Hanken Grotesk',system-ui,-apple-system,sans-serif}
+.brrow.on{border-left-color:var(--au);background:#e3b64b0f}
+.brrow.on .bnum{background:var(--au);color:#1a1305}
+.brrow.b1{--c:#8fa0b4}.brrow.b2{--c:#5bbd7a}.brrow.b3{--c:#6db2ee}.brrow.b4{--c:var(--au2)}.brrow.b5{--c:#e0613f}
+.brrow .bnum{box-shadow:inset 0 0 0 1px var(--c,#ffffff22);color:var(--c,#dbe4ee)}
+.brrow.on .bnum{color:#1a1305}
+.cmissues{display:flex;flex-direction:column;gap:5px;margin-top:8px}
+.cmissues div{font:600 11.5px/1.4 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#ffc8a0;background:#f5a35510;border:1px solid #f5a3552e;border-radius:8px;padding:5px 8px}
+.cmissues div.ok{color:#9bf2b5;background:#9bf2b514;border-color:#9bf2b53d}
+.cmrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end}
+.cmnone{display:inline-flex;align-items:center;gap:6px;color:var(--mu);font:600 12px 'Hanken Grotesk',system-ui,-apple-system,sans-serif}
+.cmident{display:inline-flex;gap:3px;align-items:center}
+.cmsm select,.cmsm input{padding:6px 8px;font-size:13px}
+@media(max-width:640px){
+  .brrow{grid-template-columns:24px minmax(0,1fr);gap:6px 8px}
+  .brrow span.d{grid-column:1/-1}
+}
+/* ---------- gestión del comandante en el tablero ---------- */
+.cmcz{margin-top:8px;border-top:1px solid #ffffff12;padding-top:8px;display:flex;flex-direction:column;gap:6px}
+.cmczzone{font:700 10.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--au2)}
+.cmcztax{display:flex;align-items:center;gap:6px;font:600 11.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:var(--mu)}
+.cmcztax b{color:var(--tx);font-size:12.5px;min-width:36px;text-align:center}
+.cmcztax button,.cmczdmg button{width:20px;height:20px;border-radius:6px;border:1px solid #ffffff20;background:#ffffff0a;color:#cfdae6;font:800 12px/1 system-ui,sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0}
+.cmcztax button:hover,.cmczdmg button:hover{background:#ffffff18}
+.cmczdmg{display:flex;flex-direction:column;gap:4px;background:#ffffff05;border:1px solid #ffffff0d;border-radius:8px;padding:6px 8px}
+.cmczdmg .lab{font:700 10px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--mu)}
+.cmczdmg .r{display:flex;align-items:center;gap:6px;font:600 11.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif}
+.cmczdmg .r span:first-child{min-width:26px;color:var(--mu)}
+.cmczdmg .r b{min-width:20px;text-align:center;font-size:12.5px;color:#a8d4f8}
+.cmczdmg .r b.hot{color:#ffb39b}
+.cmczreset{align-self:flex-start;border:0;background:none;color:var(--mu);font:600 10.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;text-decoration:underline;cursor:pointer;padding:0}
+/* ---------- herramientas para construir mazos ---------- */
+.cmtools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.cmtools input{flex:1;min-width:180px;max-width:340px}
+.cmtools select{max-width:190px}
+.cmcomp .anacurve{height:64px;margin-bottom:20px}
+.cmcompstats{display:flex;gap:16px;margin:4px 0 10px;flex-wrap:wrap}
+.cmcompstats small{display:block;color:var(--mu);font:700 9.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.07em;text-transform:uppercase}
+.cmcompstats b{font-family:Fraunces,serif;font-size:17px}
+
+/* ---------- acabado: cabecera compacta y vida ajustable ---------- */
+#jugar.playing h1{font-size:21px!important;margin:0}
+#jugar.playing>.row:first-child{margin-bottom:0;align-items:center}
+#jugar.playing .eyebrow{display:none}
+@media(max-width:760px){nav button{white-space:nowrap;padding:7px 9px;font-size:13.5px}}
+.jlifectl{display:inline-flex;align-items:center;gap:3px}
+.jlifebtn{width:23px;height:23px;border-radius:7px;border:1px solid #ffffff24;background:#ffffff0c;color:#dfe8f2;font:800 13px/1 system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:0 0 auto}
+.jlifebtn:hover{background:#ffffff1c;border-color:var(--au);color:var(--au2)}
+.jlifebtn:active{transform:scale(.94)}
+.jzone .jempty{color:#8398ad;font:600 12px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.02em;background:#0000002e;border:1px dashed #ffffff14;border-radius:10px;padding:6px 14px}
+.cmczdmg .r b{font-size:14px;min-width:24px}
+.cmczdmg .cmczreset{width:auto;height:auto;border:0;background:none;padding:0;margin-top:2px;align-self:flex-start;font:600 10.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:var(--mu);text-decoration:underline;cursor:pointer}
+.cmczdmg .cmczreset:hover{color:#ffb39b}
+.cmcz{gap:7px}
+.cmcztax b{min-width:38px}
+.jcmdbox #jCmd img{width:64px!important;box-shadow:0 0 0 1px #e3b64b55,0 6px 14px #000a}
+.cmczzone{display:flex;align-items:center;gap:5px}
+
+/* reglas del formato: seis fichas en tres columnas */
+@media(min-width:901px){#formato>.rules{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:641px) and (max-width:900px){#formato>.rules{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#formato>.rules .rule{background:#ffffff04;border:1px solid #ffffff0b;border-left:3px solid var(--au);border-radius:0 10px 10px 0;padding:10px 14px}
+.jcmdbadge{display:inline-flex;align-items:center;gap:3px;margin-left:4px;padding:2px 7px;border-radius:999px;border:1px solid #e0613f55;background:#e0613f14;color:#ffb39b;font:800 10.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.02em;white-space:nowrap}
+.jcmdbadge.hot{background:#e0613f33;border-color:#e0613f;color:#ffd9cf;box-shadow:0 0 14px #e0613f55}
+
+/* ---------- móvil: editor en una columna y barra de mazos compacta ---------- */
+@media(max-width:900px){
+  #t-editor > .grid{grid-template-columns:1fr!important}
+  body.playing .jside{height:auto}
+}
+@media(max-width:980px){
+  body.playing .jgrid>.jside{align-self:start}
+  .jgrid{grid-template-columns:1fr!important}
+  nav button{flex:0 0 auto}
+}
+@media(max-width:640px){
+  .cmtools{gap:6px}
+  .cmtools input{flex:1 1 100%;max-width:none}
+  .cmtools select{flex:1 1 auto;max-width:none}
+  .cmtools #packShown{flex:1 1 100%}
+}

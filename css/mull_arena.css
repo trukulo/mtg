@@ -1,0 +1,114 @@
+/* ===== MULLIGAN ESTILO ARENA (capa de presentación) ===== */
+#jMullOver.mull-arena{
+  padding:0;
+  background:radial-gradient(ellipse 130% 95% at 50% 42%,#16202a 0%,#0a1015 46%,#04070a 100%);
+}
+#jMullOver.mull-arena::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 72% 62% at 50% 46%,#0000 38%,#000000a8 100%);
+}
+#jMullOver.mull-arena .mull-dialog{
+  max-width:none;max-height:none;width:100%;height:100%;
+  border:0;border-radius:0;background:none;box-shadow:none;padding:0;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+#jMullOver.mull-arena .mull-dialog h2{
+  margin:0;text-align:center;color:#f4efe3;
+  font:800 clamp(24px,3.2vw,42px)/1.05 'Fraunces',Georgia,serif;
+  letter-spacing:-.01em;text-shadow:0 2px 22px #000c;
+}
+#jMullOver.mull-arena #jMullP{
+  margin:9px 0 0;max-width:min(720px,86vw);text-align:center;
+  color:#a6b3c1;font-size:clamp(12.5px,1.1vw,14.5px);line-height:1.5;
+}
+#jMullOver.mull-arena .mullfan{
+  display:flex;justify-content:center;align-items:flex-start;flex-wrap:nowrap;gap:0;
+  margin:clamp(14px,3.4vh,34px) 0 0;padding:0 10px;perspective:1400px;
+}
+#jMullOver.mull-arena .mullfan .mcard{
+  width:min(calc((100vw - 96px)/7),21vh,176px);flex:0 0 auto;margin:0 -8px;
+  border-radius:12px;border:1px solid #ffffff2e;background:#0b1118;
+  box-shadow:0 26px 44px #000c,0 3px 8px #0009;
+  transform:rotate(var(--rot,0deg)) translateY(var(--ty,0px));
+  transform-origin:50% 130%;
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .2s,filter .2s;
+}
+#jMullOver.mull-arena .mullfan .mcard img{border-radius:11px 11px 0 0}
+#jMullOver.mull-arena .mullfan .mcard span{
+  font:600 9px/1.3 'Hanken Grotesk',system-ui,sans-serif;padding:3px 5px;
+  background:#0a1016cc;color:#c2cedb
+}
+#jMullOver.mull-arena .mullfan .mcard:hover{
+  transform:rotate(0deg) translateY(-18px) scale(1.05);
+  box-shadow:0 36px 60px #000e,0 0 0 1px #e8c57466;z-index:200!important;
+}
+#jMullOver.mull-arena .mullfan.choose .mcard:hover{transform:rotate(0deg) translateY(-14px) scale(1.03)}
+#jMullOver.mull-arena .mullfan .mcard.sel{
+  outline:2px solid #ff6f5e;outline-offset:1px;filter:brightness(.82) saturate(.9);
+  box-shadow:0 18px 30px #000c,0 0 26px #ff5a3a55;
+}
+#jMullOver.mull-arena .mull-dialog > .row{
+  position:absolute;left:0;right:0;bottom:clamp(16px,3.2vh,34px);
+  margin:0;padding:0 16px;justify-content:center;gap:14px;z-index:6
+}
+#jMullOver.mull-arena .mull-dialog > .row .btn{
+  min-width:clamp(148px,16vw,214px);padding:14px 22px;border-radius:12px;
+  font:800 14px/1 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.01em
+}
+#jMullOver.mull-arena #jMullKeep{
+  background:linear-gradient(180deg,#f2dfa8,#d3ac56);color:#1d1408;border:0;
+  box-shadow:0 3px 0 #8a6d33,0 12px 28px #000a
+}
+#jMullOver.mull-arena #jMullDo{background:#1a2531;border:1px solid #ffffff2b;color:#e6eef7}
+#jMullOver.mull-arena #jMullDo:hover{background:#22303e;border-color:#ffffff44}
+#jMullOver.mull-arena #jMullHint{
+  position:absolute;left:0;right:0;bottom:clamp(72px,9.5vh,98px);
+  margin-inline:auto;padding:0 24px;max-width:min(760px,92vw);
+  text-align:center;color:#798694;font-size:11.5px;line-height:1.45
+}
+
+/* cabecera */
+#jMullOver.mull-arena .ma-top{
+  position:absolute;left:0;right:0;top:0;z-index:7;pointer-events:none;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  padding:clamp(14px,2vw,24px) clamp(16px,2.4vw,30px)
+}
+#jMullOver.mull-arena .ma-who{display:flex;flex-direction:column;gap:3px}
+#jMullOver.mull-arena .ma-who b{
+  font:700 17px/1.1 'Hanken Grotesk',system-ui,sans-serif;color:#eef4f9
+}
+#jMullOver.mull-arena .ma-who span{
+  font:600 11px/1 'Hanken Grotesk',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8b9cad
+}
+#jMullOver.mull-arena .ma-actions{pointer-events:auto}
+#jMullOver.mull-arena .ma-peek{
+  font:700 12.5px/1.15 'Hanken Grotesk',sans-serif;color:#e8eef5;
+  background:#141c25d9;border:1px solid #ffffff26;border-radius:999px;
+  padding:10px 16px;max-width:190px;cursor:pointer;transition:.15s;text-align:center
+}
+#jMullOver.mull-arena .ma-peek:hover{background:#1d2833;border-color:#e8c57499;color:#fff}
+
+/* «ver campo de batalla»: la mano desaparece y deja ver la mesa */
+#jMullOver.mull-arena.peek{background:transparent;pointer-events:none}
+#jMullOver.mull-arena.peek::before{opacity:0}
+#jMullOver.mull-arena.peek .mullfan,
+#jMullOver.mull-arena.peek h2,
+#jMullOver.mull-arena.peek #jMullP,
+#jMullOver.mull-arena.peek #jMullHint{opacity:0;transition:opacity .18s;pointer-events:none}
+#jMullOver.mull-arena.peek .ma-top,
+#jMullOver.mull-arena.peek .mull-dialog > .row{pointer-events:auto}
+
+@media (max-width:640px){
+  #jMullOver.mull-arena .mullfan{flex-wrap:wrap;gap:7px;perspective:none}
+  #jMullOver.mull-arena .mullfan .mcard{width:28vw;margin:0;transform:none}
+  #jMullOver.mull-arena .mullfan .mcard:hover{transform:translateY(-8px) scale(1.03)}
+}
+
+/* arco por posición: garantía para la mano de 7 aunque el JS no llegue */
+#jMullOver.mull-arena .mullfan .mcard:nth-child(1){--rot:-15deg;--ty:28px}
+#jMullOver.mull-arena .mullfan .mcard:nth-child(2){--rot:-10deg;--ty:12px}
+#jMullOver.mull-arena .mullfan .mcard:nth-child(3){--rot:-5deg;--ty:3px}
+#jMullOver.mull-arena .mullfan .mcard:nth-child(4){--rot:0deg;--ty:0px}
+#jMullOver.mull-arena .mullfan .mcard:nth-child(5){--rot:5deg;--ty:3px}
+#jMullOver.mull-arena .mullfan .mcard:nth-child(6){--rot:10deg;--ty:12px}
+#jMullOver.mull-arena .mullfan .mcard:nth-child(7){--rot:15deg;--ty:28px}

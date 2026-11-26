@@ -1,0 +1,3 @@
+/* ===== selector de cartas con sitio para «Solo Foundations (FDN)» ===== */
+.cmrow .field:has(#vSource){grid-column:span 2}
+#vSource{width:100%;min-width:0;max-width:none}

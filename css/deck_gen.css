@@ -1,0 +1,39 @@
+/* ===== tipo de generación del mazo (capa deck-gen) =====
+   Chips de filtro sobre la lista de mazos y una etiqueta de color en cada
+   tarjeta diciendo de qué generador salió. La lista sigue siendo una sola. */
+.genfilter{
+  display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+  margin:2px 0 10px;
+}
+.genchip{
+  font:inherit;font-size:11.5px;line-height:1;font-weight:600;
+  padding:7px 10px;border-radius:999px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;
+  color:var(--mu,#aab4c0);
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.14);
+  transition:background .12s,border-color .12s,color .12s;
+}
+.genchip:hover{background:rgba(255,255,255,.09);color:#fff}
+.genchip.on{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.38)}
+.genchip .n{opacity:.65;font-weight:500}
+.genb{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10.5px;line-height:1;font-weight:600;
+  padding:4px 7px;border-radius:999px;white-space:nowrap;
+  border:1px solid currentColor;
+}
+.genb[data-gen="virtual"]{color:#8fb4e8;background:rgba(80,130,200,.16)}
+.genb[data-gen="fdn"]{color:#8fd6a8;background:rgba(80,180,120,.16)}
+.genb[data-gen="kit"]{color:#e8cf8f;background:rgba(200,170,80,.16)}
+.genb[data-gen="official"]{color:#c3a8e8;background:rgba(150,110,200,.16)}
+.genb[data-gen="imported"]{color:#8fe0e0;background:rgba(80,190,190,.16)}
+.genb[data-gen="manual"]{color:#d9b3b3;background:rgba(190,120,120,.16)}
+.genb[data-gen="collection"]{color:#c9e08f;background:rgba(150,190,80,.16)}
+.genchip[data-gen="virtual"] .ic{color:#8fb4e8}
+.genchip[data-gen="fdn"] .ic{color:#8fd6a8}
+.genchip[data-gen="kit"] .ic{color:#e8cf8f}
+.genchip[data-gen="official"] .ic{color:#c3a8e8}
+.genchip[data-gen="imported"] .ic{color:#8fe0e0}
+.genchip[data-gen="manual"] .ic{color:#d9b3b3}
+.genchip[data-gen="collection"] .ic{color:#c9e08f}

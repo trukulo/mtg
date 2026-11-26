@@ -1,0 +1,25 @@
+/* ===== sagas y planeswalkers ===== */
+/* contador de relato / lealtad sobre la carta (mismo estilo que el de lealtad) */
+#jTable .jzone .bcard .loy{position:absolute;right:4px;bottom:4px;z-index:4;
+  background:#121a2ee6;border:1px solid #8fd3ff77;color:#d8ecff;border-radius:4px;
+  padding:3px 7px;font:700 11px/1 'Hanken Grotesk',system-ui,sans-serif;
+  box-shadow:0 1px 4px #0009;pointer-events:none}
+#jTable .jzone .bcard .loy.lore{background:#2a1c0ee6;border-color:#e0b97877;color:#f4ddb0}
+/* panel propio de habilidades de lealtad (captain y standard, donde el motor
+   no pinta el suyo o lo tiene oculto) */
+.swpanel{position:fixed;left:14px;bottom:58px;z-index:86;display:none;
+  min-width:190px;max-width:min(38vw,360px);padding:8px 10px;border-radius:12px;
+  background:#0b131bf2;border:1px solid #c9a4ff4d;box-shadow:0 12px 28px #000b;
+  color:#e9e0c9;font:600 12px/1.25 'Hanken Grotesk',system-ui,-apple-system,sans-serif;
+  backdrop-filter:blur(6px)}
+.swpanel.on{display:block}
+.swpanel .swhd{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.swpanel .swhd b{font-size:12.5px;color:#f2d99a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.swpanel .swhd .swloy{margin-left:auto;color:#cdb8ff;font-weight:800}
+.swpanel .swhd .swx{border:0;background:transparent;color:#8fa3b5;font-size:15px;cursor:pointer;line-height:1}
+.swpanel .swrow{display:flex;flex-wrap:wrap;gap:4px}
+.swpanel .swab{min-width:34px;padding:4px 8px;border-radius:8px;cursor:pointer;
+  background:#1a1430;border:1px solid #c9a4ff66;color:#eadcff;font:800 11px/1 inherit}
+.swpanel .swab:disabled{opacity:.42;cursor:not-allowed}
+.swpanel .sweff{margin-top:6px;color:#a9b7c4;font-weight:500;font-size:11px;line-height:1.3}
+@media(max-height:820px){.swpanel{bottom:52px;min-width:170px}}

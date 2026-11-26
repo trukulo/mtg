@@ -1,0 +1,1002 @@
+/* ===== bloque 0 ===== */
+.jgrid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;margin-top:14px;align-items:start}
+@media(max-width:980px){
+.jgrid{grid-template-columns:1fr}
+}
+.jmain{background:radial-gradient(120% 90% at 50% -10%,#16202c,#0a1017 70%);border:1px solid var(--ln);border-radius:16px;padding:12px;box-shadow:inset 0 20px 60px #0008,0 8px 30px #0006}
+.jphase{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.jphase .ph{font:700 10.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--mu);border:1px solid #ffffff14;border-radius:999px;padding:5px 11px;background:#0b1118}
+.jphase .ph.on{color:#1a1305;background:linear-gradient(180deg,var(--au2),var(--au));border-color:transparent;box-shadow:0 4px 14px #e3b64b33}
+.jphase .jturn{margin-left:auto;font:700 11px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--au2)}
+.jbody{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px;align-items:stretch}
+.jpiles{display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+.pstack{display:flex;flex-direction:column;gap:4px;align-items:stretch}
+.plabel{font:700 9px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--mu);text-align:center;opacity:.7}
+.pmini{display:flex;align-items:center;gap:4px;justify-content:center;font:600 11px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#cfdae6;background:#0a121b;border:1px solid #ffffff12;border-radius:8px;padding:6px 4px;position:relative}
+.pmini .cnt{font-weight:800;color:var(--au2)}
+.pmini.gy{border-color:#f5555522}
+.pmini.ex{border-color:#a855f722}
+.pmini.cmd{border-color:#e3b64b44}
+.jplay{display:flex;flex-direction:column;gap:6px;min-width:0}
+.jzone{min-height:104px;border:1px dashed #ffffff14;border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;background:#ffffff04;position:relative}
+.jzone.jlands{min-height:76px;border-style:solid;border-color:#ffffff0d;background:#ffffff02}
+.jzone.jhand{border-style:solid;border-color:#ffffff10;background:#ffffff05}
+.jzone.me{border-color:#e3b64b26}
+.jzone.ai{border-color:#6fb4f026}
+.jempty{font:600 10.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.06em;color:var(--mu);opacity:.55;margin:auto}
+.jzone .bcard{width:72px}
+.jzone.jlands .bcard{width:56px}
+.jzone.jhand .hcard{width:66px}
+.jinfo{display:flex;align-items:center;gap:10px;padding:2px 4px}
+.jinfo.me{justify-content:flex-end}
+.jdice{font:850 24px Fraunces,serif;color:#f2e7cf;background:#0a121b;border:1px solid #ffffff1a;border-radius:12px;padding:1px 12px;min-width:46px;text-align:center;box-shadow:0 4px 14px #0007}
+.jdice.pulse{animation:jdice .7s ease}
+.jdice.hit{color:#ff9b9b;border-color:#f5555588;box-shadow:0 0 22px #f5555544}
+.jdice.gain{color:#9bf2b5;border-color:#55f58b88;box-shadow:0 0 22px #55f58b44}
+.jmeta{font:600 10.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:var(--mu);letter-spacing:.04em}
+.jmid{display:flex;flex-direction:column;align-items:center;gap:6px;margin:6px 0;min-height:20px}
+.jstatus{font:700 11px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--au2)}
+.jside{display:flex;flex-direction:column;gap:10px;background:#0b1118;border:1px solid var(--ln);border-radius:16px;padding:12px}
+.jtools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.jcmdbox{background:#0a121b;border:1px solid #e3b64b22;border-radius:12px;padding:8px}
+.jlogbox{flex:1;min-height:180px;max-height:360px;overflow:auto;background:#080e15;border:1px solid var(--ln);border-radius:12px;padding:8px}
+.jlogbox .log{font:11.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#a9b8c6}
+.jblockpanel{margin-top:12px;background:#0b1118;border:1px solid var(--ln);border-radius:14px;padding:12px}
+.jgrid{grid-template-columns:minmax(0,1fr) 268px;gap:10px;margin-top:10px}
+.jmain{padding:10px;border-radius:14px}
+.jphase{gap:4px;margin-bottom:6px}
+.jphase .ph{padding:4px 9px;font-size:10px}
+.jbody{grid-template-columns:52px minmax(0,1fr);gap:8px}
+.jpiles{gap:8px}
+.pmini{padding:4px 2px;font-size:10.5px}
+.jplay{gap:4px}
+.jzone{min-height:104px;padding:6px;gap:5px;border-radius:10px}
+.jzone.jlands{min-height:78px}
+.jzone.jhand{min-height:112px;max-height:112px;overflow:hidden}
+.jzone .bcard{width:62px}
+.jzone.jlands .bcard{width:46px}
+.jzone.jhand .hcard{width:50px}
+.jzone.jhand .bcard{aspect-ratio:.716;height:auto;width:52px}
+.jinfo{padding:0 2px}
+.jdice{font-size:20px;padding:0 9px;min-width:40px;border-radius:10px}
+.jmid{margin:2px 0;min-height:0;gap:4px}
+.jside{padding:10px;gap:8px}
+.jlogbox{min-height:110px;max-height:min(300px,32vh)}
+.jblockpanel{margin-top:8px;padding:10px}
+@media(max-height:900px){
+.jzone{min-height:88px}
+.jzone.jlands{min-height:62px}
+.jzone.jhand{min-height:82px;max-height:82px}
+.jzone .bcard{width:52px}
+.jzone.jlands .bcard{width:40px}
+.jzone.jhand .hcard{width:46px}
+.jzone.jhand .bcard{width:46px}
+.jzone.jhand .hcard span{display:none}
+.jmid{max-height:none;overflow:visible}
+}
+.jmain{position:relative;overflow:hidden;background:radial-gradient(120% 82% at 50% -15%,#1e2d3d,#0c1621 58%,#070c12 100%);border:1px solid #ffffff1f;box-shadow:inset 0 0 0 1px #ffffff0a,inset 0 34px 90px #0009,0 18px 46px #0007}
+.jmain:before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(118deg,#ffffff05 0 1px,#0000 1px 9px),radial-gradient(70% 55% at 50% 118%,#e8c57414,#0000 72%)}
+.jmain>*{position:relative;z-index:1}
+.jplay{border-radius:16px;background:radial-gradient(90% 60% at 50% 50%,#ffffff05,#0000 70%)}
+.jinfo{min-height:44px}
+.jdice{font:800 21px Fraunces,serif;color:#2a1a05;border:2px solid #7a5a22;border-radius:50%;min-width:56px;height:56px;display:flex;align-items:center;justify-content:center;padding:0;background:radial-gradient(circle at 32% 26%,#fff6d6,#efd18a 40%,#c79a45 74%,#8a6a2c);box-shadow:0 8px 18px #000b,0 0 22px #e8c5743d,inset 0 -6px 12px #5a3c0a66,inset 0 4px 8px #fffb;text-shadow:0 1px 0 #fff9;transition:transform .16s ease,box-shadow .2s}
+.jdice.pulse{animation:jdice .7s ease}
+.jdice.hit{color:#3d0d0d;animation:jflash .5s}
+.jdice.gain{color:#123d1d;animation:jgain .5s}
+.jzone{background:linear-gradient(180deg,#ffffff06,#ffffff01);border:1px solid #ffffff12;border-radius:14px;box-shadow:inset 0 1px 0 #ffffff0d,inset 0 -24px 34px #00000026;justify-content:center;align-items:center;align-content:center}
+.jzone.jlands{background:linear-gradient(90deg,#0000,#0000002e 18%,#0000002e 82%,#0000);border-color:#ffffff0f;box-shadow:inset 0 1px 0 #ffffff08}
+.jzone.jhand{background:linear-gradient(180deg,#ffffff0a,#ffffff02);border-color:#ffffff1f;overflow:visible;align-items:flex-end;justify-content:center;padding:8px 8px 2px;max-height:none;min-height:0}
+.jzone.jhand .hcard{width:62px;margin:0 -9px;transform-origin:50% 135%;transform:rotate(var(--rot,0deg)) translateY(var(--lift,0px));transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .2s,filter .2s}
+.jzone.jhand .hcard:hover{transform:rotate(0deg) translateY(-26px);z-index:20}
+.jzone.jhand .hcard.off{filter:grayscale(.75) brightness(.82)}
+.jzone.jhand .hcard:not(.off){box-shadow:0 0 0 1px #e8c5744d,0 8px 16px #000b,inset 0 0 0 1px #ffffff10}
+.jzone.jhand .hcard span{padding:3px 5px;font:600 10px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;background:linear-gradient(180deg,#0d141c,#070c11);color:#cbd7e3}
+.jzone.jhand .bcard{transform-origin:50% 135%;transform:rotate(var(--rot,0deg)) translateY(var(--lift,0px));margin:0 -5px;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .2s}
+.jzone .bcard{border-radius:9px;box-shadow:0 8px 18px #000b,0 1px 3px #000a,inset 0 0 0 1px #ffffff16;transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .22s,filter .2s}
+.jzone .bcard:hover{box-shadow:0 20px 34px #000e,0 0 0 2px var(--au),0 0 26px #e3b64b5c;z-index:6}
+.jzone.me .bcard.sel{outline:none;transform:translateY(-16px) rotate(-2deg);box-shadow:0 0 0 2px #f0d79a,0 0 24px #e8c5748c,0 18px 30px #000c;filter:brightness(1.06)}
+.jzone .bcard.tapped{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) rotate(90deg) scale(.86);margin:0 12px}
+.jzone .bcard.enter{animation:cardEnter .5s cubic-bezier(.2,1.4,.4,1)}
+.jzone .bcard.hit{animation:cardHit .42s}
+.jmid{background:linear-gradient(90deg,#0000,#0009 18%,#0009 82%,#0000);border-radius:12px;padding:3px 10px}
+.jstatus{color:#f0d79a;text-shadow:0 0 16px #e8c57455}
+.pmini{background:linear-gradient(180deg,#121e2a,#080e15);border-color:#ffffff1a;box-shadow:inset 0 1px 0 #ffffff12}
+.pmini .cnt{color:#f0d79a;text-shadow:0 0 10px #e8c57455}
+@media(max-height:900px){
+.jzone.jhand{min-height:96px;padding-top:10px}
+.jzone.jhand .hcard{width:48px}
+}
+.jzone .bcard,.jzone .hcard{position:relative;transform-style:preserve-3d}
+.jzone .bcard{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .16s ease-out,box-shadow .22s ease-out}
+.jzone.jhand .hcard{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) rotate(var(--rot,0deg)) translateY(var(--lift,0px));transition:transform .16s ease-out,box-shadow .22s ease-out}
+.jzone.jhand .hcard:hover{transform:perspective(900px) rotateX(0deg) rotateY(0deg) rotate(0deg) translateY(-26px)}
+.jzone .bcard::after,.jzone .hcard::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;opacity:0;transition:opacity .22s ease-out;mix-blend-mode:screen;background:radial-gradient(115% 85% at var(--mx,50%) var(--my,50%),#ffffff59,#ffffff12 30%,#0000 62%),linear-gradient(115deg,#0000 38%,#ffffff1f 48%,#0000 58%)}
+.jzone .bcard:hover::after,.jzone .hcard:hover::after{opacity:1}
+#jYouBf>.bcard:not(.sel):not(.hit):not(.enter):not(.landdrop),#jAiBf>.bcard:not(.hit):not(.enter),.jzone.jlands>.bcard:not(.enter):not(.landdrop){animation:jfloat 6.5s ease-in-out infinite;animation-delay:var(--fd,0s)}
+.jzone.jhand .hcard:not(:hover){animation:jhandfloat 5.5s ease-in-out infinite;animation-delay:var(--fd,0s)}
+.jzone .bcard.landdrop{animation:jlanddrop .48s cubic-bezier(.2,1.5,.4,1)}
+.jzone.me .bcard.lunge{animation:jlungeup .5s cubic-bezier(.3,1.2,.4,1)}
+.jzone.ai .bcard.lunge{animation:jlungedown .5s cubic-bezier(.3,1.2,.4,1)}
+.jmain.jimpact{animation:jimpact .3s cubic-bezier(.3,1.4,.5,1)}
+#jPileView .jempty{margin:20px auto}
+.pmini{cursor:pointer}
+.pmini:hover{border-color:var(--au);box-shadow:0 0 18px #e3b64b3d}
+.jgrid{grid-template-columns:minmax(0,1fr) 286px;gap:12px}
+.jmain{padding:4px;--jch:136px;--jlh:92px}
+.jplay{gap:2px}
+.jphase{margin-bottom:2px}
+.jinfo{min-height:46px}
+.jdice{min-width:44px;height:44px;font-size:18px}
+.jmid{flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:center;padding:2px 8px;min-height:0;gap:6px;margin:0}
+.jmid #jStatus{flex:0 0 auto}
+.jzone{padding:8px 10px;min-height:calc(var(--jch) + 18px)}
+.jzone .bcard{width:calc(var(--jch)*.716);aspect-ratio:745/1040;height:auto}
+.jzone.jlands{min-height:calc(var(--jlh) + 14px);padding:6px 10px}
+.jzone.jlands .bcard{width:calc(var(--jlh)*.716)}
+.jzone.jhand{min-height:0;max-height:none;padding:6px 8px 0}
+.jzone.jhand .hcard{width:clamp(84px,8.8vh,104px);margin:0 -6px}
+#jAiHand{height:50px;min-height:50px;overflow:hidden;padding:2px 8px}
+#jAiHand .bcard{width:34px;height:auto;margin:0 -4px}
+@media(max-height:1030px){
+.jmain{--jch:118px;--jlh:82px}
+.jzone.jhand .hcard{width:clamp(80px,9vh,104px)}
+}
+@media(max-height:900px){
+.jmain{--jch:100px;--jlh:72px}
+.jzone.jhand .hcard{width:clamp(68px,8.2vh,92px)}
+}
+@media(max-height:820px){
+.jmain{--jch:78px;--jlh:54px}
+.jzone{padding:5px 8px}
+.jzone.jhand .hcard{width:clamp(50px,6.8vh,68px)}
+#jAiHand{height:38px;min-height:38px}
+.jinfo{min-height:40px}
+.jdice{min-width:38px;height:38px;font-size:16px}
+}
+.jzone .bcard{transition:transform .16s ease-out,box-shadow .22s ease-out,translate .16s ease-out,filter .2s}
+.jzone .bcard:hover{translate:0 -6px}
+.jzone .bcard.tapped:hover{translate:0 0}
+.jzone .bcard .nm{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:8px 5px 3px;font:700 9.5px/1.15 'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#e7eff8;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:linear-gradient(180deg,#0000,#05090de8 58%,#05090df5);pointer-events:none;text-shadow:0 1px 2px #000}
+.jzone .bcard .pt,.jzone .bcard .tag{z-index:3}
+.jzone .bcard .pt.dmg{color:#ffb4a0;background:#3a1208cc;box-shadow:inset 0 0 0 1px #f5555544}
+.jzone .bcard.sick img{filter:brightness(.7) saturate(.8)}
+.jzone .bcard.tapped img{filter:brightness(.84) saturate(.9)}
+.jzone .bcard .pt{bottom:2px;background:#0a1119e0}
+.jzone .bcard:not(.land) .nm{padding-right:32px}
+.jmain.dense{--jch:114px;--jlh:78px}
+body.playing .jgrid{align-items:stretch}
+body.playing .jside{height:100%}
+.jzone .bcard.sick::before{content:'💤';position:absolute;left:3px;bottom:26px;z-index:3;font-size:10px;opacity:.9;pointer-events:none}
+#jYouBf,#jAiBf{flex:1 1 auto}
+.jlogbox{flex:1;min-height:140px;max-height:none}
+.jzone .bcard .tokface{aspect-ratio:745/1040;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:7px 5px;text-align:center;background:radial-gradient(circle at 50% 28%,var(--tk,#556),#0a0f15 68%);color:#f2f7fc;overflow:hidden}
+.jzone .bcard .tokface .tktop{font:700 9.5px/1.15 'Hanken Grotesk',system-ui,-apple-system,sans-serif;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 3px #000;background:#00000066;padding:2px 5px;border-radius:4px}
+.jzone .bcard .tokface .tkmid{font-size:20px;line-height:1;opacity:.92;filter:drop-shadow(0 2px 4px #0009)}
+.jzone .bcard .tokface .tkpt{font:800 12px/1 'Hanken Grotesk',system-ui,-apple-system,sans-serif;padding:2px 6px;border-radius:5px;background:#00000055;box-shadow:inset 0 0 0 1px #ffffff33}
+.jzone .bcard .tokface .tksub{font:700 7px/1 'Hanken Grotesk',system-ui,-apple-system,sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.65}
+@media(max-height:820px){
+.jzone .bcard .nm{font-size:8px;padding:6px 4px 2px}
+.jzone .bcard:not(.land) .nm{padding-right:24px}
+.jzone .bcard .pt{font-size:8.5px;padding:0 3px}
+.jzone .bcard.sick::before{font-size:8px;bottom:20px}
+}
+
+/* ===== bloque 1 ===== */
+#jugar.playing .jgrid{grid-template-columns:minmax(0,1fr) 286px;gap:14px;align-items:stretch}
+#jugar.playing .jmain{
+  padding:16px; border-radius:20px; border:1px solid #a98a5145;
+  background:
+    radial-gradient(ellipse at 50% 48%,#294638 0%,#1c382e 48%,#14291f 100%);
+  box-shadow:inset 0 0 0 5px #0a1510, inset 0 0 0 6px #b99a5a38,
+    inset 0 0 80px #050b08a8,0 18px 50px #0009;
+}
+#jugar.playing .jmain:before{
+  inset:9px;border:1px solid #d6bc7950;border-radius:13px;
+  background:
+   linear-gradient(90deg,transparent 49.85%,#d6bc7918 50%,transparent 50.15%),
+   radial-gradient(ellipse at center,#d6bc7909,transparent 62%),
+   repeating-linear-gradient(135deg,#ffffff04 0 1px,transparent 1px 12px);
+}
+#jugar.playing .jphase{padding:0 4px 10px;border-bottom:1px solid #d6bc792b}
+#jugar.playing .jphase .ph{background:#09150f9c;border-color:#d6bc7930;color:#c1c9bc}
+#jugar.playing .jphase .ph.on{background:linear-gradient(#f6df9e,#c59b4c);color:#241b0b}
+#jugar.playing .jbody{grid-template-columns:64px minmax(0,1fr);gap:12px}
+#jugar.playing .jpiles{justify-content:space-around;gap:18px;padding:10px 0}
+#jugar.playing .pstack{padding:8px 5px;border:1px solid #d6bc7924;border-radius:12px;background:#08140f80}
+#jugar.playing .plabel{color:#d8c28f;opacity:1;font-size:9px}
+#jugar.playing .pmini{background:#09150f;border-color:#d6bc7933;color:#d9dfd3;min-height:31px}
+#jugar.playing .jplay{gap:7px;padding:3px 0}
+#jugar.playing .jinfo{min-height:48px;padding:2px 8px}
+#jugar.playing .jinfo.ai{justify-content:flex-start}
+#jugar.playing .jinfo.me{justify-content:flex-end}
+#jugar.playing .jmeta{color:#d2d9cd;font-size:11px}
+#jugar.playing .jzone{
+ min-height:132px;padding:12px;gap:9px;justify-content:center;align-content:center;
+ background:linear-gradient(145deg,#07140f66,#0a1b1366);
+ border:1px solid #c4ad7040;border-radius:13px;
+ box-shadow:inset 0 1px #ffffff0c,inset 0 -18px 34px #0002;
+}
+#jugar.playing .jzone:before{
+ content:attr(aria-label);position:absolute;top:6px;left:10px;
+ color:#d4c28f;font:700 9px 'Hanken Grotesk',sans-serif;
+ letter-spacing:.13em;text-transform:uppercase;opacity:.7;pointer-events:none
+}
+#jugar.playing .jzone.jhand{min-height:150px;padding:14px 14px 5px;overflow:visible}
+#jugar.playing .jzone.jlands{min-height:86px;background:#09170f66;border-color:#d6bc792b}
+#jugar.playing .jzone .bcard{width:clamp(56px,5.1vw,78px)}
+#jugar.playing .jzone.jlands .bcard{width:clamp(43px,3.8vw,58px)}
+#jugar.playing .jzone.jhand .hcard{width:clamp(54px,4.5vw,70px);margin:0 -7px}
+#jugar.playing .jzone .bcard img,#jugar.playing .jzone .hcard img{
+ width:100%;height:auto;aspect-ratio:0.716;object-fit:contain;background:#080d13
+}
+#jugar.playing .jmid{min-height:36px;margin:1px 0;padding:5px 0;border-top:1px solid #d6bc791f;border-bottom:1px solid #d6bc791f}
+#jugar.playing .jstatus{color:#f0d99d}
+#jugar.playing .jdice{width:54px;height:54px;min-width:54px;font-size:21px}
+#jugar.playing .jside{
+ border:1px solid #a98a5145;border-radius:18px;padding:13px;
+ background:linear-gradient(180deg,#18231f,#0c1512);
+ box-shadow:inset 0 0 0 1px #ffffff08,0 12px 34px #0006;
+}
+#jugar.playing .jcmdbox{background:#101d17;border-color:#d6bc7950;padding:11px}
+#jugar.playing .jlogbox{background:#080f0d;border-color:#d6bc7928;max-height:min(430px,48vh)}
+#jugar.playing .jblockpanel{border-color:#a98a5145;background:#101d17}
+@media(max-width:1100px){
+#jugar.playing .jgrid{grid-template-columns:minmax(0,1fr) 250px}
+#jugar.playing .jbody{grid-template-columns:52px minmax(0,1fr)}
+#jugar.playing .jzone{min-height:112px}
+#jugar.playing .jzone.jhand{min-height:124px}
+}
+@media(max-width:820px){
+#jugar.playing .jgrid{grid-template-columns:1fr}
+#jugar.playing .jbody{grid-template-columns:42px minmax(0,1fr);gap:7px}
+#jugar.playing .jmain{padding:10px}
+#jugar.playing .jzone{min-height:90px;padding:7px;gap:5px}
+#jugar.playing .jzone.jhand{min-height:106px;padding:8px 5px 3px}
+#jugar.playing .jzone .bcard{width:clamp(38px,8vw,58px)}
+#jugar.playing .jzone.jlands .bcard{width:clamp(32px,6vw,46px)}
+#jugar.playing .jzone.jhand .hcard{width:clamp(38px,7.5vw,56px);margin:0 -5px}
+#jugar.playing .jdice{width:44px;height:44px;min-width:44px;font-size:18px}
+}
+@media(max-width:520px){
+#jugar.playing .jbody{grid-template-columns:34px minmax(0,1fr);gap:5px}
+#jugar.playing .pstack{padding:5px 2px}
+#jugar.playing .pmini{font-size:9px;min-height:27px}
+#jugar.playing .jphase .ph{font-size:8px;padding:4px 6px}
+#jugar.playing .jzone.jhand .hcard{margin:0 -7px}
+#jugar.playing .jzone{min-height:78px}
+#jugar.playing .jzone.jhand{min-height:94px}
+}
+#jugar.playing .jzone .bcard{height:auto!important;aspect-ratio:0.716;overflow:visible}
+#jugar.playing .jzone .bcard>img,#jugar.playing .jzone .hcard>img{display:block;width:100%!important;height:100%!important;aspect-ratio:0.716;object-fit:contain!important;object-position:center;background:#080d13;border-radius:5px}
+#jugar.playing .jzone .bcard .nm{max-width:100%;}
+#jugar.playing .jzone{min-height:94px;padding:9px 8px;gap:6px;overflow:visible}
+#jugar.playing .jzone.jhand{min-height:112px;padding:10px 10px 4px}
+#jugar.playing .jzone .bcard{width:48px!important;height:auto!important;aspect-ratio:.716;flex:0 0 auto}
+#jugar.playing .jzone.jlands .bcard{width:40px!important}
+#jugar.playing .jzone.jhand .hcard{width:48px!important;height:auto!important;aspect-ratio:.716;margin:0 -5px;flex:0 0 auto}
+#jugar.playing .jzone .bcard>img,#jugar.playing .jzone .hcard>img{width:100%!important;height:100%!important;aspect-ratio:.716;object-fit:contain!important;object-position:center;display:block}
+#jugar.playing .jzone .bcard .nm{font-size:8px}
+@media(max-width:820px){
+#jugar.playing .jzone{min-height:78px;padding:7px 5px;gap:4px}
+#jugar.playing .jzone.jhand{min-height:94px;padding:7px 5px 3px}
+#jugar.playing .jzone .bcard{width:40px!important}
+#jugar.playing .jzone.jlands .bcard{width:34px!important}
+#jugar.playing .jzone.jhand .hcard{width:40px!important;margin:0 -5px}
+}
+@media(max-width:520px){
+#jugar.playing .jzone .bcard{width:36px!important}
+#jugar.playing .jzone.jlands .bcard{width:31px!important}
+#jugar.playing .jzone.jhand .hcard{width:37px!important;margin:0 -6px}
+}
+#jugar.playing .jzone.jlands{
+  display:flex;flex-flow:row wrap;align-items:center;justify-content:flex-start;align-content:center;
+  min-height:76px;padding:8px 10px 7px 10px;gap:6px;
+  background:linear-gradient(145deg,#07130eaa,#09170fbb 68%,#050d0aee);
+  border-color:#d6bc7940;box-shadow:inset 0 0 0 1px #ffffff08,inset 0 0 24px #0008;
+}
+#jugar.playing .jzone.jlands:before{top:4px;left:9px;font-size:8px;opacity:.62}
+#jugar.playing .jzone.jlands .bcard{margin-top:8px}
+@media(max-width:820px){
+#jugar.playing .jzone.jlands{min-height:64px;padding:7px 6px;gap:4px}
+}
+@media(max-width:520px){
+#jugar.playing .jzone.jlands{min-height:58px}
+}
+
+/* ===== bloque 2 ===== */
+#jugar.playing .jgrid{grid-template-columns:minmax(0,1fr) 286px;gap:16px;align-items:stretch}
+#jugar.playing .jmain{padding:16px;overflow:visible;min-width:0}
+#jugar.playing .jbody{grid-template-columns:64px minmax(0,1fr);gap:14px}
+#jugar.playing .jplay{display:flex;flex-direction:column;gap:7px;min-width:0}
+#jugar.playing .jphase{margin:0 0 5px;padding:2px 4px 9px}
+#jugar.playing .jinfo{min-height:38px;padding:0 8px}
+#jugar.playing .jinfo .jdice{width:44px;height:44px;min-width:44px;font-size:18px}
+#jugar.playing .jzone{
+  position:relative;display:flex;flex-flow:row wrap;align-items:center;align-content:center;
+  justify-content:center;gap:8px;min-width:0;min-height:142px;padding:12px 14px;
+  overflow:visible;border-radius:13px;
+}
+#jugar.playing .jzone .bcard{
+  position:relative;display:block;flex:0 0 68px;width:68px!important;min-width:68px;max-width:68px;
+  height:auto!important;aspect-ratio:0.716;overflow:hidden;margin:0!important;
+}
+#jugar.playing .jzone .bcard>img{
+  display:block;width:100%!important;height:100%!important;aspect-ratio:0.716;
+  object-fit:contain!important;object-position:center;background:#080d13;
+}
+#jugar.playing .jzone .bcard .nm{font-size:8px;line-height:1.1}
+#jugar.playing .jzone.jlands{
+  position:relative;display:flex;flex-flow:row wrap;align-items:center;align-content:center;
+  justify-content:center;gap:7px;min-height:78px;padding:8px 68px;
+  background:linear-gradient(90deg,#0000,#00000048 12%,#00000048 88%,#0000);
+  border-color:#d6bc7940;
+}
+#jugar.playing .jzone.jlands .bcard{
+  flex:0 0 48px;width:48px!important;min-width:48px;max-width:48px;
+  height:auto!important;aspect-ratio:.716;margin:0!important;
+}
+#jugar.playing .jzone.jlands>.jcmdslot{
+  display:flex!important;position:absolute!important;top:50%!important;right:12px!important;left:auto!important;
+  transform:translateY(-50%)!important;z-index:8;align-items:center;justify-content:center;
+  width:42px!important;min-width:42px!important;height:59px!important;min-height:59px!important;
+  margin:0!important;padding:2px!important;border:1px solid #d6bc79a0;border-radius:5px;
+  background:#07110c;box-shadow:0 3px 10px #000b;overflow:visible;
+}
+#jugar.playing .jzone.jlands>.jcmdslot .cmdcard{display:flex;width:100%;height:100%;align-items:center;justify-content:center;gap:0}
+#jugar.playing .jzone.jlands>.jcmdslot .cmdcard img{
+  display:block;width:100%!important;height:100%!important;max-height:none!important;
+  aspect-ratio:.716;object-fit:contain!important;border:0;border-radius:3px;cursor:zoom-in;
+}
+#jugar.playing .jzone.jlands>.jcmdslot .cmdname,
+#jugar.playing .jzone.jlands>.jcmdslot .cmdempty{display:none!important}
+#jugar.playing .jzone.jhand{
+  min-height:112px;max-height:none;padding:10px 12px 5px;overflow:visible;
+  align-items:flex-end;justify-content:center;gap:2px;
+}
+#jugar.playing .jzone.jhand .hcard{
+  position:relative;flex:0 0 68px;width:68px!important;min-width:68px;max-width:68px;
+  height:auto!important;aspect-ratio:.716;margin:0 -5px!important;overflow:hidden;
+}
+#jugar.playing .jzone.jhand .hcard>img{
+  display:block;width:100%!important;height:100%!important;aspect-ratio:.716;object-fit:contain!important;
+}
+#jugar.playing .jmid{min-height:44px;margin:2px 0;padding:7px 10px;gap:8px}
+#jugar.playing .jside{padding:14px}
+@media(max-width:1100px){
+#jugar.playing .jgrid{grid-template-columns:minmax(0,1fr) 250px;gap:12px}
+#jugar.playing .jzone{min-height:128px;gap:6px;padding:10px}
+#jugar.playing .jzone .bcard,#jugar.playing .jzone.jhand .hcard{flex-basis:60px;width:60px!important;min-width:60px;max-width:60px}
+#jugar.playing .jzone.jlands .bcard{flex-basis:43px;width:43px!important;min-width:43px;max-width:43px}
+#jugar.playing .jzone.jlands{min-height:70px;padding-left:8px;padding-right:62px}
+#jugar.playing .jzone.jlands>.jcmdslot{width:38px!important;min-width:38px!important;height:53px!important;min-height:53px!important}
+#jugar.playing .jzone.jhand{min-height:102px}
+}
+@media(max-width:820px){
+#jugar.playing .jgrid{grid-template-columns:1fr}
+#jugar.playing .jmain{padding:10px}
+#jugar.playing .jbody{grid-template-columns:42px minmax(0,1fr);gap:8px}
+#jugar.playing .jzone{min-height:112px;padding:8px;gap:5px}
+#jugar.playing .jzone .bcard,#jugar.playing .jzone.jhand .hcard{flex-basis:54px;width:54px!important;min-width:54px;max-width:54px}
+#jugar.playing .jzone.jlands .bcard{flex-basis:38px;width:38px!important;min-width:38px;max-width:38px}
+#jugar.playing .jzone.jlands{min-height:64px;padding:7px 54px 7px 7px}
+#jugar.playing .jzone.jlands>.jcmdslot{right:8px!important;width:34px!important;min-width:34px!important;height:48px!important;min-height:48px!important}
+#jugar.playing .jzone.jhand{min-height:92px;padding:7px 5px 3px}
+#jugar.playing .jmid{min-height:38px}
+}
+@media(max-width:520px){
+#jugar.playing .jbody{grid-template-columns:34px minmax(0,1fr);gap:5px}
+#jugar.playing .jzone{min-height:96px;padding:6px;gap:4px}
+#jugar.playing .jzone .bcard,#jugar.playing .jzone.jhand .hcard{flex-basis:46px;width:46px!important;min-width:46px;max-width:46px}
+#jugar.playing .jzone.jlands .bcard{flex-basis:32px;width:32px!important;min-width:32px;max-width:32px}
+#jugar.playing .jzone.jlands{min-height:56px;padding-right:46px}
+#jugar.playing .jzone.jlands>.jcmdslot{width:29px!important;min-width:29px!important;height:41px!important;min-height:41px!important}
+#jugar.playing .jzone.jhand{min-height:82px}
+}
+
+/* ===== bloque 3 ===== */
+#jugar.playing .jplay{
+  position:relative;
+  gap:8px;
+  padding:0;
+}
+#jugar.playing .jinfo{
+  position:absolute;
+  z-index:8;
+  min-height:0!important;
+  height:32px;
+  padding:0 5px!important;
+  gap:8px;
+  pointer-events:none;
+}
+#jugar.playing .jinfo.ai{top:5px;right:8px;left:auto;justify-content:flex-end}
+#jugar.playing .jinfo.me{bottom:5px;left:8px;right:auto;justify-content:flex-start}
+#jugar.playing .jdice{
+  width:42px!important;height:42px!important;min-width:42px!important;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px!important;
+}
+#jugar.playing .jmeta{font-size:10px}
+#jugar.playing #jAiHand,
+#jugar.playing #jYouHand{
+  display:flex!important;
+  flex-flow:row nowrap;
+  align-items:flex-start;
+  justify-content:center;
+  min-height:104px!important;
+  height:104px;
+  padding:8px 10px 5px!important;
+  gap:5px;
+  overflow:visible!important;
+  border:1px solid #d6bc7940;
+  border-radius:12px;
+  background:linear-gradient(180deg,#07130edc,#0b1b14b8);
+}
+#jugar.playing #jAiHand:before{content:"MANO · IA"}
+#jugar.playing #jYouHand:before{content:"TU MANO"}
+#jugar.playing #jAiHand .bcard{
+  display:block!important;
+  position:relative!important;
+  flex:0 0 58px!important;
+  width:58px!important;height:81px!important;
+  min-width:58px;
+  aspect-ratio:0.716;
+  margin:0!important;
+  border:1px solid #d6bc7970;
+  border-radius:6px;
+  box-shadow:0 4px 10px #0008;
+  background-position:center!important;
+  background-size:cover!important;
+  transform:none!important;
+}
+#jugar.playing #jYouHand .hcard{
+  flex:0 0 58px!important;
+  width:58px!important;height:81px!important;
+  margin:0!important;
+}
+#jugar.playing #jYouHand .hcard img{
+  width:100%!important;height:100%!important;
+  object-fit:contain!important;aspect-ratio:0.716;
+}
+#jugar.playing #jAiHand:before,
+#jugar.playing #jYouHand:before{
+  position:absolute;left:10px;top:4px;
+  color:#d8c28f;font:700 8px 'Hanken Grotesk',sans-serif;
+  letter-spacing:.12em;opacity:.75;pointer-events:none;
+}
+#jugar.playing .jzone.jlands{
+  position:relative;
+  min-height:76px!important;
+  padding:8px 62px 7px!important;
+  display:flex;
+  flex-flow:row nowrap;
+  align-items:center;
+  justify-content:center!important;
+  align-content:center;
+  gap:7px;
+  overflow:visible!important;
+}
+#jugar.playing .jzone.jlands .bcard{
+  flex:0 0 50px!important;
+  width:50px!important;height:auto!important;
+  aspect-ratio:0.716;
+  margin:0!important;
+}
+#jugar.playing #jAiBf,
+#jugar.playing #jYouBf{
+  min-height:145px!important;
+  padding:12px 10px!important;
+  gap:8px;
+  align-content:center;
+}
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{
+  flex:0 0 62px!important;
+  width:62px!important;height:auto!important;
+  aspect-ratio:0.716;
+}
+#jugar.playing .jzone .bcard>img{
+  display:block;width:100%!important;height:100%!important;
+  aspect-ratio:0.716;object-fit:contain!important;
+}
+#jugar.playing .jmid{
+  min-height:30px!important;
+  margin:0!important;padding:3px 0!important;
+  border-top:1px solid #d6bc7920;
+  border-bottom:1px solid #d6bc7920;
+}
+@media(max-width:1100px){
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:56px!important;width:56px!important}
+#jugar.playing #jAiHand .bcard{flex-basis:50px!important;width:50px!important;height:70px!important;min-width:50px}
+#jugar.playing #jYouHand .hcard{flex-basis:50px!important;width:50px!important;height:70px!important}
+}
+@media(max-width:820px){
+#jugar.playing .jplay{gap:6px;padding:0}
+#jugar.playing #jAiHand,#jugar.playing #jYouHand{min-height:84px!important;height:84px;padding:7px 5px 3px!important}
+#jugar.playing #jAiHand .bcard{flex-basis:42px!important;width:42px!important;height:59px!important;min-width:42px}
+#jugar.playing #jYouHand .hcard{flex-basis:42px!important;width:42px!important;height:59px!important}
+#jugar.playing .jzone.jlands{min-height:66px!important;padding-left:48px!important;padding-right:52px!important}
+#jugar.playing .jzone.jlands .bcard{flex-basis:40px!important;width:40px!important}
+#jugar.playing #jAiBf,#jugar.playing #jYouBf{min-height:112px!important}
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:48px!important;width:48px!important}
+}
+@media(max-width:520px){
+#jugar.playing .jplay{padding:0}
+#jugar.playing #jAiHand .bcard{flex-basis:35px!important;width:35px!important;height:49px!important;min-width:35px}
+#jugar.playing #jYouHand .hcard{flex-basis:35px!important;width:35px!important;height:49px!important}
+#jugar.playing .jzone.jlands .bcard{flex-basis:32px!important;width:32px!important}
+#jugar.playing #jAiBf,#jugar.playing #jYouBf{min-height:94px!important}
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:40px!important;width:40px!important}
+}
+
+/* ===== bloque 4 ===== */
+#jugar.playing .jplay{gap:3px!important}
+#jugar.playing #jAiBf,
+#jugar.playing #jYouBf{
+  min-height:132px!important;
+  padding:5px 6px!important;
+  gap:4px!important;
+  row-gap:3px!important;
+}
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{
+  flex:0 0 76px!important;
+  width:76px!important;
+  height:auto!important;
+  aspect-ratio:0.716!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard>img{
+  display:block!important;
+  width:100%!important;height:100%!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+#jugar.playing .jzone .bcard{
+  background-repeat:no-repeat!important;
+  background-position:center!important;
+  background-size:contain!important;
+}
+#jugar.playing #jAiHand,
+#jugar.playing #jYouHand{
+  min-height:94px!important;height:94px!important;
+  padding:5px 8px 3px!important;
+  gap:4px!important;
+}
+#jugar.playing #jAiHand .bcard{
+  flex:0 0 66px!important;width:66px!important;
+  height:92px!important;min-width:66px!important;
+  aspect-ratio:0.716!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+  background-size:contain!important;
+}
+#jugar.playing #jYouHand .hcard{
+  flex:0 0 66px!important;width:66px!important;
+  height:92px!important;min-width:66px!important;
+  margin:0!important;
+}
+#jugar.playing #jYouHand .hcard img{
+  display:block!important;width:100%!important;height:100%!important;
+  object-fit:contain!important;object-position:center!important;
+}
+#jugar.playing .jzone.jlands{
+  min-height:68px!important;
+  padding-top:3px!important;padding-bottom:3px!important;
+  gap:4px!important;
+}
+#jugar.playing .jzone.jlands .bcard{
+  flex:0 0 54px!important;width:54px!important;
+  height:auto!important;aspect-ratio:0.716!important;
+  background-size:contain!important;
+}
+#jugar.playing .jzone.jlands .bcard>img{
+  display:block!important;width:100%!important;height:100%!important;
+  object-fit:contain!important;object-position:center!important;
+}
+#jugar.playing .jmid{
+  min-height:24px!important;
+  padding:1px 0!important;margin:0!important;
+}
+@media(max-width:1100px){
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:68px!important;width:68px!important}
+#jugar.playing #jAiHand .bcard{flex-basis:58px!important;width:58px!important;height:81px!important;min-width:58px!important}
+#jugar.playing #jYouHand .hcard{flex-basis:58px!important;width:58px!important;height:81px!important;min-width:58px!important}
+}
+@media(max-width:820px){
+#jugar.playing #jAiBf,#jugar.playing #jYouBf{min-height:112px!important;padding:4px!important;gap:3px!important}
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:56px!important;width:56px!important}
+#jugar.playing #jAiHand,#jugar.playing #jYouHand{min-height:82px!important;height:82px!important}
+#jugar.playing #jAiHand .bcard{flex-basis:48px!important;width:48px!important;height:67px!important;min-width:48px!important}
+#jugar.playing #jYouHand .hcard{flex-basis:48px!important;width:48px!important;height:67px!important;min-width:48px!important}
+#jugar.playing .jzone.jlands .bcard{flex-basis:42px!important;width:42px!important}
+}
+@media(max-width:520px){
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:46px!important;width:46px!important}
+#jugar.playing #jAiHand .bcard{flex-basis:38px!important;width:38px!important;height:53px!important;min-width:38px!important}
+#jugar.playing #jYouHand .hcard{flex-basis:38px!important;width:38px!important;height:53px!important;min-width:38px!important}
+#jugar.playing .jzone.jlands .bcard{flex-basis:34px!important;width:34px!important}
+}
+
+/* ===== bloque 5 ===== */
+body.arena-mat-on #jTable .jplay{position:relative!important}
+body.arena-mat-on #jTable #jAiBf>.bcard,
+body.arena-mat-on #jTable #jYouBf>.bcard{
+  flex:0 0 77.5px!important;
+  width:77.5px!important;
+  min-width:77.5px!important;
+  max-width:77.5px!important;
+}
+@media(max-width:1100px){
+body.arena-mat-on #jTable #jAiBf>.bcard,
+  body.arena-mat-on #jTable #jYouBf>.bcard{
+    flex-basis:75px!important;width:75px!important;min-width:75px!important;max-width:75px!important;
+  }
+}
+@media(max-width:820px){
+body.arena-mat-on #jTable #jAiBf>.bcard,
+  body.arena-mat-on #jTable #jYouBf>.bcard{
+    flex-basis:67.5px!important;width:67.5px!important;min-width:67.5px!important;max-width:67.5px!important;
+  }
+}
+@media(max-width:520px){
+body.arena-mat-on #jTable #jAiBf>.bcard,
+  body.arena-mat-on #jTable #jYouBf>.bcard{
+    flex-basis:57.5px!important;width:57.5px!important;min-width:57.5px!important;max-width:57.5px!important;
+  }
+}
+
+/* ===== bloque 6 ===== */
+body.arena-mat-on #jTable #jAiHand{
+  display:flex!important;
+  position:relative!important;
+  visibility:visible!important;
+  opacity:1!important;
+  flex-flow:row nowrap!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  gap:0!important;
+  width:100%!important;
+  min-height:116px!important;
+  height:116px!important;
+  max-height:none!important;
+  padding:18px 12px 3px!important;
+  margin:0!important;
+  overflow:visible!important;
+  border:1px solid #8eb9d566!important;
+  border-radius:12px!important;
+  background:linear-gradient(180deg,#07131be8,#0b1b14b8)!important;
+  box-sizing:border-box!important;
+  z-index:5!important;
+}
+body.arena-mat-on #jTable #jAiHand:before{
+  content:"MANO · CPU"!important;
+  position:absolute!important;left:10px!important;right:auto!important;top:4px!important;
+  color:#b9d5e9!important;font:700 8px 'Hanken Grotesk',sans-serif!important;
+  letter-spacing:.12em!important;opacity:.85!important;pointer-events:none!important;
+}
+body.arena-mat-on #jTable #jAiHand>.bcard{
+  display:block!important;
+  position:relative!important;
+  flex:0 0 58px!important;
+  width:58px!important;height:81px!important;
+  min-width:58px!important;max-width:58px!important;
+  aspect-ratio:745/1040!important;
+  margin:0 -9px!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border:1px solid #9ab4c7a8!important;
+  border-radius:7px!important;
+  box-shadow:0 5px 12px #000b!important;
+  background-position:center!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+  transform:rotate(calc(var(--rot,0deg) * -1)) translateY(calc(var(--lift,0px) * -1))!important;
+  transform-origin:50% 135%!important;
+  transition:transform .22s ease,filter .2s!important;
+}
+body.arena-mat-on #jTable #jAiHand>.bcard:hover{
+  transform:rotate(0deg) translateY(-5px)!important;z-index:20!important;
+}
+@media(max-width:820px){
+body.arena-mat-on #jTable #jAiHand{min-height:94px!important;height:94px!important;padding-top:15px!important}
+body.arena-mat-on #jTable #jAiHand>.bcard{
+    flex-basis:48px!important;width:48px!important;min-width:48px!important;max-width:48px!important;
+    height:67px!important;margin-left:-8px!important;margin-right:-8px!important;
+  }
+}
+@media(max-width:520px){
+body.arena-mat-on #jTable #jAiHand{min-height:82px!important;height:82px!important;padding-top:14px!important}
+body.arena-mat-on #jTable #jAiHand>.bcard{
+    flex-basis:38px!important;width:38px!important;min-width:38px!important;max-width:38px!important;
+    height:53px!important;margin-left:-7px!important;margin-right:-7px!important;
+  }
+}
+
+/* ===== bloque 7 ===== */
+body.arena-mat-on #jTable #jAiHand{
+  display:flex!important; visibility:visible!important; opacity:1!important;
+  position:relative!important; flex-direction:row!important; flex-wrap:nowrap!important;
+  align-items:flex-start!important; justify-content:center!important;
+  min-height:116px!important; height:116px!important; max-height:none!important;
+  padding:18px 12px 3px!important; margin:0!important; overflow:visible!important;
+  box-sizing:border-box!important;
+}
+body.arena-mat-on #jTable #jAiHand>.bcard{
+  display:block!important; visibility:visible!important; opacity:1!important;
+  flex:0 0 58px!important; width:58px!important; min-width:58px!important; max-width:58px!important;
+  height:81px!important; margin:0 -9px!important;
+  background-size:cover!important; background-position:center!important; background-repeat:no-repeat!important;
+  transform:rotate(calc(var(--rot,0deg) * -1)) translateY(calc(var(--lift,0px) * -1))!important;
+  transform-origin:50% 135%!important;
+}
+@media(max-width:820px){
+body.arena-mat-on #jTable #jAiHand{min-height:94px!important;height:94px!important;padding-top:15px!important}
+body.arena-mat-on #jTable #jAiHand>.bcard{flex-basis:48px!important;width:48px!important;min-width:48px!important;max-width:48px!important;height:67px!important;margin-left:-8px!important;margin-right:-8px!important}
+}
+@media(max-width:520px){
+body.arena-mat-on #jTable #jAiHand{min-height:82px!important;height:82px!important;padding-top:14px!important}
+body.arena-mat-on #jTable #jAiHand>.bcard{flex-basis:38px!important;width:38px!important;min-width:38px!important;max-width:38px!important;height:53px!important;margin-left:-7px!important;margin-right:-7px!important}
+}
+
+/* ===== bloque 10 ===== */
+body.arena-mat-on #jugar,
+body.arena-mat-on #jTable,
+body.arena-mat-on .jgrid,
+body.arena-mat-on .jmain,
+body.arena-mat-on .jbody,
+body.arena-mat-on .jplayer-zone,
+body.arena-mat-on .jplayer-cards,
+body.arena-mat-on .jplayer-utility,
+body.arena-mat-on .jzone,
+body.arena-mat-on .jmid{
+  background:transparent!important;border-color:transparent!important;box-shadow:none!important;
+}
+body.arena-mat-on .jrail{
+  background:linear-gradient(180deg,#0b1620d6,#06101aeb)!important;
+  border:1px solid #ffffff24!important;border-radius:16px!important;
+  box-shadow:0 18px 44px #000a!important;
+  -webkit-backdrop-filter:blur(9px) saturate(1.06);backdrop-filter:blur(9px) saturate(1.06);
+}
+body.arena-mat-on #jTable .jmain{
+  background:transparent!important;border-color:transparent!important;box-shadow:none!important;
+}
+body.arena-mat-on #jTable .jzone,
+body.arena-mat-on #jTable .jplayer-cards,
+body.arena-mat-on #jTable .jplayer-zone,
+body.arena-mat-on #jTable .jbody,
+body.arena-mat-on #jTable .jgrid{
+  background:transparent!important;box-shadow:none!important;border-color:transparent!important;
+}
+body.arena-mat-on #jTable .jbody{padding-top:4px!important}
+body.arena-mat-on #jTable .jzone .bcard{
+  border:0!important;border-radius:7px!important;background-color:#08111a!important;
+  aspect-ratio:745/1040!important;
+  box-shadow:0 12px 22px #000b,0 2px 6px #0008,inset 0 0 0 1px #ffffff1f!important;
+}
+body.arena-mat-on #jTable .jzone .bcard>img{
+  width:100%!important;height:100%!important;object-fit:cover!important;
+  border-radius:7px!important;display:block!important;
+  /* recorta el marco y deja solo la ilustración, como en Arena */
+  transform:scale(2.7);transform-origin:50% 12%;
+}
+body.arena-mat-on #jTable .jzone .bcard .nm{
+  display:block!important;position:absolute!important;
+  left:0!important;right:0!important;top:0!important;bottom:auto!important;
+  margin:0!important;padding:2px 4px 8px!important;
+  background:linear-gradient(180deg,#04080cf2,#04080ca8 58%,#04080c00)!important;
+  color:#f2f7fb!important;font:700 9px/1.25 'Hanken Grotesk',system-ui,-apple-system,sans-serif!important;
+  letter-spacing:0!important;text-align:left!important;text-transform:none!important;
+  text-shadow:0 1px 2px #000!important;border-radius:7px 7px 0 0!important;
+}
+body.arena-mat-on #jTable .jzone .bcard .pt{
+  position:absolute!important;right:3px!important;bottom:3px!important;left:auto!important;top:auto!important;
+  background:#0a141df2!important;color:#fff!important;
+  border:1px solid #ffffff42!important;border-radius:999px!important;
+  padding:0 5px!important;font:800 9.5px/1.6 'Hanken Grotesk',system-ui,sans-serif!important;
+  box-shadow:0 2px 7px #000b!important;text-shadow:none!important;
+}
+body.arena-mat-on #jTable .jzone .bcard .pt.dmg{
+  background:#3a0f12f2!important;color:#ffd7d7!important;border-color:#ff7b7b66!important;
+}
+body.arena-mat-on #jTable .jzone .bcard .kws{
+  position:absolute!important;left:3px!important;right:3px!important;
+  bottom:22px!important;top:auto!important;z-index:4;
+  display:flex!important;flex-wrap:wrap!important;gap:2px!important;
+  align-content:flex-end!important;max-height:50px;overflow:hidden;pointer-events:none;
+}
+body.arena-mat-on #jTable .jzone .bcard .kw{
+  font:700 8px/1.4 'Hanken Grotesk',system-ui,sans-serif!important;
+  background:#07150ef2!important;border:1px solid #d8bd7866!important;border-radius:4px!important;
+  padding:1px 4px!important;color:#f6e6bb!important;letter-spacing:.01em!important;
+  text-transform:none!important;max-width:none!important;overflow:visible!important;
+  white-space:nowrap;box-shadow:0 1px 3px #0009!important;
+}
+body.arena-mat-on #jTable .jzone .bcard .kw.more{color:#d6c9a0!important;opacity:.9}
+body.arena-mat-on #jTable .jzone .bcard.land .nm{background:linear-gradient(180deg,#020a0ae6,#020a0a99 55%,#020a0a00)!important}
+body.arena-mat-on #jTable .jzone .bcard:not([style*="background"]){background:linear-gradient(160deg,#233240,#0b141d)!important}
+body.arena-mat-on #jTable .jzone .bcard>img{background:linear-gradient(160deg,#233240,#0b141d)}
+body.arena-mat-on #jTable .jzone.jhand .hcard{background:linear-gradient(160deg,#233240,#0b141d)!important}
+body.arena-mat-on #jTable .jplayer-utility .jinfo .jdice{
+  width:54px!important;height:54px!important;min-width:54px!important;border-radius:50%!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;padding:0!important;
+  font:800 21px/1 Fraunces,serif!important;color:#f6eeda!important;
+  background:radial-gradient(circle at 38% 28%,#20313f,#070e15 72%)!important;
+  border:2px solid #c9a55fcc!important;
+  box-shadow:0 0 0 4px #0009,0 12px 26px #000c,inset 0 0 16px #000!important;
+  text-shadow:0 1px 3px #000!important;
+}
+body.arena-mat-on #jTable .jplayer-ai .jdice{border-color:#7fa8c9d9!important}
+body.arena-mat-on #jTable .jplayer-you .jdice{border-color:#c9a55fcc!important}
+body.arena-mat-on .jplayer-you .am-id img{border-color:#c9a55f66}
+body.arena-mat-on .jempty{
+  color:#ffffff59!important;font:600 10px/1.4 'Hanken Grotesk',system-ui,sans-serif!important;
+  letter-spacing:.18em!important;text-transform:uppercase!important;
+}
+body.arena-mat-on .jstatus{color:#f0dba8cc!important;text-shadow:0 1px 3px #000a!important}
+
+/* ===== bloque 16 ===== */
+body.arena-mat-on #jTable .jzone .bcard{
+  overflow:hidden!important;
+  aspect-ratio:745/1040!important;
+}
+body.arena-mat-on #jTable .jzone .bcard>img{
+  display:block!important;
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  transform:none!important;
+  border-radius:7px!important;
+}
+
+/* ===== bloque 17 ===== */
+body.arena-mat-on #jTable #jAiHand,
+body.arena-mat-on #jTable #jYouHand{
+  min-height:132px!important;height:132px!important;max-height:none!important;
+  padding-top:23px!important;padding-bottom:5px!important;overflow:visible!important;
+}
+body.arena-mat-on #jTable #jAiHand>.bcard{
+  flex:0 0 76px!important;width:76px!important;min-width:76px!important;max-width:76px!important;
+  height:106px!important;margin-left:-12px!important;margin-right:-12px!important;
+}
+body.arena-mat-on #jTable #jYouHand>.hcard{
+  flex:0 0 82px!important;width:82px!important;min-width:82px!important;max-width:82px!important;
+  height:115px!important;margin-left:-8px!important;margin-right:-8px!important;
+}
+body.arena-mat-on #jTable #jYouHand>.hcard img{
+  width:100%!important;height:100%!important;object-fit:contain!important;
+}
+body.arena-mat-on #jTable #jAiBf,
+body.arena-mat-on #jTable #jYouBf{
+  min-height:158px!important;padding:7px!important;gap:6px!important;overflow:visible!important;
+}
+body.arena-mat-on #jTable #jAiBf>.bcard,
+body.arena-mat-on #jTable #jYouBf>.bcard{
+  flex:0 0 96px!important;width:96px!important;min-width:96px!important;max-width:96px!important;
+}
+body.arena-mat-on #jTable #jAiLand>.bcard,
+body.arena-mat-on #jTable #jYouLand>.bcard{
+  flex:0 0 66px!important;width:66px!important;min-width:66px!important;max-width:66px!important;
+}
+@media(max-width:1100px){
+body.arena-mat-on #jTable #jAiHand,
+ body.arena-mat-on #jTable #jYouHand{min-height:118px!important;height:118px!important}
+body.arena-mat-on #jTable #jAiHand>.bcard{flex-basis:68px!important;width:68px!important;min-width:68px!important;max-width:68px!important;height:95px!important}
+body.arena-mat-on #jTable #jYouHand>.hcard{flex-basis:72px!important;width:72px!important;min-width:72px!important;max-width:72px!important;height:101px!important}
+body.arena-mat-on #jTable #jAiBf,
+ body.arena-mat-on #jTable #jYouBf{min-height:142px!important}
+body.arena-mat-on #jTable #jAiBf>.bcard,
+ body.arena-mat-on #jTable #jYouBf>.bcard{flex-basis:86px!important;width:86px!important;min-width:86px!important;max-width:86px!important}
+body.arena-mat-on #jTable #jAiLand>.bcard,
+ body.arena-mat-on #jTable #jYouLand>.bcard{flex-basis:58px!important;width:58px!important;min-width:58px!important;max-width:58px!important}
+}
+@media(max-width:820px){
+body.arena-mat-on #jTable #jAiHand,
+ body.arena-mat-on #jTable #jYouHand{min-height:108px!important;height:108px!important;padding-top:19px!important}
+body.arena-mat-on #jTable #jAiHand>.bcard{flex-basis:60px!important;width:60px!important;min-width:60px!important;max-width:60px!important;height:84px!important;margin-left:-10px!important;margin-right:-10px!important}
+body.arena-mat-on #jTable #jYouHand>.hcard{flex-basis:62px!important;width:62px!important;min-width:62px!important;max-width:62px!important;height:87px!important;margin-left:-7px!important;margin-right:-7px!important}
+body.arena-mat-on #jTable #jAiBf,
+ body.arena-mat-on #jTable #jYouBf{min-height:126px!important}
+body.arena-mat-on #jTable #jAiBf>.bcard,
+ body.arena-mat-on #jTable #jYouBf>.bcard{flex-basis:74px!important;width:74px!important;min-width:74px!important;max-width:74px!important}
+body.arena-mat-on #jTable #jAiLand>.bcard,
+ body.arena-mat-on #jTable #jYouLand>.bcard{flex-basis:50px!important;width:50px!important;min-width:50px!important;max-width:50px!important}
+}
+@media(max-width:520px){
+body.arena-mat-on #jTable #jAiHand,
+ body.arena-mat-on #jTable #jYouHand{min-height:94px!important;height:94px!important;padding-top:16px!important}
+body.arena-mat-on #jTable #jAiHand>.bcard{flex-basis:50px!important;width:50px!important;min-width:50px!important;max-width:50px!important;height:70px!important;margin-left:-8px!important;margin-right:-8px!important}
+body.arena-mat-on #jTable #jYouHand>.hcard{flex-basis:52px!important;width:52px!important;min-width:52px!important;max-width:52px!important;height:73px!important;margin-left:-6px!important;margin-right:-6px!important}
+body.arena-mat-on #jTable #jAiBf,
+ body.arena-mat-on #jTable #jYouBf{min-height:108px!important}
+body.arena-mat-on #jTable #jAiBf>.bcard,
+ body.arena-mat-on #jTable #jYouBf>.bcard{flex-basis:62px!important;width:62px!important;min-width:62px!important;max-width:62px!important}
+body.arena-mat-on #jTable #jAiLand>.bcard,
+ body.arena-mat-on #jTable #jYouLand>.bcard{flex-basis:42px!important;width:42px!important;min-width:42px!important;max-width:42px!important}
+}
+
+/* ===== bloque 18 ===== */
+#jugar.playing .jside{
+  display:flex!important;
+  flex-direction:column!important;
+  min-height:0!important;
+}
+#jugar.playing .jcmdbox{
+  display:block!important;
+  flex:0 0 auto!important;
+  padding:10px!important;
+  border:1px solid #8d956b66!important;
+  border-radius:13px!important;
+  background:linear-gradient(145deg,#15241f,#0b1712)!important;
+  overflow:visible!important;
+}
+#jugar.playing .jcmdbox-ai{order:2!important}
+#jugar.playing .jside>b[data-i18n="gp.log"]{order:3!important}
+#jugar.playing .jlogbox{order:4!important;flex:1 1 auto!important;min-height:110px!important}
+#jugar.playing .jcmdbox-you{order:5!important}
+@media(max-width:820px){
+#jugar.playing .jgrid{grid-template-columns:minmax(0,1fr)!important}
+#jugar.playing .jside{display:flex!important}
+#jugar.playing .jcmdbox{max-width:none!important}
+}
+
+/* ===== bloque 19 ===== */
+#jugar.playing .jinfo.me{
+  bottom:5px!important;right:8px!important;left:auto!important;
+  justify-content:flex-end!important;
+}
+#jugar.playing .jzone.jlands{padding-left:10px!important;padding-right:10px!important}
+
+/* ===== bloque 20 ===== */
+#jTable .jzone .bcard .loy{position:absolute;right:4px;bottom:4px;z-index:4;
+  background:#121a2ee6;border:1px solid #8fd3ff77;color:#d8ecff;border-radius:4px;
+  padding:3px 7px;font:700 11px/1 'Hanken Grotesk',system-ui,sans-serif;
+  box-shadow:0 1px 4px #0009;pointer-events:none}
+#jTable .jzone .bcard .loy.lore{background:#2a1c0ee6;border-color:#e0b97877;color:#f4ddb0}
+
+/* ===== porte del tablero de captain · ajustes de esta mesa ===== */
+/* captain no rotula el campo ni la banda de tierras: los rótulos en mayúsculas venían de
+   la piel vieja de estos tableros y se quedan fuera (la mano sí conserva su rótulo). */
+#jugar.playing #jAiBf:before,#jugar.playing #jYouBf:before,
+#jugar.playing #jAiLand:before,#jugar.playing #jYouLand:before{content:none!important}
+/* La columna lateral trae los mismos bloques que captain. En standard no hay zona de
+   mando: el panel y la pila de comandante se apagan, pero los ids siguen en el DOM. */
+/* La barra de fases (Principal 1 · Combate · Principal 2 · Fin) venía con
+   `position:sticky;top:46px` de la piel vieja: se plantaba encima de la mano del rival y
+   dejaba vacía su banda, que es el margen que se veía arriba de la mesa. Ahora ocupa su
+   sitio en el flujo, arriba del todo del tablero. */
+#jugar.playing #jTable .jphase{position:relative!important;top:auto!important;bottom:auto!important;
+  margin:0 0 4px!important;padding-top:2px!important;z-index:3!important}
+/* La pila de mando (y cementerio/exilio) enseña la carta en miniatura. El arte lo
+   estilaba `arena-v15-final`, que en este porte está apagada: la imagen se quedaba
+   sin medida, a tamaño natural dentro de la caja de 72 px, y la columna de pilas
+   se rompía. Se le da el tamaño de la piel de brawl (52×73 recortado). */
+#jugar.playing .jpiles .pmini .pile-art{width:52px!important;height:73px!important;min-width:0!important;
+  max-width:100%!important;max-height:100%!important;display:block!important;object-fit:cover!important;
+  border-radius:4px!important;border:1px solid #e8d8ad66!important;box-shadow:0 3px 8px #000a!important}
+/* red de seguridad: ninguna imagen de una pila se sale de su caja */
+#jugar.playing .jpiles .pmini>img,#jugar.playing .jpiles .pmini img{max-width:100%!important;max-height:100%!important}
+/* Zona de mando (commander y brawl): la carta, en miniatura. La piel vieja la subía a
+   88 px con !important y en la columna de 250 px parecía un cartón; el motor pide 58. */
+#jugar.playing .jcmdbox #jCmd img{width:52px!important;min-width:52px!important;
+  height:auto!important;border-radius:5px!important;border:1px solid #ffffff26!important}
+#jugar.playing .jcmdbox #jCmd>div:first-child{gap:8px!important;align-items:flex-start!important}
+#jugar.playing .jcmdbox #jCmd>div:first-child b{font-size:13px!important;line-height:1.2}
+/* El impuesto, en su renglón y siempre a la vista: la etiqueta, el valor y los dos botones. */
+#jugar.playing .jcmdbox .cmcz{display:flex!important;flex-direction:column!important;gap:4px!important;
+  margin-top:6px!important;padding-top:6px!important;border-top:1px solid #d6bc7940!important}
+#jugar.playing .jcmdbox .cmczzone{display:block!important;font-size:9.5px!important;letter-spacing:.04em!important}
+#jugar.playing .jcmdbox .cmcztax{display:flex!important;align-items:center!important;gap:5px!important;
+  flex-wrap:nowrap!important;font-size:10.5px!important;color:#e6dcc0!important}
+#jugar.playing .jcmdbox .cmcztax span{white-space:nowrap!important}
+#jugar.playing .jcmdbox .cmcztax b{min-width:32px!important;font-size:12px!important;color:#f4d98a!important}
+#jugar.playing .jcmdbox .cmcztax button{width:18px!important;height:18px!important;flex:0 0 auto!important;font-size:12px!important}
+#jugar.playing .jcmdbox .cmczdmg{display:grid!important;grid-template-columns:1fr 1fr!important;
+  gap:3px 6px!important;padding:5px 6px!important}
+#jugar.playing .jcmdbox .cmczdmg .lab{grid-column:1/-1!important;font-size:9px!important}
+#jugar.playing .jcmdbox .cmczdmg .r{font-size:10px!important;gap:3px!important}
+#jugar.playing .jcmdbox .cmczdmg .r b{font-size:11.5px!important;min-width:16px!important}
+#jugar.playing .jcmdbox .cmczdmg .cmczreset{grid-column:1/-1!important;font-size:9px!important;margin:0!important}

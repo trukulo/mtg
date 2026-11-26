@@ -1,0 +1,2 @@
+/* ===== zoom-any: cualquier imagen de carta conocida abre la vista grande ===== */
+img[data-nm]{cursor:zoom-in}

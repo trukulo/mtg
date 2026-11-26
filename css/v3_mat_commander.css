@@ -1,0 +1,7 @@
+.pile .cnt{position:absolute;right:-7px;top:-8px;z-index:5;min-width:20px;padding:1px 5px;border-radius:999px;background:#0b1118;border:1px solid #c58a4b;font:800 11px 'Hanken Grotesk',sans-serif;color:var(--au2);text-align:center}
+.pmini.pile.has{border-color:transparent;background:none}
+.pile:hover{transform:translateY(-2px)}
+.pile:focus-visible{outline:2px solid var(--au);outline-offset:3px}
+.jmain .bcard.tapped{box-shadow:-4px 4px 9px #000a}.jmain .hcard:hover span{display:block;position:absolute;bottom:0;left:0;right:0;background:#000c;color:#fff}
+@media(max-width:640px){.jmain .jbody{grid-template-columns:118px minmax(0,1fr)!important;gap:8px}.pstack{grid-template-columns:repeat(2,48px);gap:20px 10px}.pile{width:48px}}
+@media(prefers-reduced-motion:reduce){.v3fly{display:none}}
