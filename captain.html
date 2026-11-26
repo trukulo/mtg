@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
-<!-- versión 2026-11-25 21:55 · los cuatro tableros van al día a la vez -->
+<!-- versión 2026-11-26 10:08 · los cuatro tableros van al día a la vez -->
+<meta charset="utf-8">
 <title>Captain Jumpstart · Two packs, one captain</title>
 <meta name="description" content="Captain Jumpstart: two 20-card packs, a 40-card singleton deck and a captain in the command zone. Build, analyse and play.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -589,7 +590,552 @@ body.playing .jside{height:100%}
   .jzone .bcard .pt{font-size:8.5px;padding:0 3px}
   .jzone .bcard.sick::before{font-size:8px;bottom:20px}
 }
-</style></head><body>
+</style>
+<style id="commander-playmat-ux">
+/* Commander playmat: jerarquía espacial, superficie de mesa y lectura de zonas */
+#jugar.playing main{max-width:1780px}
+#jugar.playing .jgrid{grid-template-columns:minmax(0,1fr) 286px;gap:14px;align-items:stretch}
+#jugar.playing .jmain{
+  padding:16px; border-radius:20px; border:1px solid #a98a5145;
+  background:
+    radial-gradient(ellipse at 50% 48%,#294638 0%,#1c382e 48%,#14291f 100%);
+  box-shadow:inset 0 0 0 5px #0a1510, inset 0 0 0 6px #b99a5a38,
+    inset 0 0 80px #050b08a8,0 18px 50px #0009;
+}
+#jugar.playing .jmain:before{
+  inset:9px;border:1px solid #d6bc7950;border-radius:13px;
+  background:
+   linear-gradient(90deg,transparent 49.85%,#d6bc7918 50%,transparent 50.15%),
+   radial-gradient(ellipse at center,#d6bc7909,transparent 62%),
+   repeating-linear-gradient(135deg,#ffffff04 0 1px,transparent 1px 12px);
+}
+#jugar.playing .jphase{padding:0 4px 10px;border-bottom:1px solid #d6bc792b}
+#jugar.playing .jphase .ph{background:#09150f9c;border-color:#d6bc7930;color:#c1c9bc}
+#jugar.playing .jphase .ph.on{background:linear-gradient(#f6df9e,#c59b4c);color:#241b0b}
+#jugar.playing .jbody{grid-template-columns:64px minmax(0,1fr);gap:12px}
+#jugar.playing .jpiles{justify-content:space-around;gap:18px;padding:10px 0}
+#jugar.playing .pstack{padding:8px 5px;border:1px solid #d6bc7924;border-radius:12px;background:#08140f80}
+#jugar.playing .plabel{color:#d8c28f;opacity:1;font-size:9px}
+#jugar.playing .pmini{background:#09150f;border-color:#d6bc7933;color:#d9dfd3;min-height:31px}
+#jugar.playing .jplay{gap:7px;padding:3px 0}
+#jugar.playing .jinfo{min-height:48px;padding:2px 8px}
+#jugar.playing .jinfo.ai{justify-content:flex-start}
+#jugar.playing .jinfo.me{justify-content:flex-end}
+#jugar.playing .jmeta{color:#d2d9cd;font-size:11px}
+#jugar.playing .jzone{
+ min-height:132px;padding:12px;gap:9px;justify-content:center;align-content:center;
+ background:linear-gradient(145deg,#07140f66,#0a1b1366);
+ border:1px solid #c4ad7040;border-radius:13px;
+ box-shadow:inset 0 1px #ffffff0c,inset 0 -18px 34px #0002;
+}
+#jugar.playing .jzone:before{
+ content:attr(aria-label);position:absolute;top:6px;left:10px;
+ color:#d4c28f;font:700 9px 'Hanken Grotesk',sans-serif;
+ letter-spacing:.13em;text-transform:uppercase;opacity:.7;pointer-events:none
+}
+#jugar.playing .jzone.jhand{min-height:150px;padding:14px 14px 5px;overflow:visible}
+#jugar.playing .jzone.jlands{min-height:86px;background:#09170f66;border-color:#d6bc792b}
+#jugar.playing .jzone .bcard{width:clamp(56px,5.1vw,78px)}
+#jugar.playing .jzone.jlands .bcard{width:clamp(43px,3.8vw,58px)}
+#jugar.playing .jzone.jhand .hcard{width:clamp(54px,4.5vw,70px);margin:0 -7px}
+#jugar.playing .jzone .bcard img,#jugar.playing .jzone .hcard img{
+ width:100%;height:auto;aspect-ratio:0.716;object-fit:contain;background:#080d13
+}
+#jugar.playing .jmid{min-height:36px;margin:1px 0;padding:5px 0;border-top:1px solid #d6bc791f;border-bottom:1px solid #d6bc791f}
+#jugar.playing .jstatus{color:#f0d99d}
+#jugar.playing .jdice{width:54px;height:54px;min-width:54px;font-size:21px}
+#jugar.playing .jside{
+ border:1px solid #a98a5145;border-radius:18px;padding:13px;
+ background:linear-gradient(180deg,#18231f,#0c1512);
+ box-shadow:inset 0 0 0 1px #ffffff08,0 12px 34px #0006;
+}
+#jugar.playing .jcmdbox{background:#101d17;border-color:#d6bc7950;padding:11px}
+#jugar.playing .jlogbox{background:#080f0d;border-color:#d6bc7928;max-height:min(430px,48vh)}
+#jugar.playing .jblockpanel{border-color:#a98a5145;background:#101d17}
+#cardZoom{
+ width:clamp(112px,20vw,230px);height:auto;max-height:calc(100vh - 16px);
+ aspect-ratio:.716;object-fit:contain!important;object-position:center;
+ padding:3px;background:#080d13;border:1px solid #d6bc79a6;border-radius:10px;
+ box-shadow:0 14px 34px #000d,0 0 0 3px #09140f;
+}
+@media(max-width:1100px){
+ #jugar.playing .jgrid{grid-template-columns:minmax(0,1fr) 250px}
+ #jugar.playing .jbody{grid-template-columns:52px minmax(0,1fr)}
+ #jugar.playing .jzone{min-height:112px}
+ #jugar.playing .jzone.jhand{min-height:124px}
+}
+@media(max-width:820px){
+ #jugar.playing .jgrid{grid-template-columns:1fr}
+ #jugar.playing .jbody{grid-template-columns:42px minmax(0,1fr);gap:7px}
+ #jugar.playing .jmain{padding:10px}
+ #jugar.playing .jzone{min-height:90px;padding:7px;gap:5px}
+ #jugar.playing .jzone.jhand{min-height:106px;padding:8px 5px 3px}
+ #jugar.playing .jzone .bcard{width:clamp(38px,8vw,58px)}
+ #jugar.playing .jzone.jlands .bcard{width:clamp(32px,6vw,46px)}
+ #jugar.playing .jzone.jhand .hcard{width:clamp(38px,7.5vw,56px);margin:0 -5px}
+ #jugar.playing .jdice{width:44px;height:44px;min-width:44px;font-size:18px}
+}
+@media(max-width:520px){
+ #jugar.playing .jbody{grid-template-columns:34px minmax(0,1fr);gap:5px}
+ #jugar.playing .pstack{padding:5px 2px}
+ #jugar.playing .pmini{font-size:9px;min-height:27px}
+ #jugar.playing .jphase .ph{font-size:8px;padding:4px 6px}
+ #jugar.playing .jzone.jhand .hcard{margin:0 -7px}
+ #jugar.playing .jzone{min-height:78px}
+ #jugar.playing .jzone.jhand{min-height:94px}
+}
+
+/* Ajustes solicitados: mesa sin cabecera redundante y zonas de mando visibles */
+#jugar.playing > .row:first-child{display:none!important}
+#jugar.playing .jcmdslot{display:flex;align-items:center;gap:10px;min-height:94px;padding:6px 10px;border:1px solid #d6bc7940;border-radius:12px;background:linear-gradient(90deg,#08140f99,#12271c99);}
+#jugar.playing .jcmdslot.ai{justify-content:flex-start}
+#jugar.playing .jcmdslot.me{justify-content:flex-end}
+#jugar.playing .jcmdslot .cmdcard{display:flex;align-items:center;gap:9px;min-width:0;color:#e8dfc8;font:600 10px 'Hanken Grotesk',sans-serif}
+#jugar.playing .jcmdslot .cmdcard img{display:block;width:57px;height:auto;aspect-ratio:0.716;object-fit:contain;background:#080d13;border:1px solid #d6bc7980;border-radius:5px;box-shadow:0 4px 12px #0008}
+#jugar.playing .jcmdslot .cmdname{max-width:190px;line-height:1.25}
+#jugar.playing .jcmdslot .cmdempty{font-size:10px;color:#c9c1a4;opacity:.55;letter-spacing:.12em;text-transform:uppercase}
+/* Las cartas de mesa y mano deben conservar el marco completo de la carta, no recortar al arte */
+#jugar.playing .jzone .bcard{height:auto!important;aspect-ratio:0.716;overflow:visible}
+#jugar.playing .jzone .bcard>img,#jugar.playing .jzone .hcard>img{display:block;width:100%!important;height:100%!important;aspect-ratio:0.716;object-fit:contain!important;object-position:center;background:#080d13;border-radius:5px}
+#jugar.playing .jzone .bcard .nm{max-width:100%;}
+@media(max-width:820px){#jugar.playing .jcmdslot{min-height:76px;padding:5px 7px}#jugar.playing .jcmdslot .cmdcard img{width:48px}}
+
+/* Escala compacta de cartas: carta completa visible y más permanentes por zona */
+#jugar.playing .jzone{min-height:94px;padding:9px 8px;gap:6px;overflow:visible}
+#jugar.playing .jzone.jhand{min-height:112px;padding:10px 10px 4px}
+#jugar.playing .jzone .bcard{width:48px!important;height:auto!important;aspect-ratio:.716;flex:0 0 auto}
+#jugar.playing .jzone.jlands .bcard{width:40px!important}
+#jugar.playing .jzone.jhand .hcard{width:48px!important;height:auto!important;aspect-ratio:.716;margin:0 -5px;flex:0 0 auto}
+#jugar.playing .jzone .bcard>img,#jugar.playing .jzone .hcard>img{width:100%!important;height:100%!important;aspect-ratio:.716;object-fit:contain!important;object-position:center;display:block}
+#jugar.playing .jzone .bcard .nm{font-size:8px}
+#jugar.playing .jcmdslot .cmdcard img{cursor:zoom-in}
+#jugar.playing .jcmdslot .cmdcard img:hover{filter:brightness(1.06)}
+@media(max-width:820px){
+ #jugar.playing .jzone{min-height:78px;padding:7px 5px;gap:4px}
+ #jugar.playing .jzone.jhand{min-height:94px;padding:7px 5px 3px}
+ #jugar.playing .jzone .bcard{width:40px!important}
+ #jugar.playing .jzone.jlands .bcard{width:34px!important}
+ #jugar.playing .jzone.jhand .hcard{width:40px!important;margin:0 -5px}
+}
+@media(max-width:520px){
+ #jugar.playing .jzone .bcard{width:36px!important}
+ #jugar.playing .jzone.jlands .bcard{width:31px!important}
+ #jugar.playing .jzone.jhand .hcard{width:37px!important;margin:0 -6px}
+}
+
+/* Reorganización de la mesa: tierras y comandante comparten una única banda compacta. */
+#jugar.playing .jzone.jlands{
+  display:flex;flex-flow:row wrap;align-items:center;justify-content:flex-start;align-content:center;
+  min-height:76px;padding:8px 10px 7px 10px;gap:6px;
+  background:linear-gradient(145deg,#07130eaa,#09170fbb 68%,#050d0aee);
+  border-color:#d6bc7940;box-shadow:inset 0 0 0 1px #ffffff08,inset 0 0 24px #0008;
+}
+#jugar.playing .jzone.jlands:before{top:4px;left:9px;font-size:8px;opacity:.62}
+#jugar.playing .jzone.jlands .bcard{margin-top:8px}
+#jugar.playing .jcmdslot{
+  display:flex!important;flex:0 0 auto;align-items:center;justify-content:center!important;
+  width:auto;min-width:0;min-height:0;height:56px;margin:7px 0 0 auto;padding:3px 5px;
+  border:1px solid #d6bc7960;border-radius:8px;
+  background:linear-gradient(145deg,#050d0a,#101e16);box-shadow:inset 0 0 12px #0009,0 2px 7px #0005;
+}
+#jugar.playing .jcmdslot .cmdcard{gap:0;min-width:0;height:100%}
+#jugar.playing .jcmdslot .cmdcard img{
+  width:34px;height:48px;max-height:48px;aspect-ratio:.716;object-fit:contain;
+  border-radius:3px;border:1px solid #d6bc7980;box-shadow:0 2px 5px #0009;
+}
+#jugar.playing .jcmdslot .cmdname{display:none}
+#jugar.playing .jcmdslot .cmdempty{font-size:7px;letter-spacing:.04em;writing-mode:vertical-rl;max-height:46px}
+@media(max-width:820px){
+ #jugar.playing .jzone.jlands{min-height:64px;padding:7px 6px;gap:4px}
+ #jugar.playing .jcmdslot{height:48px;margin-top:7px;padding:2px 3px}
+ #jugar.playing .jcmdslot .cmdcard img{width:28px;height:40px;max-height:40px}
+}
+@media(max-width:520px){
+ #jugar.playing .jzone.jlands{min-height:58px}
+ #jugar.playing .jcmdslot{height:43px}
+ #jugar.playing .jcmdslot .cmdcard img{width:25px;height:36px;max-height:36px}
+}
+</style>
+<style id="playmat-final-layout">
+/* Distribución equilibrada: zonas independientes, cartas legibles y centro despejado. */
+#jugar.playing .jgrid{grid-template-columns:minmax(0,1fr) 286px;gap:16px;align-items:stretch}
+#jugar.playing .jmain{padding:16px;overflow:visible;min-width:0}
+#jugar.playing .jbody{grid-template-columns:64px minmax(0,1fr);gap:14px}
+#jugar.playing .jplay{display:flex;flex-direction:column;gap:7px;min-width:0}
+#jugar.playing .jphase{margin:0 0 5px;padding:2px 4px 9px}
+#jugar.playing .jinfo{min-height:38px;padding:0 8px}
+#jugar.playing .jinfo .jdice{width:44px;height:44px;min-width:44px;font-size:18px}
+#jugar.playing .jzone{
+  position:relative;display:flex;flex-flow:row wrap;align-items:center;align-content:center;
+  justify-content:center;gap:8px;min-width:0;min-height:142px;padding:12px 14px;
+  overflow:visible;border-radius:13px;
+}
+#jugar.playing .jzone .bcard{
+  position:relative;display:block;flex:0 0 68px;width:68px!important;min-width:68px;max-width:68px;
+  height:auto!important;aspect-ratio:0.716;overflow:hidden;margin:0!important;
+}
+#jugar.playing .jzone .bcard>img{
+  display:block;width:100%!important;height:100%!important;aspect-ratio:0.716;
+  object-fit:contain!important;object-position:center;background:#080d13;
+}
+#jugar.playing .jzone .bcard .nm{font-size:8px;line-height:1.1}
+#jugar.playing .jzone.jlands{
+  position:relative;display:flex;flex-flow:row wrap;align-items:center;align-content:center;
+  justify-content:center;gap:7px;min-height:78px;padding:8px 68px;
+  background:linear-gradient(90deg,#0000,#00000048 12%,#00000048 88%,#0000);
+  border-color:#d6bc7940;
+}
+#jugar.playing .jzone.jlands .bcard{
+  flex:0 0 48px;width:48px!important;min-width:48px;max-width:48px;
+  height:auto!important;aspect-ratio:.716;margin:0!important;
+}
+/* El comandante vive dentro de la banda de tierras, en un espacio reservado lateral. */
+#jugar.playing .jzone.jlands>.jcmdslot{
+  display:flex!important;position:absolute!important;top:50%!important;right:12px!important;left:auto!important;
+  transform:translateY(-50%)!important;z-index:8;align-items:center;justify-content:center;
+  width:42px!important;min-width:42px!important;height:59px!important;min-height:59px!important;
+  margin:0!important;padding:2px!important;border:1px solid #d6bc79a0;border-radius:5px;
+  background:#07110c;box-shadow:0 3px 10px #000b;overflow:visible;
+}
+#jugar.playing .jzone.jlands>.jcmdslot .cmdcard{display:flex;width:100%;height:100%;align-items:center;justify-content:center;gap:0}
+#jugar.playing .jzone.jlands>.jcmdslot .cmdcard img{
+  display:block;width:100%!important;height:100%!important;max-height:none!important;
+  aspect-ratio:.716;object-fit:contain!important;border:0;border-radius:3px;cursor:zoom-in;
+}
+#jugar.playing .jzone.jlands>.jcmdslot .cmdname,
+#jugar.playing .jzone.jlands>.jcmdslot .cmdempty{display:none!important}
+#jugar.playing .jzone.jhand{
+  min-height:112px;max-height:none;padding:10px 12px 5px;overflow:visible;
+  align-items:flex-end;justify-content:center;gap:2px;
+}
+#jugar.playing .jzone.jhand .hcard{
+  position:relative;flex:0 0 68px;width:68px!important;min-width:68px;max-width:68px;
+  height:auto!important;aspect-ratio:.716;margin:0 -5px!important;overflow:hidden;
+}
+#jugar.playing .jzone.jhand .hcard>img{
+  display:block;width:100%!important;height:100%!important;aspect-ratio:.716;object-fit:contain!important;
+}
+#jugar.playing .jmid{min-height:44px;margin:2px 0;padding:7px 10px;gap:8px}
+#jugar.playing .jcmdslot .cmdcard img:hover{filter:brightness(1.08)}
+#jugar.playing .jcmdslot .cmdcard img{cursor:zoom-in}
+#jugar.playing .jside{padding:14px}
+@media(max-width:1100px){
+ #jugar.playing .jgrid{grid-template-columns:minmax(0,1fr) 250px;gap:12px}
+ #jugar.playing .jzone{min-height:128px;gap:6px;padding:10px}
+ #jugar.playing .jzone .bcard,#jugar.playing .jzone.jhand .hcard{flex-basis:60px;width:60px!important;min-width:60px;max-width:60px}
+ #jugar.playing .jzone.jlands .bcard{flex-basis:43px;width:43px!important;min-width:43px;max-width:43px}
+ #jugar.playing .jzone.jlands{min-height:70px;padding-left:8px;padding-right:62px}
+ #jugar.playing .jzone.jlands>.jcmdslot{width:38px!important;min-width:38px!important;height:53px!important;min-height:53px!important}
+ #jugar.playing .jzone.jhand{min-height:102px}
+}
+@media(max-width:820px){
+ #jugar.playing .jgrid{grid-template-columns:1fr}
+ #jugar.playing .jmain{padding:10px}
+ #jugar.playing .jbody{grid-template-columns:42px minmax(0,1fr);gap:8px}
+ #jugar.playing .jzone{min-height:112px;padding:8px;gap:5px}
+ #jugar.playing .jzone .bcard,#jugar.playing .jzone.jhand .hcard{flex-basis:54px;width:54px!important;min-width:54px;max-width:54px}
+ #jugar.playing .jzone.jlands .bcard{flex-basis:38px;width:38px!important;min-width:38px;max-width:38px}
+ #jugar.playing .jzone.jlands{min-height:64px;padding:7px 54px 7px 7px}
+ #jugar.playing .jzone.jlands>.jcmdslot{right:8px!important;width:34px!important;min-width:34px!important;height:48px!important;min-height:48px!important}
+ #jugar.playing .jzone.jhand{min-height:92px;padding:7px 5px 3px}
+ #jugar.playing .jmid{min-height:38px}
+}
+@media(max-width:520px){
+ #jugar.playing .jbody{grid-template-columns:34px minmax(0,1fr);gap:5px}
+ #jugar.playing .jzone{min-height:96px;padding:6px;gap:4px}
+ #jugar.playing .jzone .bcard,#jugar.playing .jzone.jhand .hcard{flex-basis:46px;width:46px!important;min-width:46px;max-width:46px}
+ #jugar.playing .jzone.jlands .bcard{flex-basis:32px;width:32px!important;min-width:32px;max-width:32px}
+ #jugar.playing .jzone.jlands{min-height:56px;padding-right:46px}
+ #jugar.playing .jzone.jlands>.jcmdslot{width:29px!important;min-width:29px!important;height:41px!important;min-height:41px!important}
+ #jugar.playing .jzone.jhand{min-height:82px}
+}
+</style>
+
+
+<style id="playmat-layout-v7">
+/* Ajuste de distribución: manos, mandos y vidas sin filas desperdiciadas. */
+#jugar.playing .jplay{
+  position:relative;
+  gap:8px;
+  padding:0;
+}
+
+/* Las vidas quedan superpuestas en las esquinas del tapete y dejan libre su fila. */
+#jugar.playing .jinfo{
+  position:absolute;
+  z-index:8;
+  min-height:0!important;
+  height:32px;
+  padding:0 5px!important;
+  gap:8px;
+  pointer-events:none;
+}
+#jugar.playing .jinfo.ai{top:5px;right:8px;left:auto;justify-content:flex-end}
+#jugar.playing .jinfo.me{bottom:5px;left:8px;right:auto;justify-content:flex-start}
+#jugar.playing .jdice{
+  width:42px!important;height:42px!important;min-width:42px!important;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px!important;
+}
+#jugar.playing .jmeta{font-size:10px}
+
+/* Manos separadas y claramente identificables. La mano de la IA usa reversos. */
+#jugar.playing #jAiHand,
+#jugar.playing #jYouHand{
+  display:flex!important;
+  flex-flow:row nowrap;
+  align-items:flex-start;
+  justify-content:center;
+  min-height:104px!important;
+  height:104px;
+  padding:8px 10px 5px!important;
+  gap:5px;
+  overflow:visible!important;
+  border:1px solid #d6bc7940;
+  border-radius:12px;
+  background:linear-gradient(180deg,#07130edc,#0b1b14b8);
+}
+#jugar.playing #jAiHand:before{content:"MANO · IA"}
+#jugar.playing #jYouHand:before{content:"TU MANO"}
+#jugar.playing #jAiHand .bcard{
+  display:block!important;
+  position:relative!important;
+  flex:0 0 58px!important;
+  width:58px!important;height:81px!important;
+  min-width:58px;
+  aspect-ratio:0.716;
+  margin:0!important;
+  border:1px solid #d6bc7970;
+  border-radius:6px;
+  box-shadow:0 4px 10px #0008;
+  background-position:center!important;
+  background-size:cover!important;
+  transform:none!important;
+}
+#jugar.playing #jYouHand .hcard{
+  flex:0 0 58px!important;
+  width:58px!important;height:81px!important;
+  margin:0!important;
+}
+#jugar.playing #jYouHand .hcard img{
+  width:100%!important;height:100%!important;
+  object-fit:contain!important;aspect-ratio:0.716;
+}
+#jugar.playing #jAiHand:before,
+#jugar.playing #jYouHand:before{
+  position:absolute;left:10px;top:4px;
+  color:#d8c28f;font:700 8px 'Hanken Grotesk',sans-serif;
+  letter-spacing:.12em;opacity:.75;pointer-events:none;
+}
+
+/* Cada jugador conserva su propia zona de mando junto a sus tierras.
+   El comandante queda en una miniatura completa, siempre visible. */
+#jugar.playing .jzone.jlands{
+  position:relative;
+  min-height:76px!important;
+  padding:8px 62px 7px!important;
+  display:flex;
+  flex-flow:row nowrap;
+  align-items:center;
+  justify-content:center!important;
+  align-content:center;
+  gap:7px;
+  overflow:visible!important;
+}
+#jugar.playing .jzone.jlands .bcard{
+  flex:0 0 50px!important;
+  width:50px!important;height:auto!important;
+  aspect-ratio:0.716;
+  margin:0!important;
+}
+#jugar.playing .jcmdslot{
+  position:absolute!important;
+  z-index:5;
+  top:50%!important;right:7px!important;
+  transform:translateY(-50%);
+  display:flex!important;
+  align-items:center;justify-content:center!important;
+  width:42px!important;min-width:42px!important;
+  height:59px!important;min-height:59px!important;
+  margin:0!important;padding:2px!important;
+  border:1px solid #d6bc79a0!important;
+  border-radius:6px!important;
+  background:#07120deF!important;
+  box-shadow:0 3px 10px #0009!important;
+}
+#jugar.playing .jcmdslot.ai{border-color:#8eb9d5a0!important}
+#jugar.playing .jcmdslot .cmdcard{height:100%;width:100%;display:flex;align-items:center;justify-content:center}
+#jugar.playing .jcmdslot .cmdcard img{
+  display:block;width:100%!important;height:100%!important;
+  max-height:none!important;aspect-ratio:0.716;object-fit:contain;
+  border:0!important;border-radius:3px!important;box-shadow:none!important;
+}
+#jugar.playing .jcmdslot .cmdname{display:none!important}
+#jugar.playing .jcmdslot .cmdempty{
+  writing-mode:vertical-rl;
+  font-size:7px;letter-spacing:.04em;opacity:.8;
+}
+#jugar.playing #jAiCommander:after{
+  content:"IA";position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);
+  color:#a9cbe1;font:700 7px 'Hanken Grotesk',sans-serif;letter-spacing:.08em;
+}
+#jugar.playing #jYouCommander:after{
+  content:"TÚ";position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);
+  color:#e7c979;font:700 7px 'Hanken Grotesk',sans-serif;letter-spacing:.08em;
+}
+
+/* Campo de batalla: más espacio útil y cartas legibles sin invadir la línea central. */
+#jugar.playing #jAiBf,
+#jugar.playing #jYouBf{
+  min-height:145px!important;
+  padding:12px 10px!important;
+  gap:8px;
+  align-content:center;
+}
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{
+  flex:0 0 62px!important;
+  width:62px!important;height:auto!important;
+  aspect-ratio:0.716;
+}
+#jugar.playing .jzone .bcard>img{
+  display:block;width:100%!important;height:100%!important;
+  aspect-ratio:0.716;object-fit:contain!important;
+}
+#jugar.playing .jmid{
+  min-height:30px!important;
+  margin:0!important;padding:3px 0!important;
+  border-top:1px solid #d6bc7920;
+  border-bottom:1px solid #d6bc7920;
+}
+@media(max-width:1100px){
+  #jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:56px!important;width:56px!important}
+  #jugar.playing #jAiHand .bcard{flex-basis:50px!important;width:50px!important;height:70px!important;min-width:50px}
+  #jugar.playing #jYouHand .hcard{flex-basis:50px!important;width:50px!important;height:70px!important}
+}
+@media(max-width:820px){
+  #jugar.playing .jplay{gap:6px;padding:0}
+  #jugar.playing #jAiHand,#jugar.playing #jYouHand{min-height:84px!important;height:84px;padding:7px 5px 3px!important}
+  #jugar.playing #jAiHand .bcard{flex-basis:42px!important;width:42px!important;height:59px!important;min-width:42px}
+  #jugar.playing #jYouHand .hcard{flex-basis:42px!important;width:42px!important;height:59px!important}
+  #jugar.playing .jzone.jlands{min-height:66px!important;padding-left:48px!important;padding-right:52px!important}
+  #jugar.playing .jzone.jlands .bcard{flex-basis:40px!important;width:40px!important}
+  #jugar.playing .jcmdslot{width:36px!important;min-width:36px!important;height:51px!important;min-height:51px!important}
+  #jugar.playing #jAiBf,#jugar.playing #jYouBf{min-height:112px!important}
+  #jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:48px!important;width:48px!important}
+}
+@media(max-width:520px){
+  #jugar.playing .jplay{padding:0}
+  #jugar.playing #jAiHand .bcard{flex-basis:35px!important;width:35px!important;height:49px!important;min-width:35px}
+  #jugar.playing #jYouHand .hcard{flex-basis:35px!important;width:35px!important;height:49px!important}
+  #jugar.playing .jzone.jlands .bcard{flex-basis:32px!important;width:32px!important}
+  #jugar.playing .jcmdslot{width:30px!important;min-width:30px!important;height:42px!important;min-height:42px!important}
+  #jugar.playing #jAiBf,#jugar.playing #jYouBf{min-height:94px!important}
+  #jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:40px!important;width:40px!important}
+}
+</style>
+
+
+<style id="playmat-card-scale-v8">
+/* Cartas ampliadas: siempre escalar la imagen completa, nunca recortar el arte. */
+#jugar.playing .jplay{gap:3px!important}
+#jugar.playing #jAiBf,
+#jugar.playing #jYouBf{
+  min-height:132px!important;
+  padding:5px 6px!important;
+  gap:4px!important;
+  row-gap:3px!important;
+}
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{
+  flex:0 0 76px!important;
+  width:76px!important;
+  height:auto!important;
+  aspect-ratio:0.716!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+#jugar.playing .jzone:not(.jhand):not(.jlands) .bcard>img{
+  display:block!important;
+  width:100%!important;height:100%!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+#jugar.playing .jzone .bcard{
+  background-repeat:no-repeat!important;
+  background-position:center!important;
+  background-size:contain!important;
+}
+#jugar.playing #jAiHand,
+#jugar.playing #jYouHand{
+  min-height:94px!important;height:94px!important;
+  padding:5px 8px 3px!important;
+  gap:4px!important;
+}
+#jugar.playing #jAiHand .bcard{
+  flex:0 0 66px!important;width:66px!important;
+  height:92px!important;min-width:66px!important;
+  aspect-ratio:0.716!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+  background-size:contain!important;
+}
+#jugar.playing #jYouHand .hcard{
+  flex:0 0 66px!important;width:66px!important;
+  height:92px!important;min-width:66px!important;
+  margin:0!important;
+}
+#jugar.playing #jYouHand .hcard img{
+  display:block!important;width:100%!important;height:100%!important;
+  object-fit:contain!important;object-position:center!important;
+}
+#jugar.playing .jzone.jlands{
+  min-height:68px!important;
+  padding-top:3px!important;padding-bottom:3px!important;
+  gap:4px!important;
+}
+#jugar.playing .jzone.jlands .bcard{
+  flex:0 0 54px!important;width:54px!important;
+  height:auto!important;aspect-ratio:0.716!important;
+  background-size:contain!important;
+}
+#jugar.playing .jzone.jlands .bcard>img{
+  display:block!important;width:100%!important;height:100%!important;
+  object-fit:contain!important;object-position:center!important;
+}
+#jugar.playing .jcmdslot{
+  width:46px!important;min-width:46px!important;
+  height:64px!important;min-height:64px!important;
+}
+#jugar.playing .jcmdslot .cmdcard img{
+  width:100%!important;height:100%!important;
+  object-fit:contain!important;object-position:center!important;
+}
+#jugar.playing .jmid{
+  min-height:24px!important;
+  padding:1px 0!important;margin:0!important;
+}
+@media(max-width:1100px){
+  #jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:68px!important;width:68px!important}
+  #jugar.playing #jAiHand .bcard{flex-basis:58px!important;width:58px!important;height:81px!important;min-width:58px!important}
+  #jugar.playing #jYouHand .hcard{flex-basis:58px!important;width:58px!important;height:81px!important;min-width:58px!important}
+}
+@media(max-width:820px){
+  #jugar.playing #jAiBf,#jugar.playing #jYouBf{min-height:112px!important;padding:4px!important;gap:3px!important}
+  #jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:56px!important;width:56px!important}
+  #jugar.playing #jAiHand,#jugar.playing #jYouHand{min-height:82px!important;height:82px!important}
+  #jugar.playing #jAiHand .bcard{flex-basis:48px!important;width:48px!important;height:67px!important;min-width:48px!important}
+  #jugar.playing #jYouHand .hcard{flex-basis:48px!important;width:48px!important;height:67px!important;min-width:48px!important}
+  #jugar.playing .jzone.jlands .bcard{flex-basis:42px!important;width:42px!important}
+}
+@media(max-width:520px){
+  #jugar.playing .jzone:not(.jhand):not(.jlands) .bcard{flex-basis:46px!important;width:46px!important}
+  #jugar.playing #jAiHand .bcard{flex-basis:38px!important;width:38px!important;height:53px!important;min-width:38px!important}
+  #jugar.playing #jYouHand .hcard{flex-basis:38px!important;width:38px!important;height:53px!important;min-width:38px!important}
+  #jugar.playing .jzone.jlands .bcard{flex-basis:34px!important;width:34px!important}
+  #jugar.playing .jcmdslot{width:32px!important;min-width:32px!important;height:45px!important;min-height:45px!important}
+}
+</style>
+
+</head><body>
 <header>
   <div class="logo" data-go="inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h12l4 4v14H4V3zm2 2v14h12V7.8L15.2 5H6zm2 4h8v2H8V9zm0 4h8v2H8v-2z"/></svg>Captain Jumpstart</div>
   <nav id="nav">
@@ -870,6 +1416,7 @@ body.playing .jside{height:100%}
           </div>
           <div class="jplay">
             <div class="jinfo ai"><span class="jdice" id="jLifeAi" data-shown="20">20</span><span class="jmeta" id="jAiMeta"></span></div>
+            <div class="jcmdslot ai" id="jAiCommander" aria-label="Comandante de la IA"></div>
             <div class="jzone jhand ai" id="jAiHand"></div>
             <div class="jzone jlands ai" id="jAiLand"></div>
             <div class="jzone ai" id="jAiBf"><span class="jempty" data-i18n="game.aiFieldEmpty">Campo de la IA</span></div>
@@ -881,6 +1428,7 @@ body.playing .jside{height:100%}
             <div class="jzone me" id="jYouBf"><span class="jempty" data-i18n="game.yourFieldEmpty">Tu campo de batalla</span></div>
             <div class="jzone jlands me" id="jYouLand"></div>
             <div class="jinfo me"><span class="jmeta" id="jYouMeta"></span><span class="jdice" id="jLifeYou" data-shown="20">20</span></div>
+            <div class="jcmdslot me" id="jYouCommander" aria-label="Tu zona de mando"></div>
             <div class="jzone jhand me" id="jYouHand"></div>
           </div>
         </div>
@@ -892,12 +1440,16 @@ body.playing .jside{height:100%}
           <button class="btn sec sm" id="jConcede" data-i18n="gp.concede">Conceder</button>
           <span class="badge" id="jDiffBadge"></span>
         </div>
-        <div class="jcmdbox">
-          <b class="sm" data-i18n="gp.cmdZone">Zona de mando</b>
-          <div id="jCmd" class="mu sm">—</div>
-        </div>
+        <section class="jcmdbox jcmdbox-ai" id="jAiCmdPanel">
+          <b class="sm">Zona de mando · CPU</b>
+          <div id="jAiCmdDetails" class="mu sm">—</div>
+        </section>
         <b class="sm" data-i18n="gp.log">Registro</b>
         <div class="jlogbox"><div class="log" id="jLog"></div></div>
+        <section class="jcmdbox jcmdbox-you" id="jYouCmdPanel">
+          <b class="sm">Zona de mando · Player</b>
+          <div id="jCmd" class="mu sm">—</div>
+        </section>
       </aside>
     </div>
     <div class="jblockpanel" id="jBlockWrap" style="display:none">
@@ -1645,7 +2197,7 @@ Object.assign(I18N.fr,{
 /* ---------- claves finales: tablero, partida e impresión ---------- */
 Object.assign(I18N.es,{
   'game.tapped':'girada','game.emptyHand':'Mano vacía','game.noCaptain':'Este mazo no tiene capitán.','game.cast':'Lanzar','game.taxWord':'impuesto',
-  'game.castCount':'Lanzado {n}× desde la zona de mando.','game.toCombat':'Ir a combate','game.pass':'Pasar a principal 2','game.attackN':'Atacar con {n}',
+  'game.castCount':'TAX {n}','game.toCombat':'Ir a combate','game.pass':'Pasar a principal 2','game.attackN':'Atacar con {n}',
   'game.endTurn':'Terminar turno','game.aiThinking':'Turno de la IA…','game.cantCastCombat':'No puedes lanzar hechizos en combate en este simulador.',
   'game.mulliganLog':'{p} usa el mulligan gratuito.','game.startLine':'Capitán: {c}. 20 vidas, primer mulligan gratis.',
   'game.noCombos':'Sin combinaciones','game.combos':'{n} combinaciones disponibles.','game.needPacks':'Necesitas al menos dos sobres.',
@@ -1662,7 +2214,7 @@ Object.assign(I18N.es,{
 });
 Object.assign(I18N.en,{
   'game.tapped':'tapped','game.emptyHand':'Empty hand','game.noCaptain':'This deck has no captain.','game.cast':'Cast','game.taxWord':'tax',
-  'game.castCount':'Cast {n}× from the command zone.','game.toCombat':'Go to combat','game.pass':'Pass to main 2','game.attackN':'Attack with {n}',
+  'game.castCount':'TAX {n}','game.toCombat':'Go to combat','game.pass':'Pass to main 2','game.attackN':'Attack with {n}',
   'game.endTurn':'End turn','game.aiThinking':'AI turn…','game.cantCastCombat':'You cannot cast spells during combat in this simulator.',
   'game.mulliganLog':'{p} takes the free mulligan.','game.startLine':'Captain: {c}. 20 life, first mulligan free.',
   'game.noCombos':'No combinations','game.combos':'{n} combinations available.','game.needPacks':'You need at least two packs.',
@@ -1679,7 +2231,7 @@ Object.assign(I18N.en,{
 });
 Object.assign(I18N.fr,{
   'game.tapped':'engagée','game.emptyHand':'Main vide','game.noCaptain':'Ce deck n’a pas de capitaine.','game.cast':'Lancer','game.taxWord':'taxe',
-  'game.castCount':'Lancé {n}× depuis la zone de commandement.','game.toCombat':'Aller au combat','game.pass':'Passer en principale 2','game.attackN':'Attaquer avec {n}',
+  'game.castCount':'TAX {n}','game.toCombat':'Aller au combat','game.pass':'Passer en principale 2','game.attackN':'Attaquer avec {n}',
   'game.endTurn':'Terminer le tour','game.aiThinking':'Tour de l’IA…','game.cantCastCombat':'Impossible de lancer des sorts pendant le combat dans ce simulateur.',
   'game.mulliganLog':'{p} prend le mulligan gratuit.','game.startLine':'Capitaine : {c}. 20 points de vie, premier mulligan gratuit.',
   'game.noCombos':'Aucune combinaison','game.combos':'{n} combinaisons disponibles.','game.needPacks':'Il faut au moins deux boosters.',
@@ -1774,6 +2326,13 @@ I18N.es['v.src']='Cartas';I18N.en['v.src']='Cards';I18N.fr['v.src']='Cartes';
 I18N.es['v.srcFdn']='Solo Foundations (FDN)';I18N.en['v.srcFdn']='Foundations only (FDN)';I18N.fr['v.srcFdn']='Fondations uniquement (FDN)';
 I18N.es['fdn.ok']='{n} mazos de Foundations construidos ({c} cartas cada uno).';I18N.en['fdn.ok']='{n} Foundations decks built ({c} cards each).';I18N.fr['fdn.ok']='{n} decks Foundations construits ({c} cartes chacun).';
 I18N.es['src.fdn']='Foundations (FDN)';I18N.en['src.fdn']='Foundations (FDN)';I18N.fr['src.fdn']='Foundations (FDN)';
+/* tipo de generación del mazo (capa deck-gen) */
+(function(){const K=['gen.all', 'gen.virtual', 'gen.fdn', 'gen.kit', 'gen.official', 'gen.imported', 'gen.manual', 'gen.collection', 'gen.hint'];
+const S=['Todos','Generador','Foundations','Kit de sets','Precons oficiales','Importado','Manual','Mi colección','Generado por'];
+const E=['All','Generator','Foundations','Set kit','Official precons','Imported','Manual','My collection','Generated by'];
+const F=['Tous','Générateur','Foundations','Kit de sets','Precons officiels','Importé','Manuel','Ma collection','Généré par'];
+K.forEach(function(k,i){I18N.es[k]=S[i];I18N.en[k]=E[i];I18N.fr[k]=F[i];});})();
+
 I18N.es['v.srcAll']='Cualquier carta';I18N.en['v.srcAll']='Any card';I18N.fr['v.srcAll']='Toutes les cartes';
 I18N.es['v.srcNoUb']='Sin Universes Beyond';I18N.en['v.srcNoUb']='No Universes Beyond';I18N.fr['v.srcNoUb']='Sans Universes Beyond';
 I18N.es['v.srcCore']='Solo sets básicos';I18N.en['v.srcCore']='Core sets only';I18N.fr['v.srcCore']='Sets de base uniquement';
@@ -2364,16 +2923,17 @@ function hideZoom(){
 function placeZoom(el){
   const z=$('#cardZoom');if(!z||!el||!el.isConnected)return;
   const r=el.getBoundingClientRect();
-  /* cabe en la ventana por alto y no se merienda la mesa */
-  const w=Math.round(Math.max(140,Math.min(520,innerWidth*0.42,(innerHeight-16)*0.716)));
+  /* Vista de carta completa: tamaño contenido, proporción MTG y sin tapar media mesa. */
+  const w=Math.round(Math.max(112,Math.min(248,innerWidth*.24,(innerHeight-24)*.716)));
   const h=Math.round(w/0.716);
   z.style.width=w+'px';
-  /* a la derecha de la carta si cabe; si no, a la izquierda; si no, centrado */
-  let left=r.right+16;
-  if(left+w>innerWidth-8)left=r.left-w-16;
+  z.style.height=h+'px';
+  z.style.objectFit='contain';
+  z.style.background='#080d13';
+  let left=r.right+12;
+  if(left+w>innerWidth-8)left=r.left-w-12;
   if(left<8)left=r.left+r.width/2-w/2;
   left=Math.max(8,Math.min(left,innerWidth-w-8));
-  /* centrado en la carta, sin salirse por arriba ni por abajo */
   const top=Math.max(8,Math.min(innerHeight-h-8,r.top+r.height/2-h/2));
   z.style.left=Math.round(left)+'px';z.style.top=Math.round(top)+'px';
 }
@@ -2664,7 +3224,7 @@ $('#packTabs').addEventListener('click',e=>{const b=e.target.closest('button[dat
 /* ---------- sobres ---------- */
 function loadPacks(){
   const p=store.get('cj2_packs',[]);
-      state.packs=Array.isArray(p)?p.filter(x=>x&&x.cards&&x.cards.length).map(x=>{const o={id:x.id||Date.now()+Math.random(),name:x.name||'Pack',cards:x.cards.slice(),prints:x.prints||{},basicArt:x.basicArt||{},basicArtLang:x.basicArtLang||'',setCode:x.setCode||'',theme:x.theme||'',source:x.source||'manual',color:x.color||'',themeId:x.themeId||'',seq:x.seq||0};if(!o.setCode)o.setCode=packSetOf(o);return o}):[];
+      state.packs=Array.isArray(p)?p.filter(x=>x&&x.cards&&x.cards.length).map(x=>{const o={id:x.id||Date.now()+Math.random(),name:x.name||'Pack',cards:x.cards.slice(),prints:x.prints||{},basicArt:x.basicArt||{},basicArtLang:x.basicArtLang||'',setCode:x.setCode||'',theme:x.theme||'',source:x.source||'',color:x.color||'',themeId:x.themeId||'',seq:x.seq||0};if(!o.setCode)o.setCode=packSetOf(o);return o}):[];
 }
 function savePacks(){store.set('cj2_packs',state.packs.map(p=>({id:p.id,name:p.name,cards:p.cards,prints:p.prints||{},basicArt:p.basicArt||{},basicArtLang:p.basicArtLang||'',setCode:p.setCode||'',theme:p.theme,source:p.source,color:p.color||'',themeId:p.themeId||'',seq:p.seq||0})))}
 /* numeración global: identificador único y siempre creciente (1, 6, 11, 12…) */
@@ -2828,7 +3388,7 @@ function renderPacks(){
       <div class="art">${art?`<span class="abg" style="background-image:url(${esc(art)})"></span><img src="${esc(art)}" alt="" loading="lazy">`:''}<span class="nm">${esc(nm)}</span></div>
       <div class="bd">
         <div class="meta">${cols.length?cols.map(k=>pip(k)).join(''):`<span class="mu">${t('pk.noColor')}</span>`}
-          <span>${p.cards.length}/20</span>${gr?anaBadge(p,gr):''}<span class="badge">${esc(srcLabel(p.source))}</span></div>
+          <span>${p.cards.length}/20</span>${gr?anaBadge(p,gr):''}</div>
         ${packLead(gr)}
         <div class="acts">
           <button data-act="edit" data-id="${p.id}">${t('pk.edit')}</button>
@@ -6475,21 +7035,42 @@ function renderBoard(){
   const ab=$('#jAuto');if(ab)ab.textContent=t('game.autoBtn',{s:G.auto?t('game.on'):t('game.off')});
 }
 function renderCommand(){
-  const box=$('#jCmd');if(!box)return;
-  const c=G.you&&G.you.cmd;
-  if(!c){box.innerHTML=`<span class="mu">${t('game.noCaptain')}</span>`;return}
-  const tax=G.you.cmdCount*2;
-  const cost=cardOfSafe(c.name);
-  const ok=canPay(G.you,costOf(cost),tax)&&G.turn==='you'&&G.phase!=='combat'&&!G.over&&!G.you.bf.some(x=>x.name===c.name);
-  box.innerHTML=`<div style="display:flex;gap:10px;align-items:flex-start">
-    ${cardImg(cost)?`<img src="${esc(cardImg(cost))}" alt="" style="width:58px;border-radius:6px;border:1px solid #ffffff1f">`:''}
-    <div style="flex:1;min-width:0"><b style="font-family:Fraunces,serif;font-size:15px">${esc(cardName(cost))}</b>
-      <div class="mu xs">${esc(cardType(cost))}</div>
-      <div class="sm" style="margin-top:4px">${manaHtml(cost.mana)}${tax?` <span class="mu">+{${tax}} ${t('game.taxWord')}</span>`:''}</div>
-      <button class="btn sm" id="jCastCmd" ${ok?'':'disabled'} style="margin-top:6px">${t('game.cast')} (${esc(costText(cost,tax))})</button>
-    </div></div>
-    <div class="mu xs" style="margin-top:6px">${t('game.castCount',{n:G.you.cmdCount})}</div>`;
-  const b=$('#jCastCmd');if(b)b.onclick=()=>{if(playFromHand(G.you,-1,true))renderBoard()};
+  const paintSlot=(sel,perm,owner)=>{
+    const slot=$(sel);if(!slot)return;
+    const name=perm&&(perm.name||perm.card&&perm.card.name);
+    const card=name?cardOfSafe(name):null;
+    if(!card){slot.innerHTML='<span class="cmdempty">Zona de mando · '+owner+'</span>';return}
+    const img=cardImg(card);
+    slot.innerHTML=`<div class="cmdcard">${img?`<img src="${esc(img)}" alt="${esc(cardName(card))}" data-nm="${esc(name)}" title="${esc(cardName(card))}">`:''}<span class="cmdname"><b>${esc(cardName(card))}</b><br><span style="opacity:.65">${owner}</span></span></div>`;
+  };
+  paintSlot('#jAiCommander',G.ai&&G.ai.cmd,'IA');
+  paintSlot('#jYouCommander',G.you&&G.you.cmd,'TÚ');
+
+  const renderPanel=(target,player,owner,isYou)=>{
+    const panel=$(target);if(!panel)return;
+    if(!player||!player.cmd){
+      panel.innerHTML=`<span class="mu">${t('game.noCaptain')}</span>`;
+      return;
+    }
+    const c=player.cmd;
+    const card=cardOfSafe(c.name);
+    const tax=(player.cmdCount||0)*2;
+    const ok=isYou&&canPay(player,costOf(card),tax)&&G.turn==='you'&&G.phase!=='combat'&&!G.over&&!player.bf.some(x=>x.name===c.name);
+    panel.innerHTML=`<div class="jcmd-detail">
+      ${cardImg(card)?`<img class="jcmd-art" src="${esc(cardImg(card))}" alt="${esc(cardName(card))}" data-nm="${esc(cardName(card))}" title="${esc(cardName(card))}">`:''}
+      <div class="jcmd-copy">
+        <b class="jcmd-name" data-nm="${esc(cardName(card))}">${esc(cardName(card))}</b>
+        <div class="mu xs">${esc(cardType(card))}</div>
+        <div class="sm jcmd-mana">${manaHtml(card.mana)}</div>
+        <button class="btn sm jcmd-cast" ${isYou?(ok?'':'disabled'):'disabled'} ${isYou?'id="jCastCmd"':''}>${t('game.cast')} (${esc(costText(card,tax))})</button>
+      </div>
+    </div>
+    <div class="mu xs jcmd-tax">TAX ${tax}</div>`;
+  };
+  renderPanel('#jAiCmdDetails',G.ai,'CPU',false);
+  renderPanel('#jCmd',G.you,'Player',true);
+  const b=$('#jCastCmd');
+  if(b)b.onclick=()=>{if(playFromHand(G.you,-1,true))renderBoard()};
 }
 function renderPhase(){
   const p=G.phase||'main1';
@@ -6890,7 +7471,7 @@ async function printProxies(){
   const bu=backUrl(PRINT.back);
   const backCss=bu?`.back{background-image:url('${bu}');background-size:cover;background-position:center}`:'';
   const html=`<!DOCTYPE html><html lang="${LANG}"><head>
-<meta name="app-version" content="2026-11-25 21:55">
+<meta name="app-version" content="2026-11-26 10:08">
     @page{size:${size};margin:6mm}
     *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#fff}
@@ -6918,7 +7499,187 @@ async function printProxies(){
     .back .bk{font:700 6mm Georgia,serif;letter-spacing:.2em;margin-top:3mm}
     .back .bk2{font:600 2.4mm Arial;letter-spacing:.14em;color:#9fb0c0;margin-top:1mm}
     ${backCss}
-  </style></head><body>${sheets}</body></html>`;
+  </style></head><body>${sheets}
+<style id="playmat-commander-position-and-card-scale">
+/* Zonas de mando independientes, colocadas junto a cada jugador. */
+body.arena-mat-on #jTable .jplay{position:relative!important}
+body.arena-mat-on #jTable #jAiCommander,
+body.arena-mat-on #jTable #jYouCommander{
+  position:absolute!important;
+  z-index:12!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:52px!important;
+  min-width:52px!important;
+  height:73px!important;
+  min-height:73px!important;
+  margin:0!important;
+  padding:2px!important;
+  border-radius:7px!important;
+  background:#07120deF!important;
+  box-shadow:0 5px 15px #000c!important;
+}
+body.arena-mat-on #jTable #jAiCommander{
+  top:8px!important;right:82px!important;left:auto!important;bottom:auto!important;
+  border:1px solid #8eb9d5b0!important;
+  transform:none!important;
+}
+body.arena-mat-on #jTable #jYouCommander{
+  bottom:8px!important;left:82px!important;right:auto!important;top:auto!important;
+  border:1px solid #d6bc79b0!important;
+  transform:none!important;
+}
+body.arena-mat-on #jTable .jcmdslot .cmdcard{
+  display:flex!important;width:100%!important;height:100%!important;
+  align-items:center!important;justify-content:center!important;
+}
+body.arena-mat-on #jTable .jcmdslot .cmdcard img{
+  display:block!important;width:100%!important;height:100%!important;
+  max-width:100%!important;max-height:100%!important;
+  object-fit:contain!important;aspect-ratio:745/1040!important;
+}
+body.arena-mat-on #jTable .jcmdslot .cmdname{display:none!important}
+body.arena-mat-on #jTable .jcmdslot .cmdempty{
+  writing-mode:vertical-rl!important;font-size:8px!important;
+}
+
+/* Cartas jugadas: +25% respecto al tamaño base de cada breakpoint. */
+body.arena-mat-on #jTable #jAiBf>.bcard,
+body.arena-mat-on #jTable #jYouBf>.bcard{
+  flex:0 0 77.5px!important;
+  width:77.5px!important;
+  min-width:77.5px!important;
+  max-width:77.5px!important;
+}
+@media(max-width:1100px){
+  body.arena-mat-on #jTable #jAiBf>.bcard,
+  body.arena-mat-on #jTable #jYouBf>.bcard{
+    flex-basis:75px!important;width:75px!important;min-width:75px!important;max-width:75px!important;
+  }
+}
+@media(max-width:820px){
+  body.arena-mat-on #jTable #jAiBf>.bcard,
+  body.arena-mat-on #jTable #jYouBf>.bcard{
+    flex-basis:67.5px!important;width:67.5px!important;min-width:67.5px!important;max-width:67.5px!important;
+  }
+  body.arena-mat-on #jTable #jAiCommander{right:70px!important}
+  body.arena-mat-on #jTable #jYouCommander{left:70px!important}
+}
+@media(max-width:520px){
+  body.arena-mat-on #jTable #jAiBf>.bcard,
+  body.arena-mat-on #jTable #jYouBf>.bcard{
+    flex-basis:57.5px!important;width:57.5px!important;min-width:57.5px!important;max-width:57.5px!important;
+  }
+  body.arena-mat-on #jTable #jAiCommander{
+    right:54px!important;width:42px!important;min-width:42px!important;height:59px!important;min-height:59px!important;
+  }
+  body.arena-mat-on #jTable #jYouCommander{
+    left:54px!important;width:42px!important;min-width:42px!important;height:59px!important;min-height:59px!important;
+  }
+}
+</style>
+
+
+<style id="playmat-ai-hand-visible-inverted-fan">
+/* La mano rival vuelve a estar visible: dorsos en abanico invertido. */
+body.arena-mat-on #jTable #jAiHand{
+  display:flex!important;
+  position:relative!important;
+  visibility:visible!important;
+  opacity:1!important;
+  flex-flow:row nowrap!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  gap:0!important;
+  width:100%!important;
+  min-height:116px!important;
+  height:116px!important;
+  max-height:none!important;
+  padding:18px 12px 3px!important;
+  margin:0!important;
+  overflow:visible!important;
+  border:1px solid #8eb9d566!important;
+  border-radius:12px!important;
+  background:linear-gradient(180deg,#07131be8,#0b1b14b8)!important;
+  box-sizing:border-box!important;
+  z-index:5!important;
+}
+body.arena-mat-on #jTable #jAiHand:before{
+  content:"MANO · CPU"!important;
+  position:absolute!important;left:10px!important;right:auto!important;top:4px!important;
+  color:#b9d5e9!important;font:700 8px 'Hanken Grotesk',sans-serif!important;
+  letter-spacing:.12em!important;opacity:.85!important;pointer-events:none!important;
+}
+body.arena-mat-on #jTable #jAiHand>.bcard{
+  display:block!important;
+  position:relative!important;
+  flex:0 0 58px!important;
+  width:58px!important;height:81px!important;
+  min-width:58px!important;max-width:58px!important;
+  aspect-ratio:745/1040!important;
+  margin:0 -9px!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border:1px solid #9ab4c7a8!important;
+  border-radius:7px!important;
+  box-shadow:0 5px 12px #000b!important;
+  background-position:center!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+  transform:rotate(calc(var(--rot,0deg) * -1)) translateY(calc(var(--lift,0px) * -1))!important;
+  transform-origin:50% 135%!important;
+  transition:transform .22s ease,filter .2s!important;
+}
+body.arena-mat-on #jTable #jAiHand>.bcard:hover{
+  transform:rotate(0deg) translateY(-5px)!important;z-index:20!important;
+}
+@media(max-width:820px){
+  body.arena-mat-on #jTable #jAiHand{min-height:94px!important;height:94px!important;padding-top:15px!important}
+  body.arena-mat-on #jTable #jAiHand>.bcard{
+    flex-basis:48px!important;width:48px!important;min-width:48px!important;max-width:48px!important;
+    height:67px!important;margin-left:-8px!important;margin-right:-8px!important;
+  }
+}
+@media(max-width:520px){
+  body.arena-mat-on #jTable #jAiHand{min-height:82px!important;height:82px!important;padding-top:14px!important}
+  body.arena-mat-on #jTable #jAiHand>.bcard{
+    flex-basis:38px!important;width:38px!important;min-width:38px!important;max-width:38px!important;
+    height:53px!important;margin-left:-7px!important;margin-right:-7px!important;
+  }
+}
+</style>
+
+
+<style id="playmat-ai-hand-final-visibility-fix">
+/* Corrección definitiva: mostrar siempre las cartas de la mano de la CPU. */
+body.arena-mat-on #jTable #jAiHand{
+  display:flex!important; visibility:visible!important; opacity:1!important;
+  position:relative!important; flex-direction:row!important; flex-wrap:nowrap!important;
+  align-items:flex-start!important; justify-content:center!important;
+  min-height:116px!important; height:116px!important; max-height:none!important;
+  padding:18px 12px 3px!important; margin:0!important; overflow:visible!important;
+  box-sizing:border-box!important;
+}
+body.arena-mat-on #jTable #jAiHand>.bcard{
+  display:block!important; visibility:visible!important; opacity:1!important;
+  flex:0 0 58px!important; width:58px!important; min-width:58px!important; max-width:58px!important;
+  height:81px!important; margin:0 -9px!important;
+  background-size:cover!important; background-position:center!important; background-repeat:no-repeat!important;
+  transform:rotate(calc(var(--rot,0deg) * -1)) translateY(calc(var(--lift,0px) * -1))!important;
+  transform-origin:50% 135%!important;
+}
+@media(max-width:820px){
+ body.arena-mat-on #jTable #jAiHand{min-height:94px!important;height:94px!important;padding-top:15px!important}
+ body.arena-mat-on #jTable #jAiHand>.bcard{flex-basis:48px!important;width:48px!important;min-width:48px!important;max-width:48px!important;height:67px!important;margin-left:-8px!important;margin-right:-8px!important}
+}
+@media(max-width:520px){
+ body.arena-mat-on #jTable #jAiHand{min-height:82px!important;height:82px!important;padding-top:14px!important}
+ body.arena-mat-on #jTable #jAiHand>.bcard{flex-basis:38px!important;width:38px!important;min-width:38px!important;max-width:38px!important;height:53px!important;margin-left:-7px!important;margin-right:-7px!important}
+}
+</style>
+
+</body></html>`;
   printWindow(html);
   toast(t('print.toastPacks',{n:packs.length,c:total,h:pages.length}));
 }
@@ -7426,7 +8187,7 @@ body.arena-mat-on #jTable .jgrid{
 
 /* ---------- 2. cartas del tablero ---------- */
 /* la mano del rival se resume en «N en mano»: libera sitio y evita cartas cortadas arriba */
-body.arena-mat-on #jTable #jAiHand{display:none!important}
+/* La mano de la CPU no se oculta: se muestra en abanico inverso. */
 body.arena-mat-on #jTable .jbody{padding-top:4px!important}
 
 body.arena-mat-on #jTable .jzone .bcard{
@@ -8888,6 +9649,993 @@ body.playing #undoBar.on{display:flex}
 
   if (document.readyState !== 'loading') setTimeout(function () { try { offerResume(); } catch (e) { } }, 300);
   else document.addEventListener('DOMContentLoaded', function () { try { offerResume(); } catch (e) { } });
+})();
+</script>
+<style id="basics-art-css">
+/* ===== tierras básicas sin arte crossover =====
+   La capa no necesita estilos: solo corrige qué imagen se pinta. */
+</style>
+<script id="basics-art">
+/* ============================================================
+   Arte de las tierras básicas · capa autocontenida
+   Scryfall devuelve, por nombre, la impresión MÁS RECIENTE: para «Isla» eso es
+   hoy un set Universes Beyond (Star Trek, Marvel…), y ese era el arte que salía
+   en la mesa y en la lista de mazos aunque el mazo fuera de Foundations.
+   La capa:
+     1. si una carta básica cacheada viene de un set crossover, pinta el arte de
+        un set clásico (m21) en el idioma de la carta;
+     2. tira el arte de básicas que un mazo tenga guardado de un set crossover;
+     3. si un mazo pide un set (Foundations, etc.) y no trae arte de básicas, se
+        lo rellena con el de ese set.
+   Los nombres pueden venir localizados («Isla»): Scryfall pone el nombre en
+   inglés en `name` y el del idioma en `printed_name`, así que se indexa por los
+   dos y, si aun así no hay, se busca por color (BASIC) o por tipo.
+   ============================================================ */
+(() => {
+  if (typeof cardImg !== 'function' || typeof cardOf !== 'function') return;
+
+  const UB = new Set(['trk', 'trc', 'sds', 'hob', 'hoc', 'msh', 'msc', 'tmc', 'tmt', 'tle', 'tla',
+    'ptla', 'spm', 'spe', 'pspm', 'fin', 'fic', 'pfin', 'rfin', 'acr', 'pip', 'rex', 'who',
+    'ltr', 'ltc', 'bot', '40k', 'w40k', 'mdd', 'mdc', 'mar', 'fca', 'lmar']);
+  const isUB = set => {
+    const s = String(set || '').toLowerCase();
+    if (!s) return false;
+    if (UB.has(s)) return true;
+    return (typeof isCrossoverSet === 'function') && isCrossoverSet(s);
+  };
+  const isBasicCard = c => !!c && (c.basic === true || /^basic land/i.test(String(c.type || '')));
+  const lang = () => (typeof cLang === 'function' ? cLang() : 'en');
+  const LANG_ORDER = () => {
+    const l = lang();
+    return [l, 'es', 'en'].filter((v, i, a) => a.indexOf(v) === i);
+  };
+
+  const arts = Object.create(null);      /* set -> {nombre|nombre impreso: [imgs]} */
+  const busy = Object.create(null);
+  const failedAt = Object.create(null);
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+
+  /* Scryfall corta en ráfaga (429 sin cabeceras → «Failed to fetch»): reintentar */
+  async function ask(url, tries) {
+    let last = null;
+    for (let i = 0; i < (tries || 3); i++) {
+      try { return await api(url); }
+      catch (e) { last = e; await wait(500 * (i + 1)); }
+    }
+    throw last || new Error('fetch');
+  }
+
+  function loadArt(set) {
+    const s = String(set || 'm21').toLowerCase();
+    if (arts[s]) return Promise.resolve(arts[s]);
+    if (busy[s]) return busy[s];
+    if (failedAt[s] && Date.now() - failedAt[s] < 60000) return Promise.resolve(arts[s] || {});
+    const p = (async () => {
+      const out = Object.create(null);
+      let ok = 0;
+      for (const lg of LANG_ORDER()) {
+        try {
+          const q = 'set:' + s + ' t:basic -is:digital lang:' + lg;
+          const d = await ask(API + '/cards/search?unique=prints&q=' + encodeURIComponent(q));
+          (d.data || []).forEach(c => {
+            const im = (c.image_uris || {}).normal;
+            if (!im) return;
+            [c.printed_name, c.name].forEach(n => {
+              if (!n) return;
+              const arr = out[n] || (out[n] = []);
+              if (!arr.includes(im)) arr.push(im);
+            });
+          });
+          ok++;
+        } catch (e) { }
+        await wait(120);
+      }
+      if (!ok) failedAt[s] = Date.now();
+      else arts[s] = out;
+      return out;
+    })();
+    busy[s] = p;
+    p.then(() => { delete busy[s]; }, () => { delete busy[s]; failedAt[s] = Date.now(); });
+    return p;
+  }
+
+  /* imágenes de una básica: nombre, nombre impreso, color o tipo */
+  function pick(a, name, c) {
+    if (!a) return null;
+    const direct = (n) => (n && a[n] && a[n].length) ? a[n] : null;
+    if (direct(name)) return direct(name);
+    const bare = String(name || '').replace(/^Snow-Covered /i, '');
+    if (direct(bare)) return direct(bare);
+    const col = (c && c.ci && c.ci[0]) || (c && c.prod && c.prod[0]) || '';
+    const en = col && typeof BASIC !== 'undefined' ? BASIC[col] : '';
+    if (direct(en)) return direct(en);
+    const t = String((c && c.type) || '').toLowerCase();
+    const hit = Object.keys(a).find(k => t && t.indexOf(String(k).toLowerCase()) >= 0);
+    if (hit) return a[hit];
+    return null;
+  }
+
+  function syncArt(set, name, c) {
+    return pick(arts[String(set).toLowerCase()], name, c);
+  }
+
+  async function artForName(set, name, c) {
+    const a = await loadArt(set);
+    return pick(a, name, c);
+  }
+
+  /* 1 · imagen clásica para una básica cacheada de un set crossover */
+  const fixed = Object.create(null);
+  function repaint() {
+    try { if (typeof renderPacks === 'function' && typeof state !== 'undefined' && state.packs) renderPacks(); } catch (e) { }
+    try { if (typeof renderBoard === 'function' && typeof G !== 'undefined' && G && G.you) renderBoard(); } catch (e) { }
+  }
+
+  const ciBase = cardImg;
+  cardImg = function (c) {
+    if (isBasicCard(c) && isUB(c.set)) {
+      const imgs = syncArt('m21', c.name, c);
+      if (imgs && imgs.length) return imgs[0];
+      if (!fixed[c.name]) {
+        fixed[c.name] = 1;
+        artForName('m21', c.name, c).then(r => { if (r && r.length) setTimeout(repaint, 30); });
+      }
+    }
+    return ciBase.apply(this, arguments);
+  };
+
+  /* 2 · arte crossover guardado en el mazo: fuera (así se usa el clásico) */
+  function scrubDeck(d) {
+    if (!d || typeof d !== 'object') return false;
+    let changed = false;
+    const pr = d.basicPrints || {};
+    Object.keys(d.basicArt || {}).forEach(n => {
+      if (isUB((pr[n] || {}).set)) { delete d.basicArt[n]; delete pr[n]; changed = true; }
+    });
+    return changed;
+  }
+
+  /* 3 · rellena el arte del set del mazo cuando falta */
+  async function fillDeck(d) {
+    if (!d || !Array.isArray(d.cards)) return;
+    const bases = [...new Set(d.cards.filter(n => isBasicCard(cardOf(n))))];
+    if (!bases.length) return;
+    const want = String(d.sets || d.setCode || '').split(',')[0].trim().toLowerCase();
+    const set = (want && !isUB(want)) ? want : 'm21';
+    const missing = bases.filter(n => !(d.basicArt && (d.basicArt[n] || []).length));
+    if (!missing.length) return;
+    let got = 0;
+    for (const n of missing) {
+      const imgs = await artForName(set, n, cardOf(n));
+      if (!imgs || !imgs.length) continue;
+      d.basicArt = d.basicArt || {};
+      d.basicPrints = d.basicPrints || {};
+      d.basicArt[n] = imgs.slice(0, 6);
+      d.basicPrints[n] = { set: set, img: imgs[0] };
+      got++;
+    }
+    if (got) { try { if (typeof savePacks === 'function') savePacks(); } catch (e) { } setTimeout(repaint, 30); }
+  }
+
+  const rpBase = (typeof renderPacks === 'function') ? renderPacks : null;
+  if (rpBase) {
+    renderPacks = function () {
+      try {
+        if (typeof state !== 'undefined' && state.packs) {
+          state.packs.forEach(d => {
+            if (scrubDeck(d)) { try { savePacks() } catch (e) { } }
+            fillDeck(d);
+          });
+        }
+      } catch (e) { }
+      return rpBase.apply(this, arguments);
+    };
+  }
+
+  window.__basicArt = { loadArt: loadArt, scrubDeck: scrubDeck, isUB: isUB, pick: pick };
+})();
+</script>
+<style id="deck-gen-css">
+/* ===== tipo de generación del mazo (capa deck-gen) =====
+   Chips de filtro sobre la lista de mazos y una etiqueta de color en cada
+   tarjeta diciendo de qué generador salió. La lista sigue siendo una sola. */
+.genfilter{
+  display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+  margin:2px 0 10px;
+}
+.genchip{
+  font:inherit;font-size:11.5px;line-height:1;font-weight:600;
+  padding:7px 10px;border-radius:999px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;
+  color:var(--mu,#aab4c0);
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.14);
+  transition:background .12s,border-color .12s,color .12s;
+}
+.genchip:hover{background:rgba(255,255,255,.09);color:#fff}
+.genchip.on{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.38)}
+.genchip .n{opacity:.65;font-weight:500}
+.genb{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10.5px;line-height:1;font-weight:600;
+  padding:4px 7px;border-radius:999px;white-space:nowrap;
+  border:1px solid currentColor;
+}
+.genb[data-gen="virtual"]{color:#8fb4e8;background:rgba(80,130,200,.16)}
+.genb[data-gen="fdn"]{color:#8fd6a8;background:rgba(80,180,120,.16)}
+.genb[data-gen="kit"]{color:#e8cf8f;background:rgba(200,170,80,.16)}
+.genb[data-gen="official"]{color:#c3a8e8;background:rgba(150,110,200,.16)}
+.genb[data-gen="imported"]{color:#8fe0e0;background:rgba(80,190,190,.16)}
+.genb[data-gen="manual"]{color:#d9b3b3;background:rgba(190,120,120,.16)}
+.genb[data-gen="collection"]{color:#c9e08f;background:rgba(150,190,80,.16)}
+.genchip[data-gen="virtual"] .ic{color:#8fb4e8}
+.genchip[data-gen="fdn"] .ic{color:#8fd6a8}
+.genchip[data-gen="kit"] .ic{color:#e8cf8f}
+.genchip[data-gen="official"] .ic{color:#c3a8e8}
+.genchip[data-gen="imported"] .ic{color:#8fe0e0}
+.genchip[data-gen="manual"] .ic{color:#d9b3b3}
+.genchip[data-gen="collection"] .ic{color:#c9e08f}
+</style>
+<script id="deck-gen">
+/* ============================================================
+   Tipo de generación del mazo · capa autocontenida
+   La lista de mazos es una sola, pero cada tarjeta dice de qué generador
+   salió (Generador, Foundations, Kit de sets, precons oficiales, importado,
+   manual o colección) y encima de la rejilla aparecen chips para filtrar.
+   No toca el motor ni el guardado: solo envuelve renderPacks() y decora el
+   DOM que ya se ha pintado.
+   ============================================================ */
+(() => {
+  if (typeof renderPacks !== 'function' || typeof state === 'undefined' || !state) return;
+
+  const ICON = {
+    all: '🗂', virtual: '🎲', fdn: '🧱', kit: '🧰',
+    official: '🏛', imported: '📋', manual: '✍', collection: '🃏'
+  };
+  const ORDER = ['virtual', 'fdn', 'kit', 'official', 'imported', 'manual', 'collection'];
+  const T = (k, d) => (typeof t === 'function' ? t(k) : d);
+  const esc2 = s => (typeof esc === 'function' ? esc(String(s)) : String(s));
+  const byId = id => (state.packs || []).find(x => String(x.id) === String(id));
+  const kitSets = () => (typeof CMD_KIT_SETS !== 'undefined' && CMD_KIT_SETS) || null;
+
+  /* de qué generador salió el mazo cuando el dato está guardado */
+  function genOf(p) {
+    const s = String((p && p.source) || '');
+    if (s === 'fdn') return 'fdn';
+    if (s === 'physical') return 'collection';
+    if (s === 'oficial') return 'official';
+    if (s === 'kit') return 'kit';
+    if (s === 'importado') return 'imported';
+    if (s === 'virtual') return 'virtual';
+    /* sin `source` (o con el «manual» que ponía el saneador a los mazos viejos):
+       se deduce por el contenido en vez de darlo por manual */
+    return inferOf(p);
+  }
+
+  /* Deducción conservadora para mazos guardados antes de que existiera `source`.
+     Solo se moja con señales fuertes (sets del kit, FDN, nombre que pone un
+     generador); si no hay ninguna, se queda en manual. */
+  function inferOf(p) {
+    if (!p) return 'manual';
+    const nm = String(p.name || '');
+    const sets = String(p.sets || '').toUpperCase().split(',')
+      .map(x => x.trim()).filter(Boolean);
+    const kit = kitSets();
+    if (String(p.setCode || '').toUpperCase() === 'FDN' ||
+      sets.indexOf('FDN') >= 0 || /^Foundations\b/.test(nm)) return 'fdn';
+    if (sets.length && kit && sets.every(x => kit.indexOf(x) >= 0)) return 'kit';
+    const cards = Array.isArray(p.cards) ? p.cards : [];
+    /* precons: los mazos de Jumpstart se llaman «Nombre · COD #n» y traen 20 cartas */
+    if (!p.commander && cards.length === 20 && / · [A-Z0-9]{2,6} #\d+$/.test(nm)) return 'official';
+    if (!p.commander && cards.length === 20 &&
+      /^(Sobre importado|Imported pack|Booster import)/.test(nm)) return 'imported';
+    /* el generador firma con « #n» al final; además deja comandante, tema o color */
+    if (/#\d+$/.test(nm) &&
+      (p.commander || p.themeId || p.color || /^[WUBRG]{1,5} · #\d+$/.test(nm))) return 'virtual';
+    return 'manual';
+  }
+
+  let GEN_FILTER = 'all';
+
+  function decorate() {
+    const grid = document.getElementById('packGrid');
+    if (!grid) return;
+    const cards = Array.prototype.slice.call(grid.querySelectorAll('.pack[data-pack]'));
+    const bar0 = document.getElementById('genFilter');
+
+    const rows = cards.map(el => {
+      const p = byId(el.dataset.pack);
+      return { el: el, g: p ? genOf(p) : '' };
+    }).filter(r => r.g);
+
+    if (!rows.length) { if (bar0) bar0.style.display = 'none'; return; }
+
+    /* etiqueta de color en la fila de datos de cada tarjeta */
+    rows.forEach(r => {
+      const meta = r.el.querySelector('.cmdeckmeta') || r.el.querySelector('.meta');
+      if (!meta || meta.querySelector('.genb')) return;
+      const s = document.createElement('span');
+      s.className = 'genb';
+      s.dataset.gen = r.g;
+      s.textContent = ICON[r.g] + ' ' + T('gen.' + r.g, r.g);
+      s.title = T('gen.hint', 'Generado por') + ': ' + T('gen.' + r.g, r.g);
+      meta.appendChild(s);
+    });
+
+    const counts = {};
+    rows.forEach(r => { counts[r.g] = (counts[r.g] || 0) + 1; });
+    const keys = ORDER.filter(k => counts[k]);
+
+    if (keys.length < 2) {                    /* un solo tipo: sin chips */
+      if (bar0) bar0.style.display = 'none';
+      rows.forEach(r => { r.el.style.display = ''; });
+      return;
+    }
+
+    let bar = bar0;
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'genFilter';
+      bar.className = 'genfilter';
+      if (grid.parentElement) grid.parentElement.insertBefore(bar, grid);
+    }
+    bar.style.display = '';
+
+    const chip = (k, n, label) =>
+      '<button type="button" class="genchip' + (GEN_FILTER === k ? ' on' : '') + '" data-gen="' + k + '">' +
+      '<span class="ic">' + ICON[k] + '</span>' + esc2(label) + '<span class="n">' + n + '</span></button>';
+
+    bar.innerHTML = chip('all', rows.length, T('gen.all', 'Todos')) +
+      keys.map(k => chip(k, counts[k], T('gen.' + k, k))).join('');
+
+    if (GEN_FILTER !== 'all' && !counts[GEN_FILTER]) GEN_FILTER = 'all';
+    if (GEN_FILTER !== 'all') {
+      bar.querySelector('.genchip[data-gen="' + GEN_FILTER + '"]').classList.add('on');
+      bar.querySelector('.genchip[data-gen="all"]').classList.remove('on');
+    }
+    rows.forEach(r => { r.el.style.display = (GEN_FILTER === 'all' || r.g === GEN_FILTER) ? '' : 'none'; });
+  }
+
+  const rpBase = renderPacks;
+  renderPacks = function () {
+    const out = rpBase.apply(this, arguments);
+    try { decorate(); } catch (e) { }
+    return out;
+  };
+
+  document.addEventListener('click', e => {
+    const b = e.target && e.target.closest ? e.target.closest('.genchip[data-gen]') : null;
+    if (!b) return;
+    e.preventDefault();
+    GEN_FILTER = b.dataset.gen || 'all';
+    try { renderPacks(); } catch (err) { }
+  });
+
+  /* la lista ya puede estar pintada cuando entra la capa */
+  try { decorate(); } catch (e) { }
+  window.__deckGen = { genOf: genOf, inferOf: inferOf, filter: () => GEN_FILTER, decorate: decorate };
+})();
+</script>
+
+<style id="playmat-card-full-image-fix">
+/* Corrección definitiva: mostrar la imagen completa de cada permanente del tablero.
+   Anula el zoom de arte aplicado por la capa arena-mat-on. */
+body.arena-mat-on #jTable .jzone .bcard{
+  overflow:hidden!important;
+  aspect-ratio:745/1040!important;
+}
+body.arena-mat-on #jTable .jzone .bcard>img{
+  display:block!important;
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  transform:none!important;
+  border-radius:7px!important;
+}
+</style>
+
+<style id="playmat-cards-larger-v13">
+/* Aumento general de tamaño: mano, tierras y permanentes. */
+body.arena-mat-on #jTable #jAiHand,
+body.arena-mat-on #jTable #jYouHand{
+  min-height:132px!important;height:132px!important;max-height:none!important;
+  padding-top:23px!important;padding-bottom:5px!important;overflow:visible!important;
+}
+body.arena-mat-on #jTable #jAiHand>.bcard{
+  flex:0 0 76px!important;width:76px!important;min-width:76px!important;max-width:76px!important;
+  height:106px!important;margin-left:-12px!important;margin-right:-12px!important;
+}
+body.arena-mat-on #jTable #jYouHand>.hcard{
+  flex:0 0 82px!important;width:82px!important;min-width:82px!important;max-width:82px!important;
+  height:115px!important;margin-left:-8px!important;margin-right:-8px!important;
+}
+body.arena-mat-on #jTable #jYouHand>.hcard img{
+  width:100%!important;height:100%!important;object-fit:contain!important;
+}
+body.arena-mat-on #jTable #jAiBf,
+body.arena-mat-on #jTable #jYouBf{
+  min-height:158px!important;padding:7px!important;gap:6px!important;overflow:visible!important;
+}
+body.arena-mat-on #jTable #jAiBf>.bcard,
+body.arena-mat-on #jTable #jYouBf>.bcard{
+  flex:0 0 96px!important;width:96px!important;min-width:96px!important;max-width:96px!important;
+}
+body.arena-mat-on #jTable #jAiLand>.bcard,
+body.arena-mat-on #jTable #jYouLand>.bcard{
+  flex:0 0 66px!important;width:66px!important;min-width:66px!important;max-width:66px!important;
+}
+@media(max-width:1100px){
+ body.arena-mat-on #jTable #jAiHand,
+ body.arena-mat-on #jTable #jYouHand{min-height:118px!important;height:118px!important}
+ body.arena-mat-on #jTable #jAiHand>.bcard{flex-basis:68px!important;width:68px!important;min-width:68px!important;max-width:68px!important;height:95px!important}
+ body.arena-mat-on #jTable #jYouHand>.hcard{flex-basis:72px!important;width:72px!important;min-width:72px!important;max-width:72px!important;height:101px!important}
+ body.arena-mat-on #jTable #jAiBf,
+ body.arena-mat-on #jTable #jYouBf{min-height:142px!important}
+ body.arena-mat-on #jTable #jAiBf>.bcard,
+ body.arena-mat-on #jTable #jYouBf>.bcard{flex-basis:86px!important;width:86px!important;min-width:86px!important;max-width:86px!important}
+ body.arena-mat-on #jTable #jAiLand>.bcard,
+ body.arena-mat-on #jTable #jYouLand>.bcard{flex-basis:58px!important;width:58px!important;min-width:58px!important;max-width:58px!important}
+}
+@media(max-width:820px){
+ body.arena-mat-on #jTable #jAiHand,
+ body.arena-mat-on #jTable #jYouHand{min-height:108px!important;height:108px!important;padding-top:19px!important}
+ body.arena-mat-on #jTable #jAiHand>.bcard{flex-basis:60px!important;width:60px!important;min-width:60px!important;max-width:60px!important;height:84px!important;margin-left:-10px!important;margin-right:-10px!important}
+ body.arena-mat-on #jTable #jYouHand>.hcard{flex-basis:62px!important;width:62px!important;min-width:62px!important;max-width:62px!important;height:87px!important;margin-left:-7px!important;margin-right:-7px!important}
+ body.arena-mat-on #jTable #jAiBf,
+ body.arena-mat-on #jTable #jYouBf{min-height:126px!important}
+ body.arena-mat-on #jTable #jAiBf>.bcard,
+ body.arena-mat-on #jTable #jYouBf>.bcard{flex-basis:74px!important;width:74px!important;min-width:74px!important;max-width:74px!important}
+ body.arena-mat-on #jTable #jAiLand>.bcard,
+ body.arena-mat-on #jTable #jYouLand>.bcard{flex-basis:50px!important;width:50px!important;min-width:50px!important;max-width:50px!important}
+}
+@media(max-width:520px){
+ body.arena-mat-on #jTable #jAiHand,
+ body.arena-mat-on #jTable #jYouHand{min-height:94px!important;height:94px!important;padding-top:16px!important}
+ body.arena-mat-on #jTable #jAiHand>.bcard{flex-basis:50px!important;width:50px!important;min-width:50px!important;max-width:50px!important;height:70px!important;margin-left:-8px!important;margin-right:-8px!important}
+ body.arena-mat-on #jTable #jYouHand>.hcard{flex-basis:52px!important;width:52px!important;min-width:52px!important;max-width:52px!important;height:73px!important;margin-left:-6px!important;margin-right:-6px!important}
+ body.arena-mat-on #jTable #jAiBf,
+ body.arena-mat-on #jTable #jYouBf{min-height:108px!important}
+ body.arena-mat-on #jTable #jAiBf>.bcard,
+ body.arena-mat-on #jTable #jYouBf>.bcard{flex-basis:62px!important;width:62px!important;min-width:62px!important;max-width:62px!important}
+ body.arena-mat-on #jTable #jAiLand>.bcard,
+ body.arena-mat-on #jTable #jYouLand>.bcard{flex-basis:42px!important;width:42px!important;min-width:42px!important;max-width:42px!important}
+}
+</style>
+
+
+<style id="playmat-full-commander-panels">
+/* Paneles completos de comandante en la columna lateral: CPU arriba,
+   registro en medio y jugador abajo, como en la referencia visual. */
+#jugar.playing .jside{
+  display:flex!important;
+  flex-direction:column!important;
+  min-height:0!important;
+}
+#jugar.playing .jcmdbox{
+  display:block!important;
+  flex:0 0 auto!important;
+  padding:10px!important;
+  border:1px solid #8d956b66!important;
+  border-radius:13px!important;
+  background:linear-gradient(145deg,#15241f,#0b1712)!important;
+  overflow:visible!important;
+}
+#jugar.playing .jcmdbox-ai{order:2!important}
+#jugar.playing .jside>b[data-i18n="gp.log"]{order:3!important}
+#jugar.playing .jlogbox{order:4!important;flex:1 1 auto!important;min-height:110px!important}
+#jugar.playing .jcmdbox-you{order:5!important}
+#jugar.playing .jcmd-detail{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  margin-top:7px!important;min-width:0!important;
+}
+#jugar.playing .jcmd-art{
+  display:block!important;flex:0 0 58px!important;width:58px!important;
+  height:auto!important;aspect-ratio:745/1040!important;object-fit:contain!important;
+  border:1px solid #ffffff35!important;border-radius:6px!important;
+  cursor:zoom-in!important;
+}
+#jugar.playing .jcmd-art:hover{filter:brightness(1.06)}
+#jugar.playing .jcmd-name[data-nm]{cursor:zoom-in!important}
+#jugar.playing .jcmd-copy{flex:1 1 auto!important;min-width:0!important}
+#jugar.playing .jcmd-name{
+  display:block!important;font:700 15px Fraunces,Georgia,serif!important;
+  color:#9fc2e3!important;line-height:1.15!important;margin:0 0 3px!important;
+}
+#jugar.playing .jcmd-mana{margin-top:5px!important}
+#jugar.playing .jcmd-cast{margin-top:7px!important}
+#jugar.playing .jcmd-tax{margin-top:7px!important}
+#jugar.playing .jcmd-cast:disabled{opacity:.48!important}
+@media(max-width:820px){
+  #jugar.playing .jgrid{grid-template-columns:minmax(0,1fr)!important}
+  #jugar.playing .jside{display:flex!important}
+  #jugar.playing .jcmdbox{max-width:none!important}
+}
+</style>
+
+
+<style id="captain-life-right-no-flying-commander">
+/* Vida del jugador a la derecha, como la de la IA. */
+#jugar.playing .jinfo.me{
+  bottom:5px!important;right:8px!important;left:auto!important;
+  justify-content:flex-end!important;
+}
+/* Las cartas de capitán del tapete sobraban: las zonas de mando laterales
+   (#jAiCmdPanel / #jYouCmdPanel) ya muestran y lanzan al capitán. */
+#jugar.playing #jAiCommander,
+#jugar.playing #jYouCommander{display:none!important}
+/* La banda de tierras reservaba 68px a cada lado para esa carta: se cierra. */
+#jugar.playing .jzone.jlands{padding-left:10px!important;padding-right:10px!important}
+</style>
+<style id="saga-pw-css">
+/* ===== sagas y planeswalkers ===== */
+/* contador de relato / lealtad sobre la carta (mismo estilo que el de lealtad) */
+#jTable .jzone .bcard .loy{position:absolute;right:4px;bottom:4px;z-index:4;
+  background:#121a2ee6;border:1px solid #8fd3ff77;color:#d8ecff;border-radius:4px;
+  padding:3px 7px;font:700 11px/1 'Hanken Grotesk',system-ui,sans-serif;
+  box-shadow:0 1px 4px #0009;pointer-events:none}
+#jTable .jzone .bcard .loy.lore{background:#2a1c0ee6;border-color:#e0b97877;color:#f4ddb0}
+/* panel propio de habilidades de lealtad (captain y standard, donde el motor
+   no pinta el suyo o lo tiene oculto) */
+.swpanel{position:fixed;left:14px;bottom:58px;z-index:86;display:none;
+  min-width:190px;max-width:min(38vw,360px);padding:8px 10px;border-radius:12px;
+  background:#0b131bf2;border:1px solid #c9a4ff4d;box-shadow:0 12px 28px #000b;
+  color:#e9e0c9;font:600 12px/1.25 'Hanken Grotesk',system-ui,-apple-system,sans-serif;
+  backdrop-filter:blur(6px)}
+.swpanel.on{display:block}
+.swpanel .swhd{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.swpanel .swhd b{font-size:12.5px;color:#f2d99a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.swpanel .swhd .swloy{margin-left:auto;color:#cdb8ff;font-weight:800}
+.swpanel .swhd .swx{border:0;background:transparent;color:#8fa3b5;font-size:15px;cursor:pointer;line-height:1}
+.swpanel .swrow{display:flex;flex-wrap:wrap;gap:4px}
+.swpanel .swab{min-width:34px;padding:4px 8px;border-radius:8px;cursor:pointer;
+  background:#1a1430;border:1px solid #c9a4ff66;color:#eadcff;font:800 11px/1 inherit}
+.swpanel .swab:disabled{opacity:.42;cursor:not-allowed}
+.swpanel .sweff{margin-top:6px;color:#a9b7c4;font-weight:500;font-size:11px;line-height:1.3}
+@media(max-height:820px){.swpanel{bottom:52px;min-width:170px}}
+</style>
+<script id="saga-pw">
+/* ============================================================
+   Sagas y planeswalkers · capa autocontenida
+   - Sagas: entran con un contador de relato y resuelven el capítulo I; al empezar
+     tu fase principal (primer repintado del turno) se añade un contador y se
+     resuelve ese capítulo; al llegar al último la saga se sacrifica.
+   - Planeswalkers: entran con su lealtad, tienen panel de habilidades de lealtad
+     (una por turno, no se puede bajar de 0), mueren con 0 de lealtad y reciben
+     daño con `loyalty` (el motor de commander/brawl/standard ya lo hace; aquí se
+     rellena lo que falta, sobre todo en captain).
+   Los efectos se resuelven con `applySpell`, como el resto de capas.
+   ============================================================ */
+(() => {
+  if (typeof G === 'undefined' || typeof applySpell !== 'function' || typeof playFromHand !== 'function') return;
+
+  Object.assign(I18N.es, {
+    'sw.pwEnter': '{c} entra con {n} de lealtad.',
+    'sw.pwAbility': '{c}: {a}.',
+    'sw.pwDies': '{c} pierde toda su lealtad.',
+    'sw.sagaEnter': '{c} entra con un contador de relato (capítulo I).',
+    'sw.sagaTick': '{c}: contador de relato {n}.',
+    'sw.sagaDone': '{c} completó su último capítulo y se sacrifica.',
+    'sw.loyalty': 'Lealtad {n}',
+    'sw.lore': 'Relato {n}',
+    'sw.panel': 'Habilidades',
+    'sw.sagaChapter': '{c}: capítulo {n}.',
+    'sw.pumpAll': '{n} criaturas obtienen {a}/{b}.',
+    'sw.draw': 'Robo de {n} carta(s).',
+    'sw.xPick': 'Elige X (0 a {n})',
+    'sw.both': 'ambos jugadores'
+  });
+  Object.assign(I18N.en, {
+    'sw.pwEnter': '{c} enters with {n} loyalty.',
+    'sw.pwAbility': '{c}: {a}.',
+    'sw.pwDies': '{c} loses all loyalty.',
+    'sw.sagaEnter': '{c} enters with a lore counter (chapter I).',
+    'sw.sagaTick': '{c}: lore counter {n}.',
+    'sw.sagaDone': '{c} finished its last chapter and is sacrificed.',
+    'sw.loyalty': 'Loyalty {n}',
+    'sw.lore': 'Lore {n}',
+    'sw.panel': 'Abilities',
+    'sw.sagaChapter': '{c}: chapter {n}.',
+    'sw.pumpAll': '{n} creatures get {a}/{b}.',
+    'sw.draw': 'Draw of {n} card(s).',
+    'sw.xPick': 'Choose X (0 to {n})',
+    'sw.both': 'both players'
+  });
+  Object.assign(I18N.fr, {
+    'sw.pwEnter': '{c} arrive avec {n} de loyauté.',
+    'sw.pwAbility': '{c} : {a}.',
+    'sw.pwDies': '{c} perd toute sa loyauté.',
+    'sw.sagaEnter': '{c} arrive avec un marqueur de récit (chapitre I).',
+    'sw.sagaTick': '{c} : marqueur de récit {n}.',
+    'sw.sagaDone': '{c} a terminé son dernier chapitre et est sacrifié.',
+    'sw.loyalty': 'Loyauté {n}',
+    'sw.lore': 'Récit {n}',
+    'sw.panel': 'Capacités',
+    'sw.sagaChapter': '{c} : chapitre {n}.',
+    'sw.pumpAll': '{n} créatures gagnent {a}/{b}.',
+    'sw.draw': 'Pioche de {n} carte(s).',
+    'sw.xPick': 'Choisissez X (0 à {n})',
+    'sw.both': 'les deux joueurs'
+  });
+
+  const isPW = c => /planeswalker/i.test(String((c && c.type) || ''));
+  const isSaga = c => /\bsaga\b/i.test(String((c && c.type) || ''));
+  const side = P => (P === G.you ? 'you' : 'ai');
+
+  /* ---------- sagas ---------- */
+  const ROMAN = { i: 1, ii: 2, iii: 3, iv: 4, v: 5, vi: 6, vii: 7, viii: 8 };
+  const roman = r => ROMAN[String(r || '').trim().toLowerCase()] || 0;
+  /* la raya puede llegar como em dash, en dash o guion: se pide por código para
+     no depender de cómo se sirva el archivo */
+  const CHAPTER = /^(?:chapter\s*)?(VIII|VII|VI|IV|V|III|II|I)(?:\s*,\s*(?:VIII|VII|VI|IV|V|III|II|I))*\s*[\u2014\u2013-]\s*(.+)$/i;
+
+  function sagaChapters(card) {
+    const out = [];
+    String((card && card.oracle) || '').split('\n').forEach(line => {
+      const m = line.trim().match(CHAPTER);
+      if (!m) return;
+      /* la coletilla entre paréntesis es texto recordatorio («Then sacrifice it») */
+      const eff = m[2].replace(/\s*\([^)]*\)\.?\s*$/, '').trim();
+      if (!eff) return;
+      const nums = line.trim().replace(/^chapter\s*/i, '').split(/[\u2014\u2013-]/)[0].split(',');
+      nums.forEach(r => { const n = roman(r); if (n) out.push({ n: n, eff: eff }); });
+    });
+    return out.sort((a, b) => a.n - b.n);
+  }
+  const sagaMax = card => sagaChapters(card).reduce((m, c) => Math.max(m, c.n), 0);
+
+  const isCrea = x => !!(x && x.card && /\bcreature\b/i.test(String(x.card.type || '')) && !/planeswalker/i.test(String(x.card.type || '')));
+
+  /* «las criaturas que controlas / los caballeros que controlas obtienen +N/+M»:
+     applySpell solo sube a un objetivo, así que este caso se aplica a todas (y así
+     no cae en el atajo de tokens, que creaba una ficha por el tipo del texto). */
+  function massPump(P, eff) {
+    const m = eff.match(/gets? ([+-]\d+)\/([+-]\d+)/i);
+    if (!m) return false;
+    if (!/you control|each creature|all creatures|all .+ you control/i.test(eff)) return false;
+    const a = parseInt(m[1], 10), b = parseInt(m[2], 10);
+    if (!a && !b) return false;
+    const only = (eff.match(/^\s*(?:all|each|other)?\s*([a-z]+s)\s+you control/i) || [])[1];
+    const needle = only ? only.replace(/s$/, '').toLowerCase() : '';
+    const list = (P.bf || []).filter(x => isCrea(x));
+    const target = needle ? list.filter(x => String(x.card.type || '').toLowerCase().indexOf(needle) >= 0) : list;
+    if (!target.length) return false;
+    target.forEach(x => { x.a += a; x.b += b; });
+    logLine(t('sw.pumpAll', { n: target.length, a: (a >= 0 ? '+' : '') + a, b: (b >= 0 ? '+' : '') + b }), side(P));
+    return true;
+  }
+
+  /* «cada jugador roba una carta» / «el jugador objetivo roba tres»: el motor solo
+     reconoce «draw a card», así que estos casos se resuelven aquí. Se exige el
+     verbo en tercera persona (draws) para no robar dos veces lo que ya hace applySpell. */
+  function drawEffect(P, eff) {
+    /* imperativo con cifra («Draw 3 cards.», lo que deja una X resuelta): el motor
+       solo reconoce el número escrito con letras, así que esta parte es de la capa */
+    let m = eff.match(/^\s*draw\s+(\d+)\s+cards?/i);
+    if (!m) m = eff.match(/(each player|each opponent|target player|that player)?\s*draws\s+(a|an|one|two|three|four|\d+)\s+cards?/i);
+    if (!m) return false;
+    const num = m[2] != null ? m[2] : m[1];
+    const n = /^\d+$/.test(num) ? +num : ({ a: 1, an: 1, one: 1, two: 2, three: 3, four: 4 }[String(num).toLowerCase()] || 0);
+    if (!n) return false;
+    const who = String(m[2] != null ? (m[1] || '') : '').toLowerCase();
+    const foe = P === G.you ? G.ai : G.you;
+    if (/each player/.test(who)) { draw(P, n); draw(foe, n); }
+    else if (/each opponent|that player/.test(who)) { draw(foe, n); }
+    else { draw(P, n); }
+    logLine(t('sw.draw', { n: n, p: /each player/.test(who) ? t('sw.both') : (P.name || '') }), side(P));
+    return true;
+  }
+
+  function applyEffect(P, srcCard, eff, quiet) {
+    if (!eff) return false;
+    if (massPump(P, eff)) return true;
+    if (drawEffect(P, eff)) return true;
+    return applySpell(P, Object.assign({}, srcCard, { oracle: eff }), cardName(srcCard), !!quiet);
+  }
+
+  function sagaFire(P, perm, n, quiet) {
+    /* una misma línea puede traer varios capítulos («I, II — …»): se resuelven todos */
+    const chs = sagaChapters(perm.card).filter(c => c.n === n);
+    if (!chs.length) return false;
+    if (!quiet) logLine(t('sw.sagaChapter', { c: cardName(perm.card), n: n }), side(P));
+    chs.forEach(ch => applyEffect(P, perm.card, ch.eff, quiet));
+    return true;
+  }
+
+  /* ---------- planeswalkers: lealtad ---------- */
+  function pwAbs(card) {
+    const out = [];
+    String((card && card.oracle) || '').split('\n').forEach(line => {
+      const m = line.trim().match(/^\[?([+\u2212\u2013-]?\d+|[+\u2212\u2013-]?x)\]?\s*:\s*(.+)$/i);
+      if (!m) return;
+      const eff = m[2].replace(/\s*\([^)]*\)\.?\s*$/, '').trim();
+      if (!eff) return;
+      const raw = m[1].replace(/[\u2212\u2013]/g, '-');
+      /* «−X»: el jugador elige la X (0..lealtad) al activar */
+      if (/^[+-]?x$/i.test(raw)) { out.push({ n: null, x: true, sign: (/^-/.test(raw) ? -1 : 1), eff: eff }); return; }
+      const n = parseInt(raw, 10);
+      if (!isFinite(n)) return;
+      out.push({ n: n, eff: eff });
+    });
+    return out;
+  }
+
+  /* coste real de la habilidad: fijo, o X elegido */
+  const loyCost = (a, x) => (a && a.x
+    ? (a.sign < 0 ? -1 : 1) * Math.max(0, parseInt(x, 10) || 0)
+    : (a ? a.n : 0));
+
+  function canLoy(P, perm, a, x) {
+    if (!P || !perm || !perm.card || !isPW(perm.card) || perm.loyalty == null || !a) return false;
+    if (perm._loyTurn === G.turnNo) return false;
+    if ((perm.loyalty || 0) + loyCost(a, x) < 0) return false;
+    if (P === G.you && !(G.turn === 'you' && (G.phase === 'main1' || G.phase === 'main2'))) return false;
+    return true;
+  }
+
+  function useLoy(P, perm, a, x) {
+    if (!canLoy(P, perm, a, x)) return false;
+    const c = loyCost(a, x);
+    perm.loyalty = (perm.loyalty || 0) + c;
+    perm.loy = perm.loyalty;
+    perm._loyTurn = G.turnNo;
+    logLine(t('sw.pwAbility', { c: cardName(perm.card), a: (c > 0 ? '+' : '') + c }), side(P));
+    /* la X del texto es la cantidad, sin el signo del coste */
+    const v = a.x ? Math.abs(loyCost(a, x)) : null;
+    const eff = v == null ? a.eff : String(a.eff).replace(/\bX\b/g, String(v));
+    applyEffect(P, perm.card, eff, true);
+    checkDeaths();
+    renderBoard();
+    return true;
+  }
+
+  /* ---------- marcas de entrada ----------
+     Se ponen las marcas que falten a cualquier saga o planeswalker que ya esté en
+     el campo, venga de la mano o de un efecto (reanimar, buscar, copiar): así el
+     relato y la lealtad se siembran también cuando la carta no se lanza a mano.
+     El capítulo I de una saga se resuelve aquí, igual que al lanzarla. */
+  function seed() {
+    [G.you, G.ai].forEach(P => {
+      if (!P) return;
+      (P.bf || []).slice().forEach(perm => {
+        if (!perm || !perm.card) return;
+        const c = perm.card;
+        if (isPW(c) && perm.loyalty == null) {
+          const loy = parseInt(c.loyalty, 10);
+          if (!isFinite(loy)) return;
+          perm.pw = true;
+          perm.loyalty = loy;
+          perm.loy = loy;
+          logLine(t('sw.pwEnter', { c: cardName(c), n: loy }), side(P));
+        }
+        if (isSaga(c) && perm.lore == null) {
+          perm.lore = 1;
+          perm._sagaTurn = G.turnNo;      /* el capítulo I no cuenta como el del turno */
+          logLine(t('sw.sagaEnter', { c: cardName(c) }), side(P));
+          sagaFire(P, perm, 1, true);
+        }
+      });
+    });
+  }
+
+  /* ---------- un contador por turno al empezar la fase principal ---------- */
+  let tickKey = '';
+  function tick() {
+    if (!G.you || !G.ai || G.over) return;
+    if (window.MP && MP.live && MP.role === 'guest') return;   /* el anfitrión manda */
+    const key = G.turnNo + '|' + G.turn;
+    if (tickKey === key) return;
+    tickKey = key;
+    const P = G.turn === 'you' ? G.you : G.ai;
+    /* una saga recién puesta ya resolvió su capítulo I: su siguiente contador
+       llega en tu próxima fase principal, no en el mismo turno */
+    const sagas = (P.bf || []).filter(x => x && x.card && isSaga(x.card) &&
+      x.lore != null && x._sagaTurn !== G.turnNo);
+    sagas.forEach(perm => {
+      const max = sagaMax(perm.card);
+      if (!max) return;
+      perm.lore = (perm.lore || 1) + 1;
+      const n = perm.lore;
+      logLine(t('sw.sagaTick', { c: cardName(perm.card), n: n }), side(P));
+      sagaFire(P, perm, Math.min(n, max), true);
+      if (n >= max) {
+        P.bf = P.bf.filter(x => x !== perm);
+        if (!perm.token) P.gy.push(perm.name);
+        logLine(t('sw.sagaDone', { c: cardName(perm.card) }), side(P));
+      }
+    });
+    /* la IA usa una habilidad de lealtad al empezar su turno */
+    if (P === G.ai) {
+      (P.bf || []).slice().forEach(perm => {
+        if (!perm || !perm.card || !isPW(perm.card) || perm.loyalty == null) return;
+        const abs = pwAbs(perm.card);
+        if (!abs.length) return;
+        /* la IA no elige X: usa la mejor habilidad de coste fijo */
+        const fixed = abs.filter(a => !a.x);
+        const pick = fixed.filter(a => a.n >= 0).sort((a, b) => b.n - a.n)[0] || fixed[0];
+        if (pick && canLoy(P, perm, pick)) useLoy(P, perm, pick);
+      });
+    }
+    if (sagas.length) { checkDeaths(); renderBoard(); }
+  }
+
+  /* ---------- lealtad al día y muerte a 0 ---------- */
+  function syncLoy() {
+    [G.you, G.ai].forEach(P => {
+      if (!P) return;
+      (P.bf || []).forEach(x => {
+        if (!x || !x.card || !isPW(x.card)) return;
+        if (x.loyalty == null && x.loy != null) x.loyalty = x.loy;
+        if (x.loy != null && x.loy < x.loyalty) x.loyalty = x.loy;   /* daño de otros caminos */
+        x.loy = x.loyalty;
+      });
+    });
+  }
+  function pwSweep() {
+    [G.you, G.ai].forEach(P => {
+      if (!P) return;
+      (P.bf || []).filter(x => x && x.card && isPW(x.card) && x.loyalty != null && x.loyalty <= 0)
+        .slice().forEach(pw => {
+          P.bf = P.bf.filter(y => y !== pw);
+          if (!pw.token) P.gy.push(pw.name);
+          logLine(t('sw.pwDies', { c: cardName(pw.card) }), side(P));
+        });
+    });
+  }
+
+  /* ---------- contador en la carta ---------- */
+  if (typeof permInner === 'function') {
+    const piBase = permInner;
+    permInner = function (x) {
+      let html = piBase.apply(this, arguments);
+      const c = (x && x.card) || {};
+      if (isSaga(c) && x && x.lore != null) {
+        html += '<span class="loy lore" title="' + t('sw.lore', { n: x.lore }) + '">' + x.lore + '</span>';
+        /* el contador de relato tiene que repintarse aunque la carta no cambie de otra cosa */
+      } else if (isPW(c) && x && x.loyalty != null && String(html).indexOf('class="loy"') < 0) {
+        html += '<span class="loy" title="' + t('sw.loyalty', { n: x.loyalty }) + '">' + x.loyalty + '</span>';
+      }
+      return html;
+    };
+  }
+
+  /* ---------- panel propio (captain y standard) ---------- */
+  function panel() {
+    let el = document.getElementById('swPanel');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'swPanel';
+      el.className = 'swpanel';
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+
+  /* elegir X (0..lealtad) para una habilidad «−X» */
+  function drawX(perm, a) {
+    const el = panel();
+    const max = Math.max(0, parseInt(perm.loyalty, 10) || 0);
+    let h = '<div class="swhd"><b>' + t('sw.xPick', { n: max }) + '</b>'
+      + '<span class="swloy">' + t('sw.loyalty', { n: perm.loyalty }) + '</span>'
+      + '<button class="swx" data-swx="1" aria-label="×">×</button></div><div class="swrow">';
+    const sg = a.sign < 0 ? '−' : '+';
+    for (let i = 0; i <= max; i++) h += '<button class="swab" data-swxi="' + i + '">' + sg + i + '</button>';
+    h += '</div><div class="sweff">' + String(a.eff || '').replace(/</g, '&lt;') + '</div>';
+    el.innerHTML = h;
+    el.classList.add('on');
+    const x = el.querySelector('[data-swx]');
+    if (x) x.onclick = () => { G.permSel = null; renderBoard(); };
+    el.querySelectorAll('[data-swxi]').forEach(b => {
+      b.onclick = () => { useLoy(G.you, perm, a, +b.getAttribute('data-swxi')); };
+    });
+  }
+
+  function drawPanel() {
+    const el = panel();
+    const native = document.querySelector('.abilbox');
+    if (!G.you || G.over || (window.MP && MP.live && MP.role === 'guest')) {
+      el.classList.remove('on');
+      if (native) native.style.display = '';
+      return;
+    }
+    const perm = (G.you.bf || []).filter(x => x && x.id === G.permSel)[0];
+    const abs = (perm && perm.card && isPW(perm.card) && perm.loyalty != null) ? pwAbs(perm.card) : [];
+    const hasX = abs.some(a => a.x);
+    /* el panel del motor no conoce las habilidades «−X»: en ese caso manda el de la capa */
+    if (native) native.style.display = hasX ? 'none' : '';
+    if (!abs.length) { el.classList.remove('on'); el.innerHTML = ''; return; }
+    if (native && native.offsetParent !== null) { el.classList.remove('on'); return; }
+
+    const canAct = G.turn === 'you' && !G.over && (G.phase === 'main1' || G.phase === 'main2');
+    let h = '<div class="swhd"><b>' + cardName(perm.card) + '</b><span class="swloy">' + t('sw.loyalty', { n: perm.loyalty }) + '</span>'
+      + '<button class="swx" data-swx="1" aria-label="×">×</button></div><div class="swrow">';
+    abs.forEach((a, i) => {
+      const dis = !canAct || perm._loyTurn === G.turnNo || (perm.loyalty + (a.x ? 0 : a.n) < 0);
+      h += '<button class="swab" data-swa="' + i + '"' + (dis ? ' disabled' : '') + ' title="' + a.eff.replace(/"/g, '&quot;') + '">'
+        + (a.x ? (a.sign < 0 ? '−' : '+') + 'X' : (a.n > 0 ? '+' : '') + a.n) + '</button>';
+    });
+    h += '</div>';
+    const first = abs[0];
+    if (first) h += '<div class="sweff">' + first.eff.replace(/</g, '&lt;') + '</div>';
+    el.innerHTML = h;
+    el.classList.add('on');
+    const x = el.querySelector('[data-swx]');
+    if (x) x.onclick = () => { G.permSel = null; renderBoard(); };
+    el.querySelectorAll('[data-swa]').forEach(b => {
+      b.onclick = () => {
+        const a = abs[+b.getAttribute('data-swa')];
+        if (a && a.x) { drawX(perm, a); return; }
+        useLoy(G.you, perm, a);
+      };
+    });
+    el.querySelectorAll('[data-swa]').forEach(b => {
+      b.onmouseenter = () => {
+        const a = abs[+b.getAttribute('data-swa')];
+        const eff = el.querySelector('.sweff');
+        if (a && eff) eff.textContent = a.eff;
+      };
+    });
+  }
+
+  /* seleccionar un planeswalker propio con un clic (captain no lo trae) */
+  if (typeof bindBoardEvents === 'function') {
+    const bbBase = bindBoardEvents;
+    bindBoardEvents = function () {
+      bbBase.apply(this, arguments);
+      const root = document.querySelector('#jYouBf');
+      if (!root) return;
+      root.querySelectorAll('.bcard').forEach(el => {
+        if (el._swBound) return;
+        const id = +el.dataset.perm;
+        const perm = ((G.you && G.you.bf) || []).filter(x => x && x.id === id)[0];
+        if (!perm || !perm.card || !isPW(perm.card)) return;
+        el._swBound = 1;
+        el.addEventListener('click', () => {
+          if (!G.you || G.over || G.turn !== 'you' || G.phase === 'combat') return;
+          G.permSel = id;
+          renderBoard();
+        });
+      });
+    };
+  }
+
+  /* ganchos de prueba (mismo criterio que `window.fdnBuild`) */
+  window.__sagaChapters = sagaChapters;
+  window.__sagaMax = sagaMax;
+  window.__pwAbs = pwAbs;
+
+  /* ---------- la firma de la carta incluye el relato, para que el contador se repinte ---------- */
+  if (typeof permSig === 'function') {
+    const sigBase = permSig;
+    permSig = function (x) {
+      return sigBase.apply(this, arguments) + '|lore' + (x && x.lore != null ? x.lore : '');
+    };
+  }
+
+  /* ---------- el panel del motor se rehace tras cada `renderCommand` ---------- */
+  if (typeof renderCommand === 'function') {
+    const rcBase = renderCommand;
+    renderCommand = function () {
+      const out = rcBase.apply(this, arguments);
+      try { drawPanel(); } catch (e) { }
+      return out;
+    };
+  }
+
+  /* ---------- enganches ---------- */
+  const rbBase = renderBoard;
+  renderBoard = function () {
+    try { seed(); } catch (e) { }
+    try { tick(); } catch (e) { }
+    const out = rbBase.apply(this, arguments);
+    try { syncLoy(); pwSweep(); } catch (e) { }
+    try { drawPanel(); } catch (e) { }
+    return out;
+  };
 })();
 </script>
 </body>
