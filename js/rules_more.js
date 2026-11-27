@@ -189,14 +189,16 @@
   const COST0 = costOf;   /* ya incluye el «cuesta N menos» de rules-core */
 
   /* ---------- selector flotante (reusa la piel de rules-core) ---------- */
-  function picker(title, sub, opts, cb, onCancel) {
+  function picker(title, sub, opts, cb, onCancel, art) {
     if (typeof document === 'undefined') return null;
     const old = document.getElementById('rulesPick');
     if (old) old.remove();
     const box = document.createElement('div');
     box.id = 'rulesPick';
     const esc0 = s => String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
-    box.innerHTML = `<div class="rpk"><div class="rpk-hd">${esc0(title)}</div>${sub ? `<div class="rpk-sub">${esc0(sub)}</div>` : ''}<div class="rpk-opts">${
+    box.innerHTML = `<div class="rpk"><div class="rpk-hd">${esc0(title)}</div>${sub ? `<div class="rpk-sub">${esc0(sub)}</div>` : ''}${
+      art ? `<div class="rpk-art"><img src="${esc0(art)}" alt=""></div>` : ''
+    }<div class="rpk-opts">${
       opts.map((o, i) => `<button data-i="${i}"${o.dis ? ' disabled' : ''}${o.tip ? ` title="${esc0(o.tip)}"` : ''}>${esc0(o.label)}</button>`).join('')
     }</div><button class="rpk-x" data-close="1" aria-label="×">×</button></div>`;
     document.body.appendChild(box);
@@ -872,7 +874,7 @@
               if (G.turn !== 'you' || G.over) return;
               if (low((P.hand || [])[idx] || '') === low(nm0)) castSplit(P, idx, i);
             },
-            () => { G._splitBusy = false; });
+            () => { G._splitBusy = false; }, (typeof cardImg === 'function' ? cardImg(card) : ''));
           return true;
         }
         return castSplit(P, idx, aiSplitChoice(P, card));
@@ -901,7 +903,7 @@
                 G._kickBusy = false;
                 if (G.turn !== 'you' || G.over) return;
                 if (P.hand[idx] !== undefined && low(P.hand[idx]) === low(card.name)) castingCall(P, idx, null, behold);
-              });
+              }, (typeof cardImg === 'function' ? cardImg(card) : ''));
             return true;
           }
           /* la IA paga el estímulo si le sobran al menos dos manás */
@@ -1029,7 +1031,7 @@
         b = makeBadge('rm-act', '✦', T('rm.ability'), () => {
           picker(T('rm.ability') + ' · ' + nameOf(perm), T('rm.actUse', { c: nameOf(perm), a: abs.map(a => a.cost).join(' / ') }),
             abs.map(a => ({ label: `${a.cost} — ${a.eff}`, dis: !canUseMore(G.you, perm, a), tip: a.eff })),
-            i => useMore(G.you, perm, abs[i]));
+            i => useMore(G.you, perm, abs[i]), null, (typeof cardImg === 'function' ? cardImg(perm.card) : ''));
         });
         el.appendChild(b);
       } else if (!any && b) b.remove();
@@ -1086,7 +1088,7 @@
         x.a = (x.a || 0) + 1; x.b = (x.b || 0) + 1;
         x._riot = false;
         try { renderBoard(); } catch (e) {}
-      });
+      }, (typeof cardImg === 'function' ? cardImg(x.card) : ''));
   }
 
   /* El clic humano no pasa por `playFromHand`: el tablero llama a un `castFromHand`

@@ -2670,7 +2670,10 @@ async function ensureBasicArt(packs){
   for(const p of (packs||[])){
     const set=String(packSetOf(p)||'').toLowerCase();
     const names=[...new Set((p.cards||[]).filter(isBasicName))];
-    if(!set||!names.length)continue;
+    /* sin set no hay arte que pedir: se marca igual para que renderPrintInfo()
+       no vuelva a hidratar en bucle (mazos guardados sin impresiones) */
+    if(!set){if(names.length)p.basicArtLang=L;continue}
+    if(!names.length)continue;
     if(p.basicArtLang===L)continue;
     const art=await fetchBasicArt(set,L);
     const got={};
@@ -12815,9 +12818,11 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
     var openLocal = function (asHost) {
       bc = new BroadcastChannel(chan);
       bc.onmessage = function (e) { if (MP.dc && MP.dc.onmessage) MP.dc.onmessage({ data: e.data }); };
-      MP.dc = fakeDC; MP.ready = true;
-      if (asHost) { MP.role = 'host'; status(tx('wait')); }
-      else { MP.role = 'guest'; send({ t: 'join', deck: myDeck() }); }
+      /* bindDC instala el onmessage que interpreta los mensajes; sin él el
+         modo de dos pestañas abría el canal pero descartaba el «join». */
+      bindDC(fakeDC);
+      MP.role = asHost ? 'host' : 'guest';
+      if (fakeDC.onopen) fakeDC.onopen();
     };
     var bHost = document.createElement('button'), bGuest = document.createElement('button');
     bHost.className = 'btn sec sm'; bHost.textContent = 'Local: alojar';
@@ -12926,10 +12931,10 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
   setInterval(refresh,900);
 })();
 </script>
-<style id="rules-core-css">@import url("css/rules_core.css?v=20261127d");</style>
-<script id="rules-core" src="js/rules_core.js"></script>
-<style id="rules-more-css">@import url("css/rules_more.css");</style>
-<script id="rules-more" src="js/rules_more.js"></script>
+<style id="rules-core-css">@import url("css/rules_core.css?v=20261127h");</style>
+<script id="rules-core" src="js/rules_core.js?v=20261127h"></script>
+<style id="rules-more-css">@import url("css/rules_more.css?v=20261127a");</style>
+<script id="rules-more" src="js/rules_more.js?v=20261127a"></script>
 <script id="fdn-deck">
 /* ---------- Cimientos (FDN): mazos completos ---------- */
 (function(){
@@ -13393,9 +13398,13 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
 <script id="saga-pw" src="js/saga_pw.js"></script>
 <style id="zoom-any-css">@import url("css/zoom_any.css");</style>
 <script id="zoom-any" src="js/zoom_any.js"></script>
-<style id="lib-gy-css">@import url("css/lib_gy.css?v=20261127b");</style>
-<script id="lib-gy" src="js/lib_gy.js?v=20261127b"></script>
+<style id="lib-gy-css">@import url("css/lib_gy.css?v=20261127c");</style>
+<script id="lib-gy" src="js/lib_gy.js?v=20261127c"></script>
 <script id="net-cache" src="js/net_cache.js"></script>
 <script id="play-bridge" src="js/play_bridge.js"></script>
+<style id="block-arena-css">@import url("css/block_arena.css?v=20261127f");</style>
+<script id="block-arena" src="js/block_arena.js?v=20261127e"></script>
+<style id="deck-search-css">@import url("css/deck_search.css?v=20261127o");</style>
+<script id="deck-search" src="js/deck_search.js?v=20261127o"></script>
 </body>
 </html>

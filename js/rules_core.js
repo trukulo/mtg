@@ -123,14 +123,19 @@
   const others = P => (P && P !== G.you ? G.you : G.ai);
 
   /* ---------- selector flotante propio ---------- */
-  function picker(title, sub, opts, cb) {
+  /* `art`: imagen de la carta que se está decidiendo (scry/surveil).
+     `noClose`: sin aspa, para decisiones que no se pueden abandonar sin
+     perder cartas (scry/surveil ya las sacó de la biblioteca). */
+  function picker(title, sub, opts, cb, art, noClose) {
     const old = document.getElementById('rulesPick');
     if (old) old.remove();
     const box = document.createElement('div');
     box.id = 'rulesPick';
-    box.innerHTML = `<div class="rpk"><div class="rpk-hd">${esc(title)}</div>${sub ? `<div class="rpk-sub">${esc(sub)}</div>` : ''}<div class="rpk-opts">${
-      opts.map((o, i) => `<button data-i="${i}"${o.dis ? ' disabled' : ''}${o.tip ? ` title="${esc(o.tip)}"` : ''}>${esc(o.label)}</button>`).join('')
-    }</div><button class="rpk-x" data-close="1" aria-label="×">×</button></div>`;
+    box.innerHTML = `<div class="rpk"><div class="rpk-hd">${esc(title)}</div>${sub ? `<div class="rpk-sub">${esc(sub)}</div>` : ''}${
+      art ? `<div class="rpk-art"><img src="${esc(art)}" alt=""></div>` : ''
+    }<div class="rpk-opts">${
+      opts.map((o, i) => `<button data-i="${i}"${o.dis ? ' disabled' : ''}${o.tip ? ` title="${esc(o.tip)}"` : ''}>${o.img ? `<img class="rpk-th" src="${esc(o.img)}" alt="">` : ''}<span>${esc(o.label)}</span></button>`).join('')
+    }</div>${noClose ? '' : '<button class="rpk-x" data-close="1" aria-label="×">×</button>'}</div>`;
     document.body.appendChild(box);
     box.querySelectorAll('[data-i]').forEach(b => { b.onclick = () => { const i = +b.dataset.i; box.remove(); cb(i); }; });
     const cl = box.querySelector('[data-close]');
@@ -187,7 +192,7 @@
     const victim = pickVictim(P, spec);
     if (allowChoice && P === G.you && pool.length > 1) {
       picker(T('r.sacPick'), T('r.sacPickSub', { c: srcName }),
-        pool.map(x => ({ label: `${cardNameOf(x.card)} · ${pOf(x)}/${tOf(x)}`, tip: cardNameOf(x.card) })),
+        pool.map(x => ({ label: `${cardNameOf(x.card)} · ${pOf(x)}/${tOf(x)}`, tip: cardNameOf(x.card), img: (typeof cardImg === 'function' ? cardImg(x.card) : '') })),
         i => {
           const target = pool[i] || victim;
           if (target && sacrifice(P, target)) { try { checkDeaths(); renderBoard(); } catch (e) {} }
@@ -300,9 +305,10 @@
         if (i >= cards.length) { finish(keep, rest); return; }
         const c = (typeof cardOfSafe === 'function' ? cardOfSafe(cards[i]) : null) || { name: cards[i] };
         const label = cardNameOf(c) + (c.type ? ' · ' + String(c.type).split('—')[0].trim() : '');
-        picker(T(surveil ? 'r.surveilHd' : 'r.scryHd', { n: cards.length }), T(surveil ? 'r.surveilSub' : 'r.scrySub'),
+        picker(T(surveil ? 'r.surveilHd' : 'r.scryHd', { n: cards.length }), T(surveil ? 'r.surveilSub' : 'r.scrySub') + ' · ' + (i + 1) + '/' + cards.length,
           [{ label: `${T('r.scryTop')} — ${label}` }, { label: `${T(surveil ? 'r.scryBin' : 'r.scryBottom')} — ${label}` }],
-          i2 => { (i2 === 0 ? keep : rest).push(cards[i]); step(i + 1); });
+          i2 => { (i2 === 0 ? keep : rest).push(cards[i]); step(i + 1); },
+          (typeof cardImg === 'function' ? cardImg(c) : ''), true);
       };
       step(0);
       return cards.length;
@@ -416,7 +422,11 @@
       if (/^as an additional cost|rather than pay/i.test(cost)) return;
       const syms = cost.match(/\{[^}]+\}/g) || [];
       const mana = syms.filter(x => !/^\{[TQXS]\}$/i.test(x)).join('');
-      const selfSac = /sacrifice (this|it)\b/i.test(cost);
+      const nm = String((card && card.name) || '').trim();
+      const selfName = nm
+        ? new RegExp('sacrifice\\s+' + nm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i').test(cost)
+        : false;
+      const selfSac = /sacrifice (this|it)\b/i.test(cost) || selfName;
       const other = cost.match(/sacrifice (a|an|another|one|two|three|\d+) ([a-z]+)/i);
       out.push({
         cost, eff, mana, tap: /\{T\}/i.test(cost),
@@ -442,7 +452,7 @@
       if (/sacrifice|discard|exile .*from your graveyard|return .*from your graveyard/i.test(cost)) return;
       if (!/\{|pay \d+ life/i.test(cost)) return;
       if (/add \{/i.test(eff)) return;                       /* fuentes de maná: las usa el motor */
-      if (!/draw|gain \d+ life|lose \d+ life|damage|destroy|exile|tap |untap|gets [+-]|counter|token|mill|scry|surveil|discard|put .*onto the battlefield|return .*hand/i.test(eff)) return;
+      if (!/draw|gain \d+ life|lose \d+ life|damage|destroy|exile|tap |untap|gets [+-]|gain lifelink|gains lifelink|counter|token|mill|scry|surveil|discard|put .*onto the battlefield|return .*hand/i.test(eff)) return;
       const syms = cost.match(/\{[^}]+\}/g) || [];
       const mana = syms.filter(x => !/^\{[TQXS]\}$/i.test(x)).join('');
       out.push({
@@ -478,14 +488,27 @@
     if (a.life) P.life -= a.life;
     perm._rulesTurn = G.turnNo;
     log(T('r.actUse', { c: cardNameOf(perm.card), a: a.cost }), who(P));
+    let victim = null;
     if (a.sac === 'self') {
       sacrifice(P, perm);
     } else if (a.sac === 'other') {
-      const victim = poolFor(P, a.sacWhat || 'creature').filter(x => x !== perm).sort((x, y) => valOf(x) - valOf(y))[0];
+      victim = poolFor(P, a.sacWhat || 'creature').filter(x => x !== perm).sort((x, y) => valOf(x) - valOf(y))[0] || null;
       if (victim) sacrifice(P, victim);
     }
     if (!a.sac || a.sac === 'none') perm.tapped = a.tap ? true : wasTapped;
-    try { applySpell(P, Object.assign({}, perm.card, { oracle: a.eff }), cardNameOf(perm.card), true); } catch (e) {}
+    let eff = a.eff;
+    /* Ayli: «You gain life equal to the sacrificed creature's toughness» */
+    if (victim && /gain life equal to (?:the sacrificed creature's|that creature's|its) toughness/i.test(eff)) {
+      const n = Math.max(0, typeof thOf === 'function' ? thOf(victim) : (victim.tou || 0));
+      eff = 'You gain ' + n + ' life.';
+    }
+    /* Vito: «Creatures you control gain lifelink until end of turn» */
+    if (/creatures you control gain lifelink until end of turn/i.test(eff) && P && P.bf) {
+      P.bf.filter(isCrea).forEach(x => { x._kwLifelinkTurn = G.turnNo; });
+      try { renderBoard(); } catch (e) {}
+      return true;
+    }
+    try { applySpell(P, Object.assign({}, perm.card, { oracle: eff }), cardNameOf(perm.card), true); } catch (e) {}
     try { checkDeaths(); renderBoard(); } catch (e) {}
     return true;
   }
@@ -727,6 +750,69 @@
         }
       } catch (e) {}
       return playBase.apply(this, arguments);
+    };
+  }
+
+  /* ---------- «Whenever you gain life» (Vito y similares) ----------
+     Las capas de los tableros ya disparan el texto del disparador, pero el
+     motor no sabía cuánto se había ganado: «loses that much life» se quedaba en
+     nada. Aquí se mide la vida ganada y se aplica la pérdida al rival. */
+  if (typeof applySpell === 'function' && typeof G !== 'undefined') {
+    const lifeBase = applySpell;
+    applySpell = function (P, card, srcName, quiet) {
+      const before = P ? (P.life || 0) : 0;
+      const r = lifeBase.apply(this, arguments);
+      const gained = P ? (P.life || 0) - before : 0;
+      if (gained > 0) {
+        try { triggerLifeGain(P, gained); } catch (e) {}
+      }
+      return r;
+    };
+    var triggerLifeGain = function (P, n) {
+      const foe = P === G.you ? G.ai : G.you;
+      if (!foe) return;
+      (P.bf || []).forEach(perm => {
+        const oracle = String((perm.card && perm.card.oracle) || '').replace(/\n/g, ' ');
+        oracle.split(/\.\s+/).forEach(s => {
+          const m = s.match(/^whenever you gain life,\s*(.+)$/i);
+          if (!m) return;
+          const eff = m[1];
+          if (!/opponent loses that much life/i.test(eff)) return;
+          foe.life -= n;
+          try {
+            if (typeof logLine === 'function' && typeof t === 'function') {
+              logLine(t('game.lifeLost', { p: foe.name, n }), P === G.you ? 'you' : 'ai');
+            }
+          } catch (e) {}
+        });
+      });
+      try { if (typeof checkDeaths === 'function') checkDeaths(); } catch (e) {}
+    };
+  }
+
+  /* El lifelink de combate suma vida directamente en `resolveCombat`, sin pasar
+     por applySpell: se mide allí para que Vito también disparare con daño con
+     vínculo vital. */
+  if (typeof resolveCombat === 'function') {
+    const combatBase = resolveCombat;
+    resolveCombat = function (atkP, defP) {
+      const a0 = atkP ? (atkP.life || 0) : 0;
+      const d0 = defP ? (defP.life || 0) : 0;
+      const r = combatBase.apply(this, arguments);
+      try {
+        if (atkP && atkP.life - a0 > 0) triggerLifeGain(atkP, atkP.life - a0);
+        if (defP && defP.life - d0 > 0) triggerLifeGain(defP, defP.life - d0);
+      } catch (e) {}
+      return r;
+    };
+  }
+
+  /* lifelink temporal de Vito: grantedKw() del tablero lo consulta aquí */
+  if (typeof grantedKw === 'function') {
+    const kwBase = grantedKw;
+    grantedKw = function (x, k) {
+      if (k === 'lifelink' && x && x._kwLifelinkTurn === G.turnNo) return true;
+      return kwBase.apply(this, arguments);
     };
   }
 

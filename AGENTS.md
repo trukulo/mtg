@@ -2714,3 +2714,487 @@ En los tres el pie («Elige una carta» / «Elige la IA») queda visible dentro 
 ventana y el tablero se ve por detrás. `commander.html` en el perfil normal se
 queda colgado al cargar con los mazos guardados (problema previo, ajeno a este
 cambio); la comprobación se hizo en una pestaña incógnito sin `localStorage`.
+
+## Cuelgue al cargar con mazos guardados sin set (27 nov 2026)
+
+Síntoma: `commander.html` se quedaba con la pestaña bloqueada (sin responder a
+nada) al arrancar con el mazo guardado «Small» (99 Plains + Adeline), mientras
+que en incógnito sin `localStorage` cargaba bien. No era la red: el bucle estaba
+en la vista previa de impresión.
+
+Causa, en `ensureBasicArt()` (los cuatro tableros):
+
+- `renderPrintInfo()` llama a `hydratePreviewBasics()`, que pide
+  `ensureBasicArt()` si el mazo tiene básicas y `basicArtLang` no coincide con
+  el idioma de cartas.
+- Si el mazo **no guarda set** (`setCode:''`, `prints:{}` y sin sets deducibles),
+  `packSetOf(p)` devuelve `''` y `ensureBasicArt` hacía `continue` **sin marcar
+  `basicArtLang`**.
+- Al terminar, el `.then()` de `hydratePreviewBasics` vuelve a llamar a
+  `renderPrintInfo()`, que ve la misma necesidad y repite → recursión infinita
+  de promesas; el hilo principal se queda bloqueado.
+
+Arreglo (`tmp/fix_basics_loop.py`, copias en
+`tmp/versions/<tablero>_before_basicsloop.html`): cuando hay básicas pero no set,
+se marca `p.basicArtLang=L` antes del `continue` (no hay arte que pedir y la
+vista previa deja de reintentarlo).
+
+Comprobado en partida real de carga (no en incógnito):
+- `commander.html#inicio` con «Small»: `readyState complete`, 1 mazo, 99 cartas,
+  `basicArtLang:'es'`, `renderPrintInfo()` en 1 ms, «1 mazo · 100 cartas ·
+  12 hojas», sección «Imprimir» con 8 imágenes de vista previa y sin errores en
+  consola.
+- `brawl.html` y `standard.html` (mazos propios) y `captain.html` siguen
+  cargando; `renderPrintInfo()` en 1-2 ms.
+- `lint_boards.py --strict` verde y `sync_shared.py --check` 16/16.
+
+El diagnóstico se hizo con copias instrumentadas (`tmp/debug_boot.py`,
+`tmp/strip_layers.py`): se aisló `applyI18n → onLangChange → renderPrintInfo` y
+dentro de esta `hydratePreviewBasics`; las copias `commander_dbg*.html` se
+borraron al terminar.
+
+## Habilidades de Ayli y Vito (27 nov 2026)
+
+Ayli, Eternal Pilgrim y Vito, Thorn of the Dusk Rose no aplicaban sus
+habilidades. En `tmp/rules_core.js` (capa `rules-core`, compartida por los
+cuatro tableros) faltaban tres piezas:
+
+- **Coste con el nombre de la carta**: `sacAbilities()` solo reconocía
+  «Sacrifice this/it». Ahora también acepta «Sacrifice <nombre de la carta>»
+  (escapando el nombre), así que el coste no se cobraba de más ni de menos.
+- **Vida igual a la resistencia**: al sacrificar, `use()` guarda la víctima y
+  sustituye «You gain life equal to the sacrificed creature's toughness» por
+  «You gain N life» con `thOf(victim)`. (La impresión actual de Ayli usa
+  «Sacrifice another creature», ya contemplado por `sacWhat`.)
+- **Disparo al ganar vida**: se envuelve `applySpell()` para medir la vida
+  ganada y aplicar «Whenever you gain life, target opponent loses that much
+  life» al rival (una vez por Vito y por ganancia). Vale también para el rival.
+- **Lifelink temporal**: `generalAbilities()` acepta «gain lifelink»; al
+  activarlo se marca `_kwLifelinkTurn` en las criaturas y el `grantedKw()`
+  envuelto devuelve lifelink ese turno.
+- **Lifelink de combate**: el daño con vínculo vital suma vida directamente en
+  `resolveCombat`; también se envuelve para medir la vida ganada y disparar a
+  Vito.
+
+Comprobado en `commander.html` con una partida real (`startGame` + mulligan) y
+permisos con estadísticas como las de una permanente real:
+- Ayli: se sacrifica el Centauro 3/3, la vida sube +3, Ayli sigue en mesa.
+- Vito: `applySpell` con «You gain 4 life» deja al rival en −4 y el registro
+  muestra «IA pierde 4 vidas» una sola vez; la habilidad de lifelink se activa
+  y `grantedKw(perm,'lifelink')` es true.
+- `rules_core.js` se publica con `tmp/sync_shared.py`; para que el navegador no
+  sirva la copia vieja, los cuatro tableros enlazan
+  `js/rules_core.js?v=20261127g` (y el CSS con la misma versión).
+
+También se probó el lifelink de combate con `resolveCombat`: un 3/3 con
+vínculo vital deja al jugador en +3 y al rival en −6 (3 de daño + 3 de Vito),
+con un solo «IA pierde 3 vidas» en el registro.
+
+No comprobado: la segunda habilidad de Ayli (exilio) más allá del parseo.
+
+## Bloqueos estilo Arena (capa `block-arena`, 27 nov 2026)
+
+Sustituye la presentación de los bloqueos por una mesa tipo Arena, sin tocar el
+motor: `#jBlockWrap` y sus `<select data-blk>` siguen siendo la fuente de
+verdad (también en multijugador, `askBlocks`), y «Aceptar bloqueos» rellena los
+selects y pulsa el `#jBlockOk` original.
+
+- `css/block_arena.css` (`?v=20261127g`) y `js/block_arena.js` (`?v=20261127e`),
+  fuente en `tmp/`, publicados con `sync_shared.py` y enlazados en los cuatro.
+- Los atacantes van arriba y tus criaturas legales abajo; se toca una criatura
+  propia y luego el atacante. La asignación se marca con una flecha SVG y un
+  círculo «×» para quitarla. Una criatura solo puede bloquear un atacante; las
+  opciones que el motor no ofrece se rechazan con un temblor.
+- El panel original (filas, selects y botón) se oculta cuando la mesa nueva se
+  pinta; si no hay atacantes localizables (p. ej. un invitado sin la copia de
+  las permanentes), no se oculta nada y queda la UI antigua como respaldo.
+- **Mesa fija y centrada**: con la mesa nueva, `#jBlockWrap` pasa a
+  `position:fixed` centrada (95vw, máximo 92vh, sombra de fondo) en vez de ser
+  un bloque al final de la página. Como `#jugar` puede tener un ancestro con
+  `transform`, un `fixed` dentro se colocaría respecto a ese ancestro (la mesa
+  salía en y≈1740): el JS mueve el panel al `body` mientras dura la declaración
+  y lo devuelve a su sitio al cerrarse.
+- `#jBlockWrap` se fuerza a columna (`#jBlockList` al 100 %) para que la mesa
+  use todo el ancho; antes, al ser un flex en fila, la mesa se quedaba en
+  549 px y el botón no coincidía con el centro. El pie es una rejilla
+  `1fr auto 1fr`: estado a la izquierda y **«Aceptar bloqueos» centrado**
+  (`min-width:190px`).
+- `scan()` se dispara con `MutationObserver` y usa `getClientRects()` (no
+  `offsetParent`, que es null en `position:fixed`). El botón original se
+  consulta en cada scan porque `startBlocks`/`askBlocks` rehacen el panel.
+
+Comprobado en partida real de `commander.html` (mulligan cerrado, mesa nueva
+abierta con `startBlocks` y criaturas con estadísticas reales):
+- Captura en `tmp/shots/bloqueos_real.png`: panel centrado en la pantalla
+  (733×472 en x=10,8, y=230; centro 377,5/466) con el botón exactamente en el
+  mismo centro (377,5), flecha de Centauro a Centauro y estado «1/2».
+- El panel se sale del flujo de la página, no hay scroll para verlo y las filas
+  y el botón viejos quedan ocultos.
+
+Multijugador real con dos pestañas `commander.html?mplocal=1` (BroadcastChannel):
+- El invitado recibió el `blockReq`, se pintó la mesa (3 bloqueadores, 2
+  atacantes), asignó con flecha y «Aceptar bloqueos» (captura
+  `tmp/shots/bloqueos_mp.png`); el anfitrión resolvió el combate y el atacante
+  bloqueado no hizo daño al jugador. Mismo centrado exacto (377/377).
+- No comprobado: multijugador por WebRTC entre navegadores distintos (la ruta
+  de red no cambia; solo se probó el canal local de dos pestañas).
+## Buscador de cartas del constructor (capa `deck-search`, 27 nov 2026)
+
+Botón «🔎 Buscador» junto a `#edSearch` en el editor de los cuatro tableros.
+Abre un modal a pantalla casi completa con filtros de Scryfall y añade cartas
+con `addCardByName()` (respeta límite, singleton e identidad del mazo).
+
+- `css/deck_search.css` y `js/deck_search.js` (fuente en `tmp/`, publicados con
+  `sync_shared.py`), enlazados con `?v=20261127c`.
+- Filtros: nombre, texto de reglas, tipo libre, tipos (criatura, instantáneo,
+  conjuro, artefacto, encantamiento, planeswalker, tierra, batalla), colores
+  con modo contiene/exacto/identidad/dentro de identidad, identidad de color,
+  coste mín/máx, fuerza y resistencia mínimas, rareza, set (con datalist de
+  `/sets`), legalidad por formato, palabras clave (multiselección), precio USD,
+  «solo con imagen» y «legal en este formato». Orden (EDHREC, nombre, coste,
+  fecha, rareza, precio, fuerza, resistencia) y cartas únicas/impresiones.
+- Resultados en rejilla con imagen, tipo, coste y set; clic para añadir, con
+  contador «N en el mazo». Paginación anterior/siguiente y estado de resultados.
+- Usa `api()`/`net_cache` si existen y, si no, `fetch`; por defecto busca
+  `-is:digital` cuando no hay filtros para no pedir una consulta vacía.
+
+Comprobado en `commander.html` (editor abierto): «Atraxa» + azul + criatura +
+Commander devuelve 2 resultados; `fdn` + criatura devuelve 290 (175 en pantalla,
+«siguiente» activo) y la página 2 empieza por otra carta; al pulsar una carta
+aparece «1 en el mazo» y el mazo pasa de 0 a 1 (se deshizo el cambio). El modal
+abre y cierra en los cuatro tableros.
+No comprobado: todas las combinaciones de filtros una a una ni el límite de
+mazo lleno.
+
+## Modo local de dos pestañas arreglado (`mp-layer`, 27 nov 2026)
+
+Al probar los bloqueos con dos pestañas `?mplocal=1`, el botón «Local: unirme»
+no arrancaba la partida: el invitado enviaba `join`, pero el anfitrión lo
+descartaba y todo se quedaba en «2 mazos disponibles».
+
+Causa: `openLocal()` creaba el `BroadcastChannel`, asignaba `MP.dc = fakeDC` y
+`MP.ready=true`, pero **nunca llamaba a `bindDC(fakeDC)`**. `bc.onmessage`
+reenvía a `MP.dc.onmessage`, que era `undefined`; por eso el `join` se perdía.
+
+Arreglo en `tmp/mp_layer.js`:
+
+    bindDC(fakeDC);
+    MP.role = asHost ? 'host' : 'guest';
+    if (fakeDC.onopen) fakeDC.onopen();
+
+`bindDC` instala el `onmessage` que interpreta los mensajes y `onopen` hace que
+el invitado mande el `join` (el anfitrión solo queda a la espera). Se
+reinyectó con `python tmp/inject_mp.py commander.html brawl.html standard.html`
+(copias `tmp/versions/<tablero>_before_mplocal.html`).
+
+Comprobado con dos pestañas reales del navegador: tras alojar/unir, ambos tienen
+`G.you` con 40 vidas y 7 cartas, el anfitrión empieza en su turno, ataca al
+invitado y este ve la mesa de bloqueos, confirma y el combate se resuelve en el
+anfitrión. Consola sin errores.
+
+No se tocó `captain.html` (no tiene `mp-layer`).
+
+## Scry/surveil: selector lateral con la carta (27 nov 2026)
+
+Síntoma: al resolver scry o surveil, la ventana de `rules-core` (`#rulesPick`)
+aparecía **centrada encima del campo**, con una lista de texto y sin la carta;
+tapaba las criaturas y el botón no dejaba ver qué se estaba decidiendo. Además,
+el aspa permitía cerrar a mitad: las cartas ya sacadas de la biblioteca se
+quedaban fuera para siempre.
+
+Cambios en `tmp/rules_core.js` / `tmp/rules_core.css` (publicados como
+`js/rules_core.js` y `css/rules_core.css`, ambos con `?v=20261127h`):
+
+- El selector pasa a ser un **panel lateral derecho** de 340 px (42vw), centrado
+  verticalmente, con fondo opaco y sombra; el campo y las cartas centrales
+  quedan visibles. En pantallas de ≤700 px se convierte en hoja inferior
+  (ancho completo, máximo 58vh).
+- `picker()` acepta una imagen de carta (`art`) y la pinta en `.rpk-art`; scry y
+  surveil le pasan `cardImg(c)` de la carta que toca decidir. Las opciones
+  pueden llevar `img` y se dibujan con miniatura (`.rpk-th`); el sacrificio
+  elegido por el jugador ya muestra la miniatura de cada criatura.
+- Scry/surveil abren el selector con `noClose=true`: **sin aspa**, porque
+  cerrarlo dejaría las N cartas fuera de la biblioteca. Hay que decidir cada
+  carta (arriba / al fondo o al cementerio).
+- El resto de selectores que comparten la ventana (habilidad activada ◈,
+  sacrificio, split/kicker/riot de `rules_more`) heredan la posición lateral y
+  dejan de tapar el centro del tablero. Los de `rules_more` muestran también la
+  carta en `.rpk-art` (`?v=20261127a`).
+
+Comprobado en partida real de `commander.html`:
+- Scry 3: panel en x=412–737 (324 px), la carta se ve en `.rpk-art`, tres pasos
+  con «Dejar arriba»/«Al fondo», sin aspa; al terminar el registro dice
+  «Scry 3: 3 arriba, 0 al fondo» y las tres cartas siguen arriba.
+- Surveil 2: arte visible y botón «Al cementerio»; al terminar el cementerio
+  pasa de 0 a 2 cartas.
+- Selector de sacrificio con dos criaturas: panel lateral, dos miniaturas,
+  aspa disponible; elegir una la sacrifica.
+- Capturas: `tmp/shots/scry_antes.png` (centrado, tapando el campo) y
+  `tmp/shots/scry_despues.png` (panel lateral con la carta).
+
+Comprobado después, ya con arte en el panel: `Fire // Ice` (split) muestra
+las dos mitades y la carta, resuelve «Fire» con 2 de daño; `Into the Roil`
+(kicker) ofrece pagar el estímulo y lo cobra; `Zhur-Taa Goblin` (riot) entra con
+la elección +1/+1 o prisa. Scry 3 en una partida real de `captain.html` muestra
+la carta, los pasos «1/3, 2/3, 3/3» y deja las tres arriba. Captura:
+`tmp/shots/riot_picker.png`.
+
+## Buscador de cartas: habilidades, coste y sinergia (27 nov 2026)
+
+El buscador del constructor (`tmp/deck_search.js` / `tmp/deck_search.css`,
+publicados con `?v=20261127h`) añade tres formas rápidas de filtrar sin salir de
+la misma consulta:
+
+- **Habilidad / función**: chips que se traducen a etiquetas de oráculo de
+  Scryfall (`otag:ramp`, `otag:draw`, `otag:removal`, `otag:board-wipe`,
+  `otag:tutor`, `otag:recursion`, `otag:protection`, `otag:evasion`,
+  `otag:lifegain`, `otag:discard`, `otag:mill`, `otag:scry`, `otag:blink`,
+  `otag:theft`, `otag:counter`, `otag:sacrifice-outlet`,
+  `o:"+1/+1 counter"`, `otag:lands-matter`). Varias seleccionadas se unen
+  con `or` dentro de un solo paréntesis. Se usan solo etiquetas comprobadas:
+  `otag:tokens`, `otag:counters` o `otag:card-draw` dan 404 en Scryfall.
+- **Coste mínimo y máximo**: los dos campos `cmcMin` / `cmcMax` salen de «Más
+  filtros» a la rejilla principal, junto a tipo y formato. Se traducen a
+  `cmc>=` y `cmc<=`. Los colores siguen en sus chips (contiene, exacto,
+  identidad o dentro de la identidad).
+- **Sinergia con otra carta**: campo con autocompletado de Scryfall. Al buscar,
+  se pide **una sola vez** `/cards/named?exact=`, se guarda en caché y se
+  construye una única consulta. Se extraen hasta dos subtipos y tres palabras
+  clave, y se detecta la **dirección** de la carta:
+  - **pago**: dispara al ocurrir algo (p. ej. «whenever you gain life»); se
+    buscan **generadores** de ese recurso.
+  - **genera**: produce el recurso (p. ej. «proliferate», «you gain 1 life»); se
+    buscan **pagos** que lo aprovechen.
+  - **pago/genera** o **tema**: se incluyen ambos lados.
+
+  Los roles son frases precisas, no etiquetas amplias: para pagos de vida se
+  usa `o:/you gain (\d+|X) life/` y `o:"you gain life equal"`; así Swords to
+  Plowshares («gains life») ya no entra. Para contadores se usa
+  `o:"+1/+1 counter"` y `o:"whenever a +1/+1 counter"`; para fichas,
+  sacrificio, robo, descarte, molino, scry/surveil y tierras hay pares
+  enabler/payoff equivalentes. La consulta final mezcla subtipos, palabras
+  clave, roles y excluye la propia carta con `-!"Nombre"`; al pintar se puntúa
+  subtipo (5), palabra clave (4) y rol (6), y se ordena la página para que las
+  cartas de tipo/tribu y las del rol correcto queden por encima de las que solo
+  comparten una palabra clave genérica. La nota bajo el campo dice la dirección
+  y los rasgos usados. Repetir la búsqueda no vuelve a pedir la carta; como
+  máximo son 2 peticiones (carta + búsqueda).
+
+Comprobado en el navegador, en `commander.html`:
+- `otag:ramp` + verde + coste 1–3: 546 resultados; primeros Cultivate,
+  Farseek, Nature's Lore, Rampant Growth, Birds of Paradise.
+- **Vito, Thorn of the Dusk Rose** (pago de vida): consulta
+  `(t:vampire or o:"Vampire" or t:cleric or o:"Cleric" or
+  o:/you gain (\d+|X) life/ or o:"you gain life equal") -!"Vito..."`,
+  2513 resultados; nota «pago → vida generada + vida igual · Vampire/Cleric».
+  Primeros Blood Artist, Soul Warden, Elas il-Kor, Archivist of Oghma, Cruel
+  Celebrant; **Swords to Plowshares ya no aparece**.
+- **Atraxa, Praetors' Voice** (genera contadores y vida): consulta con
+  Phyrexian/Angel, deathtouch/flying/lifelink y los pagos
+  `o:"whenever you gain life"`, `o:"+1/+1 counter"`,
+  `o:"whenever a +1/+1 counter"`; 6571 resultados; nota «genera → pago de vida +
+  pago de contadores · Phyrexian/Angel, deathtouch/flying/lifelink». Primeros
+  K'rrik, Exemplar of Light, Shalai, Archangel of Thune (todos con contadores o
+  vida); las cartas que solo comparten una palabra clave quedan debajo.
+- Limpiar oculta la nota y vacía la consulta; consola sin errores.
+
+Límites: es una heurística (probada con Vito y Atraxa) de sinergia, no una recomendación de EDHREC. La
+dirección se deduce del texto y puede fallar en cartas con varias frases; el
+orden es solo dentro de la página que devuelve Scryfall, no global. Para
+afinarlo, combinar con colores, coste o identidad.
+
+## Buscador: tipos de carta completos y localizados (27 nov 2026)
+
+Los chips de **Tipos** del buscador (`tmp/deck_search.js`, publicado como
+`js/deck_search.js?v=20261127l`) cubren todos los tipos de carta de Scryfall y
+los casos compuestos habituales. Las consultas no cambiaron al localizar:
+
+| valor | ES | EN | FR | consulta |
+|---|---|---|---|---|
+| creature | Criatura | Creature | Créature | `t:creature` |
+| legendary creature | Criatura legendaria | Legendary creature | Créature légendaire | `(t:legendary t:creature)` |
+| artifact | Artefacto | Artifact | Artefact | `t:artifact` |
+| artifact creature | Criatura artefacto | Artifact creature | Créature-artefact | `(t:artifact t:creature)` |
+| enchantment | Encantamiento | Enchantment | Enchantement | `t:enchantment` |
+| enchantment creature | Criatura encantamiento | Enchantment creature | Créature-enchantement | `(t:enchantment t:creature)` |
+| planeswalker | Planeswalker | Planeswalker | Planeswalker | `t:planeswalker` |
+| legendary planeswalker | Planeswalker legendario | Legendary planeswalker | Planeswalker légendaire | `(t:legendary t:planeswalker)` |
+| instant | Instantáneo | Instant | Éphémère | `t:instant` |
+| sorcery | Conjuro | Sorcery | Rituel | `t:sorcery` |
+| land | Tierra | Land | Terrain | `t:land` |
+| basic land | Tierra básica | Basic land | Terrain de base | `(t:basic t:land)` |
+| battle | Batalla | Battle | Bataille | `t:battle` |
+| kindred | Kindred (tribal) | Kindred (tribal) | Kindred (tribal) | `t:kindred` |
+
+Las etiquetas viven en `TX` como claves `ty.*` (una por tipo e idioma) y
+`chips()` las pinta con `tx()`; `refreshLabels()` actualiza todos los chips y
+leyendas marcados con `data-ds-i18n` cuando cambia el atributo `lang` de
+`<html>`. Los valores de los inputs siguen siendo los mismos, por lo que el
+FormData y las consultas no se tocan; la leyenda de tipos también se refresca
+al cambiar de idioma. Las claves nuevas son `co.*`, `ra.*` y `ab.*`; los valores
+de los chips y las etiquetas anteriores de español se mantienen.
+
+Comprobado en el navegador, con el buscador abierto y cambiando ES → EN → FR →
+ES: los 14 chips y la leyenda cambiaron en caliente, y volvieron a español.
+Consultas verificadas:
+
+- Criatura legendaria: `((t:legendary t:creature)) f:commander`, 3672
+  resultados; las primeras fichas dicen «Legendary Creature — …».
+- Planeswalker legendario: `((t:legendary t:planeswalker))`, 320 resultados;
+  todas «Legendary Planeswalker — …».
+- Criatura legendaria + Instantáneo: 7455 resultados, unión de ambos.
+- `t:kindred` (78), `t:battle` (36) y `t:basic t:land` (12 básicas) responden
+  200.
+
+No se cambió el resto de etiquetas del modal (colores, rarezas, habilidades),
+que siguen como estaban; esta pasada solo afecta a los tipos.
+
+
+## Buscador: colores, rarezas y habilidades localizados (27 nov 2026)
+
+Se localizaron también los chips y leyendas que quedaban en español
+(`tmp/deck_search.js`, publicado como `js/deck_search.js?v=20261127l`). No se
+cambió ni un valor de consulta: los `input` siguen enviando `W/U/B/R/G`,
+`common/.../special` y `ramp/draw/.../lands-matter`.
+
+- **Colores**: `co.W` … `co.G` → Blanco/Azul/Negro/Rojo/Verde ·
+  White/Blue/Black/Red/Green · Blanc/Bleu/Noir/Rouge/Vert. Se usan tanto en
+  «Colores» como en «Identidad»; el punto de color (`ds-pip`) queda fuera del
+  span traducible para no borrarlo.
+- **Rarezas**: `ra.common` … `ra.special` → Común/Infrecuente/Rara/Mítica/
+  Especial · Common/Uncommon/Rare/Mythic/Special · Commune/Peu commune/Rare/
+  Mythique/Spéciale.
+- **Habilidades**: `ab.ramp`, `ab.draw`, `ab.removal`, `ab.boardWipe`,
+  `ab.tutor`, `ab.recursion`, `ab.protection`, `ab.evasion`, `ab.lifegain`,
+  `ab.discard`, `ab.mill`, `ab.scry`, `ab.blink`, `ab.theft`, `ab.counter`,
+  `ab.sacrifice`, `ab.countersMatter`, `ab.landsMatter`. ES conserva las
+  etiquetas anteriores; EN usa Ramp, Card draw, Removal, Board wipe, Tutor,
+  Recursion, Protection, Evasion, Lifegain, Discard, Mill, Scry, Blink, Theft,
+  Counterspell, Sacrifice, Counters, Lands; FR usa Accélération, Pioche, Retrait,
+  Destruction de masse, Tutorat, Récursion, Protection, Évasion, Gain de vie, Défausse,
+  Meule, Regard, Clignotement, Vol, Contresort, Sacrifice, Marqueurs, Terrains.
+- **Leyendas**: «Colores · Modo de color», «Identidad», «Tipos»,
+  «Habilidad / función» y «Rareza» llevan `data-ds-i18n` y se actualizan junto
+  con los chips. El `MutationObserver` sobre `lang` llama a `refreshLabels()`;
+  `open()` también lo hace por si el idioma cambió con el modal cerrado.
+
+Comprobado en el navegador con el buscador abierto, cambiando **ES → EN → FR →
+ES**: los 5 colores, las 5 rarezas, las 18 habilidades, los 14 tipos y las 5
+leyendas cambiaron en caliente y volvieron a español. Consulta de control con
+color blanco + rareza rara + habilidad rampa:
+
+    q=c:W (r:rare) f:commander (otag:ramp)  → 89 resultados
+
+La misma consulta que antes de localizar. `node --check`, `sync_shared.py
+--check` y `lint_boards.py --strict` en verde. No se tocaron las etiquetas de
+los campos de formulario (nombre, texto, coste, orden…), solo chips y leyendas.
+
+## Buscador: pasada de etiquetas francesas y refresco completo del modal
+
+Publicado como `js/deck_search.js?v=20261127n`. Se revisaron todas las etiquetas
+visibles del buscador, no solo las habilidades. Los valores de los `input` y las
+consultas a Scryfall no cambiaron.
+
+- **Kindred/tribal**: FR pasa de `Kindred (tribal)` a **Clan**, el término
+  oficial francés (regla 308, « Les cartes de clan »). La consulta sigue siendo
+  `t:kindred`; ES y EN mantienen `Kindred (tribal)` como etiqueta explicativa.
+- **Set**: FR pasa de `Set` a **Extension**.
+- **Board wipe**: FR pasa de `Balayage` a **Destruction de masse**.
+- **Impresiones**: FR pasa a **Éditions** / **Toutes les éditions**.
+- **Palabras clave**: el desplegable ya no muestra los términos ingleses en FR.
+  Se añadieron claves `kw.*` con las traducciones oficiales: Vol, Piétinement,
+  Célérité, Vigilance, Lien de vie, Contact mortel, Initiative, Double
+  initiative, Menace, Portée, Flash, Défense talismanique, Indestructible,
+  Parade, Protection, Explorer, Surveiller, Regard, Convocation, Cascade,
+  Prouesse, Toxique, Infection, Annihilateur, **Recyclage** (cycling), Kick,
+  Flashback, Ascension, Partenariat y Commandant. El `value` de cada opción
+  sigue siendo el término inglés que entiende Scryfall (`kw:"cycling"`, etc.).
+- **Orden**: los ocho desplegables estaban en español en todos los idiomas. Ahora
+  usan claves `sort.*` y se traducen a ES/EN/FR (Popularité, Nom, Valeur de mana,
+  Plus récentes, Rareté, Prix, Force, Endurance).
+- **Refresco en caliente**: título, subtítulo, etiquetas de campos, leyendas,
+  «Más filtros», checkboxes, botones, paginador, placeholders traducibles y el
+  lanzador «Buscador» llevan `data-ds-i18n`/`data-ds-i18n-ph`. `refreshLabels()`
+  actualiza todos, no solo los chips, y `updateCount()` reconstruye el contador
+  para que «resultados/résultats» no se quede en el idioma anterior.
+
+Comprobado en el navegador con el modal abierto, cambiando **FR → EN → ES → FR**:
+0 elementos vacíos o `undefined`; los 30 términos de palabras clave, los 8
+órdenes, los 14 tipos, las etiquetas y los botones cambiaron. Consulta de control
+con tipo Clan + palabra clave Recyclage:
+
+    q=(t:kindred) (kw:"cycling")  → consulta sin cambios de valor
+
+`node --check`, `sync_shared.py --check` (20/20), `lint_boards.py --strict` y
+`agents_doc.py` en verde.
+
+### Análisis UX pendiente (sin cambios de código en esta pasada)
+
+- **Creación de mazos**: el contador de la forja puede decir «40/40» y a la vez
+  «faltan 28 copias»; son dos conceptos (mazo completo vs copias en colección)
+  y deben separarse. Hay demasiadas acciones primarias juntas (Generar mazo
+  completo, Completar huecos, Sugerir cartas) y el capitán/formato deberían ir
+  primero, con filtros avanzados plegados. A 900 px aparece desbordamiento
+  horizontal por el botón «Quitar» del capitán; el panel del mazo debería pasar
+  a off-canvas con un resumen fijo.
+- **Tablero de juego**: a 771 px se recortan las zonas laterales, la mano queda
+  bajo el pliegue y el tablero mantiene un ancho fijo con scroll horizontal. Hay
+  dos contadores de vida y dos «PRINCIPAL 1» visibles, la etiqueta «MANO · CPU»
+  se superpone al rival y el aviso de partida guardada tapa la barra inferior.
+  Conviene un HUD único (turno/fase, vida, maná, mano), zonas con etiquetas
+  legibles y acciones legales resaltadas; el impuesto de comandante muestra
+  «+{0}» y necesita un rótulo claro.
+
+## Buscador: limpieza y «sin resultados» ya no parece un fallo (27 nov 2026)
+
+Publicado como `js/deck_search.js?v=20261127o` y `css/deck_search.css?v=20261127o` en los
+cuatro tableros (`python tmp/sync_shared.py` + `python tmp/bump_deck_search.py 20261127o`).
+Las consultas a Scryfall y los `value` de los campos no cambian.
+
+**Bug del mensaje vacío.** Scryfall contesta **404** cuando una búsqueda no tiene
+coincidencias («Your query didn’t match any cards…», «No cards found»), y `api()` del tablero
+convierte cualquier respuesta no-2xx en `Error(j.details)`. El buscador lo pintaba como
+`Échec de la recherche : Your query didn’t match any cards…`, que se lee como una avería.
+
+- `isNotFound(e)` reconoce solo los textos de «sin coincidencias»
+  (`match any cards`, `no cards found`, `not_found`); un 404 de paginación o un fallo de red
+  siguen saliendo como error.
+- Con esa señal, `load()` pinta el estado vacío, deja el contador en `0 resultados /
+  résultats / resultados` y limpia el paginador.
+- El estado vacío es ahora `<p class="ds-empty"><b>Aucun résultat.</b><span>hint</span></p>`,
+  con clave nueva `noneHint` en ES/EN/FR («Prueba a quitar algún filtro…»,
+  «Try removing a filter…», «Essayez de retirer un filtre…»).
+
+**Lo que sobraba, fuera** (mismo comportamiento, sin tocar consultas):
+
+- `lastQuery`: se asignaba en `runSearch()` y en «Limpiar» y no se leía nunca.
+- El parámetro `isPrev` de `load(url, isPrev)`: no se usaba; ahora `load(url)` y las llamadas
+  del paginador pierden el booleano.
+- Código repetido de paginador: las cuatro copias de
+  `pagerEl.querySelector('.ds-prev').disabled = !prevUrls.length` (+ `.ds-next`) son
+  `setPager()`.
+- Tres copias del párrafo vacío son `emptyState(texto, pista)`.
+- La clave `added` («Añadida»/«Added»/«Ajoutée») no la usaba nadie: la confirmación visual es
+  la clase `ds-added`.
+- `dir` del orden: `(order === 'name') ? 'auto' : (… ? 'desc' : 'auto')` → la condición
+  directa de `released|usd|rarity`; mismos valores enviados (`dir=auto|desc`).
+- `encodeURIComponent(query || '')` → `encodeURIComponent(query)`: `query` ya no puede ser
+  vacío porque cae en `-is:digital` (la consulta por defecto sigue igual).
+
+**Verificado en el navegador** (`standard.html`, versión `o`):
+
+- Búsqueda sin coincidencias (`name = zzzzqqqxyz`) en FR: `Aucun résultat.` + pista, contador
+  `0 résultats`, botones Anterior/Siguiente desactivados. En ES: «Sin resultados.» + pista y
+  `0 resultados`. El `<style id="deck-search-css">` sigue importando `css/deck_search.css`.
+- Búsqueda con resultados (`type = creature`): 175 cartas y `3107 résultats`; «Siguiente»
+  carga la página 2 (175 cartas, «Anterior» activo) y «Anterior» vuelve a la 1 (175 cartas).
+- Consola: solo 404 de imágenes de Scryfall y el 404 esperado de la consulta vacía; ningún
+  404 local.
+- `node --check tmp/deck_search.js`, `python tmp/sync_shared.py --check` (20/20) y
+  `python tmp/lint_boards.py --strict` (4 tableros) en verde.
+
+**Ojo con el CSS**: `sync_shared.py` publica `tmp/deck_search.css` sobre `css/`; editar
+`css/deck_search.css` a mano se pierde en la siguiente sincronización.
+
+**Pendiente detectado** (no tocado): la nota de sinergia escribe en español el papel de la
+carta (`pago`/`genera`/`tema` y etiquetas como «contadores», «fichas») en los tres idiomas.
