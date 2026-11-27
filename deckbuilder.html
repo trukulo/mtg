@@ -1,0 +1,2738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#080c10">
+<title>Forja de mazos · Magic TCG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,850&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070a0e;--panel:#0e161d;--panel2:#121d26;--line:#ffffff1a;--line2:#ffffff10;
+  --txt:#e9e3d4;--muted:#93a1ae;--gold:#e8c574;--gold2:#a9843c;
+  --virt:#7fb7ff;--phys:#e8c574;--bad:#f0746a;--ok:#6fd08c;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100vh;color:var(--txt);
+  font:400 15px/1.55 "Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:radial-gradient(ellipse 120% 70% at 50% -10%,#162431 0%,#0a1117 45%,#04070a 100%) fixed;
+}
+a{color:inherit}
+button{font:inherit;color:inherit}
+.wtop{max-width:1560px;margin:0 auto;padding:22px 22px 0}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.back{font:700 12px/1 "Hanken Grotesk",sans-serif;letter-spacing:.14em;text-transform:uppercase;
+  color:#b9c5d0;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:9px 14px;background:#ffffff08}
+.back:hover{color:#fff;border-color:#e8c57488}
+.topbar-left{display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-width:0}
+.webnav{display:flex;align-items:center;gap:1px;flex-wrap:wrap}
+.webnav a{font:600 10.5px/1 "Hanken Grotesk",sans-serif;color:#9fadb9;text-decoration:none;
+  border:1px solid transparent;border-radius:999px;padding:7px 8px;letter-spacing:.03em}
+.webnav a:hover{color:#fff;border-color:#e8c57455;background:#ffffff08}
+.webnav .sep{color:#4d5a66;font-size:10px;padding:0 1px}
+.eyebrow{font:600 11px/1 "Hanken Grotesk",sans-serif;letter-spacing:.32em;text-transform:uppercase;color:var(--gold2);margin:18px 0 8px}
+h1{margin:0;font:850 clamp(28px,3.2vw,44px)/1.04 "Fraunces",Georgia,serif;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{margin:10px 0 0;max-width:78ch;color:var(--muted);font-size:14.5px}
+.modesw{display:flex;gap:6px;padding:5px;border:1px solid var(--line);border-radius:999px;background:#0b1218e0}
+.modesw button{
+  border:0;border-radius:999px;background:transparent;cursor:pointer;
+  font:700 12.5px/1 "Hanken Grotesk",sans-serif;letter-spacing:.06em;
+  padding:11px 16px;color:#a9b6c2;transition:background .15s,color .15s
+}
+.modesw button:hover{color:#fff;background:#ffffff0d}
+.modesw button.on{color:#08111a;background:linear-gradient(180deg,#f6e7bb,#d8b45f);box-shadow:0 2px 0 #8a6d33}
+.modesw button[data-mode="virtual"].on{background:linear-gradient(180deg,#cfe4ff,#7fb7ff);box-shadow:0 2px 0 #3d6b9c}
+
+.shell{
+  max-width:1560px;margin:16px auto 40px;padding:0 22px;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(370px,440px);gap:18px;align-items:start
+}
+@media (max-width:1080px){.shell{grid-template-columns:minmax(0,1fr)}}
+.panel{border:1px solid var(--line);border-radius:14px;background:linear-gradient(170deg,var(--panel2),#080d12 80%);
+  box-shadow:0 14px 34px #0008,inset 0 1px 0 #ffffff0b;padding:16px 18px}
+.panel h2,.panel h3{margin:0;font-family:"Fraunces",Georgia,serif;font-weight:600;color:#f7f2e3}
+.panel h2{font-size:20px}.panel h3{font-size:16px}
+.muted{color:var(--muted)}
+.xs{font-size:12px}
+.hint{font-size:12px;color:var(--muted);margin:8px 0 0}
+.tagline{display:flex;align-items:center;gap:8px;font:600 11px/1 "Hanken Grotesk",sans-serif;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px #e8c57499}
+#panelVirtual .dot{background:var(--virt);box-shadow:0 0 8px #7fb7ff99}
+
+/* ---------- ajustes compartidos ---------- */
+.settings{margin-bottom:16px;display:flex;flex-direction:column;gap:12px}
+.setrow{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
+.setblock{display:flex;flex-direction:column;gap:6px;min-width:0}
+label,.lbl{font:600 10.5px/1 "Hanken Grotesk",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#8d9aa6}
+.formats{display:flex;gap:6px;flex-wrap:wrap}
+.fmtbtn{cursor:pointer;border:1px solid var(--line);background:#ffffff07;border-radius:999px;
+  padding:9px 13px;font:600 12.5px/1 "Hanken Grotesk",sans-serif;color:#c3ced8}
+.fmtbtn:hover{background:#ffffff10;color:#fff}
+.fmtbtn.on{background:linear-gradient(180deg,#f6e7bb,#d8b45f);color:#1d1408;border-color:#e8c574}
+.pips{display:flex;gap:5px}
+.pip{width:34px;height:34px;border-radius:9px;border:1px solid #ffffff22;background:#ffffff08;
+  cursor:pointer;font:800 13px/1 "Hanken Grotesk",sans-serif;color:#c8d3dd;display:grid;place-items:center;transition:.15s}
+.pip:hover{transform:translateY(-1px);border-color:#ffffff55}
+.pip[data-c="W"].on{background:#f5efd8;color:#33290f;border-color:#fff}
+.pip[data-c="U"].on{background:#7fb7ff;color:#06203c;border-color:#cfe4ff}
+.pip[data-c="B"].on{background:#7a6b86;color:#120a18;border-color:#c9b7d6}
+.pip[data-c="R"].on{background:#ef7d63;color:#2a0d07;border-color:#ffc2b3}
+.pip[data-c="G"].on{background:#7fbd8a;color:#09240f;border-color:#c4e8cb}
+.pips.off{opacity:.45;pointer-events:none}
+.cmdslot{display:flex;align-items:center;gap:10px;flex:1;min-width:0;border:1px dashed #ffffff2b;
+  border-radius:11px;padding:8px 12px;background:#ffffff05;min-height:56px}
+.cmdslot.has{border-style:solid;border-color:#e8c57466;background:#e8c5740d}
+.cmdslot img{width:34px;height:47px;object-fit:cover;border-radius:5px;flex:0 0 auto}
+.cmdslot .cn{min-width:0}
+.cmdslot b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmdslot span{font-size:11.5px;color:var(--muted)}
+.cmdslot .x{margin-left:auto;border:0;background:#ffffff0d;border-radius:8px;cursor:pointer;padding:7px 10px;color:#c9d4de}
+.cmdslot .x:hover{background:#ffffff1a}
+
+/* ---------- controles ---------- */
+input[type=text],input[type=search],select,textarea{
+  font:400 14px/1.4 "Hanken Grotesk",sans-serif;color:var(--txt);
+  background:#070c11;border:1px solid #ffffff21;border-radius:9px;padding:10px 12px;outline:none;min-width:0
+}
+input:focus,select:focus,textarea:focus{border-color:#e8c57488;box-shadow:0 0 0 3px #e8c57414}
+textarea{resize:vertical;width:100%;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12.5px;line-height:1.55}
+select{cursor:pointer}
+.btn{cursor:pointer;border:0;border-radius:10px;padding:11px 16px;font:700 13.5px/1 "Hanken Grotesk",sans-serif;
+  color:#1d1408;background:linear-gradient(180deg,#f6e7bb,#d8b45f);box-shadow:0 2px 0 #8a6d33;transition:transform .1s,filter .15s}
+.btn:hover{filter:brightness(1.05)}
+.btn:active{transform:translateY(1px);box-shadow:0 1px 0 #8a6d33}
+.btn:disabled{opacity:.5;cursor:default;box-shadow:none}
+.btn.sec{background:#ffffff0d;color:#dbe4ec;border:1px solid var(--line);box-shadow:none}
+.btn.sec:hover{background:#ffffff16}
+.btn.sm{padding:8px 11px;font-size:12px;border-radius:8px}
+.btn.wide{width:100%;justify-content:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* ---------- virtual ---------- */
+.block{margin-top:14px}
+.block:first-child{margin-top:0}
+.setpicker{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.setpicker input{flex:1;min-width:180px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #7fb7ff55;background:#7fb7ff14;
+  color:#cfe4ff;border-radius:999px;padding:6px 10px;font-size:12px}
+.chip button{border:0;background:none;color:#cfe4ff;cursor:pointer;padding:0 0 0 2px;font-size:14px;line-height:1}
+.chip button:hover{color:#fff}
+.searchbar{display:flex;gap:8px;margin-top:8px}
+.searchbar input{flex:1}
+.results{display:flex;flex-direction:column;gap:6px;margin-top:10px;max-height:560px;overflow:auto;padding-right:2px}
+.result{display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:10px;align-items:center;
+  border:1px solid var(--line2);border-radius:10px;padding:6px;background:#ffffff05}
+.result:hover{background:#ffffff0a;border-color:#ffffff26}
+.rimg{width:46px;height:64px;border-radius:6px;background:#111c25 center/cover no-repeat;border:1px solid #ffffff18}
+.rmain{min-width:0}
+.rmain b{display:block;font-size:13.5px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rmain .meta{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rmain .own{display:inline-block;margin-top:3px;font:600 10px/1 "Hanken Grotesk",sans-serif;letter-spacing:.06em;
+  color:#0c2415;background:#6fd08c;border-radius:999px;padding:3px 6px}
+.racts{display:flex;gap:4px;align-items:center}
+.icobtn{cursor:pointer;border:1px solid #ffffff24;background:#ffffff0b;color:#dbe4ec;border-radius:7px;
+  padding:6px 8px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.icobtn:hover{background:#ffffff1a;color:#fff}
+.icobtn.add{border-color:#e8c57466;color:#f4e3b4}
+.icobtn.star{border-color:#7fb7ff66;color:#cfe4ff}
+.icobtn:disabled{opacity:.35;cursor:default}
+.emptybox{border:1px dashed #ffffff26;border-radius:10px;padding:16px;color:var(--muted);font-size:13px;text-align:center;margin-top:10px}
+.genbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--line2)}
+#vStatus{font-size:12.5px;color:var(--muted)}
+
+/* ---------- colección ---------- */
+.collstats{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
+.stat{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:#ffffff06;min-width:96px}
+.stat b{display:block;font:700 18px/1.1 "Fraunces",Georgia,serif;color:#f7f2e3}
+.stat span{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+details.import{border:1px solid var(--line2);border-radius:11px;background:#ffffff04;margin-top:12px}
+details.import summary{cursor:pointer;padding:11px 13px;font:600 12.5px/1 "Hanken Grotesk",sans-serif;color:#cbd6e0;list-style:none}
+details.import summary::-webkit-details-marker{display:none}
+details.import summary::before{content:"＋";color:var(--gold);margin-right:8px}
+details.import[open] summary{border-bottom:1px solid var(--line2)}
+details.import .in{padding:12px 13px}
+.ownlist{display:flex;flex-direction:column;gap:4px;margin-top:10px;max-height:340px;overflow:auto}
+.ownrow{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:8px;align-items:center;
+  border:1px solid var(--line2);border-radius:8px;padding:5px 7px;background:#ffffff04}
+.ownrow .q{font:700 12.5px/1 "Hanken Grotesk",sans-serif;color:var(--gold);text-align:center}
+.ownrow b{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.ownrow small{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.mini-acts{display:flex;gap:3px}
+.mini-acts button{cursor:pointer;width:24px;height:24px;border-radius:6px;border:1px solid #ffffff24;
+  background:#ffffff0a;color:#d7e1ea;font-size:13px;line-height:1}
+.mini-acts button:hover{background:#ffffff1c}
+
+/* ---------- mazo ---------- */
+.deckpane{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;scrollbar-width:thin}
+@media (max-width:1080px){.deckpane{position:static;max-height:none}}
+.deckhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.deckhead h2{font-size:21px}
+.countbadge{font:700 12px/1 "Hanken Grotesk",sans-serif;padding:7px 10px;border-radius:999px;
+  border:1px solid #e8c57455;background:#e8c57412;color:#f4e3b4;white-space:nowrap}
+.countbadge.full{border-color:#6fd08c77;background:#6fd08c14;color:#b9f0cb}
+.deckname{width:100%;margin-top:10px}
+.cmdcard{display:flex;gap:10px;align-items:center;border:1px solid #e8c57444;border-radius:11px;
+  padding:8px 10px;background:#e8c5740d;margin-top:10px}
+.cmdcard img{width:40px;height:56px;border-radius:5px;object-fit:cover}
+.cmdcard .lab{font:700 9.5px/1 "Hanken Grotesk",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2)}
+.cmdcard b{display:block;font-size:13px}
+.deckgroups{margin-top:12px}
+.dgroup{margin-top:10px}
+.dgroup h4{margin:0 0 5px;font:600 10.5px/1 "Hanken Grotesk",sans-serif;letter-spacing:.14em;
+  text-transform:uppercase;color:#8d9aa6;display:flex;justify-content:space-between}
+.drow{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:7px;align-items:center;
+  padding:5px 3px;border-bottom:1px solid #ffffff0b}
+.drow:last-child{border-bottom:0}
+.qtybox{display:flex;align-items:center;gap:0;border:1px solid #ffffff1f;border-radius:7px;overflow:hidden}
+.qtybox button{cursor:pointer;border:0;background:#ffffff08;color:#cfdae5;width:22px;height:24px;font-size:12px;line-height:1}
+.qtybox button:hover{background:#ffffff18}
+.qtybox b{min-width:24px;text-align:center;font:700 11.5px/1 "Hanken Grotesk",sans-serif;color:#f1e8d3}
+.dname{min-width:0}
+.dname b{display:block;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dname small{display:block;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dmana{font:600 10.5px/1 "Hanken Grotesk",sans-serif;color:#c9b071;white-space:nowrap}
+.drow .del{cursor:pointer;border:0;background:none;color:#7f8c98;font-size:15px;line-height:1;padding:2px 4px}
+.drow .del:hover{color:var(--bad)}
+.deckempty{border:1px dashed #ffffff24;border-radius:10px;padding:18px 14px;text-align:center;color:var(--muted);font-size:13px;margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.stats div{border:1px solid var(--line2);border-radius:8px;padding:7px 8px;background:#ffffff05}
+.stats b{display:block;font:700 15px/1.1 "Fraunces",Georgia,serif;color:#f7f2e3}
+.stats span{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.curve{display:flex;align-items:flex-end;gap:4px;height:64px;margin-top:10px;padding-top:4px;border-top:1px solid var(--line2)}
+.curve .bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;height:100%}
+.curve .bar i{display:block;width:100%;background:linear-gradient(180deg,#e8c574,#8a6d33);border-radius:3px 3px 0 0;min-height:2px}
+.curve .bar b{font:600 9px/1 "Hanken Grotesk",sans-serif;color:#8d9aa6}
+.issues{margin-top:12px;display:flex;flex-direction:column;gap:5px}
+.issue{font-size:12px;border-left:3px solid var(--bad);background:#f0746a0f;padding:6px 8px;border-radius:0 7px 7px 0;color:#f3c0bb}
+.issue.ok{border-left-color:var(--ok);background:#6fd08c0f;color:#b9f0cb}
+.issue.warn{border-left-color:#e8c574;background:#e8c5740f;color:#f1e2b6}
+.decktools{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--line2)}
+.decktools .btn{flex:1 1 auto}
+.saved{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.saved select{flex:1;min-width:130px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;
+  background:#101b24;border:1px solid #e8c57455;color:#f4e3b4;border-radius:10px;padding:11px 16px;
+  font-size:13px;box-shadow:0 14px 40px #000b;transition:.2s;z-index:50;max-width:min(92vw,540px)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.spin{width:12px;height:12px;border:2px solid #ffffff33;border-top-color:#e8c574;border-radius:50%;
+  display:inline-block;animation:sp .7s linear infinite;vertical-align:-1px}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* análisis, filtros de mazo y resultados largos */
+.resultsinfo{margin-top:8px}
+.srcrow{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;align-items:center}
+.srcc{font:700 10.5px/1 "Hanken Grotesk",sans-serif;border-radius:6px;padding:5px 7px;
+  border:1px solid #ffffff1c;background:#ffffff06;color:#c9d4de}
+.srcc.low{border-color:#f0746a66;color:#f3c0bb;background:#f0746a0f}
+.comprow{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.comp{font-size:10.5px;color:#aeb9c4;border:1px solid #ffffff14;border-radius:999px;padding:3px 7px}
+.deckfilter{margin-top:10px}
+.deckfilter input{width:100%;padding:8px 10px;font-size:12.5px}
+.morebtn{margin-top:8px;width:100%}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--gold);outline-offset:2px}
+
+/* filtros rápidos, propiedad y vista previa */
+.filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.fbtn{cursor:pointer;border:1px solid var(--line);background:#ffffff06;border-radius:999px;
+  padding:6px 10px;font:600 11.5px/1 "Hanken Grotesk",sans-serif;color:#c3ced8}
+.fbtn:hover{background:#ffffff10;color:#fff}
+.fbtn.on{background:#7fb7ff22;border-color:#7fb7ff88;color:#e2efff}
+.filters select{padding:6px 8px;font-size:12px;border-radius:8px}
+.toggle{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#c3ced8;cursor:pointer}
+.toggle input{accent-color:#7fb7ff;width:15px;height:15px}
+.own.have{color:#0c2415;background:#6fd08c}
+.own.none{color:#2a0d07;background:#f0a08f}
+.buybox{margin-top:10px;border:1px solid #e8c57438;border-radius:10px;background:#e8c5740a;padding:8px 10px}
+.buybox summary{cursor:pointer;font:600 12px/1.3 "Hanken Grotesk",sans-serif;color:#f1e2b6}
+.buybox ul{margin:8px 0 0;padding-left:16px;font-size:12px;color:#cbd6e0;max-height:170px;overflow:auto;columns:2;column-gap:18px}
+.buybox li{margin:1px 0;break-inside:avoid}
+.hovercard{position:fixed;left:16px;top:50%;transform:translateY(-50%);width:286px;z-index:70;
+  border:1px solid #ffffff26;border-radius:12px;background:#0b141b;box-shadow:0 20px 54px #000d;
+  padding:8px;display:none;pointer-events:none}
+.hovercard.on{display:block}
+.hovercard img{width:100%;display:block;border-radius:7px}
+.hovercard .hcmeta{padding:7px 2px 0}
+.hovercard b{display:block;font-size:13px;line-height:1.2}
+.hovercard span{display:block;font-size:10.5px;color:#c9b071;margin-top:2px}
+.hovercard p{margin:6px 2px 0;font-size:10.5px;line-height:1.45;color:#b9c5d0;max-height:112px;overflow:hidden}
+@media (max-width:1200px){.hovercard{display:none!important}}
+
+
+/* ---------- horda ---------- */
+.hordepanel{border-color:#e8c57477;background:linear-gradient(170deg,#1a1710,#0b0d10 70%)}
+.hordepanel h2{font-size:22px}
+.hordegen{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.hordegen .toggle{color:#e7dcc2}
+#hordeStatus{font-size:12.5px;color:var(--muted)}
+.hordesum{margin-top:12px}
+.hordestats{display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:6px}
+.hordestats div{border:1px solid #e8c5742e;border-radius:9px;padding:8px 9px;background:#e8c57408}
+.hordestats b{display:block;font:700 17px/1.1 "Fraunces",Georgia,serif;color:#f7edcf}
+.hordestats span{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#b9a77e}
+.hordemeta{margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.55}
+.hordemeta b{color:#e9e3d4;font-weight:600}
+.hordebars{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}
+.hordebar{display:flex;align-items:center;gap:5px;border:1px solid #ffffff16;border-radius:999px;
+  padding:4px 8px;font-size:10.5px;color:#cbd6e0;background:#ffffff05}
+.hordebar i{display:block;height:6px;border-radius:3px;background:linear-gradient(90deg,#e8c574,#a9843c);min-width:4px}
+.hordetab{width:100%;border-collapse:collapse;margin-top:9px;font-size:11.5px}
+.hordetab th{text-align:left;font:600 9.5px/1 "Hanken Grotesk",sans-serif;letter-spacing:.12em;text-transform:uppercase;
+  color:#9d8f70;border-bottom:1px solid #ffffff1c;padding:6px 5px}
+.hordetab td{padding:5px;border-bottom:1px solid #ffffff0a;vertical-align:top}
+.hordetab td:first-child{white-space:nowrap;color:#f0dfb4;font-weight:700}
+.hordetab tr:last-child td{border-bottom:0}
+.hordetable{margin-top:12px;max-height:680px;overflow:auto;border:1px solid #ffffff12;border-radius:10px;padding:0 10px 8px}
+.hordegroup{margin-top:10px}
+.hordegroup h4{margin:0 0 5px;display:flex;justify-content:space-between;gap:8px;font:600 10.5px/1.3 "Hanken Grotesk",sans-serif;
+  letter-spacing:.12em;text-transform:uppercase;color:#d9c187}
+.hordegroup h4 span{color:#8d9aa6;letter-spacing:.04em}
+.hordecards{display:flex;flex-direction:column;gap:2px}
+.hordecard{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:7px;align-items:start;padding:5px 3px;border-bottom:1px solid #ffffff08}
+.hordecard:last-child{border-bottom:0}
+.hordecard .q{font:700 11px/1.5 "Hanken Grotesk",sans-serif;color:#e8c574;text-align:center}
+.hordecard .cn{min-width:0}
+.hordecard b{display:block;font-size:12px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hordecard small{display:block;font-size:10.5px;line-height:1.35;color:#9aa8b5;margin-top:1px}
+.hordecard .pt{font:600 10px/1.2 "Hanken Grotesk",sans-serif;color:#c9b071;white-space:nowrap;text-align:right}
+.htag{display:inline-block;font:600 8.5px/1 "Hanken Grotesk",sans-serif;letter-spacing:.05em;text-transform:uppercase;
+  border:1px solid #ffffff1c;border-radius:999px;padding:2px 5px;margin:3px 3px 0 0;color:#aebbc7}
+.htag.dmg{border-color:#f0746a55;color:#f3b4ad}
+.htag.tok{border-color:#6fd08c55;color:#b9f0cb}
+.htag.him{border-color:#e8c57455;color:#f1e2b6}
+.htag.tri{border-color:#f0a08f44;color:#e7b3a7}
+.hordeok{border:1px solid #6fd08c44;background:#6fd08c0c;border-radius:10px;padding:9px 11px;color:#b9f0cb;font-size:12.5px}
+.hordepanel .hint code{color:#e8c574}
+#srcRow[hidden],#deckTest[hidden],#panelHorde[hidden]{display:none!important}
+@media print{.hordepanel,.hordegen{display:none!important}}
+
+@media (max-width:620px){
+  .wtop,.shell{padding-left:14px;padding-right:14px}
+  .shell{gap:12px}
+  .panel{padding:14px}
+  .result{grid-template-columns:40px minmax(0,1fr)}
+  .racts{grid-column:1/-1;justify-content:flex-end}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .qtybox button{width:28px;height:28px}
+}
+</style>
+</head>
+<body>
+<div class="wtop">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="back" href="index.html">← Portada</a>
+      <nav class="webnav" aria-label="Webs jugables">
+        <a href="commander.html">Commander</a><span class="sep">·</span>
+        <a href="brawl.html">Brawl</a><span class="sep">·</span>
+        <a href="captain.html">Captain</a><span class="sep">·</span>
+        <a href="standard.html">Standard</a>
+      </nav>
+    </div>
+    <div class="modesw" role="tablist" aria-label="Modo de construcción">
+      <button type="button" data-mode="virtual" class="on" role="tab" aria-selected="true">Mazo virtual</button>
+      <button type="button" data-mode="collection" role="tab" aria-selected="false">Mi colección</button>
+    </div>
+  </div>
+  <p class="eyebrow">Magic TCG · construcción</p>
+  <h1>Forja de <em>mazos</em></h1>
+  <p class="lede">Dos talleres separados: monta el mazo con cualquier carta de los sets que elijas, o solo con lo que tienes en la caja. La app cuenta, avisa de lo que falta y te ordena la curva. Los cuatro formatos con tablero —<b>Commander</b>, <b>Brawl</b>, <b>Captain</b> y <b>Standard</b>— se pueden probar contra la IA con un clic. Incluye además la <b>Horda</b>: 99 criaturas de 1 a 3 maná, sin decisiones, lista para imprimir.</p>
+</div>
+
+<main class="shell">
+  <div>
+    <section class="panel settings" id="settings">
+      <div class="setrow">
+        <div class="setblock">
+          <span class="lbl">Formato</span>
+          <div class="formats" id="fmtRow">
+            <button class="fmtbtn on" data-fmt="commander">Commander · 100</button>
+            <button class="fmtbtn" data-fmt="brawl">Brawl · 60</button>
+            <button class="fmtbtn" data-fmt="captain" title="40 cartas singleton y una criatura como capitán en la zona de mando">Captain · 40</button>
+            <button class="fmtbtn" data-fmt="standard">Standard · 60</button>
+            <button class="fmtbtn" data-fmt="horde" title="99 criaturas de 1 a 3 maná, sin decisiones ni tierras">Horda · 99</button>
+          </div>
+        </div>
+        <div class="setblock">
+          <span class="lbl">Identidad de color</span>
+          <div class="pips" id="pipRow">
+            <button class="pip" data-c="W" title="Blanco">W</button>
+            <button class="pip" data-c="U" title="Azul">U</button>
+            <button class="pip" data-c="B" title="Negro">B</button>
+            <button class="pip" data-c="R" title="Rojo">R</button>
+            <button class="pip" data-c="G" title="Verde">G</button>
+          </div>
+        </div>
+        <div class="setblock" style="flex:1">
+          <span class="lbl" id="cmdLbl">Comandante</span>
+          <div class="cmdslot" id="cmdSlot"></div>
+        </div>
+      </div>
+      <p class="hint" id="setHint"></p>
+    </section>
+
+
+    <!-- ============ HORDA ============ -->
+    <section class="panel hordepanel" id="panelHorde" hidden>
+      <div class="tagline"><span class="dot" style="background:#e8c574;box-shadow:0 0 8px #e8c57499"></span> Mazo Horda</div>
+      <h2 style="margin-top:8px">99 criaturas, cero decisiones</h2>
+      <p class="hint" style="margin-bottom:4px">Un mazo pensado para jugar al modo Horda de Magic en mesa: criaturas de 1 a 3 maná, sin tierras, sin comandante y sin una sola decisión. Todos los efectos se disparan solos al entrar, atacar o morir.</p>
+      <p class="hint" style="margin-top:4px">La app no tiene tablero de Horda: aquí se construye la biblioteca de 99 cartas, se analiza carta a carta y se imprime el mazo (reglas, lista y proxies) para jugarlo con tus amigos.</p>
+
+      <div class="hordegen">
+        <button class="btn" id="hordeGen">Generar horda (99)</button>
+        <button class="btn sec" id="hordeFill">Completar huecos</button>
+        <button class="btn sec" id="hordePdf">PDF / Imprimir</button>
+        <label class="toggle"><input type="checkbox" id="hordeProxies" checked> Incluir proxies (9 por hoja)</label>
+        <span id="hordeStatus"></span>
+      </div>
+
+      <div id="hordeSummary" class="hordesum"></div>
+      <div id="hordeWarn" class="issues"></div>
+      <div id="hordeTable" class="hordetable"></div>
+    </section>
+
+    <!-- ============ VIRTUAL ============ -->
+    <section class="panel" id="panelVirtual">
+      <div class="tagline"><span class="dot"></span> Mazo virtual</div>
+      <h2 style="margin-top:8px">Cartas de los sets que elijas</h2>
+      <p class="hint" style="margin-bottom:12px">Sin límite de colección: busca dentro de los sets escogidos y monta el mazo carta a carta. Si no eliges comandante ni colores, la app propone ambos.</p>
+
+      <div class="block">
+        <span class="lbl">Sets del mazo</span>
+        <div class="setpicker" style="margin-top:6px">
+          <input id="setInput" list="setList" placeholder="Busca un set: Foundations, Bloomburrow, Modern Horizons…" autocomplete="off">
+          <datalist id="setList"></datalist>
+          <button class="btn sec sm" id="setAdd">Añadir set</button>
+          <button class="btn sec sm" id="setClear">Quitar todos</button>
+        </div>
+        <div class="chips" id="setChips"></div>
+      </div>
+
+      <div class="block">
+        <span class="lbl">Buscar cartas</span>
+        <div class="searchbar">
+          <input type="search" id="cardQuery" placeholder="Nombre o texto de reglas. Enter para buscar." autocomplete="off">
+          <button class="btn" id="cardGo">Buscar</button>
+        </div>
+        <div class="filters" id="filters">
+          <button class="fbtn on" data-type="all">Todo</button>
+          <button class="fbtn" data-type="creature">Criaturas</button>
+          <button class="fbtn" data-type="instant">Instantáneos</button>
+          <button class="fbtn" data-type="sorcery">Conjuros</button>
+          <button class="fbtn" data-type="artifact">Artefactos</button>
+          <button class="fbtn" data-type="enchantment">Encantamientos</button>
+          <button class="fbtn" data-type="planeswalker">Planeswalkers</button>
+          <button class="fbtn" data-type="legendary">Legendarias</button>
+          <button class="fbtn" data-type="land">Tierras</button>
+        </div>
+        <div class="filters">
+          <select id="mvMax" aria-label="Coste máximo">
+            <option value="">Cualquier coste</option>
+            <option value="1">Coste 1 o menos</option>
+            <option value="2">Coste 2 o menos</option>
+            <option value="3">Coste 3 o menos</option>
+            <option value="4">Coste 4 o menos</option>
+            <option value="5">Coste 5 o menos</option>
+          </select>
+          <select id="sortBy" aria-label="Ordenar por">
+            <option value="edhrec">Más jugadas</option>
+            <option value="name">Nombre</option>
+            <option value="cmc">Coste</option>
+            <option value="released">Más recientes</option>
+          </select>
+          <label class="toggle"><input type="checkbox" id="ownedOnly"> Solo cartas que tengo</label>
+        </div>
+        <p class="hint" style="margin-top:6px">Los filtros se suman a la sintaxis de Scryfall: <code>t:instant mv&lt;=3 -c:g</code>, <code>o:"draw a card"</code>…</p>
+        <div class="resultsinfo xs muted" id="virtualCount"></div>
+        <div class="results" id="virtualResults"></div>
+      </div>
+
+      <div class="genbar">
+        <button class="btn" id="vGenerate">Generar mazo completo</button>
+        <button class="btn sec" id="vFill" title="Añade cartas a los huecos sin borrar lo que ya tienes">Completar huecos</button>
+        <button class="btn sec" id="vSuggest" title="Cartas populares que aún no están en el mazo">Sugerir cartas</button>
+        <select id="budget" title="Precio máximo por carta (Scryfall, USD)" style="max-width:150px">
+          <option value="5">≤ $5 / carta</option>
+          <option value="20" selected>≤ $20 / carta</option>
+          <option value="0">Sin límite</option>
+        </select>
+        <span id="vStatus"></span>
+      </div>
+    </section>
+
+    <!-- ============ COLECCIÓN ============ -->
+    <section class="panel" id="panelCollection" hidden>
+      <div class="tagline"><span class="dot" style="background:#e8c574;box-shadow:0 0 8px #e8c57499"></span> Colección física</div>
+      <h2 style="margin-top:8px">Solo con lo que tienes</h2>
+      <p class="hint" style="margin-bottom:12px">Pega tu colección una vez: queda guardada en este navegador. A partir de ahí el mazo se monta solo con tus cartas; las básicas se dan por ilimitadas.</p>
+
+      <div class="collstats" id="collStats"></div>
+
+      <details class="import" id="importBox">
+        <summary>Cargar o ampliar mi colección</summary>
+        <div class="in">
+          <textarea id="collText" rows="7" placeholder="4 Lightning Bolt&#10;1 Atraxa, Praetors' Voice (2XM) 210&#10;12 Plains&#10;&#10;También vale «Nombre x4» o un CSV con Qty y Name."></textarea>
+          <div class="btnrow" style="margin-top:8px">
+            <input type="file" id="collFile" accept=".txt,.csv,text/plain,text/csv" style="max-width:240px;font-size:12px">
+            <button class="btn" id="collLoad">Resolver y guardar</button>
+            <button class="btn sec" id="collWipe">Vaciar colección</button>
+            <span class="xs muted" id="collStatus"></span>
+          </div>
+          <p class="hint">Formato libre: una carta por línea con su cantidad. Se aceptan listas de ManaBox, Moxfield o Archidekt y CSV con cabecera.</p>
+        </div>
+      </details>
+
+      <div class="block">
+        <span class="lbl">Mi colección</span>
+        <div class="searchbar">
+          <input type="search" id="ownFilter" placeholder="Filtrar tus cartas por nombre o tipo…" autocomplete="off">
+          <button class="btn sec sm" id="ownRefresh" title="Volver a resolver nombres pendientes">Resolver</button>
+        </div>
+        <div class="ownlist" id="ownList"></div>
+      </div>
+
+      <div class="block">
+        <span class="lbl">Buscar fuera de la colección</span>
+        <div class="searchbar">
+          <input type="search" id="collQuery" placeholder="¿Te falta una carta? Búscala y márcala como tuya." autocomplete="off">
+          <button class="btn" id="collGo">Buscar</button>
+        </div>
+        <div class="resultsinfo xs muted" id="collCount"></div>
+        <div class="results" id="collResults"></div>
+      </div>
+
+      <div class="genbar">
+        <button class="btn" id="pGenerate">Generar con lo que tengo</button>
+        <span id="pStatus"></span>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ MAZO ============ -->
+  <aside class="panel deckpane" id="deckPane">
+    <div class="deckhead">
+      <div>
+        <div class="tagline"><span class="dot"></span> <span id="deckModeLabel">Mazo virtual</span></div>
+        <h2 style="margin-top:6px">Tu mazo</h2>
+      </div>
+      <span class="countbadge" id="deckCount">0 / 100</span>
+    </div>
+    <input class="deckname" type="text" id="deckName" placeholder="Ponle nombre al mazo…" autocomplete="off">
+    <div class="xs muted" id="saveHint" style="margin-top:6px">Guardado automático en este navegador.</div>
+    <div id="deckCmd"></div>
+    <div class="stats" id="deckStats"></div>
+    <div class="srcrow" id="srcRow"></div>
+    <div class="comprow" id="compRow"></div>
+    <div class="curve" id="deckCurve" title="Curva de maná de los hechizos"></div>
+    <div class="issues" id="deckIssues"></div>
+    <div id="buyBox"></div>
+    <div class="deckfilter"><input type="search" id="deckFilter" placeholder="Filtrar el mazo por nombre o tipo…" autocomplete="off"></div>
+    <div class="deckgroups" id="deckList"></div>
+    <div class="deckempty" id="deckEmpty">Todavía no hay cartas. Usa el buscador o genera un mazo completo.</div>
+    <div class="decktools">
+      <button class="btn sm" id="deckTest" style="flex:1 1 100%" title="Abre el tablero con este mazo contra la IA. No se guarda en el tablero.">▶ Probar en el tablero</button>
+      <button class="btn sm" id="deckSave">Guardar</button>
+      <button class="btn sec sm" id="deckUndo" title="Deshacer el último cambio (Ctrl+Z)">↶ Deshacer</button>
+      <button class="btn sec sm" id="deckClear">Vaciar</button>
+      <button class="btn sec sm" id="deckCopy">Copiar lista</button>
+      <button class="btn sec sm" id="deckDownload">Descargar .txt</button>
+    </div>
+    <div class="saved">
+      <select id="savedSel"><option value="">Mazos guardados…</option></select>
+      <button class="btn sec sm" id="savedLoad">Cargar</button>
+      <button class="btn sec sm" id="savedDel">Borrar</button>
+    </div>
+    <details class="import" id="deckImportBox">
+      <summary>Importar una lista</summary>
+      <div class="in">
+        <textarea id="deckText" rows="6" placeholder="Comandante: Atraxa, Praetors' Voice&#10;1 Sol Ring&#10;1 Arcane Signet&#10;12 Plains"></textarea>
+        <div class="btnrow" style="margin-top:8px">
+          <button class="btn" id="deckImportGo">Importar</button>
+          <span class="xs muted" id="deckImportStatus"></span>
+        </div>
+      </div>
+    </details>
+  </aside>
+</main>
+<div class="hovercard" id="hoverCard" aria-hidden="true">
+  <img id="hcImg" alt="">
+  <div class="hcmeta"><b id="hcName"></b><span id="hcType"></span></div>
+  <p id="hcOracle"></p>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =========================================================
+   Forja de mazos · dos talleres, una sola lista
+   Virtual: cualquier carta de los sets elegidos.
+   Colección: solo cartas marcadas como propias (básicas libres).
+   ========================================================= */
+const API = 'https://api.scryfall.com';
+const LS = { coll:'mtgb_coll_v1', decks:'mtgb_decks_v1', sets:'mtgb_sets_v1', name:'mtgb_deckname_v1', draft:'mtgb_draft_v1', horde:'mtgb_horde_v1' };
+const COLORS = ['W','U','B','R','G'];
+const BASIC = { W:'Plains', U:'Island', B:'Swamp', R:'Mountain', G:'Forest' };
+const BASIC_SET = new Set(Object.values(BASIC));
+const FORMATS = {
+  commander:{ id:'commander', label:'Commander', size:100, life:40, cmd:true,  copies:1, leg:'commander', lands:37 },
+  brawl:    { id:'brawl',     label:'Brawl',     size:60,  life:30, cmd:true,  copies:1, leg:'brawl',     lands:24 },
+  captain:  { id:'captain',   label:'Captain',   size:40,  life:20, cmd:true,  copies:1, leg:'',          lands:16, captain:true },
+  standard: { id:'standard',  label:'Standard',  size:60,  life:20, cmd:false, copies:4, leg:'standard',  lands:24 },
+  horde:    { id:'horde',     label:'Horda',     size:99,  life:0,  cmd:false, copies:2, leg:'',          lands:0, horde:true }
+};
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+const CACHE = new Map();
+let COLL = load(LS.coll, { qty:{}, cards:{} });
+if (!COLL || typeof COLL !== 'object') COLL = { qty:{}, cards:{} };
+if (!COLL.qty) COLL.qty = {};
+if (!COLL.cards) COLL.cards = {};
+
+const S = {
+  mode:'virtual',
+  fmt:'commander',
+  colors:new Set(),
+  sets:[],
+  commander:null,
+  deck:{ name:'', list:[] },
+  currentDeckId:null,
+  busy:false,
+  deckFilter:'',
+  typeFilter:'all',
+  mvMax:'',
+  sort:'edhrec',
+  ownedOnly:false,
+  booted:false
+};
+
+/* ---------- utilidades de almacenamiento ---------- */
+function load(k, def){ try{ const v = JSON.parse(localStorage.getItem(k)); return v == null ? def : v; }catch(e){ return def; } }
+function save(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ toast('No se pudo guardar: almacenamiento lleno.'); } }
+let toastT = 0;
+function toast(msg){
+  const el = $('#toast');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 2600);
+}
+
+/* ---------- Scryfall ---------- */
+async function api(url, opt){
+  for (let i = 0; i < 4; i++){
+    let r;
+    try{ r = await fetch(url, opt); }
+    catch(e){ throw new Error('No hay conexión con Scryfall'); }
+    if (r.status === 429){ await sleep(700); continue; }
+    if (r.status === 404){ const e = new Error('not found'); e.code = 404; throw e; }
+    if (!r.ok) throw new Error('Scryfall respondió ' + r.status);
+    return r.json();
+  }
+  throw new Error('Scryfall va lento; prueba otra vez');
+}
+
+function normCard(c){
+  if (!c || !c.name) return null;
+  const face = (c.card_faces && c.card_faces[0]) || c;
+  const imgs = c.image_uris || face.image_uris || {};
+  return {
+    name:c.name,
+    set:(c.set || '').toUpperCase(),
+    setName:c.set_name || '',
+    type:c.type_line || '',
+    oracle:c.oracle_text || ((c.card_faces || []).map(f => f.oracle_text || '').join('\n')),
+    mana:(c.mana_cost != null ? c.mana_cost : (face.mana_cost || '')),
+    cmc:Number(c.cmc || 0),
+    colors:c.colors || face.colors || [],
+    ci:c.color_identity || [],
+    img:imgs.small || imgs.normal || '',
+    big:imgs.normal || imgs.small || '',
+    art:imgs.art_crop || imgs.small || '',
+    rank:Number(c.edhrec_rank || 1e6),
+    price:c.prices && c.prices.usd ? Number(c.prices.usd) : 0,
+    rarity:c.rarity || '',
+    legal:c.legalities || {},
+    basic:/\bbasic land\b/i.test(c.type_line || ''),
+    pow:String(c.power != null ? c.power : (face.power != null ? face.power : '')),
+    tou:String(c.toughness != null ? c.toughness : (face.toughness != null ? face.toughness : '')),
+    layout:c.layout || ''
+  };
+}
+function mini(c){
+  return {
+    name:c.name, type:c.type || '', oracle:c.oracle || '', mana:c.mana || '', cmc:c.cmc || 0,
+    pow:c.pow || '', tou:c.tou || '', layout:c.layout || '',
+    ci:c.ci || [], colors:c.colors || [], basic:!!c.basic,
+    art:c.art || '', big:c.big || c.img || '', rank:c.rank || 1e6, price:c.price || 0,
+    legal:{ commander:(c.legal||{}).commander, brawl:(c.legal||{}).brawl, standard:(c.legal||{}).standard }
+  };
+}
+function basicCard(name){
+  const col = COLORS.find(k => BASIC[k] === name) || 'W';
+  return { name, type:'Basic Land — ' + name, mana:'', cmc:0, colors:[col], ci:[col], basic:true,
+           art:'', big:'', rank:1e6, price:0, legal:{ commander:'legal', brawl:'legal', standard:'legal' } };
+}
+function cardFor(name){
+  if (!name) return null;
+  if (CACHE.has(name)) return CACHE.get(name);
+  if (BASIC_SET.has(name)){ const c = basicCard(name); CACHE.set(name, c); return c; }
+  if (COLL.cards[name]){ const c = COLL.cards[name]; CACHE.set(name, c); return c; }
+  return null;
+}
+
+async function searchScry(q, opt){
+  opt = opt || {};
+  const parts = [q || ''];
+  const fmtNow = FORMATS[S.fmt];
+  if (!fmtNow.horde){ const idq = identityQ(); if (idq) parts.push(idq); }
+  if (fmtNow.leg) parts.push('f:' + fmtNow.leg);
+  if (S.sets.length) parts.push('(' + S.sets.map(s => 'set:' + s.toLowerCase()).join(' or ') + ')');
+  if (opt.extra) parts.push(opt.extra);
+  let url = API + '/cards/search?unique=cards&order=' + encodeURIComponent(opt.order || 'edhrec') +
+            '&q=' + encodeURIComponent(parts.filter(Boolean).join(' '));
+  const out = [];
+  const pages = opt.pages || 2;
+  for (let p = 0; p < pages && url; p++){
+    let d;
+    try{ d = await api(url); }
+    catch(e){ if (e.code === 404) break; throw e; }
+    for (const raw of (d.data || [])){
+      if (raw.layout === 'token' || raw.layout === 'emblem' || raw.layout === 'art_series') continue;
+      const c = normCard(raw);
+      if (!c) continue;
+      CACHE.set(c.name, c);
+      out.push(c);
+    }
+    url = d.has_more ? d.next_page : null;
+    await sleep(85);
+  }
+  return out;
+}
+
+async function resolveNames(names){
+  const out = {}, missing = [];
+  for (let i = 0; i < names.length; i += 75){
+    const chunk = names.slice(i, i + 75);
+    let r;
+    try{
+      r = await api(API + '/cards/collection', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body:JSON.stringify({ identifiers: chunk.map(n => ({ name:n })) })
+      });
+    }catch(e){ missing.push(...chunk); continue; }
+    for (const raw of (r.data || [])){
+      const c = normCard(raw);
+      if (!c) continue;
+      CACHE.set(c.name, c);
+      out[c.name] = mini(c);
+    }
+    for (const nf of (r.not_found || [])) if (nf.name) missing.push(nf.name);
+    await sleep(100);
+  }
+  return { out, missing };
+}
+
+
+/* =========================================================
+   HORDA · 99 criaturas, cero decisiones
+   Lista curada y validada contra el texto real de cada carta.
+   ========================================================= */
+const HORDE_SEED = [
+  'Corpse Knight','Witty Roastmaster','Gibbering Fiend','Pulse Tracker',
+  'Vicious Conquistador','Scorch Spitter','Tattered Mummy',
+  'Drana, Liberator of Malakir','Markov Blademaster','Skullbriar, the Walking Grave',
+  'Unstoppable Slasher','Vincent, Vengeful Atoner','Sardian Avenger',
+  'Managorger Hydra','Rug of Smothering','Scytheclaw Raptor','Voice of Resurgence',
+  'Skyknight Vanguard','Krenko, Tin Street Kingpin','Sanguine Evangelist',
+  'Torens, Fist of the Angels','Brimaz, King of Oreskos','Hanweir Garrison',
+  'Goblin Rabblemaster','Rufus Shinra','Adeline, Resplendent Cathar',
+  'Mirri, Weatherlight Duelist','Precinct Captain','Falcon and Redwing',
+  'Cadira, Caller of the Small','Risona, Asari Commander','Xantid Swarm',
+  'Predator Ooze','Stromkirk Noble',
+  'Blade Splicer','Thopter Engineer','Voracious Vermin','Goblin Instigator',
+  'Hare Apparent','Invasion Reinforcements','Caller of the Claw','Elder Auntie',
+  'Ferocious Pup','Prideful Parent','Twin-Silk Spider',
+  'Doomed Traveler','Infestation Sage','Garrison Cat','Harried Spearguard',
+  'Tukatongue Thallid','Doomed Dissenter','Myr Sire','Wriggling Grub',
+  'Orzhov Enforcer','Ministrant of Obligation','Hallowed Spiritkeeper',
+  'Sprouting Thrinax','Anax, Hardened in the Forge','Headless Rider',
+  'Nested Shambler','Tangled Colony','Feral Ghoul',
+  'Benalish Marshal','Khenra Charioteer','Suki, Courageous Rescuer','Bolt Hound',
+  'Adept Watershaper','Arwen, Weaver of Hope','Champion of Lambholt',
+  'Good-Fortune Unicorn','Grumgully, the Generous','Devilish Valet',
+  'Skyknight Squire','Botanical Brawler','Ezio, Brash Novice',
+  'Young Wolf','Butcher Ghoul','Putrid Goblin','Nine-Lives Familiar'
+];
+const HORDE_BAD = [
+  'target','choose','chosen','may','up to','unless','sacrifice','discard',
+  'search','shuffle','draw','gain','lifelink','prevent','counter target',
+  'counter that spell','return target','exile target','destroy target','roll',
+  'flip a coin','vote','copy','control of','extra turn','win the game',
+  'poison','infect','toxic','annihilator','exert','enlist','bolster',
+  'support','adapt','monstrosity','exploit','improvise','convoke','delve',
+  'level up','equip','crew','reconfigure','outlast','bestow','escape',
+  'foretell','companion','background','enters tapped','defender',"can't attack",
+  'tempting','council','venture','dungeon','investigate','treasure','clue',
+  'food','blood','amass','fabricate','modular','riot','unleash','evolve',
+  'devour','tribute','prowess','landfall','noncreature','instant or sorcery',
+  'artifact you control enters','enchantment you control enters','commander',
+  'lieutenant','partner','mill','surveil','scry','when this creature blocks',
+  'whenever this creature blocks','whenever you sacrifice','whenever you gain life',
+  'whenever you draw','all creatures','destroy all','exile all','damage to all',
+  'each creature'
+];
+const HORDE_ROLE_LABEL = {
+  'etb-token':'Fichas al entrar','attack-token':'Fichas al atacar','death-token':'Fichas al morir',
+  'token-other':'Fichas (otras)','etb-damage':'Daño al entrar','attack-damage':'Daño al atacar',
+  'death-damage':'Daño al morir','damage-other':'Daño (otras)','anthem':'Himnos y contadores',
+  'combat':'Combate','cast':'Al lanzar hechizos','keyword':'Cuerpo duro','other':'Otras'
+};
+const HORDE_ROLE_ORDER = ['attack-token','etb-token','death-token','token-other','attack-damage',
+  'etb-damage','death-damage','damage-other','anthem','combat','cast','keyword','other'];
+const HORDE_ROLE_DESC = {
+  'attack-token':'Amplía el tablero cada vez que la Horda ataca.',
+  'etb-token':'Deja cuerpos extra nada más entrar.',
+  'death-token':'Sigue dejando cuerpos cuando la Horda limpia.',
+  'token-other':'Fichas por combate o por otras acciones.',
+  'attack-damage':'Daño directo en cada ataque.',
+  'etb-damage':'Daño directo al entrar.',
+  'death-damage':'Daño cuando muere.',
+  'damage-other':'Daño por hechizos o disparos.',
+  'anthem':'Sube a todo el equipo o reparte contadores.',
+  'combat':'Premia con daño de combate o evasion.',
+  'cast':'Castiga a los supervivientes que lancen hechizos.',
+  'keyword':'Cuerpo difícil de matar o evasivo.',
+  'other':'Efecto de apoyo.'
+};
+let HORDE_MEM = null, HORDE_HYDRATING = false, HORDE_TRIED = '';
+const HORDE_INFO = new Map();
+
+function hordeRules(c){
+  return String((c && c.oracle) || '').replace(/\s*\([^)]*\)/g, ' ').replace(/\s+/g, ' ').toLowerCase();
+}
+function hordeRole(c){
+  const o = hordeRules(c);
+  if (/create .*creature token/.test(o)){
+    if (/when this creature enters or dies/.test(o)) return 'etb-token';
+    if (/when this creature dies|when .* dies, create/.test(o)) return 'death-token';
+    if (/whenever .* attacks|when you attack|beginning of combat/.test(o)) return 'attack-token';
+    if (/when this creature enters|when .* enters/.test(o)) return 'etb-token';
+    return 'token-other';
+  }
+  if (/deals? \d+ damage|each opponent loses|defending player loses/.test(o)){
+    if (/when this creature dies|when .* dies/.test(o)) return 'death-damage';
+    if (/whenever .* attacks/.test(o)) return 'attack-damage';
+    if (/when this creature enters|when .* enters|another creature you control enters/.test(o)) return 'etb-damage';
+    return 'damage-other';
+  }
+  if (/deals combat damage|becomes blocked/.test(o)) return 'combat';
+  if (/whenever this creature attacks/.test(o) && /\+1\/\+1 counter/.test(o)) return 'combat';
+  if (/whenever .* attacks.*can't block|whenever this creature attacks, defending player can't cast/.test(o)) return 'combat';
+  if (/whenever this creature attacks, it gets \+/.test(o)) return 'combat';
+  if (/casts? a spell/.test(o)) return 'cast';
+  if (/other creatures you control|creatures you control (get|have)|other creature you control|another creature you control enters|creature you control enters|\+1\/\+1 counter|additional \+1\/\+1/.test(o)) return 'anthem';
+  return 'keyword';
+}
+function hordeNarrow(o){
+  o = o.replace(/\bnon-[a-z]+/g, 'noncreature' ); /* «non-Human» es genérico, no una tribu */
+  const tribes = 'sliver|merfolk|cat|knight|vampire|goblin|warrior|zombie|elf|human|dinosaur|saproling|ooze|ally|rat|bird|soldier|spirit|wolf|spider|bear|golem|myr|insect|squirrel|worm|bat|rabbit|elemental|hero';
+  const m = o.match(/\b(?:another|other)\s+(?!creature\b|creatures\b|permanent\b|tapped\b)([a-z]+)\s+(?:creatures?\s+)?you control/);
+  if (m && tribes.split('|').includes(m[1])) return true;
+  if (new RegExp('\\b(' + tribes + ')\\s+creatures?\\s+you control').test(o)) return true;
+  if (/\b(artifact|colorless|red|blue|black|white|green)\s+creatures?\s+you control/.test(o)) return true;
+  return false;
+}
+function hordeEffect(o){
+  return /(create .*creature token|deals? \d+ damage|each opponent loses|other creatures you control|creatures you control (get|have)|other creature you control|another creature you control|creature you control enters|creature you control dies|deals combat damage|becomes blocked|casts? a spell|when this creature enters|when this creature dies|whenever .* attacks|when you attack|beginning of combat|\+1\/\+1 counter)/.test(o);
+}
+function hordeInfo(c){
+  if (!c) return { ok:false, role:'other', score:0, reasons:['sin carta'], tags:[], narrow:false };
+  const key = c.name + '|' + c.cmc + '|' + String(c.oracle || '').length;
+  if (HORDE_INFO.has(key)) return HORDE_INFO.get(key);
+  const o = hordeRules(c);
+  const reasons = [];
+  if (c.oracle == null) reasons.push('texto sin cargar');
+  if (!/\bcreature\b/i.test(c.type || '') || /\bland\b/i.test(c.type || '')) reasons.push('no es criatura');
+  if (!(Number(c.cmc) >= 1 && Number(c.cmc) <= 3)) reasons.push('coste ' + (c.cmc || 0));
+  if (/\{x\}/i.test(c.mana || '') || /\{x\}/i.test(o)) reasons.push('coste X');
+  if (o.includes(':')) reasons.push('habilidad activada');
+  for (const w of HORDE_BAD) if (o.includes(w)) reasons.push('contiene «' + w + '»');
+  const durable = /(undying|persist|indestructible|revival counter|afterlife|when this creature dies)/.test(o);
+  if (o && !hordeEffect(o) && !durable) reasons.push('sin efecto al entrar, atacar o morir');
+  const narrow = hordeNarrow(o);
+  const role = hordeRole(c);
+  if (narrow && role === 'anthem' && !/create|deals? .*damage|each opponent loses/.test(o)) reasons.push('himno tribal');
+  let score = ({ 'etb-token':9, 'attack-token':10, 'death-token':8, 'token-other':8,
+    'etb-damage':9, 'attack-damage':8, 'death-damage':7, 'damage-other':7,
+    'anthem':6, 'combat':7, 'cast':6, 'keyword':4, 'other':4 }[role] || 2);
+  if (/create (two|three|\d+) .*token/.test(o)) score += 2;
+  if (/create x .*token|x .*token/.test(o)) score += 1;
+  if (/deathtouch|flying|menace|trample|first strike|double strike/.test(o)) score += 1;
+  if (/indestructible|undying|persist|revival/.test(o)) score += 1;
+  if (/another creature you control enters|whenever you attack|beginning of combat/.test(o)) score += 2;
+  if (/each opponent loses|damage to each opponent/.test(o)) score += 1;
+  score += Math.max(0, 2 - (Number(c.cmc) || 0) * 0.4);
+  score += Math.max(0, 2 - (Number(c.rank) || 1e6) / 3000);
+  if (narrow) score -= 3;
+  const tags = [];
+  if (/flying/.test(o)) tags.push('vuela');
+  if (/haste/.test(o)) tags.push('prisa');
+  if (/deathtouch/.test(o)) tags.push('toque mortal');
+  if (/trample/.test(o)) tags.push('arrolla');
+  if (/indestructible|undying|persist|revival/.test(o)) tags.push('resiliente');
+  if (/create .*creature token/.test(o)) tags.push('fichas');
+  if (/each opponent loses|deals? .* damage/.test(o)) tags.push('daño');
+  if (/other creatures you control|creatures you control get|creatures you control have/.test(o)) tags.push('himno');
+  if (narrow) tags.push('tribu');
+  const info = { ok:!reasons.length, role, score, reasons:[...new Set(reasons)], tags, narrow };
+  HORDE_INFO.set(key, info);
+  return info;
+}
+function hordeRoleLabel(role){ return HORDE_ROLE_LABEL[role] || 'Otras'; }
+function hordeCardText(c){
+  let o = String(c.oracle || '').replace(/\s*\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
+  if (o.length > 190) o = o.slice(0, 187) + '…';
+  return o || 'Sin texto de reglas.';
+}
+async function hordeSeed(){
+  if (HORDE_MEM) return HORDE_MEM;
+  const cached = load(LS.horde, null);
+  if (cached && cached.at && Date.now() - cached.at < 7 * 864e5 && Array.isArray(cached.list) && cached.list.length >= 70){
+    HORDE_MEM = cached.list.map(m => CACHE.get(m.name) || m);
+    return HORDE_MEM;
+  }
+  await resolveNames(HORDE_SEED);
+  const all = HORDE_SEED.map(n => CACHE.get(n)).filter(Boolean);
+  HORDE_MEM = all.filter(c => hordeInfo(c).ok);
+  if (HORDE_MEM.length < 70) throw new Error('No se pudieron cargar las cartas de la Horda (' + HORDE_MEM.length + '/' + HORDE_SEED.length + ')');
+  save(LS.horde, { at:Date.now(), list:HORDE_MEM.map(mini) });
+  return HORDE_MEM;
+}
+async function hordeHydrate(names){
+  const need = [...new Set(names)].filter(n => { const c = cardFor(n); return c && !c.oracle && !BASIC_SET.has(n); });
+  if (!need.length) return;
+  const { out } = await resolveNames(need);
+  for (const [n, m] of Object.entries(out)) COLL.cards[n] = m;
+  saveColl();
+}
+function hordePick(pool, want, ownedMap){
+  const valid = pool.filter(c => c && !isLand(c) && hordeInfo(c).ok);
+  const used = new Map();
+  const out = [];
+  const cap = c => ownedMap ? Math.min(Number(ownedMap.get(c.name) || 0), FORMATS.horde.copies) : FORMATS.horde.copies;
+  const add = c => {
+    const u = used.get(c.name) || 0;
+    if (u >= cap(c)) return false;
+    used.set(c.name, u + 1);
+    out.push(c);
+    return true;
+  };
+  const byScore = (a, b) => (hordeInfo(b).score - hordeInfo(a).score) || (a.cmc - b.cmc) || a.name.localeCompare(b.name);
+  valid.slice().sort(byScore).forEach(c => { if (out.length < want) add(c); });
+  const dupOrder = valid.slice().sort((a, b) => (a.cmc - b.cmc) || (hordeInfo(b).score - hordeInfo(a).score));
+  for (const c of dupOrder){
+    if (out.length >= want) break;
+    while (out.length < want && add(c)){}
+  }
+  return out;
+}
+async function hordeGenerate(physical){
+  if (S.busy) return;
+  if (physical && !Object.keys(COLL.qty).length){ toast('Carga tu colección primero'); if ($('#importBox')) $('#importBox').open = true; return; }
+  if (deckCount() && !confirm('Esto sustituirá el mazo actual. ¿Seguir?')) return;
+  S.busy = true; setBusy(true); setHordeBusy(true);
+  const st = $('#hordeStatus');
+  try{
+    setStatus(st, physical ? 'Leyendo tu colección…' : 'Reuniendo las 99 criaturas…');
+    let picked = [];
+    if (physical){
+      let all = await ownedCards();
+      const need = all.filter(x => !x.c.oracle).map(x => x.c.name);
+      if (need.length){
+        await resolveNames(need);
+        all = all.map(x => ({ c:cardFor(x.c.name) || x.c, qty:x.qty }));
+      }
+      const ownedMap = new Map(all.map(x => [x.c.name, x.qty]));
+      const pool = all.map(x => x.c).filter(c => c && !isLand(c) && hordeInfo(c).ok);
+      if (!pool.length) throw new Error('No tienes criaturas que valgan para la Horda');
+      picked = hordePick(pool, FORMATS.horde.size, ownedMap);
+    } else {
+      const seed = await hordeSeed();
+      picked = hordePick(seed, FORMATS.horde.size, null);
+    }
+    if (picked.length < FORMATS.horde.size) throw new Error(physical
+      ? 'Tu colección solo tiene ' + picked.length + ' criaturas válidas para la Horda'
+      : 'No se reunieron 99 criaturas válidas para la Horda');
+    pushUndo();
+    const counts = new Map();
+    picked.forEach(c => counts.set(c.name, (counts.get(c.name) || 0) + 1));
+    S.deck.list = [...counts].map(([name, qty]) => ({ name, qty }));
+    S.commander = null; S.colors.clear(); S.currentDeckId = null;
+    picked.forEach(c => CACHE.set(c.name, c));
+    if (!S.deck.name) S.deck.name = physical ? 'Horda · mi colección' : 'Horda · 99 criaturas';
+    renderAll();
+    toast('Horda generada: 99 criaturas' + (physical ? ' con tu colección' : ''));
+    st.textContent = '';
+  }catch(e){
+    console.error(e); st.textContent = ''; toast(e.message || String(e));
+  }finally{
+    S.busy = false; setBusy(false); setHordeBusy(false);
+  }
+}
+async function hordeAutoFill(){
+  if (S.busy) return;
+  const f = F();
+  if (!f.horde) return;
+  if (deckCount() >= f.size){ toast('La horda ya está completa'); return; }
+  S.busy = true; setBusy(true); setHordeBusy(true);
+  const st = $('#hordeStatus');
+  try{
+    setStatus(st, 'Completando la horda…');
+    let pool;
+    if (S.mode === 'collection'){
+      let all = await ownedCards();
+      const need = all.filter(x => !x.c.oracle).map(x => x.c.name);
+      if (need.length){
+        await resolveNames(need);
+        all = all.map(x => ({ c:cardFor(x.c.name) || x.c, qty:x.qty }));
+      }
+      pool = all.map(x => x.c).filter(c => c && !isLand(c) && hordeInfo(c).ok);
+    } else {
+      pool = await hordeSeed();
+    }
+    const want = f.size - deckCount();
+    const used = new Map(S.deck.list.map(e => [e.name, e.qty]));
+    const cap = c => S.mode === 'collection' ? Math.min(ownedQty(c.name), f.copies) : f.copies;
+    const out = [];
+    const order = pool.slice().sort((a, b) => (a.cmc - b.cmc) || (hordeInfo(b).score - hordeInfo(a).score));
+    for (const c of order){
+      if (out.length >= want) break;
+      const h = used.get(c.name) || 0;
+      if (h >= cap(c)) continue;
+      used.set(c.name, h + 1);
+      out.push(c);
+    }
+    if (!out.length) throw new Error('No hay cartas válidas para completar la horda');
+    pushUndo();
+    out.forEach(c => {
+      const e = S.deck.list.find(x => x.name === c.name);
+      if (e) e.qty++; else S.deck.list.push({ name:c.name, qty:1 });
+      CACHE.set(c.name, c);
+    });
+    if (!S.deck.name) S.deck.name = 'Horda · 99 criaturas';
+    renderAll();
+    toast('Horda completada: ' + deckCount() + ' / ' + f.size);
+    st.textContent = '';
+  }catch(e){
+    console.error(e); st.textContent = ''; toast(e.message || String(e));
+  }finally{
+    S.busy = false; setBusy(false); setHordeBusy(false);
+  }
+}
+function hordeAnalysis(){
+  const entries = [], cards = [];
+  for (const e of S.deck.list){
+    const c = cardFor(e.name);
+    if (!c) continue;
+    const info = hordeInfo(c);
+    entries.push({ e, c, info });
+    for (let i = 0; i < e.qty; i++) cards.push(c);
+  }
+  const roles = {}, curve = { 1:0, 2:0, 3:0, other:0 }, colors = { W:0, U:0, B:0, R:0, G:0, C:0 };
+  let pow = 0, tou = 0, pt = 0, unknown = 0;
+  for (const c of cards){
+    if (!c.oracle) unknown++;
+    const info = hordeInfo(c);
+    roles[info.role] = (roles[info.role] || 0) + 1;
+    const m = Math.round(Number(c.cmc) || 0);
+    if (m >= 1 && m <= 3) curve[m]++; else curve.other++;
+    const cs = (c.colors || []).filter(x => colors[x] != null);
+    if (cs.length) cs.forEach(x => colors[x]++); else colors.C++;
+    const p = parseFloat(c.pow), t = parseFloat(c.tou);
+    if (isFinite(p)){ pow += p; pt++; }
+    if (isFinite(t)) tou += t;
+  }
+  const unique = new Set(entries.map(x => x.e.name)).size;
+  const invalid = entries.filter(x => !x.info.ok && !x.info.reasons.includes('texto sin cargar'));
+  const warnings = [];
+  const total = cards.length;
+  if (total !== 99) warnings.push({ k:'warn', t:'La Horda pide exactamente 99 criaturas y ahora hay ' + total + '.' });
+  if (unknown) warnings.push({ k:'warn', t:'Cargando el texto de ' + unknown + ' cartas para el análisis…' });
+  if (invalid.length) warnings.push({ k:'bad', t:invalid.length + ' carta(s) no cumplen las reglas de la Horda: ' + invalid.slice(0, 5).map(x => x.e.name).join(', ') + (invalid.length > 5 ? '…' : '') + '.' });
+  if (unique < 50) warnings.push({ k:'warn', t:'Solo ' + unique + ' cartas únicas: demasiadas repeticiones para una horda variada.' });
+  const tokens = (roles['attack-token'] || 0) + (roles['etb-token'] || 0) + (roles['death-token'] || 0) + (roles['token-other'] || 0);
+  const damage = (roles['attack-damage'] || 0) + (roles['etb-damage'] || 0) + (roles['death-damage'] || 0) + (roles['damage-other'] || 0);
+  if (tokens < 30) warnings.push({ k:'warn', t:'Poca presión de fichas (' + tokens + '): la Horda necesita cuerpos que sigan llegando.' });
+  if (damage < 8) warnings.push({ k:'warn', t:'Poco daño directo (' + damage + '): la partida se alargará.' });
+  if ((roles.anthem || 0) < 6) warnings.push({ k:'warn', t:'Pocos himnos o contadores (' + (roles.anthem || 0) + '): los cuerpos serán pequeños.' });
+  if (curve[1] < 18) warnings.push({ k:'warn', t:'Solo ' + curve[1] + ' criaturas de 1 maná: la Horda arrancará lenta.' });
+  return { entries, cards, roles, curve, colors, unique, invalid, warnings,
+    total, unknown, avgCmc: cards.length ? cards.reduce((a, c) => a + (Number(c.cmc) || 0), 0) / cards.length : 0,
+    avgPow: pt ? pow / pt : 0, avgTou: pt ? tou / pt : 0 };
+}
+function renderHorde(){
+  const panel = $('#panelHorde');
+  if (!panel) return;
+  const f = F();
+  panel.hidden = !f.horde;
+  if (!f.horde) return;
+  const a = hordeAnalysis();
+  const pct = n => a.total ? Math.round(n / a.total * 100) : 0;
+  const stat = (v, l) => '<div><b>' + v + '</b><span>' + l + '</span></div>';
+  const colorTxt = COLORS.filter(k => a.colors[k]).map(k => k + ' ' + a.colors[k]).join(' · ');
+  $('#hordeSummary').innerHTML =
+    '<div class="hordestats">' +
+      stat(a.total + '/99', 'Criaturas') +
+      stat(a.unique, 'Únicas') +
+      stat(a.total ? (a.total - a.unique) : 0, 'Repetidas') +
+      stat(a.total ? a.avgCmc.toFixed(1) : '—', 'Coste medio') +
+      stat(a.total ? a.avgPow.toFixed(1) + '/' + a.avgTou.toFixed(1) : '—', 'F/R media') +
+      stat(a.invalid.length, 'No válidas') +
+    '</div>' +
+    '<div class="hordemeta"><b>Curva:</b> 1 maná ' + a.curve[1] + ' · 2 maná ' + a.curve[2] + ' · 3 maná ' + a.curve[3] +
+      (a.curve.other ? ' · fuera de curva ' + a.curve.other : '') + '<br><b>Colores:</b> ' + (colorTxt || 'incoloro') +
+      '<br><b>Regla:</b> sin tierras, sin comandante, maná infinito y una carta por turno. El daño recibido se convierte en cartas milladas.</div>' +
+    '<div class="hordebars">' + COLORS.map(k =>
+      '<span class="hordebar">' + k + ' <i style="width:' + Math.round((a.colors[k] || 0) * 1.4) + 'px"></i> ' + (a.colors[k] || 0) + '</span>'
+    ).join('') + '</div>' +
+    '<table class="hordetab"><thead><tr><th>Rol</th><th>N</th><th>%</th><th>Qué aporta</th></tr></thead><tbody>' +
+      HORDE_ROLE_ORDER.filter(r => a.roles[r]).map(r =>
+        '<tr><td>' + esc(hordeRoleLabel(r)) + '</td><td>' + a.roles[r] + '</td><td>' + pct(a.roles[r]) + '%</td><td class="muted">' + esc(HORDE_ROLE_DESC[r] || '') + '</td></tr>'
+      ).join('') + '</tbody></table>';
+
+  $('#hordeWarn').innerHTML = a.warnings.length
+    ? a.warnings.map(w => '<div class="issue ' + (w.k === 'warn' ? 'warn' : w.k === 'ok' ? 'ok' : '') + '">' + esc(w.t) + '</div>').join('')
+    : '<div class="issue ok">✓ 99 criaturas, 0 tierras y 0 decisiones. La horda está lista para imprimir.</div>';
+  $('#deckIssues').innerHTML = a.warnings.length
+    ? a.warnings.map(w => '<div class="issue ' + (w.k === 'warn' ? 'warn' : w.k === 'ok' ? 'ok' : '') + '">' + esc(w.t) + '</div>').join('')
+    : '<div class="issue ok">✓ Horda válida: 99 criaturas, 0 tierras, 0 decisiones.</div>';
+
+  let html = '';
+  for (const role of HORDE_ROLE_ORDER){
+    const rows = a.entries.filter(x => x.info.role === role);
+    if (!rows.length) continue;
+    const n = rows.reduce((s, x) => s + x.e.qty, 0);
+    html += '<div class="hordegroup"><h4><span>' + esc(hordeRoleLabel(role)) + '</span><span>' + n + ' cartas</span></h4><div class="hordecards">' +
+      rows.sort((x, y) => (x.c.cmc - y.c.cmc) || x.e.name.localeCompare(y.e.name)).map(x => {
+        const tags = x.info.tags.map(t => '<span class="htag ' + (t === 'daño' ? 'dmg' : t === 'fichas' ? 'tok' : t === 'himno' ? 'him' : t === 'tribu' ? 'tri' : '') + '">' + esc(t) + '</span>').join('');
+        const bad = !x.info.ok ? '<span class="htag tri">revisar</span>' : '';
+        return '<div class="hordecard" data-preview="' + esc(x.e.name) + '">' +
+          '<span class="q">' + x.e.qty + '×</span>' +
+          '<div class="cn"><b>' + esc(x.e.name) + '</b><small>' + esc(hordeCardText(x.c)) + '</small>' + tags + bad + '</div>' +
+          '<span class="pt">' + esc(x.c.mana || '') + '<br>' + esc((x.c.pow || '?') + '/' + (x.c.tou || '?')) + '</span></div>';
+      }).join('') + '</div></div>';
+  }
+  $('#hordeTable').innerHTML = html || '<div class="emptybox">Genera la horda o añade criaturas válidas para ver el análisis.</div>';
+  if (a.unknown) ensureHordeDeck();
+}
+async function ensureHordeDeck(){
+  if (HORDE_HYDRATING) return;
+  const need = S.deck.list.map(e => e.name).filter(n => { const c = cardFor(n); return c && !c.oracle && !BASIC_SET.has(n); });
+  if (!need.length) return;
+  const key = need.join('|');
+  if (HORDE_TRIED === key) return;
+  HORDE_TRIED = key;
+  HORDE_HYDRATING = true;
+  try{ await hordeHydrate(need); }catch(e){ console.warn(e); }
+  HORDE_HYDRATING = false;
+  renderDeck();
+}
+function setHordeBusy(b){
+  ['#hordeGen', '#hordeFill'].forEach(sel => { const el = $(sel); if (el) el.disabled = b; });
+}
+async function hordePrint(){
+  if (!F().horde){ toast('Elige el formato Horda'); return; }
+  if (!S.deck.list.length){ toast('Genera o monta una horda primero'); return; }
+  const need = S.deck.list.map(e => e.name).filter(n => { const c = cardFor(n); return c && !c.oracle && !BASIC_SET.has(n); });
+  if (need.length){ try{ await hordeHydrate(need); }catch(e){} renderDeck(); }
+  const a = hordeAnalysis();
+  if (!a.total){ toast('No hay cartas que imprimir'); return; }
+  const w = window.open('', '_blank');
+  if (!w){ toast('El navegador bloqueó la pestaña; permite las ventanas emergentes'); return; }
+  const proxies = $('#hordeProxies') ? $('#hordeProxies').checked : true;
+  const date = new Date().toLocaleString('es-ES', { dateStyle:'long', timeStyle:'short' });
+  const cardRows = a.entries.slice().sort((x, y) =>
+    HORDE_ROLE_ORDER.indexOf(x.info.role) - HORDE_ROLE_ORDER.indexOf(y.info.role) ||
+    (x.c.cmc - y.c.cmc) || x.e.name.localeCompare(y.e.name)
+  );
+  const roleRows = HORDE_ROLE_ORDER.filter(r => a.roles[r]).map(r =>
+    '<tr><td>' + esc(hordeRoleLabel(r)) + '</td><td>' + a.roles[r] + '</td><td>' + esc(HORDE_ROLE_DESC[r] || '') + '</td></tr>'
+  ).join('');
+  const listRows = cardRows.map(x =>
+    '<tr><td class="q">' + x.e.qty + '</td><td><b>' + esc(x.e.name) + '</b></td><td>' + esc(x.c.mana || '') +
+    '</td><td>' + esc((x.c.pow || '?') + '/' + (x.c.tou || '?')) + '</td><td>' + esc(hordeRoleLabel(x.info.role)) +
+    '</td><td class="fx">' + esc(hordeCardText(x.c)) + '</td></tr>'
+  ).join('');
+  const proxyCards = a.cards.slice();
+  const sheets = [];
+  for (let i = 0; i < proxyCards.length; i += 9){
+    const chunk = proxyCards.slice(i, i + 9);
+    sheets.push('<div class="sheet">' + chunk.map(c =>
+      '<div class="proxy">' + (c.big || c.img ? '<img src="' + esc(c.big || c.img) + '" alt="">' : '<div class="noimg">' + esc(c.name) + '</div>') + '</div>'
+    ).join('') + '</div>');
+  }
+  const warnRows = a.warnings.length
+    ? a.warnings.map(x => '<li>' + esc(x.t) + '</li>').join('')
+    : '<li>Sin avisos: 99 criaturas, cero tierras y cero decisiones.</li>';
+  const html = '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Horda · ' + esc(S.deck.name || '99 criaturas') + '</title>' +
+    '<style>' +
+    '@page{size:A4;margin:8mm}*{box-sizing:border-box}body{margin:0;font:11px/1.4 "Segoe UI",Arial,sans-serif;color:#161616;background:#fff}' +
+    '.screen{position:fixed;right:12px;top:12px;z-index:9;background:#1d1408;color:#f6e7bb;border:0;border-radius:8px;padding:10px 14px;font:700 13px sans-serif;cursor:pointer}' +
+    '.page{page-break-after:always;padding:0 0 4mm}.page:last-child{page-break-after:auto}' +
+    'h1{font:800 26px/1.05 Georgia,serif;margin:0 0 3mm}h2{font:700 16px/1.1 Georgia,serif;margin:6mm 0 2mm;border-bottom:.4mm solid #d8c48a;padding-bottom:1.5mm}' +
+    '.sub{color:#666;font-size:10px;margin:0 0 4mm}.grid{display:grid;grid-template-columns:1fr 1fr;gap:4mm}' +
+    '.box{border:.3mm solid #ccc;border-radius:2mm;padding:3mm}.box h3{font:700 12px/1.2 sans-serif;margin:0 0 1.5mm;color:#6b5424}' +
+    'ul{margin:0;padding-left:4mm}li{margin:.8mm 0}.rules li{margin:1.2mm 0}' +
+    'table{width:100%;border-collapse:collapse;font-size:9.5px}th{text-align:left;background:#f2ead6;padding:1.4mm;border-bottom:.3mm solid #c9b98f;font-size:8.5px;text-transform:uppercase;letter-spacing:.04em}' +
+    'td{padding:1.2mm;border-bottom:.2mm solid #eee;vertical-align:top}td.q{font-weight:700;color:#8a6d33;white-space:nowrap}.fx{font-size:8.5px;color:#444}' +
+    '.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:1.5mm;margin:2mm 0}.stat{border:.3mm solid #ddd;border-radius:1.5mm;padding:1.5mm}.stat b{display:block;font:700 15px/1.1 Georgia,serif}.stat span{font-size:7.5px;text-transform:uppercase;color:#777}' +
+    '.sheet{display:grid;grid-template-columns:repeat(3,63mm);grid-auto-rows:88mm;justify-content:center;page-break-after:always}' +
+    '.sheet:last-child{page-break-after:auto}.proxy{width:63mm;height:88mm;overflow:hidden;border:.2mm dashed #bbb;background:#f4f4f4}.proxy img{width:100%;height:100%;object-fit:cover;display:block}.noimg{display:grid;place-items:center;height:100%;padding:3mm;text-align:center;font-size:9px}' +
+    '.foot{position:fixed;bottom:2mm;left:0;right:0;text-align:center;font-size:7.5px;color:#999}' +
+    '@media print{.screen{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}' +
+    '</style></head><body>' +
+    '<button class="screen" onclick="window.print()">Imprimir / Guardar como PDF</button>' +
+    '<div class="page">' +
+      '<h1>Horda · ' + esc(S.deck.name || '99 criaturas') + '</h1>' +
+      '<p class="sub">99 criaturas de 1 a 3 maná · sin tierras · sin comandante · sin decisiones · ' + esc(date) + '</p>' +
+      '<div class="stats">' +
+        '<div class="stat"><b>' + a.total + '</b><span>Criaturas</span></div>' +
+        '<div class="stat"><b>' + a.unique + '</b><span>Únicas</span></div>' +
+        '<div class="stat"><b>' + a.avgCmc.toFixed(1) + '</b><span>Coste medio</span></div>' +
+        '<div class="stat"><b>' + a.avgPow.toFixed(1) + '/' + a.avgTou.toFixed(1) + '</b><span>F/R media</span></div>' +
+        '<div class="stat"><b>' + (a.roles['attack-token'] || 0) + '</b><span>Fichas al atacar</span></div>' +
+        '<div class="stat"><b>' + (a.roles.anthem || 0) + '</b><span>Himnos</span></div>' +
+      '</div>' +
+      '<div class="grid"><div class="box"><h3>Cómo se juega</h3><ul class="rules">' +
+        '<li>La Horda no tiene vida ni tierras: su biblioteca es este mazo de 99 criaturas.</li>' +
+        '<li>Cada turno revela la primera carta, la juega y ataca con todas sus criaturas. Tiene maná infinito, pero una carta por turno.</li>' +
+        '<li>Todas las criaturas de la Horda tienen prisa y atacan cada turno si pueden.</li>' +
+        '<li>El daño que hagas a la Horda se convierte en cartas milladas. Si se queda sin biblioteca, pierde.</li>' +
+        '<li>Los supervivientes empiezan con 20 vidas y tienen 3 turnos de preparación antes del primer ataque.</li>' +
+        '<li>Escalado: 45 cartas para 1 jugador · 60 para 2 · 75 para 3 · 99 para 4 o más.</li>' +
+      '</ul></div><div class="box"><h3>Por qué estas cartas</h3><ul>' +
+        '<li>Ninguna pide objetivos, elecciones, «puedes», sacrificios ni habilidades activadas: todo se dispara solo.</li>' +
+        '<li>Se descartan efectos de vida, robo, maná, tierras y hechizos que no son criatura: en la Horda no hacen nada.</li>' +
+        '<li>Se priorizan fichas al atacar/entrar/morir, daño directo, himnos y cuerpos difíciles de matar.</li>' +
+        '<li>Las repetidas son copias de las mejores criaturas de 1 y 2 maná, nunca relleno.</li>' +
+      '</ul></div></div>' +
+      '<h2>Reparto por rol</h2><table><thead><tr><th>Rol</th><th>N</th><th>Aporte</th></tr></thead><tbody>' + roleRows + '</tbody></table>' +
+      '<h2>Avisos del análisis</h2><ul>' + warnRows + '</ul>' +
+      '<p class="sub" style="margin-top:5mm">La Horda es un modo cooperativo de mesa: esta app no tiene tablero de Horda. Este PDF es la biblioteca, las reglas y los proxies para jugarlo.</p>' +
+    '</div>' +
+    '<div class="page"><h2>Lista y análisis carta a carta</h2>' +
+      '<table><thead><tr><th>N</th><th>Carta</th><th>Coste</th><th>F/R</th><th>Rol</th><th>Qué hace</th></tr></thead><tbody>' + listRows + '</tbody></table></div>' +
+    (proxies ? sheets.map((s, i) => '<div class="page">' + (i === 0 ? '<h2>Proxies · cortar por las líneas</h2>' : '') + s + '</div>').join('') : '') +
+    '<div class="foot">Forja de mazos · Horda · ' + a.total + ' criaturas</div>' +
+    '</body></html>';
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+  const imgs = [...w.document.images];
+  Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(r => { img.onload = r; img.onerror = r; })))
+    .then(() => setTimeout(() => { try{ w.focus(); w.print(); }catch(e){} }, 350));
+  toast('PDF listo: elige «Guardar como PDF» en el diálogo de impresión');
+}
+
+
+/* ---------- estado derivado ---------- */
+function F(){ return FORMATS[S.fmt]; }
+function identityCtx(){
+  if (S.commander) return (S.commander.ci || []).slice();
+  if (S.colors.size) return [...S.colors];
+  return null;
+}
+function identityQ(){
+  const id = identityCtx();
+  if (id === null) return '';
+  return 'id<=' + (id.join('') || 'c');
+}
+function fitsIdentity(c){
+  if (F().horde) return true;
+  const id = identityCtx();
+  if (id === null) return true;
+  const ci = c.ci || [];
+  if (!ci.length) return true;
+  return ci.every(x => id.includes(x));
+}
+function deckQty(name){
+  const e = S.deck.list.find(x => x.name === name);
+  return e ? e.qty : 0;
+}
+function deckCount(){
+  let n = S.deck.list.reduce((a, e) => a + e.qty, 0);
+  if (F().cmd && S.commander) n++;
+  return n;
+}
+function testDeck(){
+  const f = F();
+  if (f.horde){ toast('La Horda se juega en mesa: usa «PDF / Imprimir» para llevar la biblioteca y las reglas'); return; }
+  if (!S.deck.list.length && !S.commander){ toast('El mazo está vacío'); return; }
+  if (f.cmd && !S.commander){ toast('Elige un ' + (f.captain ? 'capitán' : 'comandante') + ' para probar el mazo'); return; }
+  const cards = [];
+  S.deck.list.forEach(e => { for (let i = 0; i < e.qty; i++) cards.push(e.name); });
+  if (S.commander) cards.push(S.commander.name);
+  if (cards.length < 20){ toast('El mazo es demasiado pequeño para probarlo'); return; }
+  const payload = { v:1, format:f.id, name:S.deck.name || 'Forja',
+    commander:S.commander ? S.commander.name : null, cards };
+  const url = f.id + '.html?play=1&d=' + encodeURIComponent(JSON.stringify(payload));
+  const win = window.open(url, '_blank');
+  if (!win){ toast('El navegador bloqueó la pestaña; permite las ventanas emergentes para probar el mazo'); return; }
+  toast('Abriendo ' + f.label + ' con ' + cards.length + ' cartas contra la IA…');
+}
+function maxCopies(c){ return c.basic ? 99 : F().copies; }
+function isLand(c){ return /\bland\b/i.test((c && c.type) || ''); }
+function canCommand(c){
+  if (!c) return false;
+  const ty = (c.type || '').toLowerCase();
+  if (S.fmt === 'captain') return /\bcreature\b/.test(ty);
+  if (/\blegendary\b/.test(ty) && /\bcreature\b/.test(ty)) return true;
+  if (/can be your commander/.test((c.oracle || '').toLowerCase())) return true;
+  if (S.fmt === 'brawl' && /\bplaneswalker\b/.test(ty)) return true;
+  return false;
+}
+function ownedQty(name){
+  if (BASIC_SET.has(name)) return 99;
+  return Number(COLL.qty[name] || 0);
+}
+function pipCounts(cards){
+  const p = { W:0, U:0, B:0, R:0, G:0 };
+  for (const c of cards){
+    const mc = c.mana || '';
+    for (const m of mc.matchAll(/\{([^}]+)\}/g)){
+      const s = m[1].toUpperCase();
+      for (const col of COLORS) if (s.includes(col)) p[col]++;
+    }
+  }
+  return p;
+}
+function basicSplit(n, pips, id){
+  let cols = (id && id.length) ? id.slice() : COLORS.filter(c => pips[c] > 0);
+  if (!cols.length) cols = ['W'];
+  const active = cols.filter(c => pips[c] > 0);
+  const use = active.length ? active : cols;
+  const weights = use.map(c => Math.max(1, pips[c]));
+  const sum = weights.reduce((a, b) => a + b, 0);
+  const raw = weights.map(w => n * w / sum);
+  const base = raw.map(Math.floor);
+  let rem = n - base.reduce((a, b) => a + b, 0);
+  const order = raw.map((v, i) => ({ i, f:v - base[i] })).sort((a, b) => b.f - a.f);
+  for (let k = 0; k < rem; k++) base[order[k % order.length].i]++;
+  return use.map((c, i) => ({ c, n:base[i] })).filter(x => x.n > 0);
+}
+
+/* ---------- analisis de maná, tipos y precio ---------- */
+const LAND_TYPE_COLORS = { plains:'W', island:'U', swamp:'B', mountain:'R', forest:'G' };
+function landColors(c){
+  const out = new Set();
+  const t = (c.type || '').toLowerCase();
+  for (const k of Object.keys(LAND_TYPE_COLORS)) if (t.includes(k)) out.add(LAND_TYPE_COLORS[k]);
+  const o = (c.oracle || '').toLowerCase();
+  for (const m of o.matchAll(/\{([wubrg])\}/g)) out.add(m[1].toUpperCase());
+  if (/any color|any one color/.test(o)) ['W','U','B','R','G'].forEach(x => out.add(x));
+  return out;
+}
+function landSources(){
+  const s = { W:0, U:0, B:0, R:0, G:0 };
+  const id = identityCtx();
+  const allowed = id === null ? null : new Set(id);
+  for (const e of S.deck.list){
+    const c = cardFor(e.name);
+    if (!c || !isLand(c)) continue;
+    for (const k of landColors(c)) if (!allowed || allowed.has(k)) s[k] += e.qty;
+  }
+  return s;
+}
+function deckPips(){
+  const cards = S.deck.list.map(e => cardFor(e.name)).filter(c => c && !isLand(c));
+  if (S.commander) cards.push(S.commander);
+  return pipCounts(cards);
+}
+function deckPrice(){
+  let sum = S.deck.list.reduce((a, e) => {
+    const c = cardFor(e.name);
+    return a + (c && !c.basic ? (c.price || 0) * e.qty : 0);
+  }, 0);
+  if (F().cmd && S.commander) sum += S.commander.price || 0;
+  return sum;
+}
+function typeCounts(){
+  const t = { Criaturas:0, Instantáneos:0, Conjuros:0, Artefactos:0, Encantamientos:0, Planeswalkers:0, Tierras:0, Otras:0 };
+  for (const e of S.deck.list){
+    const c = cardFor(e.name);
+    if (!c) continue;
+    const ty = (c.type || '').toLowerCase();
+    if (ty.includes('land')) t.Tierras += e.qty;
+    else if (ty.includes('creature')) t.Criaturas += e.qty;
+    else if (ty.includes('instant')) t.Instantáneos += e.qty;
+    else if (ty.includes('sorcery')) t.Conjuros += e.qty;
+    else if (ty.includes('artifact')) t.Artefactos += e.qty;
+    else if (ty.includes('enchantment')) t.Encantamientos += e.qty;
+    else if (ty.includes('planeswalker')) t.Planeswalkers += e.qty;
+    else t.Otras += e.qty;
+  }
+  return t;
+}
+function landScore(c, demand){
+  let s = 0;
+  for (const col of landColors(c)) s += (demand[col] || 0);
+  s += Math.max(0, 60 - Math.min(60, (c.rank || 1e6) / 500));
+  return s;
+}
+function priceCap(){
+  const el = $('#budget');
+  return el ? Number(el.value || 0) : 0;
+}
+function withinBudget(c){
+  const cap = priceCap();
+  return !cap || !c.price || c.price <= cap;
+}
+function isCreature(c){ return /creature/i.test(c.type || ''); }
+function isArtifact(c){ return /artifact/i.test(c.type || '') && !isCreature(c); }
+
+/* ---------- pintar ajustes ---------- */
+function renderSettings(){
+  const f = F();
+  document.querySelectorAll('#fmtRow .fmtbtn').forEach(b => b.classList.toggle('on', b.dataset.fmt === S.fmt));
+  const pips = $('#pipRow');
+  pips.classList.toggle('off', !!S.commander || !!f.horde);
+  document.querySelectorAll('#pipRow .pip').forEach(b => b.classList.toggle('on', S.colors.has(b.dataset.c)));
+
+  const slot = $('#cmdSlot');
+  const cmdCap = f.captain ? 'Capitán' : 'Comandante';
+  const cmdWord = f.captain ? 'capitán' : 'comandante';
+  $('#cmdLbl').textContent = cmdCap;
+  if (f.horde){
+    slot.className = 'cmdslot has';
+    slot.innerHTML = '<div class="cn"><b>Modo Horda</b><span>99 criaturas de 1–3 maná. Sin tierras, sin comandante y sin decisiones.</span></div>';
+  } else if (!f.cmd){
+    slot.className = 'cmdslot';
+    slot.innerHTML = '<div class="cn"><b>Sin comandante</b><span>' + f.label + ' juega sesenta cartas y no usa zona de mando.</span></div>';
+  } else if (S.commander){
+    slot.className = 'cmdslot has';
+    slot.innerHTML =
+      (S.commander.art ? '<img src="' + esc(S.commander.art) + '" alt="">' : '') +
+      '<div class="cn"><b>' + esc(S.commander.name) + '</b><span>' + cmdCap + ' · identidad ' + esc((S.commander.ci || []).join('') || 'incolora') + '</span></div>' +
+      '<button class="x" id="cmdClear" title="Quitar ' + cmdWord + '">Quitar</button>';
+    $('#cmdClear').onclick = () => { S.commander = null; renderSettings(); renderDeck(); };
+  } else {
+    slot.className = 'cmdslot';
+    slot.innerHTML = '<div class="cn"><b>Sin ' + cmdWord + ' todavía</b><span>Busca una carta y pulsa ★, o deja que la app elija ' + (f.captain ? 'una criatura' : 'uno') + '.</span></div>' +
+      '<button class="x" id="cmdSuggest">Sugerir</button>';
+  }
+  const sug = $('#cmdSuggest');
+  if (sug) sug.onclick = suggestCommanders;
+
+  const hint = $('#setHint');
+  const bits = [];
+  if (f.horde){
+    bits.push('Horda · 99 criaturas · 1–3 maná · sin decisiones · sin tierras');
+  } else {
+    bits.push(f.label + ' · ' + f.size + ' cartas · ' + f.life + ' vidas');
+    bits.push(f.copies === 1 ? 'singleton' : 'hasta ' + f.copies + ' copias');
+  }
+  if (S.sets.length) bits.push(S.sets.length + ' set' + (S.sets.length === 1 ? '' : 's'));
+  if (!S.sets.length) bits.push('cualquier set');
+  if (!S.commander && !S.colors.size && f.cmd) bits.push('sin filtro de color');
+  if (f.captain) bits.push('capitán criatura en la zona de mando');
+  hint.textContent = bits.join(' · ');
+  $('#deckModeLabel').textContent = S.mode === 'virtual' ? 'Mazo virtual' : 'Colección física';
+  $('#panelHorde').hidden = !f.horde;
+  const testBtn = $('#deckTest');
+  if (testBtn){ testBtn.hidden = !!f.horde; if (!f.horde) testBtn.textContent = '▶ Probar en ' + f.label; }
+  renderChips();
+}
+
+function renderChips(){
+  const box = $('#setChips');
+  if (!S.sets.length){ box.innerHTML = '<span class="xs muted">Sin sets elegidos: se busca en todo Magic.</span>'; return; }
+  box.innerHTML = S.sets.map(code => {
+    const name = setNameOf(code);
+    return '<span class="chip">' + esc(name) + ' <small class="muted">' + esc(code) + '</small>' +
+      '<button data-setdel="' + esc(code) + '" title="Quitar">×</button></span>';
+  }).join('');
+  box.querySelectorAll('[data-setdel]').forEach(b => b.onclick = () => {
+    S.sets = S.sets.filter(x => x !== b.dataset.setdel);
+    renderSettings();
+  });
+}
+let SETS = [];
+function setNameOf(code){
+  const s = SETS.find(x => x.code === code);
+  return s ? s.name : code;
+}
+
+async function loadSets(){
+  try{
+    const cache = load(LS.sets, null);
+    if (cache && cache.at && Date.now() - cache.at < 7 * 864e5 && cache.list){
+      SETS = cache.list; fillSetDatalist(); return;
+    }
+    const d = await api(API + '/sets');
+    SETS = (d.data || [])
+      .filter(s => !s.digital && !['token','memorabilia','minigame','vanguard','planar'].includes(s.set_type))
+      .sort((a, b) => String(b.released_at || '').localeCompare(String(a.released_at || '')))
+      .map(s => ({ code:s.code.toUpperCase(), name:s.name, type:s.set_type, at:s.released_at }));
+    save(LS.sets, { at:Date.now(), list:SETS });
+    fillSetDatalist();
+  }catch(e){ console.warn('sets', e); }
+}
+function fillSetDatalist(){
+  $('#setList').innerHTML = SETS.slice(0, 900).map(s =>
+    '<option value="' + esc(s.name) + '">' + esc(s.code) + ' · ' + esc(s.at || '') + '</option>'
+  ).join('');
+}
+
+/* ---------- pintar resultados ---------- */
+let V_RESULTS = [], C_RESULTS = [];
+const LIMIT = { virtual:40, collection:40 };
+function resultRow(c, mode){
+  const f = F();
+  const own = ownedQty(c.name);
+  const hi = f.horde ? hordeInfo(c) : null;
+  const legal = f.leg ? (c.legal || {})[f.leg] : '';
+  const legalBad = legal && legal !== 'legal' ? ' · no legal' : '';
+  const star = (f.cmd && canCommand(c)) ? '<button class="icobtn star" data-cmd="' + esc(c.name) + '" title="Elegir como comandante">★</button>' : '';
+  const ownTag = c.basic || own > 0
+    ? '<span class="own have">✓ ' + (c.basic ? 'básica' : own + ' en tu colección') + '</span>'
+    : '<span class="own none">✗ no la tienes</span>';
+  const hordeTag = hi ? (hi.ok ? '<span class="own have">✓ horda</span>' : '<span class="own none">✗ ' + esc(hi.reasons[0] || 'no horda') + '</span>') : '';
+  const addBtn = '<button class="icobtn add" data-add="' + esc(c.name) + '"' + (hi && !hi.ok ? ' disabled title="' + esc(hi.reasons.join(' · ')) + '"' : '') + '>+ Mazo</button>';
+  const addMany = f.copies > 1 ? '<button class="icobtn" data-add4="' + esc(c.name) + '" title="Añadir hasta ' + f.copies + ' copias">×' + f.copies + '</button>' : '';
+  const haveBtn = mode === 'collection'
+    ? (own > 0 ? '' : '<button class="icobtn" data-own="' + esc(c.name) + '">Tengo esta</button>')
+    : '';
+  return '<div class="result" data-preview="' + esc(c.name) + '">' +
+    '<div class="rimg" style="background-image:url(\'' + esc(c.art || c.img || '') + '\')"></div>' +
+    '<div class="rmain"><b>' + esc(c.name) + '</b>' +
+    '<div class="meta">' + esc(c.type || '') + (c.mana ? ' · ' + esc(c.mana) : '') +
+      (c.price ? ' · $' + c.price.toFixed(2) : '') + legalBad + '</div>' + ownTag + hordeTag + '</div>' +
+    '<div class="racts">' + haveBtn + star + addMany + addBtn + '</div></div>';
+}
+function renderResults(box, list, mode){
+  if (!list.length){
+    box.innerHTML = '<div class="emptybox">' + (mode === 'virtual'
+      ? 'Busca cartas por nombre, tipo o texto. Los filtros de formato, color y set ya están aplicados.'
+      : 'Busca cartas para marcar las que ya tienes en casa.') + '</div>';
+    return;
+  }
+  const lim = LIMIT[mode] || 40;
+  const rest = list.length - lim;
+  box.innerHTML = list.slice(0, lim).map(c => resultRow(c, mode)).join('') +
+    (rest > 0 ? '<button class="btn sec sm morebtn" data-more="' + mode + '">Ver más (' + rest + ' restantes)</button>' : '');
+  box.querySelectorAll('[data-add]').forEach(b => b.onclick = () => {
+    const c = cardFor(b.dataset.add); if (c) addToDeck(c);
+  });
+  box.querySelectorAll('[data-add4]').forEach(b => b.onclick = () => {
+    const c = cardFor(b.dataset.add4); if (c) addToDeck(c, F().copies);
+  });
+  box.querySelectorAll('[data-cmd]').forEach(b => b.onclick = () => {
+    const c = cardFor(b.dataset.cmd); if (c) setCommander(c);
+  });
+  box.querySelectorAll('[data-own]').forEach(b => b.onclick = () => {
+    const c = cardFor(b.dataset.own); if (c) markOwned(c, 1);
+  });
+  const more = box.querySelector('[data-more]');
+  if (more) more.onclick = () => { LIMIT[mode] = (LIMIT[mode] || 40) + 40; renderResults(box, list, mode); };
+}
+
+/* ---------- acciones de mazo ---------- */
+const UNDO = [];
+function pushUndo(){
+  if (!S.booted) return;
+  try{
+    UNDO.push(JSON.stringify({ fmt:S.fmt, name:S.deck.name, list:S.deck.list,
+      commander:S.commander ? mini(S.commander) : null }));
+  }catch(e){}
+  if (UNDO.length > 40) UNDO.shift();
+}
+function undoDeck(){
+  const raw = UNDO.pop();
+  if (!raw){ toast('No hay nada que deshacer'); return; }
+  const d = JSON.parse(raw);
+  S.fmt = FORMATS[d.fmt] ? d.fmt : S.fmt;
+  S.deck.name = d.name || '';
+  S.deck.list = Array.isArray(d.list) ? d.list : [];
+  S.commander = d.commander ? (CACHE.get(d.commander.name) || d.commander) : null;
+  if (S.commander) CACHE.set(S.commander.name, S.commander);
+  S.currentDeckId = null;
+  S.deckFilter = '';
+  renderAll();
+  toast('Deshecho');
+}
+function canAdd(c){
+  const f = F();
+  if (f.horde){
+    const hi = hordeInfo(c);
+    if (!hi.ok) return c.name + ' no vale para la Horda: ' + hi.reasons.join(', ');
+  }
+  if (f.leg && c.legal && c.legal[f.leg] && c.legal[f.leg] !== 'legal') return c.name + ' no es legal en ' + f.label;
+  if (!fitsIdentity(c)) return c.name + ' se sale de la identidad de color';
+  if (S.commander && c.name === S.commander.name) return 'Esa carta ya es tu ' + (f.captain ? 'capitán' : 'comandante');
+  if (deckQty(c.name) >= maxCopies(c)) return f.copies === 1 ? 'Singleton: ' + c.name + ' ya está en el mazo' : 'Máximo ' + f.copies + ' copias de ' + c.name;
+  if (S.mode === 'collection' && !c.basic && deckQty(c.name) + 1 > ownedQty(c.name)) return 'Solo tienes ' + ownedQty(c.name) + ' de ' + c.name;
+  return '';
+}
+function addToDeck(c, n){
+  const why = canAdd(c);
+  if (why){ toast(why); return; }
+  pushUndo();
+  n = Math.max(1, n || 1);
+  for (let i = 0; i < n; i++){
+    if (canAdd(c)) break;
+    const e = S.deck.list.find(x => x.name === c.name);
+    if (e) e.qty++; else S.deck.list.push({ name:c.name, qty:1 });
+  }
+  CACHE.set(c.name, c);
+  renderDeck();
+}
+function setCommander(c){
+  const f = F();
+  const word = f.captain ? 'capitán' : 'comandante';
+  if (!f.cmd){ toast(f.label + ' no usa comandante'); return; }
+  if (!canCommand(c)){ toast(c.name + ' no puede ser ' + word + ' en ' + f.label); return; }
+  if (S.mode === 'collection' && !ownedQty(c.name)){ toast('No tienes ' + c.name + ' en tu colección'); return; }
+  pushUndo();
+  S.deck.list = S.deck.list.filter(e => e.name !== c.name);
+  S.commander = c;
+  S.colors.clear();
+  CACHE.set(c.name, c);
+  renderSettings(); renderDeck();
+  toast(c.name + ' es ahora el ' + word);
+}
+function changeQty(name, delta){
+  const e = S.deck.list.find(x => x.name === name);
+  if (!e) return;
+  pushUndo();
+  e.qty += delta;
+  if (e.qty <= 0) S.deck.list = S.deck.list.filter(x => x.name !== name);
+  renderDeck();
+}
+function clearDeck(){
+  if (!S.deck.list.length && !S.commander) return;
+  pushUndo();
+  S.deck.list = []; S.commander = null; S.currentDeckId = null;
+  renderSettings(); renderDeck();
+}
+
+/* ---------- pintar mazo ---------- */
+function renderDeck(){
+  const f = F();
+  const total = deckCount();
+  const badge = $('#deckCount');
+  badge.textContent = total + ' / ' + f.size;
+  const srcRow = $('#srcRow'); if (srcRow) srcRow.hidden = !!f.horde;
+  const testBtn = $('#deckTest'); if (testBtn) testBtn.hidden = !!f.horde;
+  badge.classList.toggle('full', total === f.size);
+
+  $('#deckName').value = S.deck.name || '';
+  $('#deckEmpty').hidden = S.deck.list.length > 0 || !!S.commander;
+  $('#deckCmd').innerHTML = (f.cmd && S.commander)
+    ? '<div class="cmdcard">' + (S.commander.art ? '<img src="' + esc(S.commander.art) + '" alt="">' : '') +
+      '<div><span class="lab">' + (f.captain ? 'Capitán' : 'Comandante') + '</span><b>' + esc(S.commander.name) + '</b></div></div>'
+    : '';
+
+  const entries = S.deck.list.map(e => ({ e, c:cardFor(e.name) })).filter(x => x.c);
+  const allSpells = entries.filter(x => !isLand(x.c)).sort((a, b) => (a.c.cmc - b.c.cmc) || a.e.name.localeCompare(b.e.name));
+  const allLands = entries.filter(x => isLand(x.c)).sort((a, b) => a.e.name.localeCompare(b.e.name));
+  const fq = (S.deckFilter || '').toLowerCase().trim();
+  const keep = x => !fq || x.e.name.toLowerCase().includes(fq) || (x.c.type || '').toLowerCase().includes(fq);
+  const spells = allSpells.filter(keep);
+  const lands = allLands.filter(keep);
+
+  const row = (x) => {
+    const missing = !x.c.basic && x.e.qty > ownedQty(x.e.name);
+    return '<div class="drow" data-preview="' + esc(x.e.name) + '"><div class="qtybox">' +
+      '<button data-q="-1" data-n="' + esc(x.e.name) + '" aria-label="Quitar una">−</button>' +
+      '<b>' + x.e.qty + '</b>' +
+      '<button data-q="1" data-n="' + esc(x.e.name) + '" aria-label="Añadir una">+</button></div>' +
+      '<div class="dname"><b>' + esc(x.e.name) + '</b><small>' + esc(x.c.type || '') + (missing ? ' · te faltan ' + (x.e.qty - ownedQty(x.e.name)) : '') + '</small></div>' +
+      '<span class="dmana">' + esc(x.c.mana || '') + '</span>' +
+      '<button class="del" data-del="' + esc(x.e.name) + '" title="Quitar del mazo">×</button></div>';
+  };
+
+  let html = '';
+  if (spells.length) html += '<div class="dgroup"><h4><span>' + (f.horde ? 'Criaturas' : 'Hechizos') + '</span><span>' + spells.reduce((a, x) => a + x.e.qty, 0) + '</span></h4>' + spells.map(row).join('') + '</div>';
+  if (lands.length) html += '<div class="dgroup"><h4><span>Tierras</span><span>' + lands.reduce((a, x) => a + x.e.qty, 0) + '</span></h4>' + lands.map(row).join('') + '</div>';
+  $('#deckList').innerHTML = html;
+  $('#deckList').querySelectorAll('[data-q]').forEach(b => b.onclick = () => changeQty(b.dataset.n, Number(b.dataset.q)));
+  $('#deckList').querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
+    pushUndo();
+    S.deck.list = S.deck.list.filter(x => x.name !== b.dataset.del); renderDeck();
+  });
+
+  const spellCards = allSpells.flatMap(x => Array(x.e.qty).fill(x.c));
+  const landCount = allLands.reduce((a, x) => a + x.e.qty, 0);
+  const avg = spellCards.length ? (spellCards.reduce((a, c) => a + c.cmc, 0) / spellCards.length) : 0;
+  const price = deckPrice();
+  $('#deckStats').innerHTML = f.horde
+    ? '<div><b>' + spellCards.length + '</b><span>Criaturas</span></div>' +
+      '<div><b>' + new Set(allSpells.map(x => x.e.name)).size + '</b><span>Únicas</span></div>' +
+      '<div><b>' + (spellCards.length ? avg.toFixed(1) : '—') + '</b><span>Coste medio</span></div>' +
+      '<div><b>' + (price > 0 ? '$' + price.toFixed(2) : '—') + '</b><span>Precio</span></div>'
+    : '<div><b>' + spellCards.length + '</b><span>Hechizos</span></div>' +
+      '<div><b>' + landCount + '</b><span>Tierras</span></div>' +
+      '<div><b>' + (spellCards.length ? avg.toFixed(1) : '—') + '</b><span>Coste medio</span></div>' +
+      '<div><b>' + (price > 0 ? '$' + price.toFixed(2) : '—') + '</b><span>Precio</span></div>';
+
+  const pips = deckPips(), src = landSources();
+  const shown = COLORS.filter(k => pips[k] || src[k]);
+  $('#srcRow').innerHTML = (shown.length ? shown : COLORS).map(k => {
+    const need = pips[k] || 0, have = src[k] || 0;
+    const low = need >= 3 && have < need * 0.7;
+    return '<span class="srcc' + (low ? ' low' : '') + '" title="' + need + ' pips · ' + have + ' fuentes">' + k + ' ' + have + '</span>';
+  }).join('') + '<span class="xs muted">fuentes / pips</span>';
+  const tc = typeCounts();
+  $('#compRow').innerHTML = Object.entries(tc).filter(([, n]) => n)
+    .map(([k, n]) => '<span class="comp">' + n + ' ' + k.toLowerCase() + '</span>').join('');
+
+  if (fq && !spells.length && !lands.length){
+    $('#deckList').innerHTML = '<div class="deckempty">Ninguna carta coincide con «' + esc(S.deckFilter) + '».</div>';
+  }
+
+  const curve = [0, 0, 0, 0, 0, 0, 0];
+  spellCards.forEach(c => { curve[Math.min(6, Math.max(0, Math.floor(c.cmc)))]++; });
+  const max = Math.max(1, ...curve);
+  $('#deckCurve').innerHTML = curve.map((n, i) =>
+    '<div class="bar" title="' + (i === 6 ? '6+' : i) + ' maná: ' + n + '"><i style="height:' + Math.round(n / max * 46) + 'px"></i><b>' + (i === 6 ? '6+' : i) + '</b></div>'
+  ).join('');
+
+  renderIssues(spellCards, landCount, entries);
+  renderHorde();
+  renderBuyBox();
+  renderSaved();
+  scheduleDraft();
+}
+
+function renderIssues(spellCards, landCount, entries){
+  if (F().horde) return;
+  const srcNow = landSources(), pipsNow = deckPips();
+  const f = F();
+  const total = deckCount();
+  const msgs = [];
+  if (total < f.size) msgs.push({ k:'warn', t:'Faltan ' + (f.size - total) + ' cartas para las ' + f.size + '.' });
+  if (total > f.size) msgs.push({ k:'bad', t:'Sobran ' + (total - f.size) + ' cartas: el mazo pide ' + f.size + '.' });
+  if (f.cmd && !S.commander) msgs.push({ k:'bad', t:'Falta el ' + (f.captain ? 'capitán' : 'comandante') + '.' });
+  if (S.mode === 'collection' && f.size) { /* aviso de propiedad más abajo */ }
+
+  const counts = new Map();
+  for (const x of entries){
+    if (x.c.basic) continue;
+    counts.set(x.e.name, (counts.get(x.e.name) || 0) + x.e.qty);
+  }
+  for (const [name, q] of counts){
+    if (q > f.copies) msgs.push({ k:'bad', t:name + ': ' + q + ' copias (máximo ' + f.copies + ').' });
+  }
+  if (S.commander){
+    for (const x of entries){
+      if (!fitsIdentity(x.c)) msgs.push({ k:'bad', t:x.e.name + ' está fuera de la identidad ' + ((S.commander.ci || []).join('') || 'incolora') + '.' });
+    }
+  }
+  for (const x of entries){
+    if (x.c.legal && x.c.legal[f.leg] && x.c.legal[f.leg] !== 'legal'){
+      msgs.push({ k:'bad', t:x.e.name + ' no es legal en ' + f.label + '.' });
+    }
+  }
+  const miss = missingEntries();
+  if (Object.keys(COLL.qty).length && miss.length){
+    msgs.push({ k:'warn', t:'Te faltan copias de ' + miss.length + ' cartas para tener el mazo completo (lista abajo).' });
+  }
+  for (const col of COLORS){
+    if (pipsNow[col] >= 6 && srcNow[col] < Math.ceil(pipsNow[col] * 0.6)){
+      msgs.push({ k:'bad', t:'Pocas fuentes de ' + col + ': ' + srcNow[col] + ' tierras para ' + pipsNow[col] + ' pips. Mete más tierras de ese color.' });
+    }
+  }
+  if (landCount && spellCards.length && landCount < Math.min(17, f.lands)) msgs.push({ k:'warn', t:'Pocas tierras para ' + f.label + '.' });
+  if (spellCards.length && landCount > f.size * 0.5) msgs.push({ k:'warn', t:'Demasiadas tierras: más de la mitad del mazo.' });
+
+  const seen = new Set();
+  const unique = msgs.filter(m => { const k = m.k + m.t; if (seen.has(k)) return false; seen.add(k); return true; });
+  $('#deckIssues').innerHTML = unique.length
+    ? unique.map(m => '<div class="issue ' + (m.k === 'warn' ? 'warn' : '') + '">' + esc(m.t) + '</div>').join('')
+    : '<div class="issue ok">Sin avisos: el mazo cumple tamaño, copias e identidad.</div>';
+}
+
+function missingEntries(){
+  const out = [];
+  if (F().cmd && S.commander){
+    const have = ownedQty(S.commander.name);
+    if (have < 1) out.push({ name:S.commander.name, need:1, have });
+  }
+  for (const x of S.deck.list){
+    const c = cardFor(x.name);
+    if (!c || c.basic) continue;
+    const have = ownedQty(x.name);
+    if (x.qty > have) out.push({ name:x.name, need:x.qty - have, have });
+  }
+  return out.sort((a, b) => a.name.localeCompare(b.name));
+}
+function renderBuyBox(){
+  const box = $('#buyBox');
+  if (!Object.keys(COLL.qty).length){
+    box.innerHTML = '<p class="xs muted" style="margin-top:10px">Carga tu colección para ver qué cartas te faltan.</p>';
+    return;
+  }
+  const miss = missingEntries();
+  if (!miss.length){
+    box.innerHTML = '<p class="xs" style="margin-top:10px;color:#b9f0cb">✓ Tienes todas las cartas del mazo.</p>';
+    return;
+  }
+  const copies = miss.reduce((a, m) => a + m.need, 0);
+  const cost = miss.reduce((a, m) => {
+    const c = cardFor(m.name);
+    return a + ((c && c.price) || 0) * m.need;
+  }, 0);
+  box.innerHTML = '<details class="buybox"><summary>Faltan ' + copies + ' copias · ' + miss.length + ' cartas' +
+    (cost > 0 ? ' · ≈ $' + cost.toFixed(2) : '') + '</summary>' +
+    '<ul>' + miss.map(m => '<li>' + m.need + ' × ' + esc(m.name) + (m.have ? ' <span class="muted">(tienes ' + m.have + ')</span>' : '') + '</li>').join('') + '</ul>' +
+    '<div class="btnrow" style="margin-top:8px"><button class="btn sec sm" id="buyCopy">Copiar lista de compra</button></div></details>';
+  const b = $('#buyCopy');
+  if (b) b.onclick = () => copyText(miss.map(m => m.need + ' ' + m.name).join('\n'), 'Lista de compra copiada');
+}
+
+/* ---------- colección ---------- */
+function parseList(txt){
+  const out = {};
+  const src = String(txt || '').replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
+  const lines = src.split('\n');
+  let cols = null;
+  const hIdx = lines.findIndex(l => /[,;\t]/.test(l) && /\b(name|card|carta|nombre)\b/i.test(l) && /\b(qty|quantity|count|cantidad)\b/i.test(l));
+  if (hIdx >= 0){
+    const head = lines[hIdx];
+    const sep = head.includes('\t') ? '\t' : head.includes(';') ? ';' : ',';
+    const cells = splitCsv(head, sep).map(x => x.toLowerCase());
+    const q = cells.findIndex(c => /^(qty|quantity|count|cantidad)$/.test(c));
+    const nm = cells.findIndex(c => /^(name|card name|card|carta|nombre)$/.test(c));
+    if (nm >= 0) cols = { sep, q:q >= 0 ? q : 0, n:nm, from:hIdx + 1 };
+  }
+  let commanderName = '';
+  let expectCmd = false;
+  for (let i = (cols ? cols.from : 0); i < lines.length; i++){
+    let l = lines[i].trim();
+    if (!l) continue;
+    if (/^(\/\/|#)/.test(l)){
+      if (/\bcomandante|commander\b/i.test(l)) { /* la siguiente línea con cantidad será el comandante */ }
+      continue;
+    }
+    const cm = l.match(/^(?:comandante|commander|capit[aá]n)\s*:\s*(.+)$/i);
+    if (cm){ commanderName = cm[1].trim(); continue; }
+    if (/^(?:comandante|commander|capit[aá]n)\s*:?\s*$/i.test(l)){ expectCmd = true; continue; }
+    if (/^(deck|mainboard|sideboard|maybeboard|companion|about|tokens?|mazo|tierras|hechizos|lands|spells|commander|comandante|capit[aá]n|criaturas|creatures)\s*:?$/i.test(l)) continue;
+    let name = '', qty = 1;
+    if (cols){
+      const cells = splitCsv(l, cols.sep);
+      name = (cells[cols.n] || '').trim();
+      qty = parseInt(String(cells[cols.q] || '').replace(/\D/g, ''), 10) || 1;
+    } else {
+      let hadSet = false;
+      if (/[\[\(\{]/.test(l)){ hadSet = true; l = l.replace(/\s*[\[\(\{][^\]\)\}]{1,12}[\]\)\}]\s*/g, ' '); }
+      l = l.replace(/\s*\*[^*]{1,8}\*\s*/g, ' ').replace(/\s+/g, ' ').trim();
+      let m;
+      if (/^\d+\s*[,;\t]/.test(l)){
+        const sep = l.includes('\t') ? '\t' : l.includes(';') ? ';' : ',';
+        const cells = splitCsv(l, sep);
+        if (/^\d+$/.test(cells[0])){ qty = +cells[0]; name = cells[1] || ''; }
+      }
+      if (!name){
+        if ((m = l.match(/^(\d+)\s*[xX×]?\s+(.+)$/))){ qty = +m[1]; name = m[2]; }
+        else if ((m = l.match(/^[xX×]\s*(\d+)\s+(.+)$/))){ qty = +m[1]; name = m[2]; }
+        else if ((m = l.match(/^(.+?)\s+[xX×]\s*(\d+)$/))){ name = m[1]; qty = +m[2]; }
+        else name = l;
+      }
+      name = name.replace(/\s+#\d+\s*$/, '').trim();
+      if (hadSet) name = name.replace(/\s+\d+[a-z]?$/i, '').trim();
+      name = name.replace(/^["“”']+|["“”']+$/g, '').trim();
+    }
+    name = name.replace(/\s+/g, ' ').trim();
+    if (name.length < 2) continue;
+    if (expectCmd && !commanderName){ commanderName = name; expectCmd = false; continue; }
+    if (/^(deck|mainboard|sideboard|maybeboard|commander|comandante|companion|tokens?|name|card|mazo|tierras|hechizos|lands|spells|criaturas|creatures)$/i.test(name)) continue;
+    out[name] = (out[name] || 0) + Math.max(1, qty);
+  }
+  return { list:out, commander:commanderName };
+}
+function splitCsv(line, sep){
+  const out = []; let cur = '', quoted = false;
+  for (let i = 0; i < line.length; i++){
+    const ch = line[i];
+    if (ch === '"'){ if (quoted && line[i + 1] === '"'){ cur += '"'; i++; } else quoted = !quoted; }
+    else if (ch === sep && !quoted){ out.push(cur); cur = ''; }
+    else cur += ch;
+  }
+  out.push(cur);
+  return out.map(x => x.trim());
+}
+
+function saveColl(){ save(LS.coll, COLL); renderColl(); }
+function renderColl(){
+  const names = Object.keys(COLL.qty).filter(n => COLL.qty[n] > 0);
+  const total = names.reduce((a, n) => a + COLL.qty[n], 0);
+  const basics = names.filter(n => BASIC_SET.has(n)).reduce((a, n) => a + COLL.qty[n], 0);
+  $('#collStats').innerHTML =
+    '<div class="stat"><b>' + names.length + '</b><span>Cartas únicas</span></div>' +
+    '<div class="stat"><b>' + total + '</b><span>Copias</span></div>' +
+    '<div class="stat"><b>' + (total - basics) + '</b><span>No básicas</span></div>';
+
+  const q = ($('#ownFilter').value || '').toLowerCase().trim();
+  const rows = names
+    .map(n => ({ n, c:cardFor(n) }))
+    .filter(x => x.c)
+    .filter(x => !q || x.n.toLowerCase().includes(q) || (x.c.type || '').toLowerCase().includes(q))
+    .sort((a, b) => a.n.localeCompare(b.n));
+  $('#ownList').innerHTML = rows.length
+    ? rows.slice(0, 300).map(x =>
+        '<div class="ownrow"><span class="q">' + COLL.qty[x.n] + '</span>' +
+        '<div><b>' + esc(x.n) + '</b><small>' + esc((x.c.type || '').split('—')[0].trim()) + '</small></div>' +
+        '<div class="mini-acts"><button data-ownplus="' + esc(x.n) + '" title="Una más">+</button>' +
+        '<button data-ownminus="' + esc(x.n) + '" title="Una menos">−</button></div></div>'
+      ).join('')
+    : '<div class="emptybox">' + (names.length ? 'Ninguna carta coincide con el filtro.' : 'Tu colección está vacía: pégala arriba o busca cartas y pulsa «Tengo esta».') + '</div>';
+  $('#ownList').querySelectorAll('[data-ownplus]').forEach(b => b.onclick = () => {
+    COLL.qty[b.dataset.ownplus] = (COLL.qty[b.dataset.ownplus] || 0) + 1; saveColl();
+  });
+  $('#ownList').querySelectorAll('[data-ownminus]').forEach(b => b.onclick = () => {
+    const n = b.dataset.ownminus;
+    COLL.qty[n] = (COLL.qty[n] || 0) - 1;
+    if (COLL.qty[n] <= 0) delete COLL.qty[n];
+    saveColl();
+  });
+}
+
+function markOwned(c, n){
+  COLL.qty[c.name] = (COLL.qty[c.name] || 0) + n;
+  COLL.cards[c.name] = mini(c);
+  CACHE.set(c.name, c);
+  saveColl();
+  toast(c.name + ': ahora tienes ' + COLL.qty[c.name]);
+}
+
+async function importCollection(){
+  const txt = $('#collText').value;
+  const parsed = parseList(txt);
+  const names = Object.keys(parsed.list);
+  if (parsed.commander && !parsed.list[parsed.commander]) names.push(parsed.commander);
+  if (!names.length){ toast('No encuentro cartas en el texto'); return; }
+  const st = $('#collStatus'), btn = $('#collLoad');
+  btn.disabled = true; st.innerHTML = '<span class="spin"></span> Resolviendo 0/' + names.length;
+  try{
+    const { out, missing } = await resolveNames(names);
+    let added = 0, copies = 0;
+    for (const [name, qty] of Object.entries(parsed.list)){
+      COLL.qty[name] = (COLL.qty[name] || 0) + qty;
+      added++; copies += qty;
+    }
+    for (const [name, card] of Object.entries(out)) COLL.cards[name] = card;
+    if (parsed.commander && !COLL.qty[parsed.commander]) COLL.qty[parsed.commander] = 1;
+    saveColl();
+    st.textContent = added + ' cartas (' + copies + ' copias)' + (missing.length ? ' · ' + missing.length + ' sin encontrar' : '');
+    toast('Colección actualizada: ' + added + ' cartas');
+    if (missing.length) console.warn('Sin encontrar:', missing);
+    $('#collText').value = '';
+  }catch(e){
+    console.error(e); st.textContent = ''; toast('Error: ' + e.message);
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+/* ---------- generación ---------- */
+function roleOf(c){
+  const ty = (c.type || '').toLowerCase(), o = (c.oracle || '').toLowerCase();
+  if (ty.includes('land')) return 'land';
+  if (/destroy target|exile target|deals? \d+ damage to (any|target|each)|target creature gets -|counter target/.test(o)) return 'removal';
+  if (/search your library for (a|up to [^.]*)? ?(basic )?land|add (one|two|three|\{[^}]*\})|you may play an additional land/.test(o)) return 'ramp';
+  if (/draw (a|two|three|four|five|x|\d)/.test(o)) return 'draw';
+  if (ty.includes('creature')) return 'creature';
+  return 'other';
+}
+function roleTargets(f){
+  if (f.id === 'commander') return { removal:8, draw:9, ramp:9, creature:22 };
+  if (f.id === 'brawl') return { removal:6, draw:6, ramp:5, creature:18 };
+  if (f.id === 'captain') return { removal:4, draw:3, ramp:2, creature:14 };
+  return { removal:5, draw:4, ramp:2, creature:18 };
+}
+function takeFrom(list, target, picked, used){
+  for (const c of list){
+    if (picked.length >= target) break;
+    const have = used.get(c.name) || 0;
+    if (have >= maxCopies(c)) continue;
+    used.set(c.name, have + 1);
+    picked.push(c);
+  }
+}
+function pickPair(){
+  const i = Math.floor(Math.random() * COLORS.length);
+  let j; do { j = Math.floor(Math.random() * COLORS.length); } while (j === i);
+  return [COLORS[i], COLORS[j]];
+}
+function topOwnedColors(n){
+  const cnt = { W:0, U:0, B:0, R:0, G:0 };
+  for (const name of Object.keys(COLL.qty)){
+    const c = cardFor(name);
+    if (!c || c.basic || isLand(c)) continue;
+    for (const col of new Set(c.colors || [])) if (cnt[col] != null) cnt[col] += COLL.qty[name];
+  }
+  return COLORS.filter(c => cnt[c] > 0).sort((a, b) => cnt[b] - cnt[a]).slice(0, n);
+}
+async function generateVirtual(){
+  if (S.busy) return;
+  if (F().horde){ await hordeGenerate(false); return; }
+  if (deckCount() && !confirm('Esto sustituirá el mazo actual. ¿Seguir?')) return;
+  S.busy = true; setBusy(true);
+  const st = $('#vStatus');
+  const f = F();
+  try{
+    if (f.cmd && !S.commander){
+      setStatus(st, 'Buscando un comandante…');
+      const extra = S.fmt === 'brawl' ? '(is:commander or t:planeswalker)' : S.fmt === 'captain' ? 't:creature' : 'is:commander';
+      const cmdWord = f.captain ? 'capitán' : 'comandante';
+      const cands = (await searchScry(extra, { pages:1, extra:'' }))
+        .filter(canCommand).filter(c => !S.ownedOnly || ownedQty(c.name) > 0)
+        .filter(withinBudget);
+      if (!cands.length) throw new Error(S.ownedOnly ? 'No tienes ningún ' + cmdWord + ' con esos filtros' : 'No hay ' + cmdWord + 's con esos filtros');
+      const pick = cands[Math.floor(Math.random() * Math.min(8, cands.length))];
+      setCommander(pick);
+      st.textContent = '';
+    }
+    if (!f.cmd && !S.colors.size){
+      const pair = S.ownedOnly && topOwnedColors(2).length ? topOwnedColors(2) : pickPair();
+      S.colors = new Set(pair);
+      renderSettings();
+    }
+    const identity = identityCtx() || [];
+    setStatus(st, 'Buscando hechizos…');
+    let pool = await searchScry('-t:land -t:token -t:emblem', { pages:3 });
+    if (S.ownedOnly){
+      pool = pool.filter(c => ownedQty(c.name) > 0);
+      if (!pool.length) throw new Error('No tienes cartas que encajen con esos filtros');
+    }
+    pool = pool.filter(withinBudget);
+    const landsN = f.lands;
+    const spellsTarget = f.size - landsN - (f.cmd ? 1 : 0);
+    if (pool.length < spellsTarget * 0.7) throw new Error('Hay pocas cartas con esos filtros (' + pool.length + '). ' + (S.ownedOnly ? 'Prueba sin «Solo cartas que tengo» o cambia de colores' : 'Amplía los sets o los colores'));
+
+    const targets = roleTargets(f);
+    const used = new Map();
+    const picked = [];
+    if (S.commander) used.set(S.commander.name, 1);
+    takeFrom(pool.filter(c => roleOf(c) === 'removal'), targets.removal, picked, used);
+    takeFrom(pool.filter(c => roleOf(c) === 'draw'), targets.draw, picked, used);
+    takeFrom(pool.filter(c => roleOf(c) === 'ramp'), targets.ramp, picked, used);
+    takeFrom(pool.filter(c => roleOf(c) === 'creature'), targets.creature, picked, used);
+    let cHave = picked.filter(isCreature).length;
+    if (cHave < targets.creature){
+      for (const c of pool){
+        if (picked.length >= spellsTarget || cHave >= targets.creature) break;
+        if (!isCreature(c)) continue;
+        const h = used.get(c.name) || 0;
+        if (h >= maxCopies(c)) continue;
+        used.set(c.name, h + 1); picked.push(c); cHave++;
+      }
+    }
+    const artCap = f.id === 'commander' ? 10 : 6;
+    let arts = picked.filter(isArtifact).length;
+    for (const c of pool){
+      if (picked.length >= spellsTarget) break;
+      if (isArtifact(c) && arts >= artCap) continue;
+      const h = used.get(c.name) || 0;
+      if (h >= maxCopies(c)) continue;
+      used.set(c.name, h + 1); picked.push(c);
+      if (isArtifact(c)) arts++;
+    }
+
+    pushUndo();
+    S.deck.list = [];
+    const add = (c, qty) => {
+      const e = S.deck.list.find(x => x.name === c.name);
+      if (e) e.qty += qty; else S.deck.list.push({ name:c.name, qty });
+    };
+    picked.forEach(c => add(c, 1));
+
+    setStatus(st, 'Buscando tierras…');
+    const landPool = (await searchScry('-t:basic t:land', { pages:1 }))
+      .filter(fitsIdentity).filter(c => !S.ownedOnly || ownedQty(c.name) > 0)
+      .filter(withinBudget);
+    const demand = pipCounts(picked.concat(S.commander ? [S.commander] : []));
+    const landPoolSorted = landPool.slice().sort((a, b) => landScore(b, demand) - landScore(a, demand));
+    const landsPicked = [];
+    const lused = new Map();
+    takeFrom(landPoolSorted, Math.min(landsN - 8, Math.round(landsN * 0.35)), landsPicked, lused);
+    landsPicked.forEach(c => add(c, 1));
+    const pips = demand;
+    const basics = basicSplit(landsN - landsPicked.length, pips, identity);
+    basics.forEach(({ c, n }) => add(basicCard(BASIC[c]), n));
+
+    if (!S.deck.name) S.deck.name = (S.commander ? S.commander.name.split(',')[0] + ' · ' : '') + 'Forja ' + (identity.join('') || 'cinco colores');
+    S.currentDeckId = null;
+    renderDeck();
+    toast('Mazo generado: ' + deckCount() + ' cartas');
+    st.textContent = '';
+  }catch(e){
+    console.error(e); st.textContent = ''; toast(e.message || String(e));
+  }finally{
+    S.busy = false; setBusy(false);
+  }
+}
+
+async function ownedCards(){
+  const names = Object.keys(COLL.qty).filter(n => COLL.qty[n] > 0);
+  const missing = names.filter(n => !cardFor(n));
+  if (missing.length){
+    const { out } = await resolveNames(missing);
+    Object.assign(COLL.cards, out);
+    saveColl();
+  }
+  return names.map(n => ({ c:cardFor(n), qty:COLL.qty[n] })).filter(x => x.c);
+}
+
+async function generatePhysical(){
+  if (S.busy) return;
+  if (F().horde){ await hordeGenerate(true); return; }
+  if (!Object.keys(COLL.qty).length){ toast('Carga tu colección primero'); $('#importBox').open = true; return; }
+  if (deckCount() && !confirm('Esto sustituirá el mazo actual. ¿Seguir?')) return;
+  S.busy = true; setBusy(true);
+  const st = $('#pStatus');
+  const f = F();
+  try{
+    setStatus(st, 'Leyendo tu colección…');
+    const all = await ownedCards();
+    if (!all.length) throw new Error('Tu colección no tiene cartas resueltas');
+
+    if (f.cmd && !S.commander){
+      const cmds = all.map(x => x.c)
+        .filter(c => canCommand(c) && fitsIdentity(c) && (c.legal[f.leg] || 'legal') === 'legal')
+        .sort((a, b) => a.rank - b.rank);
+      if (!cmds.length) throw new Error('No tienes ningún ' + (f.captain ? 'capitán' : 'comandante') + ' para estos filtros');
+      setCommander(cmds[0]);
+    }
+
+    const usable = all.map(x => ({ c:x.c, have:x.qty }))
+      .filter(x => x.c && !x.c.basic && !isLand(x.c))
+      .filter(x => fitsIdentity(x.c))
+      .filter(x => !S.commander || x.c.name !== S.commander.name)
+      .filter(x => (x.c.legal[f.leg] || 'legal') === 'legal')
+      .sort((a, b) => (a.c.rank || 1e6) - (b.c.rank || 1e6));
+
+    const landsOwned = all.map(x => ({ c:x.c, have:x.qty }))
+      .filter(x => x.c && !x.c.basic && isLand(x.c))
+      .filter(x => fitsIdentity(x.c))
+      .filter(x => (x.c.legal[f.leg] || 'legal') === 'legal')
+      .sort((a, b) => (a.c.rank || 1e6) - (b.c.rank || 1e6));
+
+    const spellsTarget = f.size - f.lands - (f.cmd ? 1 : 0);
+    const targets = roleTargets(f);
+    const used = new Map();
+    const picked = [];
+    if (S.commander) used.set(S.commander.name, 1);
+
+    const take = (list, target) => {
+      for (const x of list){
+        if (picked.length >= target) break;
+        const have = used.get(x.c.name) || 0;
+        if (have >= Math.min(x.have, maxCopies(x.c))) continue;
+        used.set(x.c.name, have + 1);
+        picked.push(x.c);
+      }
+    };
+    take(usable.filter(x => roleOf(x.c) === 'removal'), targets.removal);
+    take(usable.filter(x => roleOf(x.c) === 'draw'), targets.draw);
+    take(usable.filter(x => roleOf(x.c) === 'ramp'), targets.ramp);
+    take(usable.filter(x => roleOf(x.c) === 'creature'), targets.creature);
+    let cHave = picked.filter(isCreature).length;
+    for (const x of usable){
+      if (picked.length >= spellsTarget || cHave >= targets.creature) break;
+      if (!isCreature(x.c)) continue;
+      const have = used.get(x.c.name) || 0;
+      if (have >= Math.min(x.have, maxCopies(x.c))) continue;
+      used.set(x.c.name, have + 1); picked.push(x.c); cHave++;
+    }
+    const artCap = f.id === 'commander' ? 10 : 6;
+    let arts = picked.filter(isArtifact).length;
+    for (const x of usable){
+      if (picked.length >= spellsTarget) break;
+      if (isArtifact(x.c) && arts >= artCap) continue;
+      const have = used.get(x.c.name) || 0;
+      if (have >= Math.min(x.have, maxCopies(x.c))) continue;
+      used.set(x.c.name, have + 1); picked.push(x.c);
+      if (isArtifact(x.c)) arts++;
+    }
+
+    S.deck.list = [];
+    const add = (c, qty) => {
+      const e = S.deck.list.find(x => x.name === c.name);
+      if (e) e.qty += qty; else S.deck.list.push({ name:c.name, qty });
+    };
+    picked.forEach(c => add(c, 1));
+
+    const landsN = Math.max(15, Math.min(f.lands, Math.round(picked.length * f.lands / spellsTarget)));
+    const demand = pipCounts(picked.concat(S.commander ? [S.commander] : []));
+    landsOwned.sort((a, b) => landScore(b.c, demand) - landScore(a.c, demand));
+    const landsPicked = [];
+    const lused = new Map();
+    for (const x of landsOwned){
+      if (landsPicked.length >= Math.round(landsN * 0.35)) break;
+      lused.set(x.c.name, 1); landsPicked.push(x.c);
+    }
+    landsPicked.forEach(c => add(c, 1));
+    const identity = identityCtx() || [];
+    const pips = demand;
+    const basics = basicSplit(landsN - landsPicked.length, pips, identity);
+    basics.forEach(({ c, n }) => add(basicCard(BASIC[c]), n));
+
+    if (!S.deck.name) S.deck.name = 'Mi colección · ' + f.label + ' · ' + (identity.join('') || 'cinco colores');
+    S.currentDeckId = null;
+    renderDeck();
+    const total = deckCount();
+    toast(total >= f.size ? 'Mazo montado con tu colección: ' + total + ' cartas' : 'Mazo de ' + total + ' cartas: tu colección no llega a ' + f.size);
+    st.textContent = '';
+  }catch(e){
+    console.error(e); st.textContent = ''; toast(e.message || String(e));
+  }finally{
+    S.busy = false; setBusy(false);
+  }
+}
+
+async function autoFill(){
+  if (S.busy) return;
+  if (F().horde){ await hordeAutoFill(); return; }
+  const f = F();
+  if (deckCount() >= f.size){ toast('El mazo ya está completo'); return; }
+  if (f.cmd && !S.commander){ toast('Elige un comandante o usa «Generar mazo completo»'); return; }
+  if (!f.cmd && !S.colors.size){
+    const pair = S.ownedOnly && topOwnedColors(2).length ? topOwnedColors(2) : pickPair();
+    S.colors = new Set(pair);
+    renderSettings();
+  }
+  S.busy = true; setBusy(true);
+  const st = $('#vStatus');
+  try{
+    setStatus(st, 'Buscando cartas para los huecos…');
+    let pool = await searchScry('-t:land -t:token -t:emblem', { pages:3 });
+    if (S.ownedOnly) pool = pool.filter(c => ownedQty(c.name) > 0);
+    pool = pool.filter(withinBudget);
+    const used = new Map(S.deck.list.map(e => [e.name, e.qty]));
+    if (S.commander) used.set(S.commander.name, 1);
+    const spellsNow = S.deck.list.reduce((a, e) => {
+      const c = cardFor(e.name); return a + (c && !isLand(c) ? e.qty : 0);
+    }, 0);
+    const spellsTarget = f.size - f.lands - (f.cmd ? 1 : 0);
+    const want = Math.max(0, spellsTarget - spellsNow);
+    const targets = roleTargets(f);
+    const have = { removal:0, draw:0, ramp:0, creature:0 };
+    S.deck.list.forEach(e => {
+      const c = cardFor(e.name);
+      if (c && !isLand(c) && have[roleOf(c)] != null) have[roleOf(c)] += e.qty;
+    });
+    const picked = [];
+    const addRole = (role, n) => {
+      let left = n;
+      for (const c of pool){
+        if (left <= 0 || picked.length >= want) break;
+        if (roleOf(c) !== role) continue;
+        const h = used.get(c.name) || 0;
+        if (h >= maxCopies(c)) continue;
+        used.set(c.name, h + 1); picked.push(c); left--;
+      }
+    };
+    addRole('removal', targets.removal - have.removal);
+    addRole('draw', targets.draw - have.draw);
+    addRole('ramp', targets.ramp - have.ramp);
+    addRole('creature', targets.creature - have.creature);
+    let cHave = S.deck.list.reduce((a, e) => {
+      const c = cardFor(e.name); return a + (c && isCreature(c) ? e.qty : 0);
+    }, 0) + picked.filter(isCreature).length;
+    if (cHave < targets.creature){
+      for (const c of pool){
+        if (picked.length >= want || cHave >= targets.creature) break;
+        if (!isCreature(c)) continue;
+        const h = used.get(c.name) || 0;
+        if (h >= maxCopies(c)) continue;
+        used.set(c.name, h + 1); picked.push(c); cHave++;
+      }
+    }
+    const artCap = f.id === 'commander' ? 10 : 6;
+    let arts = picked.filter(isArtifact).length + S.deck.list.reduce((a, e) => {
+      const c = cardFor(e.name); return a + (c && isArtifact(c) ? e.qty : 0);
+    }, 0);
+    for (const c of pool){
+      if (picked.length >= want) break;
+      if (isArtifact(c) && arts >= artCap) continue;
+      const h = used.get(c.name) || 0;
+      if (h >= maxCopies(c)) continue;
+      used.set(c.name, h + 1); picked.push(c);
+      if (isArtifact(c)) arts++;
+    }
+    if (!picked.length) throw new Error('No hay cartas nuevas con esos filtros');
+
+    pushUndo();
+    const add = (c, qty) => {
+      const e = S.deck.list.find(x => x.name === c.name);
+      if (e) e.qty += qty; else S.deck.list.push({ name:c.name, qty });
+      CACHE.set(c.name, c);
+    };
+    picked.forEach(c => add(c, 1));
+
+    const landNow = S.deck.list.reduce((a, e) => {
+      const c = cardFor(e.name); return a + (c && isLand(c) ? e.qty : 0);
+    }, 0);
+    let landWant = Math.max(0, f.lands - landNow);
+    if (landWant > 0){
+      setStatus(st, 'Ajustando la base de maná…');
+      const landPool = (await searchScry('-t:basic t:land', { pages:1 }))
+        .filter(fitsIdentity).filter(c => !S.ownedOnly || ownedQty(c.name) > 0)
+        .filter(withinBudget);
+      const spellsInDeck = S.deck.list.map(e => cardFor(e.name)).filter(c => c && !isLand(c));
+      if (S.commander) spellsInDeck.push(S.commander);
+      const demand = pipCounts(spellsInDeck);
+      landPool.sort((a, b) => landScore(b, demand) - landScore(a, demand));
+      let nb = 0;
+      const maxNb = Math.min(landWant, Math.round(f.lands * 0.35));
+      for (const c of landPool){
+        if (nb >= maxNb) break;
+        add(c, 1); nb++;
+      }
+      landWant -= nb;
+      basicSplit(landWant, demand, identityCtx() || []).forEach(({ c, n }) => {
+        const e = S.deck.list.find(x => x.name === BASIC[c]);
+        if (e) e.qty += n; else S.deck.list.push({ name:BASIC[c], qty:n });
+      });
+    }
+    if (!S.deck.name) S.deck.name = (S.commander ? S.commander.name.split(',')[0] + ' · ' : '') + 'Forja';
+    renderDeck();
+    toast('Completado: ' + deckCount() + ' / ' + f.size + ' cartas');
+    st.textContent = '';
+  }catch(e){
+    console.error(e); st.textContent = ''; toast(e.message || String(e));
+  }finally{
+    S.busy = false; setBusy(false);
+  }
+}
+async function suggestCards(){
+  setMode('virtual');
+  const box = $('#virtualResults');
+  box.innerHTML = '<div class="emptybox"><span class="spin"></span> Buscando cartas que encajen…</div>';
+  try{
+    if (F().horde){
+      const seed = await hordeSeed();
+      const list = seed.filter(c => deckQty(c.name) === 0 && (!S.ownedOnly || ownedQty(c.name) > 0));
+      LIMIT.virtual = 40; V_RESULTS = list;
+      const countEl = $('#virtualCount');
+      if (countEl) countEl.textContent = list.length + ' criaturas válidas para la Horda';
+      renderResults(box, list, 'virtual');
+      if (!list.length) toast('No quedan sugerencias: la horda ya las tiene todas');
+      return;
+    }
+    const raw = await searchScry('-t:land -t:token -t:emblem', { pages:2, order:'edhrec' });
+    const list = raw.filter(c => deckQty(c.name) === 0 && (!S.ownedOnly || ownedQty(c.name) > 0));
+    LIMIT.virtual = 40;
+    V_RESULTS = list;
+    const countEl = $('#virtualCount');
+    if (countEl) countEl.textContent = list.length + ' sugerencias (ya fuera las que están en el mazo)';
+    renderResults(box, list, 'virtual');
+    if (!list.length) toast('No hay sugerencias con esos filtros');
+  }catch(e){
+    console.error(e);
+    box.innerHTML = '<div class="emptybox">No se pudo buscar: ' + esc(e.message) + '</div>';
+  }
+}
+
+function setStatus(el, txt){ el.innerHTML = '<span class="spin"></span> ' + esc(txt); }
+function setBusy(b){
+  ['#vGenerate', '#pGenerate'].forEach(sel => { const el = $(sel); if (el) el.disabled = b; });
+}
+
+/* ---------- autoguardado del borrador ---------- */
+let draftTimer = 0;
+function scheduleDraft(){
+  if (!S.booted) return;
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(() => {
+    save(LS.draft, {
+      fmt:S.fmt, name:S.deck.name, list:S.deck.list,
+      commander:S.commander ? mini(S.commander) : null, at:Date.now()
+    });
+  }, 250);
+}
+
+/* ---------- guardar / cargar mazos ---------- */
+function savedDecks(){ const a = load(LS.decks, []); return Array.isArray(a) ? a : []; }
+function renderSaved(){
+  const sel = $('#savedSel');
+  const cur = sel.value;
+  const list = savedDecks();
+  sel.innerHTML = '<option value="">Mazos guardados… (' + list.length + ')</option>' +
+    list.map(d => '<option value="' + esc(d.id) + '">' + esc(d.name) + ' · ' + esc(FORMATS[d.fmt] ? FORMATS[d.fmt].label : d.fmt) + '</option>').join('');
+  if (cur && list.some(d => d.id === cur)) sel.value = cur;
+}
+function saveDeck(){
+  if (!deckCount()){ toast('El mazo está vacío'); return; }
+  const name = ($('#deckName').value || '').trim() || 'Mazo sin nombre';
+  S.deck.name = name;
+  const id = S.currentDeckId || ('d' + Date.now());
+  const obj = {
+    id, name, fmt:S.fmt,
+    commander:S.commander ? mini(S.commander) : null,
+    list:S.deck.list.map(e => ({ name:e.name, qty:e.qty })),
+    at:Date.now()
+  };
+  const list = savedDecks().filter(d => d.id !== id);
+  list.unshift(obj);
+  save(LS.decks, list.slice(0, 40));
+  S.currentDeckId = id;
+  renderSaved();
+  $('#savedSel').value = id;
+  toast('Mazo guardado');
+}
+function loadDeck(){
+  const id = $('#savedSel').value;
+  if (!id) return;
+  const d = savedDecks().find(x => x.id === id);
+  if (!d) return;
+  pushUndo();
+  S.fmt = FORMATS[d.fmt] ? d.fmt : 'commander';
+  S.deck.name = d.name || '';
+  S.deck.list = (d.list || []).slice();
+  S.commander = d.commander ? (CACHE.get(d.commander.name) || d.commander) : null;
+  if (S.commander && S.commander.name) CACHE.set(S.commander.name, S.commander);
+  S.colors.clear();
+  S.deckFilter = '';
+  if ($('#deckFilter')) $('#deckFilter').value = '';
+  S.currentDeckId = d.id;
+  (d.list || []).forEach(e => { if (!cardFor(e.name)) { /* se resolverá al buscar o generar */ } });
+  renderAll();
+  resolveDeckNames();
+  toast('Mazo cargado');
+}
+async function resolveDeckNames(){
+  const names = S.deck.list.map(e => e.name).filter(n => !cardFor(n) && !BASIC_SET.has(n));
+  if (!names.length){ renderDeck(); return; }
+  const { out } = await resolveNames([...new Set(names)]);
+  Object.assign(COLL.cards, out);
+  saveColl();
+  renderDeck();
+}
+function deleteDeck(){
+  const id = $('#savedSel').value;
+  if (!id) return;
+  save(LS.decks, savedDecks().filter(d => d.id !== id));
+  if (S.currentDeckId === id) S.currentDeckId = null;
+  renderSaved();
+  toast('Mazo borrado');
+}
+
+/* ---------- exportar / importar ---------- */
+function deckText(){
+  const f = F();
+  const lines = [];
+  if (f.cmd && S.commander) lines.push(f.captain ? 'Capitán:' : 'Comandante:', '1 ' + S.commander.name, '');
+  const entries = S.deck.list.map(e => ({ e, c:cardFor(e.name) })).filter(x => x.c);
+  const spells = entries.filter(x => !isLand(x.c)).sort((a, b) => (a.c.cmc - b.c.cmc) || a.e.name.localeCompare(b.e.name));
+  const lands = entries.filter(x => isLand(x.c)).sort((a, b) => a.e.name.localeCompare(b.e.name));
+  if (spells.length) lines.push(f.horde ? 'Criaturas' : 'Mazo');
+  spells.forEach(x => lines.push(x.e.qty + ' ' + x.e.name));
+  if (lands.length) lines.push('', 'Tierras');
+  lands.forEach(x => lines.push(x.e.qty + ' ' + x.e.name));
+  return lines.join('\n').trim();
+}
+async function copyText(txt, okMsg){
+  if (!txt){ toast('No hay nada que copiar'); return; }
+  try{ await navigator.clipboard.writeText(txt); toast(okMsg || 'Copiado'); }
+  catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = txt; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); toast(okMsg || 'Copiado'); }catch(err){ toast('No se pudo copiar'); }
+    ta.remove();
+  }
+}
+function copyDeck(){
+  const txt = deckText();
+  if (!txt){ toast('El mazo está vacío'); return; }
+  copyText(txt, 'Lista copiada');
+}
+function downloadDeck(){
+  const txt = deckText();
+  if (!txt){ toast('El mazo está vacío'); return; }
+  const blob = new Blob([txt], { type:'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = ((S.deck.name || 'mazo').replace(/[^\w\-áéíóúñ ]+/gi, '').trim() || 'mazo') + '.txt';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+}
+async function importDeck(){
+  const parsed = parseList($('#deckText').value);
+  const names = Object.keys(parsed.list);
+  if (!names.length){ toast('No encuentro cartas en la lista'); return; }
+  const btn = $('#deckImportGo'), st = $('#deckImportStatus');
+  btn.disabled = true; st.textContent = 'Resolviendo…';
+  try{
+    const { out, missing } = await resolveNames(names);
+    Object.assign(COLL.cards, out);
+    pushUndo();
+    S.deck.list = Object.entries(parsed.list).map(([name, qty]) => ({ name, qty }));
+    let cmdName = parsed.commander;
+    if (!cmdName && F().cmd){
+      const cand = S.deck.list.find(e => { const c = cardFor(e.name); return c && canCommand(c); });
+      if (cand) cmdName = cand.name;
+    }
+    if (cmdName && F().cmd){
+      const card = cardFor(cmdName);
+      if (card && canCommand(card)){
+        S.commander = card;
+        S.colors.clear();
+        const e = S.deck.list.find(x => x.name === cmdName);
+        if (e){ e.qty--; if (e.qty <= 0) S.deck.list = S.deck.list.filter(x => x.name !== cmdName); }
+      }
+    }
+    if (!S.deck.name) S.deck.name = cmdName ? cmdName.split(',')[0] + ' · importado' : 'Mazo importado';
+    renderAll();
+    st.textContent = S.deck.list.length + ' cartas' + (missing.length ? ' · ' + missing.length + ' sin encontrar' : '');
+    toast('Mazo importado');
+  }catch(e){
+    console.error(e); st.textContent = ''; toast('Error: ' + e.message);
+  }finally{ btn.disabled = false; }
+}
+
+/* ---------- filtros, vista previa y sugerencias ---------- */
+function filterQ(){
+  const p = [];
+  if (S.typeFilter !== 'all') p.push('t:' + S.typeFilter);
+  if (S.mvMax) p.push('mv<=' + S.mvMax);
+  return p.join(' ');
+}
+function showPreview(name){
+  const c = cardFor(name), box = $('#hoverCard');
+  if (!c){ box.classList.remove('on'); return; }
+  const img = c.big || c.img || '';
+  const el = $('#hcImg');
+  if (img){ el.src = img; el.style.display = 'block'; }
+  else { el.removeAttribute('src'); el.style.display = 'none'; }
+  $('#hcName').textContent = c.name;
+  $('#hcType').textContent = (c.type || '') + (c.mana ? ' · ' + c.mana : '');
+  $('#hcOracle').textContent = c.oracle || '';
+  box.classList.add('on');
+}
+document.addEventListener('mouseover', e => {
+  if (!(e.target instanceof Element)) return;
+  const t = e.target.closest('[data-preview]');
+  if (t) showPreview(t.dataset.preview);
+});
+document.addEventListener('mouseout', e => {
+  if (!(e.target instanceof Element)) return;
+  const t = e.target.closest('[data-preview]');
+  if (t && !t.contains(e.relatedTarget)) $('#hoverCard').classList.remove('on');
+});
+document.addEventListener('keydown', e => {
+  const tag = (e.target.tagName || '').toLowerCase();
+  const typing = /^(input|textarea|select)$/.test(tag);
+  if (!typing && (e.key === '/' || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'))){
+    e.preventDefault();
+    if (S.mode !== 'virtual') setMode('virtual');
+    const el = $('#cardQuery'); el.focus(); el.select();
+  }
+  if (e.key === 'Escape') $('#hoverCard').classList.remove('on');
+  if (!typing && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey){
+    e.preventDefault(); undoDeck();
+  }
+});
+async function suggestCommanders(){
+  setMode('virtual');
+  const box = $('#virtualResults');
+  box.innerHTML = '<div class="emptybox"><span class="spin"></span> Buscando ' + (F().captain ? 'capitanes' : 'comandantes') + '…</div>';
+  const q = S.fmt === 'brawl' ? '(is:commander or t:planeswalker)' : S.fmt === 'captain' ? 't:creature' : 'is:commander';
+  const cmdWord = F().captain ? 'capitán' : 'comandante';
+  try{
+    let list = (await searchScry(q, { pages:1 })).filter(canCommand);
+    if (S.ownedOnly) list = list.filter(c => ownedQty(c.name) > 0);
+    renderResults(box, list, 'virtual');
+    if (!list.length) toast(S.ownedOnly ? 'No tienes ningún ' + cmdWord + ' que encaje con esos filtros' : 'No hay ' + cmdWord + 's con esos filtros');
+  }catch(e){
+    box.innerHTML = '<div class="emptybox">No se pudo buscar: ' + esc(e.message) + '</div>';
+  }
+}
+
+/* ---------- eventos ---------- */
+function setMode(m){
+  S.mode = m;
+  document.querySelectorAll('.modesw [data-mode]').forEach(b => {
+    const on = b.dataset.mode === m;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  $('#panelVirtual').hidden = m !== 'virtual';
+  $('#panelCollection').hidden = m !== 'collection';
+  if (m === 'collection') renderColl();
+  renderSettings(); renderDeck();
+}
+
+document.querySelectorAll('.modesw [data-mode]').forEach(b => b.onclick = () => setMode(b.dataset.mode));
+
+$('#fmtRow').addEventListener('click', e => {
+  const b = e.target.closest('[data-fmt]');
+  if (!b || b.dataset.fmt === S.fmt) return;
+  const next = b.dataset.fmt;
+  if (next === 'horde' && S.fmt !== 'horde' && (S.deck.list.length || S.commander)){
+    if (!confirm('La Horda usa 99 criaturas y no tiene comandante ni tierras. Se vaciará el mazo actual. ¿Seguir?')) return;
+    pushUndo();
+    S.fmt = next; S.commander = null; S.colors.clear();
+    S.deck.list = []; S.deck.name = ''; S.currentDeckId = null;
+    renderAll();
+    return;
+  }
+  S.fmt = next;
+  if (!F().cmd) S.commander = null;
+  if (S.commander && !canCommand(S.commander)){ S.commander = null; toast('Ese comandante no vale en ' + F().label + '; elige otro'); }
+  if (F().horde) S.colors.clear();
+  renderAll();
+});
+$('#pipRow').addEventListener('click', e => {
+  const b = e.target.closest('[data-c]');
+  if (!b || S.commander) return;
+  const c = b.dataset.c;
+  if (S.colors.has(c)) S.colors.delete(c); else S.colors.add(c);
+  renderSettings(); renderDeck();
+});
+
+$('#setAdd').onclick = () => {
+  const raw = $('#setInput').value.trim();
+  if (!raw) return;
+  let code = '';
+  const nameMatch = SETS.find(s => s.name.toLowerCase() === raw.toLowerCase());
+  const codeMatch = SETS.find(s => s.code.toLowerCase() === raw.toLowerCase());
+  if (nameMatch) code = nameMatch.code;
+  else if (codeMatch) code = codeMatch.code;
+  else {
+    const partial = SETS.find(s => s.name.toLowerCase().includes(raw.toLowerCase()));
+    if (partial) code = partial.code;
+  }
+  if (!code){ toast('No encuentro ese set'); return; }
+  if (!S.sets.includes(code)) S.sets.push(code);
+  $('#setInput').value = '';
+  renderSettings();
+};
+$('#setInput').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); $('#setAdd').click(); } });
+$('#setClear').onclick = () => { S.sets = []; renderSettings(); };
+$('#filters').addEventListener('click', e => {
+  const b = e.target.closest('[data-type]');
+  if (!b) return;
+  S.typeFilter = b.dataset.type;
+  document.querySelectorAll('#filters [data-type]').forEach(x => x.classList.toggle('on', x === b));
+});
+$('#mvMax').onchange = e => { S.mvMax = e.target.value; };
+$('#sortBy').onchange = e => { S.sort = e.target.value; };
+$('#ownedOnly').onchange = e => { S.ownedOnly = e.target.checked; };
+
+async function doSearch(inputSel, boxSel, mode, pages){
+  const q = $(inputSel).value.trim();
+  const box = $(boxSel);
+  if (!q){ toast('Escribe algo que buscar'); return; }
+  box.innerHTML = '<div class="emptybox"><span class="spin"></span> Buscando…</div>';
+  try{
+    const raw = await searchScry(q, { pages:pages || 2, extra:filterQ(), order:S.sort });
+    const list = (mode === 'virtual' && S.ownedOnly) ? raw.filter(c => ownedQty(c.name) > 0) : raw;
+    LIMIT[mode] = 40;
+    if (mode === 'virtual') V_RESULTS = list; else C_RESULTS = list;
+    const countEl = mode === 'virtual' ? $('#virtualCount') : $('#collCount');
+    if (countEl) countEl.textContent = list.length + ' cartas' +
+      (list.length !== raw.length ? ' (de ' + raw.length + ' encontradas)' : '');
+    renderResults(box, list, mode);
+    if (!list.length) toast('Ninguna carta con esos filtros');
+  }catch(e){
+    console.error(e);
+    box.innerHTML = '<div class="emptybox">No se pudo buscar: ' + esc(e.message) + '</div>';
+  }
+}
+$('#cardGo').onclick = () => doSearch('#cardQuery', '#virtualResults', 'virtual', 2);
+$('#cardQuery').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); $('#cardGo').click(); } });
+$('#collGo').onclick = () => doSearch('#collQuery', '#collResults', 'collection', 1);
+$('#collQuery').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); $('#collGo').click(); } });
+
+$('#vGenerate').onclick = generateVirtual;
+$('#vFill').onclick = autoFill;
+if ($('#hordeGen')) $('#hordeGen').onclick = () => hordeGenerate(S.mode === 'collection');
+if ($('#hordeFill')) $('#hordeFill').onclick = hordeAutoFill;
+if ($('#hordePdf')) $('#hordePdf').onclick = hordePrint;
+$('#vSuggest').onclick = suggestCards;
+$('#pGenerate').onclick = generatePhysical;
+
+$('#collLoad').onclick = importCollection;
+$('#collWipe').onclick = () => {
+  if (!confirm('¿Vaciar la colección guardada? No se puede deshacer.')) return;
+  COLL = { qty:{}, cards:{} }; saveColl(); toast('Colección vacía');
+};
+$('#collFile').onchange = e => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => { $('#collText').value = String(r.result || ''); toast('Archivo cargado: pulsa «Resolver y guardar»'); };
+  r.readAsText(f);
+};
+$('#collText').addEventListener('dragover', e => { e.preventDefault(); e.target.style.borderColor = '#e8c574'; });
+$('#collText').addEventListener('dragleave', e => { e.target.style.borderColor = ''; });
+$('#collText').addEventListener('drop', e => {
+  e.preventDefault(); e.target.style.borderColor = '';
+  const f = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => { $('#collText').value = String(r.result || ''); toast('Archivo cargado: pulsa «Resolver y guardar»'); };
+  r.readAsText(f);
+});
+$('#ownFilter').addEventListener('input', renderColl);
+$('#ownRefresh').onclick = async () => {
+  const names = Object.keys(COLL.qty).filter(n => COLL.qty[n] > 0 && !cardFor(n));
+  if (!names.length){ toast('Todo está resuelto'); return; }
+  $('#ownRefresh').disabled = true;
+  try{
+    const { out } = await resolveNames(names);
+    Object.assign(COLL.cards, out); saveColl();
+    toast(Object.keys(out).length + ' cartas resueltas');
+  }finally{ $('#ownRefresh').disabled = false; }
+};
+
+$('#deckName').addEventListener('input', e => { S.deck.name = e.target.value; scheduleDraft(); });
+$('#deckFilter').addEventListener('input', e => { S.deckFilter = e.target.value; renderDeck(); });
+$('#deckUndo').onclick = undoDeck;
+$('#deckTest').onclick = testDeck;
+$('#deckSave').onclick = saveDeck;
+$('#deckClear').onclick = clearDeck;
+$('#deckCopy').onclick = copyDeck;
+$('#deckDownload').onclick = downloadDeck;
+$('#savedLoad').onclick = loadDeck;
+$('#savedDel').onclick = () => {
+  if ($('#savedSel').value && confirm('¿Borrar este mazo guardado?')) deleteDeck();
+};
+$('#deckImportGo').onclick = importDeck;
+
+/* ---------- arranque ---------- */
+function renderAll(){ renderSettings(); renderDeck(); if (S.mode === 'collection') renderColl(); }
+
+(function restoreDraft(){
+  const d = load(LS.draft, null);
+  if (!d || (!(Array.isArray(d.list) && d.list.length) && !d.commander)) return;
+  S.fmt = FORMATS[d.fmt] ? d.fmt : 'commander';
+  S.deck.name = d.name || '';
+  S.deck.list = Array.isArray(d.list) ? d.list : [];
+  if (d.commander){
+    const c = CACHE.get(d.commander.name) || d.commander;
+    S.commander = c; CACHE.set(c.name, c);
+  }
+})();
+S.booted = true;
+
+renderAll();
+renderColl();
+renderSaved();
+loadSets();
+if (S.deck.list.length) resolveDeckNames();
+$('#cardQuery').focus();
+</script>
+</body>
+</html>

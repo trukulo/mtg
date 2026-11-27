@@ -125,6 +125,61 @@ h1 em{font-style:normal;color:var(--gold)}
 }
 .fmt:hover .go .cta{transform:translateY(-1px)}
 
+/* ---- la Forja de mazos: banner ancho, con más protagonismo que un enlace de pie ---- */
+.forge{
+  display:flex;align-items:center;gap:clamp(14px,1.6vw,24px);margin-top:clamp(12px,1.2vw,17px);
+  padding:clamp(12px,1.1vw,17px) clamp(16px,1.8vw,24px);border-radius:14px;color:inherit;text-decoration:none;
+  border:1px solid #e8c5744d;
+  background:linear-gradient(100deg,#1c2836 0%,#131d26 55%,#0a1016 100%);
+  box-shadow:0 18px 40px #000a,inset 0 1px 0 #ffffff0d;
+  transition:transform .18s ease,border-color .18s,box-shadow .18s
+}
+.forge:hover,.forge:focus-visible{
+  transform:translateY(-3px);border-color:#e8c57499;outline:none;
+  box-shadow:0 26px 60px #000c,0 0 34px #e8c57426,inset 0 1px 0 #ffffff14
+}
+.forge-mark{
+  flex:0 0 auto;display:grid;place-items:center;width:clamp(46px,4vw,62px);aspect-ratio:1;border-radius:50%;
+  font-size:clamp(22px,2vw,29px);color:#1d1408;background:linear-gradient(180deg,#f6e7bb,#d8b45f);
+  box-shadow:0 4px 14px #000a
+}
+.forge-txt{flex:1;min-width:0}
+.forge-txt h2{margin:2px 0 0;font:600 clamp(20px,1.6vw,27px)/1.15 "Fraunces",Georgia,serif;color:#f7f2e3}
+.forge-txt .desc{margin-top:5px;max-width:82ch}
+.forge-side{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:9px}
+.forge-side .facts{justify-content:flex-end}
+@media (max-width:900px){
+  .forge{flex-wrap:wrap}
+  .forge-txt{flex:1 1 100%}
+  .forge-side{width:100%;align-items:flex-start}
+  .forge-side .facts{justify-content:flex-start}
+}
+
+/* pantallas anchas pero bajas: la Forja se queda en una tira fina */
+@media (min-width:1240px) and (max-height:920px){
+  .forge{margin-top:8px;padding:8px 14px;gap:12px}
+  .forge-mark{width:36px;font-size:18px}
+  .forge-txt h2{font-size:19px}
+  .forge-txt .desc{display:none}
+  .forge-side{flex-direction:row;align-items:center;gap:12px}
+  .forge-side .facts li{padding:5px 9px;font-size:11px}
+  .forge-side .go{padding-top:0}
+  .forge-side .cta{padding:9px 15px;font-size:13px}
+  .body{padding:14px 16px 16px;gap:9px}
+}
+/* 720p: la Forja aún más fina y el arte de las tarjetas cede altura */
+@media (min-width:1240px) and (max-height:830px){
+  .forge{padding:6px 12px;gap:10px;margin-top:6px}
+  .forge-mark{width:28px;font-size:15px}
+  .forge-txt h2{font-size:17px}
+  .forge-side .facts{display:none}
+  .forge-side .cta{padding:8px 13px;font-size:12.5px}
+  .shot{min-height:0}
+  .fmt{min-height:0}
+  .fmt .facts{display:none}
+  .fmt .body{gap:7px;padding:12px 14px 14px}
+}
+
 footer{
   margin-top:clamp(14px,1.8vw,26px);padding-top:14px;border-top:1px solid #ffffff12;
   display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:space-between;align-items:center;
@@ -247,9 +302,33 @@ footer a:hover{color:var(--gold);border-bottom-color:var(--gold)}
 
   </main>
 
+  <a class="forge" href="deckbuilder.html">
+    <span class="forge-mark" aria-hidden="true">⚒</span>
+    <div class="forge-txt">
+      <p class="tag" data-i18n="forge.tag">Constructor de mazos · cinco formatos</p>
+      <h2 data-i18n="forge.title">La Forja de mazos</h2>
+      <p class="desc" data-i18n="forge.desc">Elige formato, identidad y sets, y monta el mazo carta a carta o deja que lo genere: curva, tierras, fuentes de color y avisos al instante. De ahí, a jugar en cualquiera de los cuatro tableros con un clic.</p>
+    </div>
+    <div class="forge-side">
+      <ul class="facts">
+        <li data-i18n="forge.f1">Carta a carta</li>
+        <li data-i18n="forge.f2">Mi colección</li>
+        <li data-i18n="forge.f3">Horda · 99</li>
+      </ul>
+      <p class="go"><span class="cta" data-i18n="forge.cta">Abrir la Forja →</span></p>
+    </div>
+  </a>
+
   <footer>
     <span data-i18n="foot.note">Sin instalación: todo se guarda en tu navegador. Las cartas se cargan de Scryfall.</span>
-    <a href="taller.html" data-i18n="foot.workshop">Taller de mazos</a>
+    <span class="footlinks" style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+      <a href="commander.html">Commander</a>
+      <a href="brawl.html">Brawl</a>
+      <a href="captain.html">Captain</a>
+      <a href="standard.html">Standard</a>
+      <a href="deckbuilder.html" data-i18n="foot.builder">Forja de mazos</a>
+      <a href="taller.html" data-i18n="foot.workshop">Taller de mazos</a>
+    </span>
   </footer>
 
 </div>
@@ -292,7 +371,14 @@ const I18N = {
     'facts.life30':'30 vidas','facts.life40':'40 vidas','facts.life20':'20 vidas',
     'facts.cmd21':'21 de daño de comandante','facts.sg40':'40 singleton',
 
+    'forge.tag':'Constructor de mazos · cinco formatos',
+    'forge.title':'La Forja de mazos',
+    'forge.desc':'Elige formato, identidad y sets, y monta el mazo carta a carta o deja que lo genere: curva, tierras, fuentes de color y avisos al instante. De ahí, a jugar en cualquiera de los cuatro tableros con un clic.',
+    'forge.f1':'Carta a carta','forge.f2':'Mi colección','forge.f3':'Horda · 99',
+    'forge.cta':'Abrir la Forja →',
+
     'foot.note':'Sin instalación: todo se guarda en tu navegador. Las cartas se cargan de Scryfall.',
+    'foot.builder':'Forja de mazos',
     'foot.workshop':'Taller de mazos'
   },
   en: {
@@ -330,7 +416,14 @@ const I18N = {
     'facts.life30':'30 life','facts.life40':'40 life','facts.life20':'20 life',
     'facts.cmd21':'21 commander damage','facts.sg40':'40 singleton',
 
+    'forge.tag':'Deck builder · five formats',
+    'forge.title':'The Deck Forge',
+    'forge.desc':'Pick a format, identity and sets, then build the deck card by card or let it generate itself: curve, lands, colour sources and warnings on the spot. From there, play it on any of the four tables with one click.',
+    'forge.f1':'Card by card','forge.f2':'My collection','forge.f3':'Horde · 99',
+    'forge.cta':'Open the Forge →',
+
     'foot.note':'No install: everything is stored in your browser. Cards load from Scryfall.',
+    'foot.builder':'Deck forge',
     'foot.workshop':'Deck workshop'
   },
   fr: {
@@ -368,7 +461,14 @@ const I18N = {
     'facts.life30':'30 points de vie','facts.life40':'40 points de vie','facts.life20':'20 points de vie',
     'facts.cmd21':'21 blessures de commandant','facts.sg40':'40 singleton',
 
+    'forge.tag':'Constructeur de decks · cinq formats',
+    'forge.title':'La Forge de decks',
+    'forge.desc':'Choisissez un format, une identité et des sets, puis montez le deck carte par carte ou laissez-le se générer : courbe, terrains, sources de couleur et avertissements immédiats. De là, jouez-le sur n’importe laquelle des quatre tables en un clic.',
+    'forge.f1':'Carte par carte','forge.f2':'Ma collection','forge.f3':'Horde · 99',
+    'forge.cta':'Ouvrir la Forge →',
+
     'foot.note':'Aucune installation : tout est enregistré dans votre navigateur. Les cartes viennent de Scryfall.',
+    'foot.builder':'Forge de decks',
     'foot.workshop':'Atelier de decks'
   }
 };

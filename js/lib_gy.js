@@ -215,6 +215,9 @@
     e.classList.remove('ai');
     e.querySelector('.lghd b').textContent = req.title;
     e.querySelector('.lghd .lgsub').textContent = req.sub || '';
+    /* ancho del panel según cuántas cartas caben en una fila (máx. 5) */
+    const box = e.querySelector('.lgbox');
+    if (box) box.style.setProperty('--lg-n', Math.min(req.cards.length, 5) || 1);
     e.classList.toggle('multi', req.max > 1);
     const grid = e.querySelector('.lggrid');
     grid.innerHTML = '';

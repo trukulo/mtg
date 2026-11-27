@@ -11,6 +11,18 @@ a{color:var(--au)}
 header{position:sticky;top:0;z-index:30;display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:12px 22px;border-bottom:1px solid var(--ln);background:#0f141ce8;backdrop-filter:blur(12px)}
 .logo{display:flex;align-items:center;gap:10px;font:850 21px Fraunces,serif;color:var(--au);cursor:pointer;letter-spacing:-.02em}
 .logo svg{width:26px;height:26px;fill:currentColor}
+/* enlace de vuelta a la portada del proyecto: un elemento más de la nav */
+nav .navportal{display:inline-flex;align-items:center;gap:6px;color:var(--mu);text-decoration:none;
+  font:600 14.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;padding:8px 12px;border-radius:9px;
+  border:1px solid #ffffff24;background:#ffffff08;transition:.15s}
+nav .navportal:hover{color:var(--tx);background:#ffffff14;border-color:#e6b84a66}
+nav .navportal:focus-visible{outline:2px solid var(--au2);outline-offset:2px}
+a.logo{text-decoration:none}
+a.logo:hover{color:var(--au2)}
+/* franja de tabletas: el enlace «Portal» no cabe sin partir la cabecera en dos filas */
+@media (min-width:701px) and (max-width:860px){nav .navportal{display:none}}
+
+
 nav{display:flex;gap:2px;flex-wrap:wrap;margin-left:auto}
 nav button{background:none;border:0;color:var(--mu);font:600 14.5px 'Hanken Grotesk',system-ui,-apple-system,sans-serif;padding:8px 12px;border-radius:9px;cursor:pointer;transition:.15s}
 nav button:hover{color:var(--tx);background:#ffffff0a}
@@ -614,6 +626,8 @@ img{content-visibility:auto}
  .langsw,.langsel{display:none}
  nav{position:fixed;bottom:0;left:0;right:0;margin:0!important;z-index:60;background:#0d1117;border-top:1px solid var(--ln);justify-content:space-around;padding:4px 4px calc(4px + env(safe-area-inset-bottom))}
  nav button{flex:1;padding:10px 2px;font-size:12px}
+ nav .navportal{flex:1;justify-content:center;padding:10px 2px;font-size:12px;border:0;background:none}
+
  main{padding-bottom:84px!important}
  .tabs{top:42px}
 }

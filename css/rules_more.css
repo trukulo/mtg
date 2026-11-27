@@ -1,0 +1,38 @@
+/* ===== rules-more · insignias de las mecánicas ampliadas ===== */
+/* botón de habilidades con coste (adaptar, empoderar, proliferar) */
+.rm-act{position:absolute;left:3px;bottom:22px;z-index:6;min-width:17px;height:17px;padding:0 4px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid #8fc7ff99;border-radius:999px;background:#0a1624ee;color:#bfe0ff;
+  font:800 9px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;
+  box-shadow:0 2px 6px #000a}
+.rm-act:hover{background:#8fc7ff;color:#08131f;border-color:#d9ecff}
+/* criatura preparada: lanzar la copia de su conjuro */
+.rm-prep{position:absolute;right:3px;bottom:3px;z-index:6;min-width:17px;height:17px;padding:0 4px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid #d9b3ff99;border-radius:999px;background:#170a24ee;color:#e6ccff;
+  font:800 10px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;
+  box-shadow:0 2px 6px #000a}
+.rm-prep:hover{background:#d9b3ff;color:#1a0a28;border-color:#f3e3ff}
+/* tripular un vehículo */
+.rm-crew{position:absolute;right:3px;bottom:22px;z-index:6;min-width:17px;height:17px;padding:0 4px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid #ffd08a99;border-radius:999px;background:#1b1206ee;color:#ffdda8;
+  font:800 9px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;box-shadow:0 2px 6px #000a}
+.rm-crew:hover{background:#ffd08a;color:#1a1206;border-color:#fff0d0}
+/* lanzar desde el cementerio (retrospectiva / salto inicial) */
+#jPileView .bcard .rm-gy{position:absolute;right:2px;top:2px;z-index:7;min-width:18px;height:18px;padding:0 4px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid #c7a4ff99;border-radius:999px;background:#120a1dee;color:#e0cdff;
+  font:800 10px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;box-shadow:0 2px 6px #000a}
+#jPileView .bcard .rm-gy:hover{background:#c7a4ff;color:#150a22;border-color:#f0e4ff}
+/* ciclar desde la mano */
+#jYouHand .hcard .rm-cyc{position:absolute;right:3px;top:3px;z-index:7;min-width:18px;height:18px;padding:0 4px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid #9fe0b499;border-radius:999px;background:#08180fee;color:#c4f2d4;
+  font:800 11px/1 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;
+  box-shadow:0 2px 6px #000a}
+#jYouHand .hcard .rm-cyc:hover{background:#9fe0b4;color:#06150c;border-color:#e2ffec}
+@media (max-width:760px){
+  .rm-act{left:2px;bottom:19px;min-width:15px;height:15px;font-size:8px}
+  .rm-prep{right:2px;bottom:2px;min-width:15px;height:15px}
+}

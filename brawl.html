@@ -9,8 +9,9 @@
 <style>@import url("css/board2.css");</style>
 </head><body>
 <header>
-  <div class="logo" data-go="inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h12l4 4v14H4V3zm2 2v14h12V7.8L15.2 5H6zm2 4h8v2H8V9zm0 4h8v2H8v-2z"/></svg>Brawl</div>
+  <a class="logo" href="index.html" title="Portada · Magic TCG"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h12l4 4v14H4V3zm2 2v14h12V7.8L15.2 5H6zm2 4h8v2H8V9zm0 4h8v2H8v-2z"/></svg>Brawl</a>
   <nav id="nav">
+    <a class="navportal" href="index.html" data-i18n="nav.portal">← Portal</a>
     <button data-go="inicio" class="on" data-i18n="nav.home">Inicio</button>
     <button data-go="formato" data-i18n="nav.format">El formato</button>
     <button data-go="sobres" data-i18n="nav.packs">Mazos</button>
@@ -457,7 +458,7 @@
 /* ---------- i18n: interfaz y cartas (es / en / fr) ---------- */
 const I18N={
   es:{
-    'nav.home':'Inicio','nav.format':'El formato','nav.packs':'Sobres','nav.deck':'Mazo y análisis','nav.play':'Jugar','nav.print':'Imprimir',
+    'nav.home':'Inicio','nav.format':'El formato','nav.packs':'Sobres','nav.deck':'Mazo y análisis','nav.play':'Jugar','nav.print':'Imprimir','nav.portal':'Portal',
     'home.eyebrow':'Formato de 40 cartas · singleton','home.h1a':'Dos sobres.','home.h1b':'Un capitán.',
     'home.lede':'Abre dos sobres Jumpstart de 20 cartas, mézclalos en un mazo singleton de 40 y elige una criatura para que te mande desde la zona de mando. Partidas rápidas, mazos irrepetibles y una historia distinta cada noche.',
     'home.play':'Jugar una partida','home.create':'Crear mis sobres','home.demo':'Mazo de demostración',
@@ -561,7 +562,7 @@ const I18N={
     'print.previewInfo':'{n} cartas · {p} hojas','print.listInfo':'{n} cartas · capitán: {c}','print.noDeck':'Combina dos sobres primero.'
   },
   en:{
-    'nav.home':'Home','nav.format':'The format','nav.packs':'Packs','nav.deck':'Deck & analysis','nav.play':'Play','nav.print':'Print',
+    'nav.home':'Home','nav.format':'The format','nav.packs':'Packs','nav.deck':'Deck & analysis','nav.play':'Play','nav.print':'Print','nav.portal':'Portal',
     'home.eyebrow':'40-card format · singleton','home.h1a':'Two packs.','home.h1b':'One captain.',
     'home.lede':'Open two 20-card Jumpstart packs, shuffle them into a 40-card singleton deck and pick a creature to lead from the command zone. Fast games, decks you will never rebuild, a different story every night.',
     'home.play':'Play a game','home.create':'Build my packs','home.demo':'Demo deck',
@@ -665,7 +666,7 @@ const I18N={
     'print.previewInfo':'{n} cards · {p} sheets','print.listInfo':'{n} cards · captain: {c}','print.noDeck':'Combine two packs first.'
   },
   fr:{
-    'nav.home':'Accueil','nav.format':'Le format','nav.packs':'Boosters','nav.deck':'Deck & analyse','nav.play':'Jouer','nav.print':'Imprimer',
+    'nav.home':'Accueil','nav.format':'Le format','nav.packs':'Boosters','nav.deck':'Deck & analyse','nav.play':'Jouer','nav.print':'Imprimer','nav.portal':'Portail',
     'home.eyebrow':'Format 40 cartes · singleton','home.h1a':'Deux boosters.','home.h1b':'Un capitaine.',
     'home.lede':'Ouvrez deux boosters Jumpstart de 20 cartes, mélangez-les en un deck singleton de 40 et choisissez une créature pour vous mener depuis la zone de commandement. Parties rapides, decks uniques, une histoire différente chaque soir.',
     'home.play':'Jouer une partie','home.create':'Créer mes boosters','home.demo':'Deck de démo',
@@ -1830,7 +1831,7 @@ Object.assign(I18N.fr,{
 });
 /* ---------- Commander · textos ES ---------- */
 Object.assign(I18N.es,{
-  'nav.home':'Inicio','nav.format':'El formato','nav.packs':'Mazos','nav.play':'Jugar','nav.print':'Imprimir',
+  'nav.home':'Inicio','nav.format':'El formato','nav.packs':'Mazos','nav.play':'Jugar','nav.print':'Imprimir','nav.portal':'Portal',
   'home.eyebrow':'Formato Brawl · 60 cartas · singleton',
   'home.h1a':'Sesenta cartas.','home.h1b':'Un comandante.',
   'home.lede':'Brawl es el formato de 60 cartas de Magic: eliges una criatura legendaria o un planiswalker como comandante, lo llevas en la zona de mando y construyes a su alrededor un mazo singleton de 60 cartas que respeta su identidad de color. Aquí puedes generarlo, analizarlo, jugarlo contra la IA e imprimirlo.',
@@ -1890,7 +1891,7 @@ Object.assign(I18N.es,{
 
 /* ---------- Commander · textos EN ---------- */
 Object.assign(I18N.en,{
-  'nav.home':'Home','nav.format':'The format','nav.packs':'Decks','nav.play':'Play','nav.print':'Print',
+  'nav.home':'Home','nav.format':'The format','nav.packs':'Decks','nav.play':'Play','nav.print':'Print','nav.portal':'Portal',
   'home.eyebrow':'Brawl format · 60 cards · singleton',
   'home.h1a':'Sixty cards.','home.h1b':'One commander.',
   'home.lede':'Brawl is Magic’s 60-card format: pick a legendary creature or a planeswalker as your commander, keep it in the command zone and build a 60-card singleton deck around it inside its colour identity. Here you can generate it, analyse it, play it against the AI and print it.',
@@ -1949,7 +1950,7 @@ Object.assign(I18N.en,{
 
 /* ---------- Commander · textos FR ---------- */
 Object.assign(I18N.fr,{
-  'nav.home':'Accueil','nav.format':'Le format','nav.packs':'Decks','nav.play':'Jouer','nav.print':'Imprimer',
+  'nav.home':'Accueil','nav.format':'Le format','nav.packs':'Decks','nav.play':'Jouer','nav.print':'Imprimer','nav.portal':'Portail',
   'home.eyebrow':'Format Brawl · 60 cartes · singleton',
   'home.h1a':'Soixante cartes.','home.h1b':'Un commandant.',
   'home.lede':'Brawl est le format 60 cartes de Magic : choisissez une créature légendaire ou un planeswalker comme commandant, gardez-le en zone de commandement et bâtissez autour un deck singleton de 60 cartes dans son identité de couleur. Ici vous pouvez le générer, l’analyser, le jouer contre l’IA et l’imprimer.',
@@ -2260,16 +2261,18 @@ function placeZoom(el){
   const z=$('#cardZoom');if(!z||!el||!el.isConnected)return;
   const r=el.getBoundingClientRect();
   /* cabe en la ventana por alto y no se merienda la mesa */
-  const w=Math.round(Math.max(140,Math.min(520,innerWidth*0.42,(innerHeight-16)*0.716)));
+  /* alto real de la ventana: en pantallas bajas innerHeight puede mentir */
+  const vh=Math.min(innerHeight,document.documentElement.clientHeight||innerHeight);
+  const w=Math.round(Math.max(120,Math.min(520,innerWidth*0.42,(vh-24)*0.716)));
   const h=Math.round(w/0.716);
-  z.style.width=w+'px';
+  z.style.width=w+'px';z.style.height=h+'px';
   /* a la derecha de la carta si cabe; si no, a la izquierda; si no, centrado */
   let left=r.right+16;
   if(left+w>innerWidth-8)left=r.left-w-16;
   if(left<8)left=r.left+r.width/2-w/2;
   left=Math.max(8,Math.min(left,innerWidth-w-8));
   /* centrado en la carta, sin salirse por arriba ni por abajo */
-  const top=Math.max(8,Math.min(innerHeight-h-8,r.top+r.height/2-h/2));
+  const top=Math.max(8,Math.min(vh-h-8,r.top+r.height/2-h/2));
   z.style.left=Math.round(left)+'px';z.style.top=Math.round(top)+'px';
 }
 function showZoom(el){
@@ -6492,6 +6495,9 @@ function showPile(title,names,owner){
     }
     v.append(d);
   });
+  const panel=document.createElement('div');panel.className='pv-panel';
+  while(v.firstChild)panel.append(v.firstChild);
+  v.append(panel);
   v.classList.add('on');
   h.onclick=()=>v.classList.remove('on');
   v.onclick=e=>{if(e.target===v)v.classList.remove('on')};
@@ -12920,8 +12926,10 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
   setInterval(refresh,900);
 })();
 </script>
-<style id="rules-core-css">@import url("css/rules_core.css");</style>
+<style id="rules-core-css">@import url("css/rules_core.css?v=20261127d");</style>
 <script id="rules-core" src="js/rules_core.js"></script>
+<style id="rules-more-css">@import url("css/rules_more.css");</style>
+<script id="rules-more" src="js/rules_more.js"></script>
 <script id="fdn-deck">
 /* ---------- Cimientos (FDN): mazos completos ---------- */
 (function(){
@@ -13385,7 +13393,9 @@ setTimeout(()=>{if(typeof cmdBackfillBasicArt==='function')cmdBackfillBasicArt()
 <script id="saga-pw" src="js/saga_pw.js"></script>
 <style id="zoom-any-css">@import url("css/zoom_any.css");</style>
 <script id="zoom-any" src="js/zoom_any.js"></script>
-<style id="lib-gy-css">@import url("css/lib_gy.css");</style>
-<script id="lib-gy" src="js/lib_gy.js"></script>
+<style id="lib-gy-css">@import url("css/lib_gy.css?v=20261127b");</style>
+<script id="lib-gy" src="js/lib_gy.js?v=20261127b"></script>
+<script id="net-cache" src="js/net_cache.js"></script>
+<script id="play-bridge" src="js/play_bridge.js"></script>
 </body>
 </html>

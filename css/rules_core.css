@@ -15,3 +15,28 @@
   font:800 9px/1 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.02em;cursor:pointer;
   box-shadow:0 2px 6px #000a}
 .rules-act:hover{background:#e8c574;color:#211706;border-color:#f6e7bb}
+
+/* ===== ventanas de montón (cementerio, exilio, mando): líquidas y centradas ===== */
+/* el contenedor solo centra; el panel mide lo que ocupan las cartas */
+#jPileView{position:fixed;inset:0;z-index:9996;display:none;align-items:center;align-content:center;justify-content:center;
+  padding:24px;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:auto}
+#jPileView.on{display:flex;animation:fade .18s ease}
+#jPileView .pv-panel{position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-content:flex-start;
+  gap:8px;width:fit-content;min-width:240px;max-width:min(1180px,94vw);max-height:min(86vh,920px);
+  overflow:auto;padding:42px 14px 14px;background:#04070af2;border:1px solid var(--au,#e3b64b);
+  border-radius:14px;box-shadow:0 24px 70px #000}
+/* cabecera fuera del flujo: así no estira el ancho del panel */
+#jPileView .pvh{position:absolute;left:14px;right:14px;top:10px;width:auto;max-width:calc(100% - 28px);
+  margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#jPileView .jempty{margin:8px auto}
+#jPileView .bcard{width:clamp(84px,9.5vh,112px)}
+@media (max-width:700px), (max-height:620px){
+  #jPileView{padding:10px}
+  #jPileView .pv-panel{max-width:96vw;max-height:92vh;padding:40px 10px 10px}
+  #jPileView .bcard{width:72px}
+}
+/* el zoom de carta nunca supera la ventana y no deforma la imagen */
+#cardZoom{max-width:calc(100vw - 16px);max-height:calc(100vh - 16px);object-fit:contain;background:#080d13}
+/* el selector de reglas también pierde el velo: solo se ve su caja */
+#rulesPick{background:transparent;backdrop-filter:none}
+#rulesPick .rpk{width:max-content;min-width:260px}
