@@ -2794,50 +2794,68 @@ No comprobado: la segunda habilidad de Ayli (exilio) más allá del parseo.
 
 ## Bloqueos estilo Arena (capa `block-arena`, 27 nov 2026)
 
-Sustituye la presentación de los bloqueos por una mesa tipo Arena, sin tocar el
-motor: `#jBlockWrap` y sus `<select data-blk>` siguen siendo la fuente de
-verdad (también en multijugador, `askBlocks`), y «Aceptar bloqueos» rellena los
+Capa compartida `css/block_arena.css` (`?v=20261127j`) y `js/block_arena.js`
+(`?v=20261127h`), fuente en `tmp/` y publicada con `sync_shared.py`. Sustituye la
+presentación de los bloqueos por una mesa tipo Arena sin tocar el motor:
+`#jBlockWrap` y sus `<select data-blk>` siguen siendo la fuente de verdad
+(también en multijugador, `askBlocks`), y «Confirmar bloqueos» rellena los
 selects y pulsa el `#jBlockOk` original.
 
-- `css/block_arena.css` (`?v=20261127g`) y `js/block_arena.js` (`?v=20261127e`),
-  fuente en `tmp/`, publicados con `sync_shared.py` y enlazados en los cuatro.
-- Los atacantes van arriba y tus criaturas legales abajo; se toca una criatura
-  propia y luego el atacante. La asignación se marca con una flecha SVG y un
-  círculo «×» para quitarla. Una criatura solo puede bloquear un atacante; las
-  opciones que el motor no ofrece se rechazan con un temblor.
-- El panel original (filas, selects y botón) se oculta cuando la mesa nueva se
-  pinta; si no hay atacantes localizables (p. ej. un invitado sin la copia de
-  las permanentes), no se oculta nada y queda la UI antigua como respaldo.
-- **Mesa fija y centrada**: con la mesa nueva, `#jBlockWrap` pasa a
-  `position:fixed` centrada (95vw, máximo 92vh, sombra de fondo) en vez de ser
-  un bloque al final de la página. Como `#jugar` puede tener un ancestro con
-  `transform`, un `fixed` dentro se colocaría respecto a ese ancestro (la mesa
-  salía en y≈1740): el JS mueve el panel al `body` mientras dura la declaración
-  y lo devuelve a su sitio al cerrarse.
-- `#jBlockWrap` se fuerza a columna (`#jBlockList` al 100 %) para que la mesa
-  use todo el ancho; antes, al ser un flex en fila, la mesa se quedaba en
-  549 px y el botón no coincidía con el centro. El pie es una rejilla
-  `1fr auto 1fr`: estado a la izquierda y **«Aceptar bloqueos» centrado**
-  (`min-width:190px`).
+Rediseño del 27 nov 2026 (la primera versión se veía como una losa oscura:
+cartas de 96 px, filas sin nombre, contador en español dentro de una mesa en
+francés y rectángulos vacíos mientras el arte no había cargado):
+
+- **Cabecera** con título e instrucción y **dos bandas etiquetadas** dentro de
+  la mesa: «Atacantes · N» con tinte rojizo y «Tus criaturas · N» con tinte
+  azul, separadas por una línea de puntos. Filas centradas y cartas de
+  `--bw: clamp(86px,10vw,118px)` (72 px por debajo de 640 px de ancho).
+- **Cartas**: arte con proporción 745/1040, nombre a dos líneas y placa P/T en
+  la esquina inferior derecha. Las iniciales se pintan siempre detrás de la
+  imagen, así que una carta sin arte (o con 404) se sigue leyendo; el `error`
+  de la imagen la retira.
+- **Flechas**: codo ortogonal (`M x1,y1 V my H x2 V y2`) que discurre solo por
+  el hueco entre bandas, con 4 px de aire en los extremos, de modo que nunca
+  cruza una carta ni su nombre. La «×» del codo quita esa asignación (`title`
+  traducido) y tocar el atacante ya asignado también la quita. Una criatura
+  solo puede bloquear un atacante; las parejas que el `<select>` no ofrece se
+  rechazan con un temblor (`ba-no`).
+- **Selección**: la criatura elegida se marca en azul (`ba-sel`) y la banda de
+  atacantes se resalta con un contorno dorado discontinuo (`ba-aim`).
+- **Pie** en flex: contador `n/m bloqueados · k sin bloquear` en el idioma
+  activo (antes decía «bloqueados» también en francés e inglés), botón **Quitar
+  todo** (deshabilitado sin asignaciones) y el confirmar verde
+  (`min-width:190px`). El botón ya no va centrado: contador a la izquierda y
+  acciones a la derecha.
+- **Mesa fija y centrada**: `position:fixed` al 94vw (máximo 900 px de ancho y
+  92vh de alto) con sombra `0 0 0 100vmax` de fondo. Como `#jugar` puede tener
+  un ancestro con `transform`, el JS mueve el panel al `body` mientras dura la
+  declaración y lo devuelve a su sitio (`homeParent`/`homeNext`) al cerrarse.
 - `scan()` se dispara con `MutationObserver` y usa `getClientRects()` (no
   `offsetParent`, que es null en `position:fixed`). El botón original se
-  consulta en cada scan porque `startBlocks`/`askBlocks` rehacen el panel.
+  consulta en cada scan porque `startBlocks`/`askBlocks` rehacen el panel. Si no
+  hay atacantes localizables (p. ej. un invitado sin la copia de las
+  permanentes) no se oculta nada y queda la UI antigua como respaldo.
 
-Comprobado en partida real de `commander.html` (mulligan cerrado, mesa nueva
-abierta con `startBlocks` y criaturas con estadísticas reales):
-- Captura en `tmp/shots/bloqueos_real.png`: panel centrado en la pantalla
-  (733×472 en x=10,8, y=230; centro 377,5/466) con el botón exactamente en el
-  mismo centro (377,5), flecha de Centauro a Centauro y estado «1/2».
-- El panel se sale del flujo de la página, no hay scroll para verlo y las filas
-  y el botón viejos quedan ocultos.
+Comprobado en navegador con estado sintético (`mkPlayer` + permanentes
+inyectadas) en brawl, commander, standard y captain: la mesa se construye en
+los cuatro, el panel queda dentro del viewport a 1280×720 y a 390×844, las
+etiquetas y el contador salen en el idioma activo (FR), el codo se dibuja con
+una y con dos asignaciones, «Quitar todo» limpia y «Confirmar bloqueos» rellena
+los selects, resuelve el combate, oculta el panel y lo devuelve a `#jTable`. El
+estado vacío (atacante con volar y sin bloqueadores legales) muestra «Ne peut
+pas bloquer». `node --check tmp/block_arena.js`, `sync_shared.py --check` y
+`lint_boards.py --strict` en verde.
 
-Multijugador real con dos pestañas `commander.html?mplocal=1` (BroadcastChannel):
+Multijugador real con dos pestañas `commander.html?mplocal=1` (BroadcastChannel,
+probado con la primera versión; el motor y el contrato del panel no cambian):
 - El invitado recibió el `blockReq`, se pintó la mesa (3 bloqueadores, 2
   atacantes), asignó con flecha y «Aceptar bloqueos» (captura
   `tmp/shots/bloqueos_mp.png`); el anfitrión resolvió el combate y el atacante
-  bloqueado no hizo daño al jugador. Mismo centrado exacto (377/377).
-- No comprobado: multijugador por WebRTC entre navegadores distintos (la ruta
-  de red no cambia; solo se probó el canal local de dos pestañas).
+  bloqueado no hizo daño al jugador.
+- No comprobado tras el rediseño: multijugador por WebRTC entre navegadores
+  distintos ni `askBlocks` con el panel nuevo en dos sesiones.
+- Reversión: `tmp/versions/block_arena_before_arena2.{css,js}`. Versión de los
+  cuatro tableros: `2026-11-27 15:25` (copias en `versions/`).
 ## Buscador de cartas del constructor (capa `deck-search`, 27 nov 2026)
 
 Botón «🔎 Buscador» junto a `#edSearch` en el editor de los cuatro tableros.
@@ -3198,3 +3216,197 @@ convierte cualquier respuesta no-2xx en `Error(j.details)`. El buscador lo pinta
 
 **Pendiente detectado** (no tocado): la nota de sinergia escribe en español el papel de la
 carta (`pago`/`genera`/`tema` y etiquetas como «contadores», «fichas») en los tres idiomas.
+
+## Reglas de vida: dar y quitar vidas (auditoría, 27 nov 2026)
+
+Revisión a fondo de todo lo que suma o resta vida en los cuatro tableros, sin tocar código (no se
+cambió ningún HTML, ni las capas `rules-core`/`rules-more`, ni se subió versión). Todo lo que sigue
+está medido en el navegador sobre `standard.html`, `commander.html` y `captain.html` con estado
+sintético (`mkPlayer` + permanentes creados a mano, con el oracle inyectado cuando la carta no está
+en la caché viva de 1173 cartas), y contrastado con `data/cartas_reglas.json` (3323 cartas).
+
+### Lo que funciona
+
+- **Vidas iniciales**: `cmdStartLife()` da 40 en commander (20 en Duel), 30 en brawl, 20 en standard
+  y 20 en captain (`life:20` en el estado del mazo). El linter lo vigila (`SIZES`).
+- **Ganancia directa**: `applySpell` reconoce `you gain N life` y sube la vida del jugador activo.
+  Comprobado con «You gain 2 life. Draw a card.»: las dos cosas ocurren (la pasada de robo es
+  independiente de la rama principal).
+- **Drenaje**: `each opponent loses N life` resta al rival y, si la misma frase trae `and you gain N
+  life`, también suma al lanzador; funciona igual cuando el que lanza es la IA.
+- **Disparos `whenever you gain life`**: `lifeGainTriggers` (bloque «disparadores que faltaban»,
+  envoltorio de `applySpell`) empareja el texto del permanente con la ganancia de vida; con
+  Ajani's Pridemate en mesa, «You gain 2 life» pone el +1/+1 (standard y commander). Epicure of
+  Blood («whenever you gain life, each opponent loses 1 life») con el oracle inyectado resta 1 al
+  rival. La guarda `_lgTrig` evita recursiones.
+- **Vito, Thorn of the Dusk Rose** (m21, «that opponent loses that much life») funciona vía
+  `tmp/rules_core.js` (`triggerLifeGain`, 756-790), que mide el delta de vida al volver de
+  `applySpell`; también con el botón + de la mesa.
+- **Vínculo vital en combate**: `resolveCombat` suma la vida al atacante con lifelink y al bloqueador
+  con lifelink, doble golpe la suma dos veces y el arrollar cuenta igual; deja el registro
+  `game.lifelinkLog` («Vínculo vital: {p} gana {n} vidas.») en los cuatro tableros.
+- **Fin de partida**: `checkLife` cierra la partida al llegar a 0 o menos, y se llama al final de
+  `playFromHand`, de `resolveCombat`, de mantenimiento/fin de turno y de los botones de mesa.
+  Comprobado que un `drain` que deja al rival a 0 termina la partida en el acto.
+- **Botones +1/−1 de mesa** (`cmdLifeCtl`, cuatro botones) en standard, commander y brawl: cambian la
+  vida, repintan y comprueban fin de partida, con la línea «{p}: vida +1.».
+
+### Lo que falla (verificado, con la prueba concreta)
+
+1. **Solo se aplica UNA cláusula de efecto por hechizo.** `applySpell` (5564) elige una rama por
+   orden y sale: `counter` → `multi` (dos objetivos) → `destroy` → `dmg` → `pump` → `drain` → `gain`
+   → contadores → fichas → reanimar → exiliar → rebotar → debilitar → descartar → moler → scry →
+   girar → pelear → exiliar del top. La vida va **detrás** de daño, destruir y bomba, así que se
+   pierde en cuanto la carta hace algo más:
+   - Joust Through (FDN): «3 damage to target attacking or blocking creature. You gain 1 life.» →
+     `you 10 → 10`, el daño sí entra.
+   - Lich's Caress (m19): «Destroy target creature. You gain 3 life.» → destruye y `you 10 → 10`.
+   - Moment of Triumph (FDN): «+2/+2 … You gain 2 life.» → `a=2`, vida intacta.
+   - Sorin's Thirst (m20): «2 damage … and you gain 2 life.» → `ai 10 → 8`, `you` sigue a 10.
+   Solo el robo se salva, porque al final hay un pase incondicional
+   (`if(/draw (a|two|three) cards?/.test(text))`), y por eso «gain + draw» funciona y «damage + gain»
+   no. Barrido del pool: **56 cartas** con cláusula de vida tapada por otra rama (9 de FDN:
+   Joust Through, Deadly Riposte, Moment of Triumph, Fumigate, Apothecary Stomper, Scavenging Ooze,
+   Leonin Vanguard, Demonic Pact, Primeval Bounty). Script: `tmp/life_priority2.py`.
+2. **`target opponent/player loses N life` no existe.** Solo está `each opponent loses`. La ganancia
+   de la misma carta sí entra, la pérdida no: Skymarch Bloodletter, Vampire Sovereign (m19),
+   Sovereign's Bite, Vengeful Bloodwitch y Kalastria Highborn (FDN). Medido: «you gain 3, target
+   opponent loses 3» → `you 10 → 13`, `ai` se queda en 10. 8 cartas en el pool (2 de FDN).
+3. **`you lose N life` no está en ningún tablero ni en ninguna capa.** Read the Bones roba 2 y no
+   pierde 2; Necrogen Scudder entra y no pierde 3; Ulcerate da −3/−3 sin coste de vida; Audacious
+   Thief roba y no pierde 1. Medido: vida intacta en todos. 14 cartas (1 de FDN).
+4. **`each player loses N life`** (Bad Deal, Rabid Bloodsucker, Fraying Omnipotence) tampoco: 3
+   cartas, ninguna resta.
+5. **`target player gains N life` y `gain that much life`** fuera del vínculo vital no se aplican
+   (2 cartas), y **los dobladores/reemplazos** tampoco: Tainted Remedy (m19/ori) y Angel of Vitality
+   (FDN) no hacen nada. Medido con Tainted Remedy del lado rival: ganar 3 sigue subiendo 3.
+6. **El vínculo vital no dispara `whenever you gain life`.** El envoltorio del tablero mide la vida
+   solo al volver de `applySpell`, y el combate suma dentro de `resolveCombat`; `tmp/rules_core.js`
+   envuelve `resolveCombat` (793-807) pero **solo** para Vito, no llama a `lifeGainTriggers`. Medido
+   con Pridemate en mesa: 3/3 con vínculo vital conecta → +3 vida y el Pridemate sigue 0/0 (standard
+   y commander).
+7. **No hay disparos por pérdida de vida** («whenever an opponent loses life», Bloodthirsty Conqueror
+   de FDN): no existe ningún gancho de `lost life` en el motor.
+8. **No hay disparos por daño recibido** («whenever this creature is dealt combat damage, you gain
+   that much life», Wall of Essence m15): en los cuatro tableros no aparece `dealt damage`.
+9. **La rama `drain` no registra la ganancia.** Con Sanguine Syphoner: `ai 10 → 9`, `you 10 → 11`,
+   pero el registro solo dice «Joueur perd 1 point(s) de vie». La vida sube en silencio.
+10. **Plural roto en ES y FR**: «Jugador pierde 1 vidas.» / «Joueur perd 1 points de vie.», y lo
+    mismo al ganar. EN está bien («loses 1 life»). Cadenas: `game.lifeLost`/`game.lifeGain` en los
+    tres idiomas (`log.you` = Jugador/Player/Joueur, así que la parte del nombre es correcta).
+11. **Empate a 0 imposible**: `checkLife` comprueba `G.you.life<=0` antes que la IA, así que con los
+    dos a 0 gana la IA (mensaje de derrota). No hay comprobación de empate.
+12. **`captain.html` va muy por detrás**: no tiene `findTriggers`/`runTriggers`/`lifeGainTriggers`
+    (ningún «cuando ganas vidas», ni disparos de mantenimiento, fin de turno o robo), no tiene
+    `cmdLifeCtl` (ni botones ±1 en la mesa) y su `cmdStartLife` no existe: las 20 vidas están
+    fijadas. Medido: Pridemate inyectado con «You gain 2 life» no recibe el contador.
+
+### Cómo se comprobó
+
+- `applySpell`, `applyTrigger` y `resolveCombat` llamados directamente en `preview_evaluate` sobre
+  estado sintético; cuando la carta no está en `CARD` (muchas dan `stubCard` con `oracle:''`) se
+  inyecta el texto de oracle para separar fallo de motor de fallo de datos. El estado sintético se
+  descartó recargando las pestañas.
+- Recuentos del pool con `data/cartas_reglas.json` y los scripts `tmp/life_scan.py`,
+  `tmp/life_texts.py`, `tmp/life_gaps.py`, `tmp/life_gaps2.py`, `tmp/life_fdn_gain.py`,
+  `tmp/life_priority.py` y `tmp/life_priority2.py` (todos con `PYTHONIOENCODING=utf-8`).
+- No se ejecutó el linter ni `sync_shared.py --check` porque no se editó ningún archivo del juego.
+
+### Arreglo propuesto (sin hacer; para cuando se pida)
+
+- Un **segundo pase de vida** al final de `applySpell`, hermano del pase de robo: aplicar `you gain N`
+  / `you lose N` / `target opponent loses N` / `each player loses N` aunque la rama principal haya
+  sido daño, destruir o bomba, y quitar esas frases del `text` que consume la rama (o marcar la vida
+  como ya aplicada) para no contar dos veces cuando la rama sea `drain`.
+- Regex nuevas en ese pase: `(?:target|that) (?:opponent|player) loses (\d+) life`, `you lose (\d+)
+  life`, `each player loses (\d+) life`, `target player gains (\d+) life`.
+- Llamar a `lifeGainTriggers` también desde el envoltorio de `resolveCombat` de `tmp/rules_core.js`
+  (delta de vida por lifelink), y añadir un gancho `lifeLostTriggers` opcional.
+- Singular en `game.lifeLost`/`game.lifeGain` (ES/EN/FR) con `{n}==1`.
+- Empate: si los dos están a 0 o menos, declarar tablas antes que derrota.
+- Llevar `lifeGainTriggers` y los botones ±1 a `captain.html` para igualar los cuatro tableros.
+
+## Carta a carta: cinco comandantes Orzhov (auditoría, 27 nov 2026)
+
+Repaso de **Ketramose, the New Dawn**, **Teysa of the Ghost Council**, **Elas il-Kor, Sadistic
+Pilgrim**, **Amalia Benavides Aguirre** y **Teysa Karlov** contra el motor real, con el oracle de
+Scryfall inyectado (`data/cartas_reglas.json` solo trae a Teysa Karlov: las otras cuatro no están en
+la caché viva ni en el JSON). Todo medido en la pestaña de `commander.html` con estado sintético y,
+para Elas, además con una criatura **lanzada de verdad** con `playFromHand`. Sin tocar código.
+
+### 1 · Ketramose, the New Dawn — {1}{W}{B} 4/4, amenaza, vínculo vital, indestructible
+
+- **Funciona**: las tres claves se leen del oracle (`hasKw` true en las tres); `killPermanent`
+  respeta indestructible (devuelve `false` y sigue en mesa); amenaza se respeta al bloquear
+  (`if(hasKw(a,'menace'))return` en la asignación de bloqueadores y en la lista del jugador).
+- **No existe** «can't attack or block unless there are seven or more cards in exile»: no hay
+  ninguna comprobación de tamaño de exilio en el motor (`exile.length` = 0 apariciones).
+  Medido: `G.you.exile.length === 0` y `toggleAttacker(id)` lo acepta como atacante.
+- **No existe** el disparo de exilio: 0 apariciones de `put into exile` en los cuatro tableros, y
+  ninguna rama de exilio del motor llama a un disparador. Si se le aplica su frase a mano, el pase
+  incondicional de robo sí roba (mano 0 → 1) pero **la vida no baja** (`you lose N life` no existe):
+  vida 40 → 40.
+
+### 2 · Teysa of the Ghost Council — {2}{W}{B} 0/5, intensidad
+
+- **Funciona**: el ETB crea la ficha real de Scryfall («create a 1/1 white and black Spirit creature
+  token with flying» cae en la rama `specs` de `applySpell`): una ficha `Esprit` con `flying`.
+- **No existe la intensidad**: 0 apariciones de `intensif`. «Teysa intensifies by 1» no hace nada, y
+  «Spirits you control get +X/+0» tampoco: `bonusOf(ficha,'p')` = 0 y la ficha se queda en 1/1.
+- **No existe el parpadeo de fin de turno**: «you may exile Teysa. If you do, at the beginning of
+  your next upkeep, return Teysa…» se resuelve sin efecto (el registro dice «se résout sans effet»)
+  y Teysa sigue en la mesa: en la práctica es un 0/5 con una ficha 1/1 y nada más.
+
+### 3 · Elas il-Kor, Sadistic Pilgrim — {W}{B} 2/2, toque mortal
+
+- **ETB roto**: `creatureEtbTriggers` empareja solo `^whenever (a|another|one or more) creatures?
+  [^.]*enters the battlefield under your control`, y Elas dice «Whenever another creature you
+  control **enters**, you gain 1 life». Medido con una criatura lanzada de verdad (Llanowar Elves):
+  vida 40 → 40. Control con la redacción que el motor sí conoce: 40 → 41, así que el fallo es la
+  frase, no la falta de infraestructura.
+- **Las fichas no disparan ETB**: `spawnToken` no llama a `applyTrigger`, así que ni con la
+  redacción buena (40 → 40 al crear una ficha).
+- **La muerte sí funciona**: al morir otra criatura, «each opponent loses 1 life» resta al rival
+  (40 → 39, «IA perd 1 points de vie.»), y también cuando la que muere es una **ficha** (40 → 39).
+  Es la única de las cinco que aporta algo real al motor.
+
+### 4 · Amalia Benavides Aguirre — {W}{B} 2/2, explorar
+
+- **La ganancia de vida entra** (cualquier fuente), pero **su disparo no hace nada**: 0 apariciones
+  de `explore` en los cuatro tableros. «Whenever you gain life, Amalia … explores» se empareja
+  (`lifeGainTriggers`) y el texto de la consecuencia no encaja en ninguna rama de `applySpell`:
+  medido, ganar 2 vida con ella en mesa deja `a=0`, sin contador y sin registro de disparo.
+- **La condición de 20 tampoco**: con `a=18` (fuerza exactamente 20) y otra criatura propia en
+  mesa, ganar 2 vida no destruye nada.
+- **Ward mal cobrada**: `wardCost` solo entiende `ward {N}` y `ward—pay {N}`; «Ward—Pay 3 life» no
+  encaja y cae en el valor por defecto **2 maná genérico**. Medido: «Removal» sobre ella con cuatro
+  tierras → registro «Coût de sauvegarde 2 payé», **2 tierras giradas, 0 vidas pagadas**, y muere.
+  Sin maná disponible el removal se anula y Amalia **sobrevive** («Pas de mana pour la sauvegarde…
+  autre cible choisie»), que es mucho más fuerte que la carta real.
+
+### 5 · Teysa Karlov — {2}{W}{B} 2/4
+
+- **No dobla los disparos de muerte**: con un permanente «Whenever another creature you control
+  dies, you gain 1 life» y Teysa Karlov en mesa, la muerte da **1** vida (40 → 41), no 2.
+  No hay ninguna referencia a `triggers an additional time`.
+- **Las fichas no ganan vigilancia ni vínculo vital**: `grantedKw` solo mira equipo/aura enganchada
+  (`equipTo`/`attachTo` con `has`/`gains`), no texto estático de un permanente. Medido con una ficha
+  Espíritu bajo Teysa: `hasKw(tok,'lifelink')` y `hasKw(tok,'vigilance')` = false.
+
+### Resumen práctico
+
+De las cinco, **Elas** es la única que hace algo (el drenaje al morir; su ETB está roto), **Ketramose**
+aporta el cuerpo (4/4 con vínculo vital, amenaza e indestructible) pero ni el disparo de exilio ni la
+restricción de ataque, y **Teysa of the Ghost Council**, **Amalia** y **Teysa Karlov** son casi
+texto muerto: intensidad, explorar, doblar disparos y ward con coste de vida no existen en el motor.
+Ninguna se arregla cambiando el pool de cartas: hace falta motor nuevo (explorar, intensidad,
+disparos de exilio, doblador de disparos, ward con coste de vida y el disparo de ETB con la
+redacción corta «enters»).
+
+### Cómo se midió
+
+- `applySpell`, `applyTrigger`, `killPermanent`, `spawnToken`, `bonusOf`, `hasKw`, `toggleAttacker` y
+  `playFromHand` llamados directamente en `preview_evaluate` sobre estado sintético; el estado se
+  descartó recargando la pestaña. El oracle de las cuatro cartas que no están en la base se pidió a
+  Scryfall (`api.scryfall.com/cards/named`).
+- No se ejecutó el linter ni `sync_shared.py --check` porque no se editó ningún archivo del juego.

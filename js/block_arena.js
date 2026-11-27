@@ -12,9 +12,9 @@
   window.__blockArena = true;
 
   var TX = {
-    es: { title: 'Declara bloqueos', hint: 'Toca una criatura tuya y luego el atacante. Toca la flecha para quitarla.', confirm: 'Aceptar bloqueos', none: 'Sin bloquear', no: 'No puede bloquear', blockedBy: 'Bloquea a', pick: 'Elige bloqueador' },
-    en: { title: 'Declare blockers', hint: 'Tap one of your creatures, then the attacker. Tap the arrow to remove it.', confirm: 'Confirm blocks', none: 'Unblocked', no: 'Cannot block', blockedBy: 'Blocks', pick: 'Pick a blocker' },
-    fr: { title: 'Déclarer les bloqueurs', hint: 'Touchez une de vos créatures, puis l’attaquant. Touchez la flèche pour l’enlever.', confirm: 'Confirmer les blocages', none: 'Sans blocage', no: 'Ne peut pas bloquer', blockedBy: 'Bloque', pick: 'Choisir un bloqueur' }
+    es: { title: 'Declara bloqueos', hint: 'Toca una criatura tuya y luego el atacante. Toca la flecha para quitarla.', confirm: 'Aceptar bloqueos', none: 'sin bloquear', all: 'todas bloqueadas', blocked: 'bloqueados', clear: 'Quitar todo', atkRow: 'Atacantes', blkRow: 'Tus criaturas', remove: 'Quitar bloqueo', no: 'No puede bloquear', blockedBy: 'Bloquea a', pick: 'Elige bloqueador' },
+    en: { title: 'Declare blockers', hint: 'Tap one of your creatures, then the attacker. Tap the arrow to remove it.', confirm: 'Confirm blocks', none: 'unblocked', all: 'all blocked', blocked: 'blocked', clear: 'Clear all', atkRow: 'Attackers', blkRow: 'Your creatures', remove: 'Remove block', no: 'Cannot block', blockedBy: 'Blocks', pick: 'Pick a blocker' },
+    fr: { title: 'Déclarer les bloqueurs', hint: 'Touchez une de vos créatures, puis l’attaquant. Touchez la flèche pour l’enlever.', confirm: 'Confirmer les blocages', none: 'sans blocage', all: 'tous bloqués', blocked: 'bloqués', clear: 'Tout effacer', atkRow: 'Attaquants', blkRow: 'Vos créatures', remove: 'Retirer le blocage', no: 'Ne peut pas bloquer', blockedBy: 'Bloque', pick: 'Choisir un bloqueur' }
   };
 
   function lang() {
@@ -49,6 +49,10 @@
     return (p && p.card && p.card.img) || '';
   }
   function nameOf(p) { return p && p.card ? (p.card.name || '') : ''; }
+  function initialsOf(p) {
+    var s = String(nameOf(p)).replace(/^[^A-Za-zÀ-ÿ]+/, '').replace(/[^A-Za-zÀ-ÿ ]/g, '').trim();
+    return (s.slice(0, 2) || '?').toUpperCase();
+  }
   function ptOf(p) {
     try { return (typeof pwOf === 'function' ? pwOf(p) : p.pow) + '/' + (typeof thOf === 'function' ? thOf(p) : p.tou); }
     catch (e) { return (p.pow || 0) + '/' + (p.tou || 0); }
@@ -75,7 +79,10 @@
     b.dataset.id = p.id;
     b.dataset.kind = kind;
     var img = imgOf(p);
-    b.innerHTML = '<span class="ba-art">' + (img ? '<img src="' + esc(img) + '" alt="">' : '<span class="ba-noart">' + esc(nameOf(p).slice(0, 2)) + '</span>') + '</span>' +
+    /* las iniciales quedan siempre detrás: si la imagen tarda o falla, la
+       carta sigue leyéndose en vez de ser un rectángulo vacío */
+    b.innerHTML = '<span class="ba-art"><span class="ba-noart">' + esc(initialsOf(p)) + '</span>' +
+      (img ? '<img src="' + esc(img) + '" alt="">' : '') + '</span>' +
       '<span class="ba-nm">' + esc(nameOf(p)) + '</span><span class="ba-pt">' + esc(ptOf(p)) + '</span>';
     b.title = nameOf(p) + ' · ' + ptOf(p);
     return b;
@@ -97,12 +104,14 @@
       var aEl = built.querySelector('.ba-atkcard[data-id="' + aid + '"]');
       if (!bEl || !aEl) return;
       var br = bEl.getBoundingClientRect(), ar = aEl.getBoundingClientRect();
-      var x1 = br.left - rb.left + br.width / 2, y1 = br.top - rb.top;
-      var x2 = ar.left - rb.left + ar.width / 2, y2 = ar.top - rb.top + ar.height;
-      var my = (y1 + y2) / 2;
-      html += '<path class="ba-line" d="M' + x1 + ',' + y1 + ' C' + x1 + ',' + my + ' ' + x2 + ',' + my + ' ' + x2 + ',' + y2 + '" marker-end="url(#baArrow)"/>';
-      html += '<circle class="ba-kill" data-kill="' + aid + '" cx="' + ((x1 + x2) / 2) + '" cy="' + my + '" r="10"/>';
-      html += '<text class="ba-killx" x="' + ((x1 + x2) / 2) + '" y="' + (my + 4) + '" text-anchor="middle">×</text>';
+      /* 4 px de aire: la punta no toca el nombre de la carta */
+      var x1 = br.left - rb.left + br.width / 2, y1 = br.top - rb.top - 4;
+      var x2 = ar.left - rb.left + ar.width / 2, y2 = ar.top - rb.top + ar.height + 4;
+      /* codo en el hueco entre bandas: la flecha nunca cruza una carta */
+      var my = (y1 + y2) / 2, xm = (x1 + x2) / 2;
+      html += '<path class="ba-line" d="M' + x1 + ',' + y1 + ' V' + my + ' H' + x2 + ' V' + y2 + '" marker-end="url(#baArrow)"/>';
+      html += '<circle class="ba-kill" data-kill="' + aid + '" cx="' + xm + '" cy="' + my + '" r="9"><title>' + esc(tx('remove')) + '</title></circle>';
+      html += '<text class="ba-killx" x="' + xm + '" y="' + (my + 3.6) + '" text-anchor="middle">×</text>';
     });
     svg.innerHTML = html;
     Array.prototype.forEach.call(svg.querySelectorAll('[data-kill]'), function (c) {
@@ -119,7 +128,10 @@
     var atk = selects().length;
     var done = Object.keys(assign).length;
     var un = atk - done;
-    built.querySelector('.ba-status').textContent = done + '/' + atk + ' bloqueados' + (un ? ' · ' + un + ' ' + tx('none').toLowerCase() : '');
+    built.querySelector('.ba-status').textContent = done + '/' + atk + ' ' + tx('blocked') +
+      (un ? ' · ' + un + ' ' + tx('none') : ' · ' + tx('all'));
+    var clearBtn = built.querySelector('.ba-clear');
+    if (clearBtn) clearBtn.disabled = !done;
   }
 
   function sync() {
@@ -128,6 +140,7 @@
       s.value = v ? String(v) : '';
     });
     if (!built) return;
+    built.classList.toggle('ba-aim', selected != null);
     Array.prototype.forEach.call(built.querySelectorAll('.ba-blkcard'), function (el) {
       var id = +el.dataset.id;
       var used = Object.keys(assign).some(function (a) { return +assign[a] === id; });
@@ -214,14 +227,24 @@
     var blk = blockers.length ? blockers.map(function (b) { return cardNode(b, 'blk').outerHTML; }).join('') : '<p class="ba-empty">' + esc(tx('no')) + '</p>';
     el.innerHTML =
       '<div class="ba-head"><b>' + esc(tx('title')) + '</b><span>' + esc(tx('hint')) + '</span></div>' +
-      '<div class="ba-board"><div class="ba-row ba-row-atk">' + atk + '</div>' +
-      '<div class="ba-mid"><span></span></div>' +
-      '<div class="ba-row ba-row-blk">' + blk + '</div>' +
-      '<svg class="ba-arrows" aria-hidden="true"></svg></div>' +
-      '<div class="ba-foot"><span class="ba-status"></span><button type="button" class="btn ba-ok">' + esc(tx('confirm')) + '</button></div>';
+      '<div class="ba-board">' +
+        '<div class="ba-band ba-band-atk"><span class="ba-lab">' + esc(tx('atkRow')) + ' <i>' + attackers.length + '</i></span>' +
+          '<div class="ba-row ba-row-atk">' + atk + '</div></div>' +
+        '<div class="ba-band ba-band-blk"><span class="ba-lab">' + esc(tx('blkRow')) + ' <i>' + blockers.length + '</i></span>' +
+          '<div class="ba-row ba-row-blk">' + blk + '</div></div>' +
+        '<svg class="ba-arrows" aria-hidden="true"></svg></div>' +
+      '<div class="ba-foot"><span class="ba-status"></span>' +
+        '<button type="button" class="btn ba-clear">' + esc(tx('clear')) + '</button>' +
+        '<button type="button" class="btn ba-ok">' + esc(tx('confirm')) + '</button></div>';
     box.appendChild(el);
     built = el;
     el.addEventListener('click', onClick);
+    el.querySelector('.ba-clear').addEventListener('click', function (ev) {
+      ev.preventDefault();
+      assign = {};
+      selected = null;
+      sync();
+    });
     el.querySelector('.ba-ok').addEventListener('click', function (ev) {
       ev.preventDefault();
       selects().forEach(function (s) {
@@ -234,8 +257,11 @@
       if (original) original.click();
     });
     lastKey = key;
-    var imgs = el.querySelectorAll('img');
-    Array.prototype.forEach.call(imgs, function (im) { im.addEventListener('load', renderArrows); });
+    var imgs = el.querySelectorAll('.ba-art img');
+    Array.prototype.forEach.call(imgs, function (im) {
+      im.addEventListener('load', renderArrows);
+      im.addEventListener('error', function () { im.remove(); });
+    });
     requestAnimationFrame(function () { sync(); renderArrows(); });
   }
 

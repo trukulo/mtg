@@ -1,10 +1,14 @@
 /* ===== rules-core · piezas de interfaz de las reglas ampliadas ===== */
-#rulesPick{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#04070bb8;backdrop-filter:blur(2px)}
-#rulesPick .rpk{position:relative;max-width:min(560px,92vw);max-height:84vh;overflow:auto;background:#0d1420;border:1px solid #e8c57455;border-radius:12px;padding:14px 16px 16px;box-shadow:0 18px 50px #000c}
+/* Panel lateral: deja ver el campo (antes se centraba encima de las cartas) */
+#rulesPick{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:flex-end;padding:14px 18px;background:transparent}
+#rulesPick .rpk{position:relative;pointer-events:auto;width:min(340px,42vw);max-height:min(88vh,900px);overflow:auto;background:#0d1420f5;border:1px solid #e8c57455;border-radius:12px;padding:14px 16px 16px;box-shadow:0 18px 50px #000c}
 #rulesPick .rpk-hd{font:800 11px 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#e8c574;margin:0 24px 4px 0}
 #rulesPick .rpk-sub{font:400 12px/1.45 'Hanken Grotesk',system-ui,sans-serif;color:#93a3b3;margin:0 24px 10px 0}
+#rulesPick .rpk-art{display:flex;justify-content:center;margin:0 0 10px;padding:4px;background:#070b11;border:1px solid #ffffff12;border-radius:8px}
+#rulesPick .rpk-art img{display:block;max-width:100%;max-height:38vh;width:auto;border-radius:6px;object-fit:contain}
 #rulesPick .rpk-opts{display:flex;flex-direction:column;gap:6px}
-#rulesPick .rpk-opts button{text-align:left;border:1px solid #e8c57444;background:#141c26;color:#f0e6d2;border-radius:6px;padding:8px 10px;font:600 12.5px/1.35 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}
+#rulesPick .rpk-opts button{display:flex;align-items:center;gap:8px;text-align:left;border:1px solid #e8c57444;background:#141c26;color:#f0e6d2;border-radius:6px;padding:8px 10px;font:600 12.5px/1.35 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}
+#rulesPick .rpk-th{width:28px;height:39px;object-fit:cover;border-radius:3px;flex:0 0 auto}
 #rulesPick .rpk-opts button:hover:not(:disabled){background:#26201a;border-color:#e8c574}
 #rulesPick .rpk-opts button:disabled{opacity:.4;cursor:not-allowed}
 #rulesPick .rpk-x{position:absolute;top:8px;right:8px;border:1px solid #ffffff22;background:#101a26;color:#cfe3f5;border-radius:5px;width:22px;height:22px;line-height:1;cursor:pointer}
@@ -37,6 +41,8 @@
 }
 /* el zoom de carta nunca supera la ventana y no deforma la imagen */
 #cardZoom{max-width:calc(100vw - 16px);max-height:calc(100vh - 16px);object-fit:contain;background:#080d13}
-/* el selector de reglas también pierde el velo: solo se ve su caja */
-#rulesPick{background:transparent;backdrop-filter:none}
-#rulesPick .rpk{width:max-content;min-width:260px}
+@media (max-width:700px){
+  #rulesPick{align-items:flex-end;justify-content:center;padding:8px}
+  #rulesPick .rpk{width:100%;max-width:100%;max-height:58vh}
+  #rulesPick .rpk-art img{max-height:28vh}
+}
