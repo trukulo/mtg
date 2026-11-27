@@ -3410,3 +3410,219 @@ redacción corta «enters»).
   descartó recargando la pestaña. El oracle de las cuatro cartas que no están en la base se pidió a
   Scryfall (`api.scryfall.com/cards/named`).
 - No se ejecutó el linter ni `sync_shared.py --check` porque no se editó ningún archivo del juego.
+
+## Top 20 de EDHREC: qué hace el motor con ellos (auditoría, 27 nov 2026)
+
+Petición: «analiza las reglas del top 20 de comandantes de magic y si se ejecutan correctamente, y
+luego el top 20 de cartas». Es una auditoría de **solo lectura**: no se ha tocado el motor.
+
+**Fuente del ranking**: EDHREC, pestañas «Past 2 Years» (consultadas el 27 nov 2026), lista de
+comandantes y lista de cartas. **Oracle**: Scryfall (`/cards/collection`, hay que mandar
+`Accept: application/json` o devuelve 400) guardado en `tmp/top40_oracle.json`, con
+`oracle`, `type`, `cmc`, `mana`, `colors`, `prod` (`produced_mana`), `kw` y potencia/resistencia.
+
+**Método** (`tmp/top40_fetch.py` + `tmp/top40_audit.js`): se inyectan los 40 oracles en `CARD`, se
+monta un estado sintético (`mkPlayer` + `instantiate`, tierras suficientes del color que pide el
+coste) y se llaman las funciones **reales** del motor —`applySpell`, `applyTrigger`, `playFromHand`,
+`combatDamageTriggers`, `window.__setRules.endStepTriggers`— más el botón ◈ de verdad
+(`#jYouBf .bcard .rules-act` → diálogo `#rulesPick` → opción). Se ejecuta de una vez sobre
+`standard.html` (mismo motor que commander/brawl; `LANG`=fr) y devuelve un JSON por carta.
+Dos detalles del banco que conviene no repetir: las medidas de maná necesitan `produced_mana` real
+(sin él los Talismanes salían «C»), y el diálogo de la capa `rules-core` es `#rulesPick`, no
+`#advPick`.
+
+### Comandantes (1-20)
+
+| # | comandante | veredicto | lo que se midió |
+|---|---|---|---|
+| 1 | Y'shtola, Night's Blessed | parcial | vigilancia ✓; al lanzar hechizo: 2 daños van a **una criatura** del rival (la mata) y **no** ganas 2 vidas; el disparo de fin de turno **no dispara** |
+| 2 | Edgar Markov | parcial | prisa y daño primero ✓ (la carta no tiene prisa: es el `haste` de la ficha); **eminencia no existe** (0 fichas al lanzar un vampiro); al atacar el +1/+1 va a **Edgar** (4/4 el más grande), no a cada vampiro |
+| 3 | The Ur-Dragon | mínimo | vuela ✓; eminencia de descuento `{1}` **no** (dragón cuesta 4 con y sin él); «roba por cada Dragón que ataca» son **0** robos |
+| 4 | Atraxa, Praetors' Voice | parcial | las 4 claves ✓ (vuela, vigilancia, vínculo vital, toque mortal); **proliferar no ocurre** (contador 1 → 1) |
+| 5 | Krenko, Mob Boss | parcial | el ◈ sale y la habilidad se usa ({T}); crea **1** ficha, no X (=3 con dos Goblins) |
+| 6 | Vivi Ornitier | mínimo | sin habilidad activada; al lanzar un no-criatura hace **1 daño al rival** ✓ pero **no pone el +1/+1** (el `if/else` del motor se queda con la primera rama) |
+| 7 | Teval, the Balanced Scale | parcial | vuela ✓; al atacar muele **3** ✓ y el cementerio sube 2 → 5 ✓; **no devuelve ninguna tierra** al campo |
+| 8 | Sauron, the Dark Lord | parcial | ward ✓ pero **cobra 2 maná genéricos** en vez de «sacrifica una legendaria» (con 2 tierras giradas el removal sigue y Sauron muere); amasar y «el Anillo te tienta» no existen |
+| 9 | Kaalia of the Vast | no | vuela; al atacar **no** baja nada de la mano al campo (campo 1 → 1, mano 2 → 2) |
+| 10 | Fire Lord Azula | no | sin claves, sin girar, sin vida: `firebending` no está en el motor (0 apariciones) |
+| 11 | Giada, Font of Hope | parcial | vuela y vigilancia ✓; produce `{W}` ✓ (sin la restricción «solo Ángeles»); el Ángel entra **sin** contador extra |
+| 12 | Pantlaza, Sun-Favored | no | `discover` no existe: al entrar no roba, no exilia, no lanza nada |
+| 13 | Ms. Bumbleflower | no | vigilancia; al lanzar hechizo **no** pasa nada: el efecto real es «target opponent **draws** a card» y el motor solo reconoce `draw a card` |
+| 14 | Lathril, Blade of the Elves | parcial | amenaza ✓; al hacer daño crea **1** ficha en vez de «that many» (2); la habilidad de {T} + 10 elfos **funciona con cero elfos** (drena 10 y gana 10) |
+| 15 | Toph, the First Metalbender | no | `earthbend` no existe: el artefacto no se vuelve tierra 0/1 y no hay cambios de fin de turno |
+| 16 | The Wise Mothman | no | vuela; contadores de radiación **no** (no hay campo `rad` ni efecto) |
+| 17 | Jodah, the Unifier | no | Edgar sigue 4/4 (sin +X/+X); lanzar una legendaria no roba ni exilia |
+| 18 | Hearthhull, the Worldseed | no | `station` no existe: es artefacto 6/7 y **nunca** se vuelve criatura; su habilidad «2+ | {1},{T}, sacrifica una tierra» sí aparece en el ◈ |
+| 19 | Cloud, Ex-SOLDIER | mínimo | prisa ✓; al atacar roba **1** siempre (la cláusula es «for each equipped» y él no lleva equipo), 0 fichas de Tesoro |
+| 20 | Kefka, Court Mage // Kefka, Ruler of Ruin | mínimo | vuela ✓; al transformarse descartas **solo tú** (−1 carta, rival 0) y no robas; el cementerio propio sube 1 |
+
+### Cartas (1-20)
+
+| # | carta | veredicto | lo que se midió |
+|---|---|---|---|
+| 1 | Sol Ring | **roto** | `manaOf` devuelve `[]`: **no produce nada**. `prod=['C']` y el filtro solo admite `WUBRG`, así que el `{C}{C}` se pierde y el atajo final no llega |
+| 2 | Arcane Signet | **roto** | `[]` también: el oracle no lleva `Add {`, así que sale antes de mirar `produced_mana` |
+| 3 | Swords to Plowshares | parcial | exilia ✓ (campo −1, exilio +1); el rival **no gana** vidas |
+| 4 | Path to Exile | parcial | exilia ✓; **no** busca tierra básica (tierras 0) |
+| 5 | Counterspell | parcial | contrarresta ✓ contra un no-criatura (al cementerio, sin resolver); **no** puede contrarrestar una criatura (entra al campo) |
+| 6 | Cultivate | no | se lanza y no hace nada: 0 tierras, 0 cartas a la mano |
+| 7 | Farseek | no | igual, 0 tierras |
+| 8 | Blasphemous Act | parcial | cuesta **7 siempre** (solo resta 1 por `rules-core`, no 1 por criatura: 8 → 7 con 0 y con 3); hace 13 a **una** criatura, no a cada una |
+| 9 | Talisman of Dominance | parcial | produce `{U}`/`{B}` ✓ (pierde el `{C}`); el daño a ti **no** existe |
+| 10 | Beast Within | parcial (mal) | crea el 3/3 ✓ pero **no destruye** el permanente objetivo (queda vivo, campo +1) |
+| 11 | Assassin's Trophy | no | `did:false`: no destruye ni da tierra |
+| 12 | Nature's Lore | no | 0 tierras |
+| 13 | Heroic Intervention | no | `did:false`, ni hexproof ni indestructible (el removal de control sí destruye) |
+| 14 | Rampant Growth | no | 0 tierras |
+| 15 | Chaos Warp | no | `did:false`: no baraja ni revela |
+| 16 | Birds of Paradise | parcial | vuela ✓; `manaOf` **`[]`** (el oracle dice «any color», no `Add {…}`) |
+| 17 | Talisman of Creativity | parcial | `{U}`/`{R}`, sin `{C}` ni daño |
+| 18 | Talisman of Indulgence | parcial | `{B}`/`{R}`, sin `{C}` ni daño |
+| 19 | Talisman of Hierarchy | parcial | `{W}`/`{B}`, sin `{C}` ni daño |
+| 20 | An Offer You Can't Refuse | **bien** | contrarresta el no-criatura ✓ y el rival recibe 2 Tesoros que producen los cinco colores ✓ (es la única de las 40 que se comporta como dice la carta) |
+
+### Las cuatro causas de fondo
+
+1. **`manaOf` pierde el maná incoloro y los artefactos sin `Add {`** (`standard.html`, `manaOf`):
+   `if(c.prod&&c.prod.length)return c.prod.filter(k=>'WUBRG'.includes(k))` devuelve `[]` para
+   Sol Ring, y el `if(!(c.land||/add \{/.test(o)))return []` corta antes a Arcane Signet y a Birds.
+   Con esto se cae el motor de rampa del formato: 3 de las 4 cartas más jugadas no dan maná.
+2. **Las líneas del oracle se unen antes de buscar disparos** (`js/rules_core.js`, `findTriggers`
+   hace `oracle.replace(/\n/g,' ')` y luego `split(/\.\s+/)`): el primer trozo empieza por la línea
+   de claves («Vigilance At the beginning of each end step…») y los regex anclados con `^` no
+   encienden nada. Por eso **no** proliferan Atraxa, **no** roba Y'shtola y **no** dispara ningún
+   «at the beginning of…» que vaya detrás de otra línea. Control: un hechizo de prueba cuyo oracle
+   empieza directamente por el disparo sí funciona (gana 3 vidas).
+3. **`applySpell` es una cadena `if/else`**: de un efecto compuesto solo se aplica la primera rama.
+   Y'shtola pierde «you gain 2 life», Vivi pierde el +1/+1, y el daño de Blasphemous Act acaba en un
+   único objetivo porque la rama de daño elige `bestTargets(...)[0]`.
+4. **Las cláusulas con número variable valen 1**: «that many», «X», «for each…» se resuelven como 1
+   (Krenko, Lathril, Cloud). Y las palabras clave modernas (`discover`, `firebending`, `earthbend`,
+   `station`, radiación, eminencia, «el Anillo te tienta») no existen en ninguna capa.
+
+### Lo que no se ha comprobado
+
+- Solo se auditó el motor de `standard.html` (idéntico a commander/brawl en estas capas); **no** se
+  repitió en `commander.html`, donde la regla de 21 podría cambiar el resultado de Sauron o de la
+  eminencia de Edgar (el banco no la usa).
+- No hay partida real: es estado sintético sobre funciones reales. No se ha mirado la interfaz
+  (ni el ◈ pintado en el tablero ni el zoom de carta).
+- Las medidas de los Talismanes son sobre `produced_mana` de Scryfall; si el motor no guardara
+  `prod` el resultado sería el de Sol Ring (`[]`).
+- `An Offer You Can't Refuse` sale «bien» en su parte de contrarrestar y de Tesoros; no se comprobó
+  el «mana ability» de los Tesoros gastándolos en un hechizo.
+
+## Top 100 de FDN, M19, M20 y M21: qué ejecuta el motor (auditoría, 27 nov 2026)
+
+Petición: «analiza el top 100 de cartas de fdn, m19, m21 y m20». Auditoría de **solo lectura**: no
+se ha tocado el motor ni los tableros.
+
+**Ranking**: EDHREC por set (`https://json.edhrec.com/pages/sets/<set>.json`), lista «Cards (<SET>)»
+filtrada por `set == code` y ordenada por `num_decks`; se descarta la lista «Reprints» (1273
+entradas en FDN, que no son del set). Aviso: FDN arrastra J25 y M19 arrastra G18 en el JSON, por eso
+el filtro. **Oracle**: Scryfall `/cards/collection` en lotes de 75, con `Accept: application/json`
+(sin esa cabecera devuelve 400), en `tmp/top100_oracle.json`. 400 oráculos únicos; el único que no
+resuelve por nombre es `Nicol Bolas, the Ravager` (Scryfall lo llama
+`Nicol Bolas, the Ravager // Nicol Bolas, the Arisen`; se busca por la cara frontal).
+
+**Método** (`tmp/top100_fetch.py` + `tmp/top100_audit.js` + `tmp/top100_report.py`): se inyectan los
+400 oráculos en `CARD`, estado sintético con tierras suficientes, y se llaman las funciones reales.
+Sondas por carta: lanzar (`applySpell`), entrar (`applyTrigger` 'etb' + `creatureEtbTriggers`),
+atacar (`applyTrigger` 'attack' + `attackTriggers`), inicio de turno/upkeep (`upkeepTriggers` +
+`endStepTriggers`), landfall (`landfallTriggers`), habilidad activada (botón ◈ real → `#rulesPick`),
+lealtad de planeswalker (`#jCmd .abilbtn.loyb` con `G.phase='main1'`), morir la propia carta
+(`killPermanent`), y una **batería de eventos con control**: ganar 3 vidas, que el rival pierda 3,
+robar (primera y segunda carta), lanzar un instantáneo de prueba (`castTriggers`) y matar una 1/1;
+se corre dos veces, sin y con la carta en el campo, y solo cuenta lo que la carta **añade**.
+Además se mide el bono a las otras criaturas (`buff`) y las claves que concede `hasKw`.
+Coste: 400 cartas en ~7 s. Listado completo de las 400 en `tmp/top100_report.md`.
+
+### Resultado por set
+
+| Set | Cartas | Sin texto | Tierras | Hace algo | Solo claves | Nada | % nada (con texto) |
+|---|---|---|---|---|---|---|---|
+| FDN | 100 | 1 | 1 | 41 | 28 | 29 | 30 % |
+| M19 | 100 | 2 | 1 | 43 | 16 | 38 | 39 % |
+| M20 | 100 | 1 | 1 | 44 | 20 | 34 | 35 % |
+| M21 | 100 | 2 | 1 | 45 | 13 | 39 | 40 % |
+| **Total** | **400** | **6** | **4** | **173 (44 %)** | **77 (20 %)** | **140 (36 %)** | **36 %** |
+
+- **Hace algo**: alguna sonda cambió el estado (lanzar 47 cartas, entrar 49, eventos 19, activada 18,
+  lealtad 17, atacar 13, inicio de turno 10, morir 4, landfall 2; una carta puede sumar varias).
+- **Solo claves**: no ejecuta nada pero el motor sí le concede las claves (145 claves concedidas en
+  total, 0 impresas que se queden sin conceder). Es el caso de casi todos los «señores» de tribu
+  (`Supreme Phantom`, `Empyrean Eagle`), de las criaturas con volar/arrasar y de las que solo tienen una
+  cláusula estática.
+- **Nada**: ni efecto ni claves. Ahí está el 36 %.
+- Las **tierras** (4) y las cartas **sin texto** (6) se excluyen del denominador: su maná se midió en
+  la auditoría anterior de maná y aquí no se prueba.
+
+### Lo que no hace (y por qué)
+
+1. **Efectos estáticos y de reemplazo: 46 de las 140 «nada».** Descuentos de coste
+   (`Starfield Mystic`, `Archmage of Runes`), «double» (`Unleash Fury`, `Bulk Up`,
+   `Mossborn Hydra`), «instead» (`Teferi's Ageless Insight`, `Fiery Emancipation`,
+   `Conclave Mentor`), «as this enters, choose a creature type» (`Banner of Kinship`), «you may look
+   at the top card» (`Mystic Forge`, el nº 1 de M20 con 309 810 mazos), «you may play an additional
+   land» (`Loot, Exuberant Explorer`), «equipped creature gets +10/+10» (`Colossus Hammer`).
+   El motor no tiene capa de efectos continuos sobre otras permanentes ni de reemplazo.
+2. **Disparos que no son los que probé.** `Scrawling Crawler` («whenever an opponent draws»),
+   `Ghostly Pilferer` («whenever this creature becomes untapped»), `Tinybones` («whenever an
+   opponent discards»), `Vito` («whenever you gain life… loses that much»), `Wildwood Scourge`
+   (contadores puestos en otra criatura). De estos, los que sí probé (ganar vida, robar, morir,
+   lanzar) disparan **19 cartas**; el resto sigue sin cubrir y hay que leerlo como «no medido»,
+   no como «roto» demostrado.
+3. **Hechizos que se resuelven con la primera rama.** `applySpell` es un `if/else`: `Blood Divination`
+   («sacrifice a creature, then draw three») roba 3 y **no** sacrifica nada; `Fraying Omnipotence`
+   se da por lanzado y no cambia **nada**; `Cat Collector` crea la ficha y no hace el resto.
+4. **Contrarrestar no existe** (no hay pila): `Lofty Denial`, `Sublime Epiphany`, `Tale's End` y
+   `Miscast` se dan por lanzados sin efecto. `Discontinuity` («end the turn») tampoco.
+5. **Tutores y búsquedas**: `Shared Summons`, `Scheming Symmetry`, `One with the Machine` no cambian
+   nada; `Nexus of Fate` («extra turn») tampoco.
+6. **Cantidades**: sigue vigente lo de la auditoría del top 40 — «that many», «X» y «for each» valen
+   1; se ve en `Blasphemous Edict` (13 criaturas y no se sacrifica nada) y en los planeswalkers que
+   crean fichas (1 en vez de N).
+
+### Fallo del daño a la cara: arreglado (27 nov 2026)
+
+**Era:** en la rama `dmg` de `applySpell` el cálculo era `faceHit = n >= foe.life || !tg`, así que el
+daño a un jugador solo restaba vida si era letal (o si el rival no tenía criaturas); si no, se
+aplicaba a una criatura suya. Además «each opponent» no entraba en el patrón de la cara, así que
+`Boltwave` («deals 3 damage to each opponent») mataba una criatura y no tocaba la vida.
+
+**Ahora** (`tmp/fix_face_damage.py`, los cuatro tableros) se mira la cláusula que sigue al daño:
+«to each opponent / target player / target opponent / the player or planeswalker» → siempre a la
+cara; «to any target / target creature or player» → a la criatura si el daño le basta para morir y
+si no a la cara; el resto («to target creature», «to each creature…») → a la criatura.
+
+**Comprobado** con `tmp/dmg_probe.js` (tablero controlado, `applySpell`): 17 casos × 4 tableros, 0
+fallos — `Boltwave`, `Firespitter Whelp`, `Glint-Horn Buccaneer` y `Chandra, Flame's Catalyst`
+(«each opponent») restan vida; `Viashino Pyromancer`, `Demanding Dragon` y `Scorch Spitter`
+(«target player/opponent») también; los «any target» (`Chandra, Novice Pyromancer`, `Dread
+Presence`, `Chandra, Heart of Fire`, `Sarkhan's Unsealing`) matan la criatura si les llega y si no
+van a la cara; `Fiery Annihilation`, `Soul Sear` y `Spit Flame` siguen hiriendo solo a la criatura.
+(`Demanding Dragon` además sacrifica por el «unless that player sacrifices», que `rules-core` aplica
+siempre: pendiente conocido.) De punta a punta en standard, lanzando `Boltwave` desde la mano: 20 →
+17 vidas, la criatura del rival intacta, carta al cementerio y registro «Boltwave inflige 3
+blessures à IA»; con el rival a 2 vidas, `G.over` y «Vous gagnez».
+
+### Cartas grandes que no hacen nada
+
+- FDN: `Blasphemous Edict` (nº 1, 269 345 mazos), `Scrawling Crawler` (2), `Banner of Kinship` (3),
+  `Leyline Axe` (11), `Bulk Up` (12).
+- M19: `Meteor Golem` (3), `Sai, Master Thopterist` (4), `Nexus of Fate` (12), `Satyr Enchanter` (13),
+  `Runic Armasaur` (15).
+- M20: `Mystic Forge` (1), `Colossus Hammer` (4), `Manifold Key` (6), `Moldervine Reclamation` (7),
+  `Starfield Mystic` (10).
+- M21: `Vito, Thorn of the Dusk Rose` (3), `Teferi's Ageless Insight` (5), `Fiery Emancipation` (8),
+  `Peer into the Abyss` (10), `Ghostly Pilferer` (11).
+
+### Límites de esta medición
+
+- No se prueba la producción de maná (las tierras quedan fuera a propósito; `Field of the Dead` sí crea su ficha en la sonda de entrar, y `Lotus Field` sacrifica **una** tierra y no dos) ni las habilidades de maná de criaturas y artefactos (`Leafkin Druid`, `Arcane Encyclopedia`).
+- No se prueban: robo del rival, descarte, girarse/inclinarse, contadores puestos por otros, copia de
+  hechizos ni de permanentes, asignación de daño de combate (solo el disparo de atacar), valores de X.
+- «Que haga algo» no es «que lo haga bien»: la tabla mide que el estado cambia, no la fidelidad.
+  Los caso raros verificados uno a uno están en los puntos 3-5 y en el fallo de la cara.
+- Los `num_decks` son de EDH (EDHREC), no de los cuatro tableros; aquí solo sirven como orden de
+  popularidad.

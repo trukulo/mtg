@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="es">
-<!-- versión 2026-11-27 15:25 · los cuatro tableros van al día a la vez -->
+<!-- versión 2026-11-27 16:14 · los cuatro tableros van al día a la vez -->
 <meta charset="utf-8">
 <title>Standard · Sesenta cartas, veinte vidas</title>
 <meta name="description" content="Standard: el formato de siempre, 60 cartas y 20 vidas, sin comandante ni zona de mando. Genera el mazo, analizalo, imprimelo y juega contra la IA en el navegador.">
@@ -5601,14 +5601,15 @@ function applySpell(P,card,srcName,quiet){
     if(killed){did=true;checkDeaths()}
   }else if(dmg){
     const n=+dmg[1];
-    const any=/any target|target player|target opponent/.test(o);
+    /* a quién va el daño: «a cada oponente» y «a un jugador» restan vida siempre;
+       «a cualquier objetivo» mata la criatura si el daño le basta y si no va a la cara */
+    const dmgTo=String(o).slice(String(o).indexOf(dmg[0])+dmg[0].length).split('.')[0];
+    const faceOnly=/^\s*to (each opponent|target player|target opponent|the player or planeswalker)/.test(dmgTo);
+    const anyTarget=/^\s*to (any target|target creature or player)/.test(dmgTo);
     const tg=bestTargets(P,'foe')[0];
-    if(tg&&!any){tg.dmg+=n;logLine(t('game.dmgTo',{c:srcName,n,t:cardName(tg.card)}),who);checkDeaths();did=true}
-    else{
-      const faceHit=n>=foe.life||!tg;
-      if(faceHit){foe.life-=n;logLine(t('game.dmgTo',{c:srcName,n,t:foe.name}),who);did=true}
-      else{tg.dmg+=n;logLine(t('game.dmgTo',{c:srcName,n,t:cardName(tg.card)}),who);checkDeaths();did=true}
-    }
+    const faceHit=faceOnly||!tg||(anyTarget&&n<thOf(tg));
+    if(faceHit){foe.life-=n;logLine(t('game.dmgTo',{c:srcName,n,t:foe.name}),who);did=true}
+    else{tg.dmg+=n;logLine(t('game.dmgTo',{c:srcName,n,t:cardName(tg.card)}),who);checkDeaths();did=true}
   }else if(pump){
     const tg=bestTargets(P,'self')[0];
     if(tg){tg.a+=+pump[1];tg.b+=+pump[2];logLine(t('game.pump',{c:srcName,t:cardName(tg.card),a:pump[1],b:pump[2]}),who);did=true}
@@ -7076,7 +7077,7 @@ async function printProxies(){
   const bu=backUrl(PRINT.back);
   const backCss=bu?`.back{background-image:url('${bu}');background-size:cover;background-position:center}`:'';
   const html=`<!DOCTYPE html><html lang="${LANG}"><head>
-<meta name="app-version" content="2026-11-27 15:25">
+<meta name="app-version" content="2026-11-27 16:14">
     @page{size:${size};margin:4mm}
     *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#fff}
